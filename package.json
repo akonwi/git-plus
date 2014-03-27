@@ -3,7 +3,7 @@
   "main": "./lib/git-plus",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "activationEvents": ["git-plus:toggle"],
+  "activationEvents": ["git-plus:status"],
   "repository": "https://github.com/atom/git-plus",
   "license": "MIT",
   "engines": {
