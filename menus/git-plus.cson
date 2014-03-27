@@ -1,0 +1,16 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  '.overlayer':
+      'Enable git-plus': 'git-plus:toggle'
+
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'git-plus'
+      'submenu': [
+        { 'label': 'Toggle', 'command': 'git-plus:toggle' }
+      ]
+    ]
+  }
+]
