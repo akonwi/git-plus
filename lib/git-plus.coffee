@@ -51,8 +51,7 @@ module.exports =
   showFile: ->
     atom.workspace.open @commitFilePath(), split: 'right', activatePane: true
     PathWatcher.watch @commitFilePath(), (event) =>
-      if event is 'change'
-        @commit()
+      @commit() if event is 'change'
 
   commit: ->
     process = new BufferedProcess({
