@@ -1,14 +1,15 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "0.0.0",
-  "description": "A short description of your package",
-  "activationEvents": ["git-plus:status"],
-  "repository": "https://github.com/atom/git-plus",
+  "version": "0.0.1",
+  "description": "Do git things without the terminal or command palette",
+  "activationEvents": ["git-plus:commit"],
+  "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"
   },
   "dependencies": {
+    "pathwatcher": "^1.0"
   }
 }

@@ -7,8 +7,9 @@ class StatusView extends View
       @div class: 'message'
 
   initialize: -> @toggle()
-  
+
   # Returns an object that can be retrieved when package is activated
+  # comment
   serialize: ->
 
   # Tear down any state and detach
