@@ -54,15 +54,23 @@ module.exports =
       @commit() if event is 'change'
 
   commit: ->
+    PathWatcher.closeAllWatchers()
+    @cleanFile()
     process = new BufferedProcess({
       command: 'git'
       args: ['commit', "--file=#{@commitFilePath()}"]
       options:
         cwd: @dir
       stdout: (data) =>
-        PathWatcher.closeAllWatchers()
         atom.workspace.destroyActivePane()
         @currentPane.activate()
       stderror: (data) =>
         alert data.toString()
     })
+
+  cleanFile: ->
+    file = new File(@commitFilePath())
+    text = file.readSync()
+    stripOut = text.indexOf "\n# Please enter"
+    text = text.slice(0, stripOut)
+    file.write text
