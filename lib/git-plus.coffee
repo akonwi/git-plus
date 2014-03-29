@@ -56,7 +56,7 @@ module.exports =
       options:
         cwd: @dir
       stdout: (data) =>
-        PathWatcher.close()
+        PathWatcher.closeAllWatchers()
         atom.workspace.destroyActivePane()
       stderror: (data) =>
         alert data.toString()
