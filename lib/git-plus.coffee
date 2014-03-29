@@ -4,9 +4,13 @@ File = PathWatcher.File
 StatusView = require './status-view'
 
 module.exports =
+  currentPane: null
+  dir: ''
+  commitFilePath: -> @dir + '/.git/COMMIT_EDITMSG'
+
   activate: (state) ->
     @dir = atom.project.getRepo().getWorkingDirectory()
-    @commitFilePath = @dir + '/.git/COMMIT_EDITMSG'
+    @commitFilePath()
     atom.workspaceView.command "git-plus:commit", => @gitStatus()
 
   deactivate: ->
@@ -16,6 +20,7 @@ module.exports =
     # gitPlusViewState: @gitPlusView.serialize()
 
   gitStatus: ->
+    @currentPane = atom.workspace.getActivePane()
     process = new BufferedProcess({
       command: 'git'
       args: ['status']
@@ -36,7 +41,7 @@ module.exports =
     text = text.replace(/\n/g, "\n# ")
     # in order to make sure each line doesn't start with a space, the preceding
     #   line should end with a backslash
-    new File(@commitFilePath)
+    new File(@commitFilePath())
       .write " \n\
        # Please enter the commit message for your changes. Lines starting\n\
        # with '#' will be ignored, and an empty message aborts the commit.\n\
@@ -44,21 +49,21 @@ module.exports =
     @showFile()
 
   showFile: ->
-    atom.workspace.open @commitFilePath, split: 'right', activatePane: true
-    PathWatcher.watch @commitFilePath, (event) =>
+    atom.workspace.open @commitFilePath(), split: 'right', activatePane: true
+    PathWatcher.watch @commitFilePath(), (event) =>
       if event is 'change'
         @commit()
 
   commit: ->
     process = new BufferedProcess({
       command: 'git'
-      args: ['commit', "--file=#{@commitFilePath}"]
+      args: ['commit', "--file=#{@commitFilePath()}"]
       options:
         cwd: @dir
       stdout: (data) =>
         PathWatcher.closeAllWatchers()
         atom.workspace.destroyActivePane()
-        atom.workspace.activateNextPane()
+        @currentPane.activate()
       stderror: (data) =>
         alert data.toString()
     })
