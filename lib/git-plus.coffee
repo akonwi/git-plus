@@ -58,6 +58,7 @@ module.exports =
       stdout: (data) =>
         PathWatcher.closeAllWatchers()
         atom.workspace.destroyActivePane()
+        atom.workspace.activateNextPane()
       stderror: (data) =>
         alert data.toString()
     })
