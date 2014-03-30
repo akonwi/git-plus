@@ -24,6 +24,7 @@ gitCommit = ->
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
 # TODO?: Strip out the git tips that 'git status' prints in message
 prepFile = (text) ->
+  PathWatcher.closeAllWatchers()
   # format the text to be ignored in the commit message
   text = text.replace(/\n/g, "\n# ")
   # in order to make sure each line doesn't start with a space, the preceding
@@ -46,7 +47,7 @@ showFile = ->
 
 commit = ->
   PathWatcher.closeAllWatchers()
-  # cleanFile() unless commitEditor?
+  cleanFile()
   new BufferedProcess({
     command: 'git'
     args: ['commit', "--file=#{commitFilePath()}"]
