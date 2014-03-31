@@ -8,7 +8,5 @@ module.exports =
     atom.workspaceView.command "git-plus:write-all", -> GitWrite(true)
 
   deactivate: ->
-    # @gitPlusView.destroy()
 
   serialize: ->
-    # gitPlusViewState: @gitPlusView.serialize()
