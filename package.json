@@ -3,7 +3,11 @@
   "main": "./lib/git-plus",
   "version": "0.0.1",
   "description": "Do git things without the terminal or command palette",
-  "activationEvents": ["git-plus:commit"],
+  "activationEvents": [
+    "git-plus:commit",
+    "git-plus:write",
+    "git-plus:write-all"
+  ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
