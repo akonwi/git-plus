@@ -1,7 +1,7 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
   '.overlayer':
-      'Enable git-plus': 'git-plus:toggle'
+      'Stage File': 'git-plus:write'
 
 'menu': [
   {
@@ -9,7 +9,9 @@
     'submenu': [
       'label': 'git-plus'
       'submenu': [
-        { 'label': 'Toggle', 'command': 'git-plus:toggle' }
+        { 'label': 'Write', 'command': 'git-plus:write' }
+        { 'label': 'Write All', 'command': 'git-plus:write-all' }
+        { 'label': 'Commit', 'command': 'git-plus:commit' }
       ]
     ]
   }
