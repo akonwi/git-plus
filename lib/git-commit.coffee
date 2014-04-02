@@ -1,5 +1,6 @@
-PathWatcher = require 'pathwatcher'
-File = PathWatcher.File
+# PathWatcher = require 'pathwatcher'
+# File = PathWatcher.File
+fs = require 'fs-plus'
 {BufferedProcess} = require 'atom'
 StatusView = require './status-view'
 
@@ -7,6 +8,7 @@ currentPane = null
 dir = ''
 commitFilePath = -> dir + '/.git/COMMIT_EDITMSG'
 commitEditor = null
+watcher = null
 
 gitCommit = ->
   currentPane = atom.workspace.getActivePane()
@@ -25,16 +27,17 @@ gitCommit = ->
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
 # TODO?: Strip out the git tips that 'git status' prints in message
 prepFile = (text) ->
-  PathWatcher.closeAllWatchers()
+  watcher.close() if watcher?
   # format the text to be ignored in the commit message
   text = text.replace(/\n/g, "\n# ")
   # in order to make sure each line doesn't start with a space, the preceding
   #   line should end with a backslash
-  new File(commitFilePath())
-    .write " \n\
-     # Please enter the commit message for your changes. Lines starting\n\
-     # with '#' will be ignored, and an empty message aborts the commit.\n\
-     # #{text}"
+  fs.writeFileSync commitFilePath(),
+    " \n\
+      # Please enter the commit message for your changes. Lines starting\n\
+      # with '#' will be ignored, and an empty message aborts the commit.\n\
+      # #{text}",
+    flag: 'w+'
   showFile()
 
 showFile = ->
@@ -42,12 +45,11 @@ showFile = ->
     .open(commitFilePath(), split: 'right', activatePane: true)
     # ::open returns a promise resolving to the editor
     .done (editor) -> commitEditor = editor
-  PathWatcher.watch commitFilePath(), (event) =>
-    # only commit if there isn't already an editor for the commitFile
+  watcher = fs.watch commitFilePath(), (event) =>
     commit() if event is 'change'
 
 commit = ->
-  PathWatcher.closeAllWatchers()
+  watcher.close()
   cleanFile()
   new BufferedProcess({
     command: 'git'
@@ -67,10 +69,9 @@ commit = ->
   })
 
 cleanFile = ->
-  file = new File(commitFilePath())
-  text = file.readSync()
+  text = fs.readFileSync(commitFilePath()).toString()
   stripOut = text.indexOf "\n# Please enter"
   text = text.slice(0, stripOut)
-  file.write text
+  fs.writeFileSync commitFilePath(), text, flag: 'w+'
 
 module.exports = gitCommit

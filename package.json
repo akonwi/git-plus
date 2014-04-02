@@ -16,6 +16,6 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
-    "pathwatcher": "^1.0"
+    "fs-plus": "^2.2.0"
   }
 }
