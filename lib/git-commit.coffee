@@ -1,5 +1,3 @@
-# PathWatcher = require 'pathwatcher'
-# File = PathWatcher.File
 fs = require 'fs-plus'
 {BufferedProcess} = require 'atom'
 StatusView = require './status-view'
