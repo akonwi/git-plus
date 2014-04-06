@@ -61,7 +61,7 @@ commit = ->
       # reset editor for commitFile
       currentEditor = null
     stderror: (data) =>
-      new StatusView(message: data.toString())
+      new StatusView(type: 'alert', message: data.toString())
       atom.beep()
   })
 
