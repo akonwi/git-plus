@@ -1,4 +1,5 @@
 {BufferedProcess} = require 'atom'
+StatusView = require './status-view'
 
 # if all param true, then 'git add .'
 gitWrite = (all=false)->
@@ -10,9 +11,8 @@ gitWrite = (all=false)->
     args: ['add', toStage]
     options:
       cwd: dir
-    stdout: (data) =>
-      if data.toString().indexOf 'fatal:'
-        alert data.toString()
+    stderr: (data) ->
+      new StatusView(message: data.toString())
   })
 
 module.exports = gitWrite
