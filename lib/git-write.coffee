@@ -12,7 +12,7 @@ gitWrite = (all=false)->
     options:
       cwd: dir
     stderr: (data) ->
-      new StatusView(message: data.toString())
+      new StatusView(type: 'alert', message: data.toString())
   })
 
 module.exports = gitWrite

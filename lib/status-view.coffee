@@ -4,7 +4,7 @@ module.exports =
   class StatusView extends View
     @content = (params) ->
       @div class: 'git-plus overlay from-bottom', =>
-        @div class: 'alert message', params.message
+        @div class: "#{params.type} message", params.message
 
     initialize: ->
       atom.workspaceView.append(this)

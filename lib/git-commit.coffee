@@ -1,6 +1,7 @@
 PathWatcher = require 'pathwatcher'
 File = PathWatcher.File
 {BufferedProcess} = require 'atom'
+StatusView = require './status-view'
 
 currentPane = null
 dir = ''
@@ -18,7 +19,7 @@ gitCommit = ->
     stdout: (data) =>
       prepFile data.toString()
     stderror: (data) =>
-      alert data.toString()
+      new StatusView(type: 'alert', message: data.toString())
   })
 
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
@@ -56,11 +57,11 @@ commit = ->
     stdout: (data) =>
       atom.workspace.destroyActivePane()
       currentPane.activate()
+      new StatusView(type: 'success', message: data.toString())
       # reset editor for commitFile
       currentEditor = null
     stderror: (data) =>
-      # there shouldn't be an error so make a fuss
-      alert data.toString()
+      new StatusView(message: data.toString())
       atom.beep()
   })
 
