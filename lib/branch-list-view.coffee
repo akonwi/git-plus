@@ -9,10 +9,12 @@ class ListView extends SelectListView
     @parseData()
 
   parseData: ->
-    items = @data.split("\n ")
+    items = @data.split("\n")
     branches = []
     for item in items
-      branches.push {name: item}
+      item = item.replace(/\s/g, '')
+      unless item is ''
+        branches.push {name: item}
     @setItems branches
     atom.workspaceView.append this
     @focusFilterEditor()
@@ -22,7 +24,7 @@ class ListView extends SelectListView
   viewForItem: ({name}) ->
     current = false
     if name.startsWith "*"
-      name = name.slice(2)
+      name = name.slice(1)
       current = true
     # $$ is an alias for View.render
     $$ ->
