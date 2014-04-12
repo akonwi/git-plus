@@ -7,7 +7,8 @@
     "git-plus:commit",
     "git-plus:write",
     "git-plus:write-all",
-    "git-plus:change-branch"
+    "git-plus:change-branch",
+    "git-plus:new-branch"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
