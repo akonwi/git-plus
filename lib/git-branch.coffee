@@ -27,6 +27,7 @@ class InputView extends View
       name = $(this).text().slice(2)
       @createBranch name
       @detach()
+      # callling save will redraw statusbar and show new branch
       atom.workspaceView.focus().trigger 'core:save'
 
   createBranch: (name) ->

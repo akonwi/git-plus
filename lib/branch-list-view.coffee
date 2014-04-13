@@ -46,5 +46,6 @@ class ListView extends SelectListView
         cwd: dir
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
+        atom.workspaceView.trigger 'core:save'
       stderr: (data) ->
         new StatusView(type: 'alert', message: data.toString())
