@@ -27,6 +27,7 @@ class InputView extends View
       name = $(this).text().slice(2)
       @createBranch name
       @detach()
+      atom.workspaceView.focus()
 
   createBranch: (name) ->
     new BufferedProcess
