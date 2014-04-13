@@ -60,6 +60,7 @@ commit = ->
       new StatusView(type: 'success', message: data.toString())
       # reset editor for commitFile
       currentEditor = null
+      atom.workspaceView.trigger 'core:save'
     stderror: (data) =>
       new StatusView(type: 'alert', message: data.toString())
       atom.beep()

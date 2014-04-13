@@ -26,7 +26,6 @@ class ListView extends SelectListView
     if name.startsWith "*"
       name = name.slice(1)
       current = true
-    # $$ is an alias for View.render
     $$ ->
       @li name, =>
         @div class: 'pull-right', =>
