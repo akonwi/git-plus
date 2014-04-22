@@ -14,3 +14,13 @@ vim-fugitive like package for atom. make commits and other git things without th
 2. `Git commit`
 
   Will pull up a commit message file. The commit will be made when the file is saved NOT when the pane is closed. You can just cancel by closing the tab
+
+3. `Git [change|new] branch`
+
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
