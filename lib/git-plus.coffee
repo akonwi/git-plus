@@ -1,6 +1,7 @@
 GitCommit = require './git-commit'
 GitWrite = require './git-write'
 GitBranch = require './git-branch'
+GitPull = require './git-pull'
 
 module.exports =
   activate: (state) ->
@@ -9,6 +10,7 @@ module.exports =
     atom.workspaceView.command "git-plus:write-all", -> GitWrite(true)
     atom.workspaceView.command "git-plus:change-branch", -> GitBranch.gitBranches()
     atom.workspaceView.command "git-plus:new-branch", -> GitBranch.newBranch()
+    atom.workspaceView.command "git-plus:pull", -> GitPull()
 
   deactivate: ->
 
