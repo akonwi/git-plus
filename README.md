@@ -17,6 +17,8 @@ vim-fugitive like package for atom. make commits and other git things without th
 
 3. `Git [change|new] branch`
 
+4. `Git [push|pull]`
+
 ## Contributing
 
 1. Fork it
