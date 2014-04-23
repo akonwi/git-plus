@@ -9,7 +9,8 @@
     "git-plus:write-all",
     "git-plus:change-branch",
     "git-plus:new-branch",
-    "git-plus:pull"
+    "git-plus:pull",
+    "git-plus:push"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
