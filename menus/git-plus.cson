@@ -13,6 +13,7 @@
         { 'label': 'Write All', 'command': 'git-plus:write-all' }
         { 'label': 'Commit', 'command': 'git-plus:commit' }
         { 'label': 'Pull', 'command': 'git-plus:pull' }
+        { 'label': 'Push', 'command': 'git-plus:push' }
       ]
     ]
   }
