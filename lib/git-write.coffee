@@ -14,7 +14,7 @@ gitWrite = (all=false)->
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
     exit: (data) ->
-      new StatusView(type: 'success', message: "added #{toStage}")
+      new StatusView(type: 'success', message: "Added #{toStage}")
   })
 
 module.exports = gitWrite
