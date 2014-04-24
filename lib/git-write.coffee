@@ -13,6 +13,8 @@ gitWrite = (all=false)->
       cwd: dir
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
+    exit: (data) ->
+      new StatusView(type: 'success', message: "added #{toStage}")
   })
 
 module.exports = gitWrite
