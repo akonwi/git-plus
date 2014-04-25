@@ -14,7 +14,8 @@ gitWrite = (all=false)->
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
     exit: (data) ->
-      new StatusView(type: 'success', message: "Added #{toStage}")
+      file = if toStage is '.' then 'all files' else toStage
+      new StatusView(type: 'success', message: "Added #{file}")
   })
 
 module.exports = gitWrite
