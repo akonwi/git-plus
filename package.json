@@ -1,7 +1,7 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Do git things without the terminal",
   "activationEvents": [
     "git-plus:commit",
