@@ -10,4 +10,4 @@ module.exports =
       atom.workspaceView.append(this)
       setTimeout =>
         @detach()
-      , 10000
+      , 5000

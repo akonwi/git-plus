@@ -11,7 +11,7 @@ module.exports =
       atom.workspaceView.appendToBottom(this)
       setTimeout =>
         @detach()
-      , 10000
+      , 5000
 
     addLine: (line) ->
       @find(".output").append(line)
