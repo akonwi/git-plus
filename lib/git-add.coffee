@@ -2,7 +2,7 @@
 StatusView = require './status-view'
 
 # if all param true, then 'git add .'
-gitWrite = (all=false)->
+gitAdd = (all=false)->
   dir = atom.project.getRepo().getWorkingDirectory()
   currentFile = atom.workspace.getActiveEditor().getPath()
   toStage = if all then '.' else currentFile
@@ -18,4 +18,4 @@ gitWrite = (all=false)->
       new StatusView(type: 'success', message: "Added #{file}")
   })
 
-module.exports = gitWrite
+module.exports = gitAdd

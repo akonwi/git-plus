@@ -5,8 +5,8 @@
   "description": "Do git things without the terminal",
   "activationEvents": [
     "git-plus:commit",
-    "git-plus:write",
-    "git-plus:write-all",
+    "git-plus:add",
+    "git-plus:add-all",
     "git-plus:change-branch",
     "git-plus:new-branch",
     "git-plus:pull",
