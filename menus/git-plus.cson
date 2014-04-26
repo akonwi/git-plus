@@ -9,8 +9,8 @@
     'submenu': [
       'label': 'git-plus'
       'submenu': [
-        { 'label': 'Write', 'command': 'git-plus:add' }
-        { 'label': 'Write All', 'command': 'git-plus:add-all' }
+        { 'label': 'Add', 'command': 'git-plus:add' }
+        { 'label': 'Add All', 'command': 'git-plus:add-all' }
         { 'label': 'Commit', 'command': 'git-plus:commit' }
         { 'label': 'Pull', 'command': 'git-plus:pull' }
         { 'label': 'Push', 'command': 'git-plus:push' }

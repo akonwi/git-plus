@@ -33,10 +33,10 @@ class ListView extends SelectListView
 
 
   confirmed: ({name}) ->
-    @changeTo name
+    @checkout name
     @cancel()
 
-  changeTo: (branch) ->
+  checkout: (branch) ->
     dir = atom.project.getRepo().getWorkingDirectory()
     new BufferedProcess
       command: 'git'

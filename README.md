@@ -7,15 +7,21 @@ vim-fugitive like package for atom. make commits and other git things without th
 ![A screenshot of your spankin' package](https://github.com/akonwi/git-plus/blob/master/commit.gif?raw=true)
 
 ## Usage
-1. `Git write [all]`
+1. `Git add [all]`
 
-  Git write will stage the current file and 'write all' will stage all changed files
+  Git add will add the current file and 'add all' will add all changed files
 
 2. `Git commit`
 
   Will pull up a commit message file. The commit will be made when the file is saved NOT when the pane is closed. You can just cancel by closing the tab
 
-3. `Git [change|new] branch`
+3. `Git [checkout]`
+
+  Change branches
+
+4. `Git new branch`
+
+  Create a new branch
 
 4. `Git [push|pull]`
 

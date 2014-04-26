@@ -7,7 +7,7 @@
     "git-plus:commit",
     "git-plus:add",
     "git-plus:add-all",
-    "git-plus:change-branch",
+    "git-plus:checkout",
     "git-plus:new-branch",
     "git-plus:pull",
     "git-plus:push"
