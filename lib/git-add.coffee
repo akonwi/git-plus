@@ -8,7 +8,7 @@ gitAdd = (all=false)->
   toStage = if all then '.' else currentFile
   new BufferedProcess({
     command: 'git'
-    args: ['add', toStage]
+    args: ['add', '--all', toStage]
     options:
       cwd: dir
     stderr: (data) ->
