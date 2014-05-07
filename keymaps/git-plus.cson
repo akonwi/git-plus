@@ -10,3 +10,4 @@
 '.workspace':
   'cmd-shift-a': 'git-plus:add'
   'cmd-shift-c': 'git-plus:commit'
+  'cmd-1': 'git-plus:add-and-commit'
