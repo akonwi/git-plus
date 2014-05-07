@@ -10,7 +10,8 @@
     "git-plus:checkout",
     "git-plus:new-branch",
     "git-plus:pull",
-    "git-plus:push"
+    "git-plus:push",
+    "git-plus:add-and-commit"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
