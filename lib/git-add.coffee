@@ -14,8 +14,14 @@ gitAdd = (all=false)->
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
     exit: (data) ->
-      file = if toStage is '.' then 'all files' else toStage
+      file = if toStage is '.' then 'all files' else prettify(dir, toStage)
       new StatusView(type: 'success', message: "Added #{file}")
   })
+
+# only show filepaths inside the project
+prettify = (dir, file) ->
+  i = dir.lastIndexOf('/')
+  root = dir.slice(i + 1)
+  path = file.slice(i + root.length + 2)
 
 module.exports = gitAdd

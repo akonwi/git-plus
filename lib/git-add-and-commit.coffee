@@ -3,7 +3,7 @@ GitAdd = require './git-add'
 
 #Add and commit current file only
 gitAddAndCommit = ->
-    GitAdd()
-    GitCommit()
+  GitAdd()
+  GitCommit()
 
 module.exports = gitAddAndCommit
