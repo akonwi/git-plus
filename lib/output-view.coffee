@@ -9,9 +9,11 @@ module.exports =
     initialize: ->
       super
       atom.workspaceView.appendToBottom(this)
-      setTimeout =>
-        @detach()
-      , 10000
 
     addLine: (line) ->
       @find(".output").append(line)
+
+    finish: ->
+      setTimeout =>
+        @detach()
+      , 10000

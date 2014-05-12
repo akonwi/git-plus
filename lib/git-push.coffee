@@ -13,6 +13,8 @@ gitPush = ->
       view.addLine(data.toString())
     stderr: (data) ->
       view.addLine(data.toString())
+    exit: (code) ->
+      view.finish()
   })
 
 module.exports = gitPush
