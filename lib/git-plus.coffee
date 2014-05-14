@@ -4,6 +4,7 @@ GitBranch = require './git-branch'
 GitPull = require './git-pull'
 GitPush = require './git-push'
 GitAddAndCommit = require './git-add-and-commit'
+GitAddAllAndCommit = require './git-add-all-and-commit'
 
 module.exports =
   activate: (state) ->
@@ -15,6 +16,7 @@ module.exports =
     atom.workspaceView.command "git-plus:pull", -> GitPull()
     atom.workspaceView.command "git-plus:push", -> GitPush()
     atom.workspaceView.command "git-plus:add-and-commit", -> GitAddAndCommit()
+    atom.workspaceView.command "git-plus:add-all-and-commit", -> GitAddAllAndCommit()
 
   deactivate: ->
 
