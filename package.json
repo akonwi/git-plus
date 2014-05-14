@@ -11,7 +11,8 @@
     "git-plus:new-branch",
     "git-plus:pull",
     "git-plus:push",
-    "git-plus:add-and-commit"
+    "git-plus:add-and-commit",
+    "git-plus:add-all-and-commit"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
