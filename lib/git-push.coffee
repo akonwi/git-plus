@@ -1,20 +1,20 @@
 {BufferedProcess} = require 'atom'
-OutputView = require './output-view'
+ListView = require './remote-list-view'
+StatusView = require './status-view'
+
+dir = atom.project.getRepo().getWorkingDirectory()
 
 gitPush = ->
-  dir = atom.project.getRepo().getWorkingDirectory()
-  view = new OutputView()
-  new BufferedProcess({
+  # first get the remote repos
+  new BufferedProcess(
     command: 'git'
-    args: ['push']
+    args: ['remote']
     options:
       cwd: dir
     stdout: (data) ->
-      view.addLine(data.toString())
+      new ListView(data.toString())
     stderr: (data) ->
-      view.addLine(data.toString())
-    exit: (code) ->
-      view.finish()
-  })
+      new StatusView(type: 'alert', message: data.toString())
+  )
 
 module.exports = gitPush
