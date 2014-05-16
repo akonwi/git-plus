@@ -27,9 +27,17 @@ vim-fugitive like package for atom. make commits and other git things without th
 
 4. `Git [push|pull]`
 
+  When Pushing, if you have multiple remote repos, you can choose which to push to.
+
 5. `Git Add and Commit`
+
   Add the current file and pull up the commit message file. Similar to `Git add` and `Git commit` in succession.
-  Default key binding: `Cmd-1`
+  Default key binding: `Cmd-Shift-A c`
+
+6. `Git Add All and Commit`
+
+  Add all changed files and pull up the commit message file. Similar to `Git add all` and `Git commit` in succession.
+  Default key binding: `Cmd-Shift-A a`
 
 ## Contributing
 
