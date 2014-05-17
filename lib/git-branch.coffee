@@ -2,14 +2,15 @@
 ListView = require './branch-list-view'
 StatusView = require './status-view'
 
-dir = atom.project.getRepo().getWorkingDirectory()
+dir = ->
+  atom.project.getRepo().getWorkingDirectory()
 
 module.exports.gitBranches = ->
   new BufferedProcess
     command: 'git'
     args: ['branch']
     options:
-      cwd: dir
+      cwd: dir()
     stdout: (data) ->
       new ListView(data.toString())
     stderr: (data) ->
@@ -35,7 +36,7 @@ class InputView extends View
       command: 'git'
       args: ['checkout', '-b', name]
       options:
-        cwd: dir
+        cwd: dir()
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
       stderr: (data) ->
