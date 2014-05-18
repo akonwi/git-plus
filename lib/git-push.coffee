@@ -2,7 +2,8 @@
 ListView = require './remote-list-view'
 StatusView = require './status-view'
 
-dir = atom.project.getRepo().getWorkingDirectory()
+dir = ->
+  atom.project.getRepo().getWorkingDirectory()
 
 gitPush = ->
   # first get the remote repos
@@ -10,7 +11,7 @@ gitPush = ->
     command: 'git'
     args: ['remote']
     options:
-      cwd: dir
+      cwd: dir()
     stdout: (data) ->
       new ListView(data.toString())
     stderr: (data) ->
