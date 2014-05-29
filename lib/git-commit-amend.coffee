@@ -5,21 +5,8 @@ Os = require 'os'
 Path = require 'path'
 fs = require 'fs'
 
-gitAmend = ()->
-  dir = atom.project.getRepo().getWorkingDirectory()
-  currentFile = atom.workspace.getActiveEditor()?.getPath()
-  new BufferedProcess({
-    command: 'git'
-    args: ['diff', '--stat=76', 'HEAD']
-    options:
-      cwd: dir
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
-    stdout: (data) ->
-      gitMsg data.toString()
-  })
 
-gitMsg = (diffStat) ->
+gitMsg = () ->
   dir = atom.project.getRepo().getWorkingDirectory()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   new BufferedProcess({
@@ -30,8 +17,8 @@ gitMsg = (diffStat) ->
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
     stdout: (data) ->
-      gitCommit("- " + data.toString(), diffStat)
+      gitCommit "- " + data.toString()
   })
 
   
-module.exports = gitAmend
+module.exports = gitMsg

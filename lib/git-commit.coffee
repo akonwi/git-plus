@@ -9,7 +9,7 @@ commitEditor = null
 watcher = null
 amendMsg = ""
 
-gitCommit = (_amendMsg="", diffStat="") ->
+gitCommit = (_amendMsg="") ->
   currentPane = atom.workspace.getActivePane()
   dir = atom.project.getRepo().getWorkingDirectory()
   amendMsg = _amendMsg
@@ -19,8 +19,8 @@ gitCommit = (_amendMsg="", diffStat="") ->
     options:
       cwd: dir
     stdout: (data) =>
-      prepFile data.toString() + diffStat
-    stderror: (data) =>
+      prepFile data.toString()
+    stderr: (data) =>
       new StatusView(type: 'alert', message: data.toString())
   })
 
@@ -68,13 +68,9 @@ commit = ->
       # reset editor for commitFile
       currentEditor = null
       atom.workspaceView.trigger 'core:save'
-    stderror: (data) =>
+    stderr: (data) =>
       new StatusView(type: 'alert', message: data.toString())
       atom.beep()
-    error: (exitCode) ->
-      if exitCode != 0
-        new StatusView(type: 'alert', message: 'Commit failed with exit code #{exitCode}')
-        atom.beep()
   })
 
 cleanFile = ->

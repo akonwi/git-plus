@@ -21,7 +21,9 @@ gitDiff = (diffAllStat="") ->
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
     stdout: (data) ->
-      prepFile(diffAllStat + data.toString())
+      diffAllStat += data.toString()
+    exit: (exitCode) ->
+      prepFile diffAllStat if exitCode == 0
   })
 
 prepFile = (text) ->
