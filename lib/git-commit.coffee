@@ -18,9 +18,9 @@ gitCommit = (_amendMsg="") ->
     args: ['status']
     options:
       cwd: dir
-    stdout: (data) =>
+    stdout: (data) ->
       prepFile data.toString()
-    stderr: (data) =>
+    stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
   })
 
@@ -48,7 +48,7 @@ showFile = ->
     .open(commitFilePath(), split: split, activatePane: true)
     # ::open returns a promise resolving to the editor
     .done (editor) -> commitEditor = editor
-  watcher = fs.watch commitFilePath(), (event) =>
+  watcher = fs.watch commitFilePath(), (event) ->
     commit() if event is 'change'
 
 commit = ->
@@ -61,14 +61,14 @@ commit = ->
     args: args
     options:
       cwd: dir
-    stdout: (data) =>
+    stdout: (data) ->
       atom.workspace.destroyActivePane()
       currentPane.activate()
       new StatusView(type: 'success', message: data.toString())
       # reset editor for commitFile
       currentEditor = null
       atom.workspaceView.trigger 'core:save'
-    stderr: (data) =>
+    stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
       atom.beep()
   })
