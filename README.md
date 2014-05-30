@@ -17,24 +17,36 @@ vim-fugitive like package for atom. make commits and other git things without th
   Will pull up a commit message file. The commit will be made when the file is saved NOT when the pane is closed. You can just cancel by closing the tab.
   Default key binding: `Cmd-Shift-C`
 
-3. `Git [checkout]`
+3. `Git commit amend`
+
+  Will amend the changes to previous commit.
+
+4. `Git checkout current file`
+
+  Undo changes and checkout current file.
+
+5. `Git [checkout]`
 
   Change branches
 
-4. `Git new branch`
+6. `Git Diff [All]`
+
+  Shows diff for current file or All the files. Diff can either be with staged or unstaged as selected in options.
+
+7. `Git new branch`
 
   Create a new branch
 
-4. `Git [push|pull]`
+8. `Git [push|pull]`
 
   When Pushing, if you have multiple remote repos, you can choose which to push to.
 
-5. `Git Add and Commit`
+9. `Git Add and Commit`
 
   Add the current file and pull up the commit message file. Similar to `Git add` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A c`
 
-6. `Git Add All and Commit`
+10. `Git Add All and Commit`
 
   Add all changed files and pull up the commit message file. Similar to `Git add all` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A a`

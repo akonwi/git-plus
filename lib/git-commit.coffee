@@ -7,10 +7,12 @@ dir = ''
 commitFilePath = -> dir + '/.git/COMMIT_EDITMSG'
 commitEditor = null
 watcher = null
+amendMsg = ""
 
-gitCommit = ->
+gitCommit = (_amendMsg="") ->
   currentPane = atom.workspace.getActivePane()
   dir = atom.project.getRepo().getWorkingDirectory()
+  amendMsg = _amendMsg
   new BufferedProcess({
     command: 'git'
     args: ['status']
@@ -18,7 +20,7 @@ gitCommit = ->
       cwd: dir
     stdout: (data) =>
       prepFile data.toString()
-    stderror: (data) =>
+    stderr: (data) =>
       new StatusView(type: 'alert', message: data.toString())
   })
 
@@ -31,16 +33,19 @@ prepFile = (text) ->
   # in order to make sure each line doesn't start with a space, the preceding
   #   line should end with a backslash
   fs.writeFileSync commitFilePath(),
-    " \n\
+     "#{amendMsg}\n\
       # Please enter the commit message for your changes. Lines starting\n\
       # with '#' will be ignored, and an empty message aborts the commit.\n\
+      # Remove hypen(-) and update commit message as necessary for amend.\n\
       # #{text}",
     flag: 'w+'
   showFile()
 
 showFile = ->
+  split = ''
+  split = 'right'  if atom.config.get 'git-plus.openInPane'
   atom.workspace
-    .open(commitFilePath(), split: 'right', activatePane: true)
+    .open(commitFilePath(), split: split, activatePane: true)
     # ::open returns a promise resolving to the editor
     .done (editor) -> commitEditor = editor
   watcher = fs.watch commitFilePath(), (event) =>
@@ -49,9 +54,11 @@ showFile = ->
 commit = ->
   watcher.close()
   cleanFile()
+  args = ['commit', "--file=#{commitFilePath()}"]
+  args.push  '--amend' if amendMsg != ""
   new BufferedProcess({
     command: 'git'
-    args: ['commit', "--file=#{commitFilePath()}"]
+    args: args
     options:
       cwd: dir
     stdout: (data) =>
@@ -61,7 +68,7 @@ commit = ->
       # reset editor for commitFile
       currentEditor = null
       atom.workspaceView.trigger 'core:save'
-    stderror: (data) =>
+    stderr: (data) =>
       new StatusView(type: 'alert', message: data.toString())
       atom.beep()
   })

@@ -11,9 +11,11 @@
       'submenu': [
         { 'label': 'Add', 'command': 'git-plus:add' }
         { 'label': 'Add All', 'command': 'git-plus:add-all' }
+        { 'label': 'Diff All', 'command': 'git-plus:diff-all' }
         { 'label': 'Add & Commit', 'command': 'git-plus:add-and-commit'}
         { 'label': 'Add All & Commit', 'command': 'git-plus:add-all-and-commit'}
         { 'label': 'Commit', 'command': 'git-plus:commit' }
+        { 'label': 'Commit Amend', 'command': 'git-plus:commit-amend' }
         { 'label': 'Pull', 'command': 'git-plus:pull' }
         { 'label': 'Push', 'command': 'git-plus:push' }
 

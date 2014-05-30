@@ -1,0 +1,67 @@
+'fileTypes': [
+  'diff'
+]
+'name': 'Diff'
+'patterns': [
+  {
+    'captures':
+      '4':
+        'name': 'punctuation.definition.from-file.diff'
+      '6':
+        'name': 'punctuation.definition.from-file.diff'
+      '7':
+        'name': 'punctuation.definition.from-file.diff'
+    'match': '(^(((-{3}) .+)|((\\*{3}) .+))$\\n?|^(={4}) .+(?= - ))'
+    'name': 'meta.diff.header.from-file'
+  }
+  {
+    'captures':
+      '2':
+        'name': 'punctuation.definition.to-file.diff'
+      '3':
+        'name': 'punctuation.definition.to-file.diff'
+      '4':
+        'name': 'punctuation.definition.to-file.diff'
+    'match': '(^(\\+{3}) .+$\\n?| (-) .* (={4})$\\n?)'
+    'name': 'meta.diff.header.to-file'
+  }
+  {
+    'captures':
+      '1':
+        'name': 'punctuation.definition.range.diff'
+      '2':
+        'name': 'meta.toc-list.line-number.diff'
+      '3':
+        'name': 'punctuation.definition.range.diff'
+    'match': '^(@@)\\s*(.+?)\\s*(@@)($\\n?)?'
+    'name': 'meta.diff.range.unified'
+  }
+  {
+    'captures':
+      '3':
+        'name': 'punctuation.definition.inserted.diff'
+      '6':
+        'name': 'punctuation.definition.inserted.diff'
+    'match': '^(((>)( .*)?)|((\\+).*))$\\n?'
+    'name': 'markup.inserted.diff'
+  }
+  {
+    'captures':
+      '3':
+        'name': 'punctuation.definition.inserted.diff'
+      '6':
+        'name': 'punctuation.definition.inserted.diff'
+    'match': '^(((<)( .*)?)|((-).*))$\\n?'
+    'name': 'markup.deleted.diff'
+  }
+  {
+    'match': '\\[\\-(.*)?\\-\\]'
+    'name': 'markup.deleted.diff'
+  }
+  {
+    'match': '\\{\\+(.*)?\\+\\}'
+    'name': 'markup.inserted.diff'
+  }
+
+]
+'scopeName': 'source.diff'
