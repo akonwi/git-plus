@@ -62,7 +62,12 @@ commit = ->
     options:
       cwd: dir
     stdout: (data) ->
-      atom.workspace.destroyActivePane()
+      # Destroy item if there are other items in this pane
+      # Otherwise, destroy the pane
+      if atom.workspace.getActivePane.getItems().length > 1
+        atom.workspace.destroyActivePaneItem()
+      else
+        atom.workspace.destroyActivePane()
       currentPane.activate()
       new StatusView(type: 'success', message: data.toString())
       # reset editor for commitFile
