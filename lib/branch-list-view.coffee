@@ -33,7 +33,7 @@ class ListView extends SelectListView
 
 
   confirmed: ({name}) ->
-    @checkout name
+    @checkout name.match(/\*?(.*)/)[1]
     @cancel()
 
   checkout: (branch) ->
