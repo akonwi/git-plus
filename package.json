@@ -15,6 +15,7 @@
     "git-plus:new-branch",
     "git-plus:pull",
     "git-plus:push",
+    "git-plus:fetch",
     "git-plus:add-and-commit",
     "git-plus:add-all-and-commit"
   ],

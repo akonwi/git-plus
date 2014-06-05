@@ -18,7 +18,7 @@
         { 'label': 'Commit Amend', 'command': 'git-plus:commit-amend' }
         { 'label': 'Pull', 'command': 'git-plus:pull' }
         { 'label': 'Push', 'command': 'git-plus:push' }
-
+        { 'label': 'Fetch', 'command': 'git-plus:fetch' }
       ]
     ]
   }
