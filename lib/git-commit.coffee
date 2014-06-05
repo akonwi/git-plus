@@ -64,7 +64,7 @@ commit = ->
     stdout: (data) ->
       # Destroy item if there are other items in this pane
       # Otherwise, destroy the pane
-      if atom.workspace.getActivePane.getItems().length > 1
+      if atom.workspace.getActivePane().getItems().length > 1
         atom.workspace.destroyActivePaneItem()
       else
         atom.workspace.destroyActivePane()
