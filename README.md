@@ -15,7 +15,7 @@ vim-fugitive like package for atom. make commits and other git things without th
 2. `Git commit`
 
   Will pull up a commit message file. The commit will be made when the file is saved NOT when the pane is closed. You can just cancel by closing the tab.
-  Default key binding: `Cmd-Shift-C`
+  Default key binding: `Cmd-Shift-C`(*`Ctrl-Shift-X`* on Windows + Linux)
 
 3. `Git commit amend`
 
