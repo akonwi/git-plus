@@ -1,13 +1,12 @@
-{$$, BufferedProcess, SelectListView} = require 'atom'
+{$$, SelectListView} = require 'atom'
+
+git = require '../git'
 OutputView = require './output-view'
 StatusView = require './status-view'
 GitShow = require '../models/git-show'
 
 module.exports =
 class TagView extends SelectListView
-
-  dir = ->
-    atom.project.getRepo().getWorkingDirectory()
 
   initialize: (@tag) ->
     super
@@ -46,12 +45,7 @@ class TagView extends SelectListView
       when 'Delete'
         args = ['tag', '--delete', tag]
 
-    new BufferedProcess
-      command: 'git'
-      args: args
-      options:
-        cwd: dir()
-      stdout: (data) ->
-        new StatusView(type: 'success', message: data.toString())
-      stderr: (data) ->
-        new StatusView(type: 'alert', message: data.toString())
+    git(
+      args,
+      (data) -> new StatusView(type: 'success', message: data.toString())
+    )

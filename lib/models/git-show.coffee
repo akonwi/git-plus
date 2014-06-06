@@ -2,7 +2,9 @@ Os = require 'os'
 Path = require 'path'
 fs = require 'fs'
 
-{$, BufferedProcess, EditorView, View} = require 'atom'
+{$, EditorView, View} = require 'atom'
+
+git = require '../git'
 ListView = require '../views/branch-list-view'
 StatusView = require '../views/status-view'
 
@@ -20,15 +22,10 @@ showObject = (objectHash, file) ->
     args.push '--'
     args.push file
 
-  new BufferedProcess
-    command: 'git'
-    args: args
-    options:
-      cwd: dir()
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
-    stdout: (data) ->
-      prepFile data
+  git(
+    args,
+    (data) -> prepFile data
+  )
 
 prepFile = (text) ->
   fs.writeFileSync showCommitFilePath(), text, flag: 'w+'

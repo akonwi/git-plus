@@ -1,21 +1,14 @@
-{$, BufferedProcess, EditorView, View} = require 'atom'
+{$, EditorView, View} = require 'atom'
 
+git = require '../git'
 ListView = require '../views/branch-list-view'
 StatusView = require '../views/status-view'
 
-dir = ->
-  atom.project.getRepo().getWorkingDirectory()
-
 module.exports.gitBranches = ->
-  new BufferedProcess
-    command: 'git'
-    args: ['branch']
-    options:
-      cwd: dir()
-    stdout: (data) ->
-      new ListView(data.toString())
-    stderr: (data) ->
-      alert data.toString()
+  git(
+    ['branch'],
+    (data) -> new ListView(data.toString())
+  )
 
 class InputView extends View
   @content: ->
@@ -33,15 +26,10 @@ class InputView extends View
       atom.workspaceView.focus().trigger 'core:save'
 
   createBranch: (name) ->
-    new BufferedProcess
-      command: 'git'
-      args: ['checkout', '-b', name]
-      options:
-        cwd: dir()
-      stdout: (data) ->
-        new StatusView(type: 'success', message: data.toString())
-      stderr: (data) ->
-        new StatusView(type: 'alert', message: data.toString())
+    git(
+      ['checkout', '-b', name],
+      (data) -> new StatusView(type: 'success', message: data.toString())
+    )
 
 module.exports.newBranch = ->
-  new InputView
+  new InputView()

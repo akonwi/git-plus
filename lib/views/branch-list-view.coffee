@@ -1,4 +1,6 @@
-{$$, BufferedProcess, SelectListView} = require 'atom'
+{$$, SelectListView} = require 'atom'
+
+git = require '../git'
 StatusView = require './status-view'
 
 module.exports =
@@ -37,14 +39,9 @@ class ListView extends SelectListView
     @cancel()
 
   checkout: (branch) ->
-    dir = atom.project.getRepo().getWorkingDirectory()
-    new BufferedProcess
-      command: 'git'
-      args: ['checkout', branch]
-      options:
-        cwd: dir
-      stdout: (data) ->
+    git(
+      ['checkout', branch],
+      (data) ->
         new StatusView(type: 'success', message: data.toString())
         atom.workspaceView.trigger 'core:save'
-      stderr: (data) ->
-        new StatusView(type: 'alert', message: data.toString())
+    )

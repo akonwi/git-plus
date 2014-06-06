@@ -1,5 +1,5 @@
 fs = require 'fs-plus'
-{BufferedProcess} = require 'atom'
+git = require '../git'
 StatusView = require '../views/status-view'
 
 currentPane = null
@@ -13,16 +13,10 @@ gitCommit = (_amendMsg="") ->
   currentPane = atom.workspace.getActivePane()
   dir = atom.project.getRepo().getWorkingDirectory()
   amendMsg = _amendMsg
-  new BufferedProcess({
-    command: 'git'
-    args: ['status']
-    options:
-      cwd: dir
-    stdout: (data) ->
-      prepFile data.toString()
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
-  })
+  git(
+    ['status'],
+    (data) -> prepFile data.toString()
+  )
 
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
 # TODO?: Strip out the git tips that 'git status' prints in message
@@ -56,14 +50,9 @@ commit = ->
   cleanFile()
   args = ['commit', "--file=#{commitFilePath()}"]
   args.push  '--amend' if amendMsg != ""
-  new BufferedProcess({
-    command: 'git'
-    args: args
-    options:
-      cwd: dir
-    stdout: (data) ->
-      # Destroy item if there are other items in this pane
-      # Otherwise, destroy the pane
+  git(
+    args,
+    (data) ->
       if atom.workspace.getActivePane().getItems().length > 1
         atom.workspace.destroyActivePaneItem()
       else
@@ -73,10 +62,7 @@ commit = ->
       # reset editor for commitFile
       currentEditor = null
       atom.workspaceView.trigger 'core:save'
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
-      atom.beep()
-  })
+  )
 
 cleanFile = ->
   text = fs.readFileSync(commitFilePath()).toString()

@@ -1,4 +1,6 @@
-{$, $$, BufferedProcess, SelectListView, EditorView} = require 'atom'
+{$, $$, SelectListView, EditorView} = require 'atom'
+
+git = require '../git'
 OutputView = require './output-view'
 StatusView = require './status-view'
 
@@ -52,16 +54,10 @@ class RemoveListView extends SelectListView
     currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
 
     atom.workspaceView.getActiveView().remove() if currentFile in files
-    new BufferedProcess({
-      command: 'git'
-      args: ['rm', '-f'].concat files
-      options:
-        cwd: dir
-      stdout: (data) ->
-        new StatusView(type: 'success', message: "Removed #{prettify data}")
-      stderr: (data) ->
-        new StatusView(type: 'alert', message: data.toString())
-    })
+    git(
+      ['rm', '-f'].concat files,
+      (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
+    )
 
   # cut off rm '' around the filenames.
   prettify = (data) ->
