@@ -45,13 +45,16 @@ class RemoveListView extends SelectListView
       viewItem.addClass('active')
 
   removeFiles: ->
-    dir = atom.project.getRepo().getWorkingDirectory()
-    files = $.map $('.active'), (el) -> $(el).text()
+    files = ($.map $(this).find('li.active'), (el) -> $(el).text())
     @cancel()
 
+    dir = atom.project.getRepo().getWorkingDirectory()
+    currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+
+    atom.workspaceView.getActiveView().remove() if currentFile in files
     new BufferedProcess({
       command: 'git'
-      args: ['rm', '-f'].concat files[1..]
+      args: ['rm', '-f'].concat files
       options:
         cwd: dir
       stdout: (data) ->
@@ -60,7 +63,9 @@ class RemoveListView extends SelectListView
         new StatusView(type: 'alert', message: data.toString())
     })
 
-prettify = (data) ->
-  data = data.match(/rm '(.*)'/g)
-  for file, i in data
-    data[i] = ' ' + file.match(/rm '(.*)'/)[1]
+  # cut off rm '' around the filenames.
+  prettify = (data) ->
+    data = data.match(/rm ('.*')/g)
+    if data?.length >= 1
+      for file, i in data
+        data[i] = ' ' + file.match(/rm '(.*)'/)[1]
