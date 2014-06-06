@@ -8,7 +8,7 @@ dir = ->
 gitLog = ->
   new BufferedProcess
     command: 'git'
-    args: ['log', '--pretty=%h;|%aN <%aE>;|%s;|%ar (%aD)', '-s', '-n25']
+    args: ['log', '--pretty="%h;|%aN <%aE>;|%s;|%ar (%aD)"', '-s', '-n25']
     options:
       cwd: dir
     stdout: (data) ->
