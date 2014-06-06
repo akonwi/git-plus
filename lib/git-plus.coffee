@@ -13,6 +13,7 @@ GitAddAllAndCommit = require './git-add-all-and-commit'
 GitRemove = require './git-remove'
 GitLog = require './git-log'
 GitShow = require './git-show'
+GitTags = require './git-tags'
 
 module.exports =
   configDefaults:
@@ -41,6 +42,7 @@ module.exports =
     atom.workspaceView.command "git-plus:log", -> GitLog()
     atom.workspaceView.command "git-plus:log-current-file", -> GitLog(true)
     atom.workspaceView.command "git-plus:show", -> GitShow()
+    atom.workspaceView.command "git-plus:tags", -> GitTags()
 
   deactivate: ->
 
