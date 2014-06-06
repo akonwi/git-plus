@@ -21,6 +21,7 @@
         { 'label': 'Show', 'command': 'git-plus:show' }
         { 'label': 'Log', 'command': 'git-plus:log' }
         { 'label': 'Log Current File', 'command': 'git-plus:log-current-file' }
+        { 'label': 'Tags', 'command': 'git-plus:tags' }
       ]
     ]
   }
