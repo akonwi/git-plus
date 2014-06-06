@@ -20,7 +20,8 @@
     "git-plus:add-all-and-commit",
     "git-plus:remove",
     "git-plus:remove-current-file",
-    "git-plus:log"
+    "git-plus:log",
+    "git-plus:log-current-file"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",

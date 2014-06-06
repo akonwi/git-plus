@@ -37,6 +37,7 @@ module.exports =
     atom.workspaceView.command "git-plus:remove", -> GitRemove(true)
     atom.workspaceView.command "git-plus:remove-current-file", -> GitRemove()
     atom.workspaceView.command "git-plus:log", -> GitLog()
+    atom.workspaceView.command "git-plus:log-current-file", -> GitLog(true)
 
   deactivate: ->
 
