@@ -24,7 +24,7 @@ showObject = (objectHash, file) ->
     command: 'git'
     args: args
     options:
-      cwd: dir
+      cwd: dir()
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
     stdout: (data) ->
