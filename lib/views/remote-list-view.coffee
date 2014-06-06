@@ -1,7 +1,6 @@
 {$$, BufferedProcess, SelectListView} = require 'atom'
 
 OutputView = require './output-view'
-StatusView = require './status-view'
 
 module.exports =
 class ListView extends SelectListView

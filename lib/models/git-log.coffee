@@ -1,6 +1,5 @@
 git = require '../git'
 LogListView = require '../views/log-list-view'
-StatusView = require '../views/status-view'
 
 currentFile = ->
   atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()

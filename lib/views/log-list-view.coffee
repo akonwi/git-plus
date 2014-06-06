@@ -4,8 +4,6 @@ fs = require 'fs'
 
 {$$, BufferedProcess, SelectListView} = require 'atom'
 
-OutputView = require './output-view'
-StatusView = require './status-view'
 GitShow = require '../models/git-show'
 
 module.exports =

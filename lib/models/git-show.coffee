@@ -6,10 +6,6 @@ fs = require 'fs'
 
 git = require '../git'
 ListView = require '../views/branch-list-view'
-StatusView = require '../views/status-view'
-
-dir = ->
-  atom.project.getRepo().getWorkingDirectory()
 
 showCommitFilePath = ->
   Path.join Os.tmpDir(), "atom_git_plus_commit.diff"

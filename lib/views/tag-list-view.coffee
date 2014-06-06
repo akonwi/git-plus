@@ -1,6 +1,5 @@
 {$$, BufferedProcess, SelectListView} = require 'atom'
-OutputView = require './output-view'
-StatusView = require './status-view'
+
 TagView = require './tag-view'
 TagCreateView = require './tag-create-view'
 

@@ -1,8 +1,6 @@
 {$$, SelectListView} = require 'atom'
 
 git = require '../git'
-OutputView = require './output-view'
-StatusView = require './status-view'
 GitShow = require '../models/git-show'
 
 module.exports =
