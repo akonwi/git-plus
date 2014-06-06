@@ -10,6 +10,7 @@ GitCheckoutCurrentFile = require './git-checkout-current-file'
 GitAddAndCommit = require './git-add-and-commit'
 GitCommitAmend = require './git-commit-amend'
 GitAddAllAndCommit = require './git-add-all-and-commit'
+GitRemove = require './git-remove'
 
 module.exports =
   configDefaults:
@@ -32,6 +33,8 @@ module.exports =
     atom.workspaceView.command "git-plus:fetch", -> GitFetch()
     atom.workspaceView.command "git-plus:add-and-commit", -> GitAddAndCommit()
     atom.workspaceView.command "git-plus:add-all-and-commit", -> GitAddAllAndCommit()
+    atom.workspaceView.command "git-plus:remove", -> GitRemove(true)
+    atom.workspaceView.command "git-plus:remove-current-file", -> GitRemove()
 
   deactivate: ->
 
