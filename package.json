@@ -16,7 +16,9 @@
     "git-plus:pull",
     "git-plus:push",
     "git-plus:add-and-commit",
-    "git-plus:add-all-and-commit"
+    "git-plus:add-all-and-commit",
+    "git-plus:remove",
+    "git-plus:remove-current-file"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",

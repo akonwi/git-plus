@@ -1,7 +1,7 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
   '.overlayer':
-      'Git add file': 'git-plus:add'
+    'Git add file': 'git-plus:add'
 
 'menu': [
   {
@@ -18,7 +18,8 @@
         { 'label': 'Commit Amend', 'command': 'git-plus:commit-amend' }
         { 'label': 'Pull', 'command': 'git-plus:pull' }
         { 'label': 'Push', 'command': 'git-plus:push' }
-
+        { 'label': 'Remove', 'command': 'git-plus:remove' }
+        { 'label': 'Remove Current File', 'command': 'git-plus:remove-current-file' }
       ]
     ]
   }

@@ -51,6 +51,10 @@ vim-fugitive like package for atom. make commits and other git things without th
   Add all changed files and pull up the commit message file. Similar to `Git add all` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A a`
 
+11. `Git rm [current file]`
+
+  Git rm the current file or open an selector to select the files to remove. You can select multiple files at once.
+
 ## Contributing
 
 1. Fork it
