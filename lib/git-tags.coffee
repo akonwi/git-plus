@@ -6,16 +6,18 @@ dir = ->
   atom.project.getRepo().getWorkingDirectory()
 
 gitTags = ->
-  args = ['tag', '-ln']
+  @TagListView = null
 
   new BufferedProcess
     command: 'git'
-    args: args
+    args: ['tag', '-ln']
     options:
       cwd: dir()
     stdout: (data) ->
-      new TagListView(data)
+      @TagListView = new TagListView(data)
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
+    exit: (code, data) ->
+      new TagListView('') if not @TagListView?
 
 module.exports = gitTags
