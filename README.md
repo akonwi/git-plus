@@ -54,6 +54,9 @@ vim-fugitive like package for atom. make commits and other git things without th
 11. `Git rm [current file]`
 
   Git rm the current file or open an selector to select the files to remove. You can select multiple files at once.
+12. `Git Log [Current File]`
+
+  Show the commit history [for the current file] and show display the selected commit.
 
 ## Contributing
 
