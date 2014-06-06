@@ -18,6 +18,7 @@ module.exports =
     includeStagedDiff: true
     openInPane: true
     wordDiff: true
+    amountOfCommitsToShow: 25
 
   activate: (state) ->
     atom.workspaceView.command "git-plus:commit", -> GitCommit()
