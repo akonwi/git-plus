@@ -55,6 +55,10 @@ vim-fugitive like package for atom. make commits and other git things without th
 
   Show the commit history [for the current file] and show display the selected commit.
 
+13. `Git Show`
+
+  Show the specified object, for example `HEAD`, `HEAD~2`, `3925a0d`, `origin/master` or `v2.7.3`.
+
 ## Contributing
 
 1. Fork it

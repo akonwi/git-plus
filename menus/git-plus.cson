@@ -18,6 +18,7 @@
         { 'label': 'Commit Amend', 'command': 'git-plus:commit-amend' }
         { 'label': 'Pull', 'command': 'git-plus:pull' }
         { 'label': 'Push', 'command': 'git-plus:push' }
+        { 'label': 'Show', 'command': 'git-plus:show' }
         { 'label': 'Log', 'command': 'git-plus:log' }
         { 'label': 'Log Current File', 'command': 'git-plus:log-current-file' }
       ]

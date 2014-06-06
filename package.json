@@ -18,7 +18,8 @@
     "git-plus:add-and-commit",
     "git-plus:add-all-and-commit",
     "git-plus:log",
-    "git-plus:log-current-file"
+    "git-plus:log-current-file",
+    "git-plus:show"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
