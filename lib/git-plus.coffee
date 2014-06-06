@@ -11,6 +11,7 @@ GitAddAndCommit = require './git-add-and-commit'
 GitCommitAmend = require './git-commit-amend'
 GitAddAllAndCommit = require './git-add-all-and-commit'
 GitRemove = require './git-remove'
+GitLog = require './git-log'
 
 module.exports =
   configDefaults:
@@ -35,6 +36,7 @@ module.exports =
     atom.workspaceView.command "git-plus:add-all-and-commit", -> GitAddAllAndCommit()
     atom.workspaceView.command "git-plus:remove", -> GitRemove(true)
     atom.workspaceView.command "git-plus:remove-current-file", -> GitRemove()
+    atom.workspaceView.command "git-plus:log", -> GitLog()
 
   deactivate: ->
 
