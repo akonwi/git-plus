@@ -1,8 +1,9 @@
-{BufferedProcess} = require 'atom'
-StatusView = require './status-view'
 Os = require 'os'
 Path = require 'path'
 fs = require 'fs'
+
+{BufferedProcess} = require 'atom'
+StatusView = require '../views/status-view'
 
 diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 

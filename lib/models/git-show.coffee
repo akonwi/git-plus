@@ -3,8 +3,8 @@ Path = require 'path'
 fs = require 'fs'
 
 {$, BufferedProcess, EditorView, View} = require 'atom'
-ListView = require './branch-list-view'
-StatusView = require './status-view'
+ListView = require '../views/branch-list-view'
+StatusView = require '../views/status-view'
 
 dir = ->
   atom.project.getRepo().getWorkingDirectory()

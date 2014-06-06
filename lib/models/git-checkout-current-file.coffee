@@ -1,8 +1,8 @@
 {BufferedProcess} = require 'atom'
-StatusView = require './status-view'
+StatusView = require '../views/status-view'
 Path = require 'path'
 
-gitCheckoutCurrentFile = ()->
+gitCheckoutCurrentFile = ->
   dir = atom.project.getRepo().getWorkingDirectory()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   new BufferedProcess({

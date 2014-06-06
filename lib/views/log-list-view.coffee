@@ -3,9 +3,10 @@ Path = require 'path'
 fs = require 'fs'
 
 {$$, BufferedProcess, SelectListView} = require 'atom'
+
 OutputView = require './output-view'
 StatusView = require './status-view'
-GitShow = require './git-show'
+GitShow = require '../models/git-show'
 
 module.exports =
 class LogListView extends SelectListView

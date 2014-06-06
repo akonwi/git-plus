@@ -1,6 +1,6 @@
 {BufferedProcess} = require 'atom'
-LogListView = require './log-list-view'
-StatusView = require './status-view'
+LogListView = require '../views/log-list-view'
+StatusView = require '../views/status-view'
 
 dir = ->
   atom.project.getRepo().getWorkingDirectory()

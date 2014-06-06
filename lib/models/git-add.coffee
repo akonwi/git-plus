@@ -1,8 +1,8 @@
 {BufferedProcess} = require 'atom'
-StatusView = require './status-view'
+StatusView = require '../views/status-view'
 
 # if all param true, then 'git add .'
-gitAdd = (all=false)->
+gitAdd = (all=false) ->
   dir = atom.project.getRepo().getWorkingDirectory()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   toStage = if all then '.' else currentFile

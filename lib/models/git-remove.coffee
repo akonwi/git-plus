@@ -1,6 +1,6 @@
 {BufferedProcess} = require 'atom'
-StatusView = require './status-view'
-RemoveListView = require './remove-list-view'
+StatusView = require '../views/status-view'
+RemoveListView = require '../views/remove-list-view'
 
 gitRemove = (showSelector=false) ->
   dir = atom.project.getRepo().getWorkingDirectory()

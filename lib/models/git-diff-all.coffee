@@ -1,10 +1,11 @@
-{BufferedProcess} = require 'atom'
-StatusView = require './status-view'
-GitDiff = require './git-diff'
 Os = require 'os'
 Path = require 'path'
 fs = require 'fs'
 
+{BufferedProcess} = require 'atom'
+
+StatusView = require '../views/status-view'
+GitDiff = require './git-diff'
 
 gitStat = ()->
   dir = atom.project.getRepo().getWorkingDirectory()

@@ -1,5 +1,5 @@
 {BufferedProcess} = require 'atom'
-OutputView = require './output-view'
+OutputView = require '../views/output-view'
 
 gitPull = ->
   dir = atom.project.getRepo().getWorkingDirectory()

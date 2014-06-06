@@ -1,10 +1,11 @@
-{BufferedProcess} = require 'atom'
-StatusView = require './status-view'
-gitCommit = require './git-commit'
 Os = require 'os'
 Path = require 'path'
 fs = require 'fs'
 
+{BufferedProcess} = require 'atom'
+
+StatusView = require '../views/status-view'
+gitCommit = require './git-commit'
 
 gitMsg = () ->
   dir = atom.project.getRepo().getWorkingDirectory()
@@ -20,5 +21,5 @@ gitMsg = () ->
       gitCommit "- " + data.toString()
   })
 
-  
+
 module.exports = gitMsg
