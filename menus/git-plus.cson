@@ -21,6 +21,7 @@
         { 'label': 'Fetch', 'command': 'git-plus:fetch' }
         { 'label': 'Remove', 'command': 'git-plus:remove' }
         { 'label': 'Remove Current File', 'command': 'git-plus:remove-current-file' }
+        { 'label': 'Show', 'command': 'git-plus:show' }
         { 'label': 'Log', 'command': 'git-plus:log' }
         { 'label': 'Log Current File', 'command': 'git-plus:log-current-file' }
       ]

@@ -5,6 +5,7 @@ fs = require 'fs'
 {$$, BufferedProcess, SelectListView} = require 'atom'
 OutputView = require './output-view'
 StatusView = require './status-view'
+GitShow = require './git-show'
 
 module.exports =
 class LogListView extends SelectListView
@@ -43,29 +44,4 @@ class LogListView extends SelectListView
         @div class: 'text-info', commit.time
 
   confirmed: ({hash}) ->
-    args = ['show']
-    args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-    args.push hash
-    if @onlyCurrentFile and currentFile()?
-      args.push '--'
-      args.push currentFile()
-
-    new BufferedProcess
-      command: 'git'
-      args: args
-      options:
-        cwd: dir
-      stderr: (data) ->
-        new StatusView(type: 'alert', message: data.toString())
-      stdout: (data) ->
-        prepFile data
-
-  prepFile = (text) ->
-    fs.writeFileSync showCommitFilePath(), text, flag: 'w+'
-    showFile()
-
-  showFile = ->
-    split = ''
-    split = 'right'  if atom.config.get 'git-plus.openInPane'
-    atom.workspace
-      .open(showCommitFilePath(), split: split, activatePane: true)
+    GitShow(hash, currentFile() if @onlyCurrentFile)
