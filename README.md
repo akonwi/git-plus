@@ -51,6 +51,10 @@ vim-fugitive like package for atom. make commits and other git things without th
   Add all changed files and pull up the commit message file. Similar to `Git add all` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A a`
 
+12. `Git Log [Current File]`
+
+  Show the commit history [for the current file] and show display the selected commit.
+
 ## Contributing
 
 1. Fork it
