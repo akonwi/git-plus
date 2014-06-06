@@ -12,22 +12,24 @@ class LogListView extends SelectListView
   dir = ->
     atom.project.getRepo().getWorkingDirectory()
 
+  currentFile = ->
+    atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+
   showCommitFilePath = ->
     Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
 
-
-  initialize: (@data) ->
+  initialize: (@data, @onlyCurrentFile) ->
     super
     @addClass 'overlay from-top'
     @parseData()
 
   parseData: ->
-    @data = @data.split("\n")
-    items = for item in @data
-      continue if not item?
-      tmp = item.match /([\w\d]{7});\|(.*);\|(.*);\|(.*)/
-      {hash: tmp?[1], author: tmp?[2], title: tmp?[3], time: tmp?[4]}
-    @setItems items
+    @data = @data.split("\n")[...-1]
+    @setItems(
+      for item in @data when item != ''
+        tmp = item.match /([\w\d]{7});\|(.*);\|(.*);\|(.*)/
+        {hash: tmp?[1], author: tmp?[2], title: tmp?[3], time: tmp?[4]}
+    )
     atom.workspaceView.append this
     @focusFilterEditor()
 
@@ -44,7 +46,9 @@ class LogListView extends SelectListView
     args = ['show']
     args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
     args.push hash
-    # args.push '--'
+    if @onlyCurrentFile and currentFile()?
+      args.push '--'
+      args.push currentFile()
 
     new BufferedProcess
       command: 'git'
@@ -52,7 +56,6 @@ class LogListView extends SelectListView
       options:
         cwd: dir
       stderr: (data) ->
-        console.log data
         new StatusView(type: 'alert', message: data.toString())
       stdout: (data) ->
         prepFile data

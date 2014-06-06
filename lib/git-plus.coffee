@@ -32,6 +32,7 @@ module.exports =
     atom.workspaceView.command "git-plus:add-and-commit", -> GitAddAndCommit()
     atom.workspaceView.command "git-plus:add-all-and-commit", -> GitAddAllAndCommit()
     atom.workspaceView.command "git-plus:log", -> GitLog()
+    atom.workspaceView.command "git-plus:log-current-file", -> GitLog(true)
 
 
   deactivate: ->

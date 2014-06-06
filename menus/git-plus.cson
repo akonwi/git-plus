@@ -19,6 +19,7 @@
         { 'label': 'Pull', 'command': 'git-plus:pull' }
         { 'label': 'Push', 'command': 'git-plus:push' }
         { 'label': 'Log', 'command': 'git-plus:log' }
+        { 'label': 'Log Current File', 'command': 'git-plus:log-current-file' }
       ]
     ]
   }
