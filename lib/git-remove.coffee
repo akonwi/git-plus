@@ -4,18 +4,19 @@ RemoveListView = require './remove-list-view'
 
 gitRemove = (showSelector=false) ->
   dir = atom.project.getRepo().getWorkingDirectory()
-  currentFile = atom.workspace.getActiveEditor()?.getPath()
+  currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
 
   if currentFile? and not showSelector
+    atom.workspaceView.getActiveView().remove()
     new BufferedProcess({
-    command: 'git'
-    args: ['rm', '-f', '--ignore-unmatch', currentFile]
-    options:
-      cwd: dir
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
-    stdout: (data) ->
-      new StatusView(type: 'success', message: "Removed #{prettify data}")
+      command: 'git'
+      args: ['rm', '-f', '--ignore-unmatch', currentFile]
+      options:
+        cwd: dir
+      stderr: (data) ->
+        new StatusView(type: 'alert', message: data.toString())
+      stdout: (data) ->
+        new StatusView(type: 'success', message: "Removed #{prettify data}")
     })
   else
     new BufferedProcess({
@@ -31,7 +32,7 @@ gitRemove = (showSelector=false) ->
 
 # cut off rm '' around the filenames.
 prettify = (data) ->
-  data = data.match(/rm '(.*)'/g)
+  data = data.match(/rm ('.*')/g)
   for file, i in data
     data[i] = file.match(/rm '(.*)'/)[1]
 
