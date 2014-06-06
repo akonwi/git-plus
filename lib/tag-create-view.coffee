@@ -38,7 +38,7 @@ class TagCreateView extends View
       stderr: (data) ->
         new StatusView(type: 'alert', message: data.toString())
       exit: (code) ->
-        new StatusView(type: 'success', message: "Tag #{tag.name} has been created successfully!") if code is 0
+        new StatusView(type: 'success', message: "Tag '#{tag.name}' has been created successfully!") if code is 0
     @detach()
 
   abort: ->

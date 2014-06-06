@@ -29,7 +29,9 @@ class TagView extends SelectListView
     $$ ->
       @li =>
         @div class: 'text-highlight', cmd
-        @div class: 'text-info', "#{description} #{tag}"
+        @div class: 'text-warning', "#{description} #{tag}"
+
+  getFilterKey: -> 'cmd'
 
   confirmed: ({tag, cmd}) ->
     @cancel()

@@ -13,12 +13,16 @@ class TagListView extends SelectListView
     @parseData()
 
   parseData: ->
-    @data = @data.split("\n")[...-1]
-    items = (
-      for item in @data.reverse() when item != ''
-        tmp = item.match /([\w\d-_/.]+)\s(.*)/
-        {tag: tmp?[1], annotation: tmp?[2]}
-    )
+    if @data.length > 0
+      @data = @data.split("\n")[...-1]
+      items = (
+        for item in @data.reverse() when item != ''
+          tmp = item.match /([\w\d-_/.]+)\s(.*)/
+          {tag: tmp?[1], annotation: tmp?[2]}
+      )
+    else
+      items = []
+
     items.push {tag: '+ Add Tag', annotation: 'Add a tag referencing the current commit.'}
 
     @setItems items
@@ -31,7 +35,7 @@ class TagListView extends SelectListView
     $$ ->
       @li =>
         @div class: 'text-highlight', tag
-        @div class: 'text-info', annotation
+        @div class: 'text-warning', annotation
 
   confirmed: ({tag}) ->
     @cancel()
