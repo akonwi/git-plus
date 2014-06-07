@@ -2,6 +2,7 @@
 
 git = require '../git'
 GitShow = require '../models/git-show'
+StatusView = require './status-view'
 
 module.exports =
 class TagView extends SelectListView
