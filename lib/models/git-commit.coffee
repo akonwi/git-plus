@@ -62,6 +62,7 @@ commit = ->
       # reset editor for commitFile
       currentEditor = null
       atom.workspaceView.trigger 'core:save'
+      atom.project.getRepo()?.refreshStatus()
   )
 
 cleanFile = ->
