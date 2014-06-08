@@ -19,10 +19,10 @@ gitCommit = (_amendMsg="") ->
   )
 
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
-# TODO?: Strip out the git tips that 'git status' prints in message
 prepFile = (text) ->
   watcher.close() if watcher?
   # format the text to be ignored in the commit message
+  text = text.replace(/\s*\(.*\)\n/g, '')
   text = text.replace(/\n/g, "\n# ")
   # in order to make sure each line doesn't start with a space, the preceding
   #   line should end with a backslash
