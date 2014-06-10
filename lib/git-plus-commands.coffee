@@ -8,6 +8,7 @@ registerCommands = ->
   GitPush = require './models/git-push'
   GitFetch = require './models/git-fetch'
   GitCheckoutCurrentFile = require './models/git-checkout-current-file'
+  GitCheckoutAllFiles = require './models/git-checkout-all-files'
   GitAddAndCommit = require './models/git-add-and-commit'
   GitCommitAmend = require './models/git-commit-amend'
   GitAddAllAndCommit = require './models/git-add-all-and-commit'
@@ -23,6 +24,7 @@ registerCommands = ->
     atom.workspaceView.command 'git-plus:commit-amend', -> GitCommitAmend()
     atom.workspaceView.command 'git-plus:add', -> GitAdd()
     atom.workspaceView.command 'git-plus:checkout-current-file', -> GitCheckoutCurrentFile()
+    atom.workspaceView.command 'git-plus:checkout-all-files', -> GitCheckoutAllFiles()
     atom.workspaceView.command 'git-plus:diff', -> GitDiff()
     atom.workspaceView.command 'git-plus:diff-all', -> GitDiffAll()
     atom.workspaceView.command 'git-plus:add-all', -> GitAdd(true)
@@ -45,6 +47,7 @@ registerCommands = ->
     atom.workspaceView.unbind 'git-plus:commit-amend'
     atom.workspaceView.unbind 'git-plus:add'
     atom.workspaceView.unbind 'git-plus:checkout-current-file'
+    atom.workspaceView.unbind 'git-plus:checkout-all-files'
     atom.workspaceView.unbind 'git-plus:diff'
     atom.workspaceView.unbind 'git-plus:diff-all'
     atom.workspaceView.unbind 'git-plus:add-all'
