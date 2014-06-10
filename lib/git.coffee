@@ -19,6 +19,45 @@ gitCmd = (args, c_stdout, c_exit) ->
       new StatusView(type: 'alert', message: data.toString())
     exit: c_exit
 
+gitStagedFiles = (c_stdout) ->
+  new BufferedProcess
+    command: 'git'
+    args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+    options:
+      cwd: dir()
+    stdout: (data) -> c_stdout _prettify(data)
+    stderr: (data) ->
+      new StatusView(type: 'alert', message: data.toString())
+
+gitUnstagedFiles = (c_stdout) ->
+  new BufferedProcess
+    command: 'git'
+    args: ['diff-files', '--name-status', '-z']
+    options:
+      cwd: dir()
+    stdout: (data) -> gitUntrackedFiles(c_stdout, _prettify(data))
+    stderr: (data) ->
+      new StatusView(type: 'alert', message: data.toString())
+
+gitUntrackedFiles = (c_stdout, dataUnstaged) ->
+  new BufferedProcess
+    command: 'git'
+    args: ['ls-files', '-o', '-z']
+    options:
+      cwd: dir()
+    stdout: (data) -> c_stdout dataUnstaged.concat(_prettifyUntracked(data))
+    stderr: (data) ->
+      new StatusView(type: 'alert', message: data.toString())
+
+_prettify = (data) ->
+  data = data.split('\0')[...-1]
+  files = [] = for mode, i in data by 2
+    {mode: mode, path: data[i+1]}
+
+_prettifyUntracked = (data) ->
+  data = data.split('\0')[...-1]
+  files = [] = for file in data
+    {mode: '?', path: file}
 
 # Public: Return the current WorkingDirectory
 #
@@ -30,3 +69,5 @@ dir = ->
     atom.project.getPath()
 
 module.exports = gitCmd
+module.exports.stagedFiles = gitStagedFiles
+module.exports.unstagedFiles = gitUnstagedFiles

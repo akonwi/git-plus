@@ -17,6 +17,8 @@ registerCommands = ->
   GitShow = require './models/git-show'
   GitTags = require './models/git-tags'
   GitInit = require './models/git-init'
+  GitStageFiles = require './models/git-stage-files'
+  GitUnstageFiles = require './models/git-unstage-files'
 
   if atom.project.getRepo()?
     atom.workspaceView.unbind 'git-plus:init'
@@ -41,6 +43,8 @@ registerCommands = ->
     atom.workspaceView.command 'git-plus:log-current-file', -> GitLog(true)
     atom.workspaceView.command 'git-plus:show', -> GitShow()
     atom.workspaceView.command 'git-plus:tags', -> GitTags()
+    atom.workspaceView.command 'git-plus:stage-files', -> GitStageFiles()
+    atom.workspaceView.command 'git-plus:unstage-files', -> GitUnstageFiles()
   else
     atom.workspaceView.command 'git-plus:init', -> GitInit()
     atom.workspaceView.unbind 'git-plus:commit'
@@ -64,5 +68,7 @@ registerCommands = ->
     atom.workspaceView.unbind 'git-plus:log-current-file'
     atom.workspaceView.unbind 'git-plus:show'
     atom.workspaceView.unbind 'git-plus:tags'
+    atom.workspaceView.unbind 'git-plus:stage-files'
+    atom.workspaceView.unbind 'git-plus:unstage-files'
 
 module.exports = registerCommands
