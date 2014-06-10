@@ -1,62 +1,54 @@
-{$, $$, BufferedProcess, SelectListView, EditorView} = require 'atom'
+{$, $$, EditorView, BufferedProcess} = require 'atom'
+
 OutputView = require './output-view'
 StatusView = require './status-view'
+SelectListMultipleView = require './select-list-multiple-view'
 
 module.exports =
-class RemoveListView extends SelectListView
+class SelectStageFilesView extends SelectListMultipleView
 
-  initialize: (@items) ->
+  initialize: (items) ->
     super
+    @addClass('overlay from-top')
 
-    @on 'click', 'button', (e) =>
-      @removeFiles() if $(e.target).hasClass('gp-remove-button')
-      @cancel() if $(e.target).hasClass('gp-cancel-button')
+    @setItems items
+    atom.workspaceView.append(this)
+    @focusFilterEditor()
 
-    @on 'mousedown', ({target}) =>
-      false if target is @list[0] or $(target).hasClass('btn')
+  dir = -> atom.project.getRepo().getWorkingDirectory()
 
-    @addClass 'overlay from-top'
-    @list.addClass 'mark-active'
-    @parseData()
+  getFilterKey: ->
+    'path'
 
+  addButtons: ->
     viewButton = $$ ->
       @div class: 'buttons', =>
-        @text ' '
         @span class: 'pull-left', =>
-          @button class: 'btn btn-error inline-block-tight gp-cancel-button', 'Cancel'
+          @button class: 'btn btn-error inline-block-tight btn-cancel-button', 'Cancel'
         @span class: 'pull-right', =>
-          @button class: 'btn btn-success inline-block-tight gp-remove-button', 'Remove'
+          @button class: 'btn btn-success inline-block-tight btn-remove-button', 'Remove'
     viewButton.appendTo(this)
 
-  parseData: ->
-    @setItems @items
-    atom.workspaceView.append this
-    @focusFilterEditor()
+    @on 'click', 'button', ({target}) =>
+      @complete() if $(target).hasClass('btn-remove-button')
+      @cancel() if $(target).hasClass('btn-cancel-button')
 
   viewForItem: (item) ->
     $$ ->
       @li item
 
-  confirmed: (item) ->
-    viewItem = @getSelectedItemView()
-    if viewItem.hasClass('active')
-      viewItem.removeClass('active')
-    else
-      viewItem.addClass('active')
-
-  removeFiles: ->
-    files = ($.map $(this).find('li.active'), (el) -> $(el).text())
+  completed: (items) ->
+    files = (item for item in items when item isnt '')
     @cancel()
 
-    dir = atom.project.getRepo().getWorkingDirectory()
     currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
-
     atom.workspaceView.getActiveView().remove() if currentFile in files
+
     new BufferedProcess({
       command: 'git'
-      args: ['rm', '-f'].concat files
+      args: ['rm', '-f'].concat(files)
       options:
-        cwd: dir
+        cwd: dir()
       stdout: (data) ->
         new StatusView(type: 'success', message: "Removed #{prettify data}")
       stderr: (data) ->
