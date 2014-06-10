@@ -41,7 +41,6 @@ class SelectStageFilesView extends SelectListMultipleView
 
   completed: (items) ->
     files = (item.path for item in items)
-    console.log ['rm', '--cached', '--'].concat(files)
     @cancel()
 
     git(

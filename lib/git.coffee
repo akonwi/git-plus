@@ -29,23 +29,37 @@ gitStagedFiles = (c_stdout) ->
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
 
-gitUnstagedFiles = (c_stdout) ->
+gitUnstagedFiles = (c_stdout, showUntracked=false) ->
   new BufferedProcess
     command: 'git'
     args: ['diff-files', '--name-status', '-z']
     options:
       cwd: dir()
-    stdout: (data) -> gitUntrackedFiles(c_stdout, _prettify(data))
+    stdout: (data) ->
+      if showUntracked
+        gitUntrackedFiles(c_stdout, _prettify(data))
+      else
+        c_stdout _prettify(data)
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
 
-gitUntrackedFiles = (c_stdout, dataUnstaged) ->
+gitUntrackedFiles = (c_stdout, dataUnstaged=[]) ->
   new BufferedProcess
     command: 'git'
-    args: ['ls-files', '-o', '-z']
+    args: ['ls-files', '-o', '--exclude-standard','-z']
     options:
       cwd: dir()
     stdout: (data) -> c_stdout dataUnstaged.concat(_prettifyUntracked(data))
+    stderr: (data) ->
+      new StatusView(type: 'alert', message: data.toString())
+
+gitDiff = (c_stdout, path) ->
+  new BufferedProcess
+    command: 'git'
+    args: ['diff', '-p', path]
+    options:
+      cwd: dir()
+    stdout: (data) -> c_stdout _prettifyDiff(data)
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
 
@@ -59,6 +73,11 @@ _prettifyUntracked = (data) ->
   files = [] = for file in data
     {mode: '?', path: file}
 
+_prettifyDiff = (data) ->
+  data = data.split(/^@@(?=[ \-\+\,0-9]*@@)/gm)
+  data[1..data.length] = ('@@' + line for line in data[1..])
+  data
+
 # Public: Return the current WorkingDirectory
 #
 # Returns the current WorkingDirectory as {String}.
@@ -71,3 +90,4 @@ dir = ->
 module.exports = gitCmd
 module.exports.stagedFiles = gitStagedFiles
 module.exports.unstagedFiles = gitUnstagedFiles
+module.exports.diff = gitDiff
