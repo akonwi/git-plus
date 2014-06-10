@@ -5,7 +5,7 @@ Path = require 'path'
 gitCheckoutCurrentFile = ->
   currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
   git(
-    ['checkout', currentFile],
+    ['checkout', '--', currentFile],
     (data) -> new StatusView(type: 'success', message: data.toString())
   )
 
