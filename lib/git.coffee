@@ -23,6 +23,10 @@ gitCmd = (args, c_stdout, c_exit) ->
 # Public: Return the current WorkingDirectory
 #
 # Returns the current WorkingDirectory as {String}.
-dir = -> atom.project.getRepo().getWorkingDirectory()
+dir = ->
+  if atom.project.getRepo()?
+    atom.project.getRepo().getWorkingDirectory()
+  else
+    atom.project.getPath()
 
 module.exports = gitCmd
