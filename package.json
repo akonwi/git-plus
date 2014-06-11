@@ -22,6 +22,8 @@
     "git-plus:log-current-file",
     "git-plus:show",
     "git-plus:tags"
+    "git-plus:remove",
+    "git-plus:remove-current-file"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",

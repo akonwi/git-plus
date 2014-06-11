@@ -23,6 +23,8 @@
         { 'label': 'Log Current File', 'command': 'git-plus:log-current-file' }
         { 'label': 'Tags', 'command': 'git-plus:tags' }
         { 'label': 'Fetch', 'command': 'git-plus:fetch' }
+        { 'label': 'Remove', 'command': 'git-plus:remove' }
+        { 'label': 'Remove Current File', 'command': 'git-plus:remove-current-file' }
       ]
     ]
   }
