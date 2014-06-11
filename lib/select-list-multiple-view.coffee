@@ -1,4 +1,3 @@
-fuzzyFilter = require('fuzzaldrin').filter
 {$, $$, View, SelectListView} = require 'atom'
 
 # Public: Provides a view that renders a list of items with an editor that
@@ -113,6 +112,7 @@ class SelectMultipleListView extends SelectListView
   #
   # Subclasses may override this method but should always call `super`.
   populateList: ->
+    fuzzyFilter = require('fuzzaldrin').filter
     return unless @items?
 
     filterQuery = @getFilterQuery()
