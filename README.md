@@ -59,6 +59,10 @@ vim-fugitive like package for atom. make commits and other git things without th
 
   Show the specified object, for example `HEAD`, `HEAD~2`, `3925a0d`, `origin/master` or `v2.7.3`.
 
+11. `Git rm [current file]`
+
+  Git rm the current file or open an selector to select the files to remove. You can select multiple files at once.
+
 ## Contributing
 
 1. Fork it
