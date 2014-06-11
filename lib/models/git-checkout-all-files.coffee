@@ -5,7 +5,9 @@ Path = require 'path'
 gitCheckoutAllFiles = ->
   git(
     ['checkout', '-f'],
-    (data) -> new StatusView(type: 'success', message: data.toString())
+    (data) ->
+      new StatusView(type: 'success', message: data.toString())
+      atom.project.getRepo()?.refreshStatus()
   )
 
 module.exports = gitCheckoutAllFiles

@@ -7,6 +7,7 @@ gitCheckoutCurrentFile = ->
   git(
     ['checkout', '--', currentFile],
     (data) -> new StatusView(type: 'success', message: data.toString())
+    atom.project.getRepo()?.refreshStatus()
   )
 
 module.exports = gitCheckoutCurrentFile
