@@ -4,7 +4,7 @@ StatusView = require './status-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@data) ->
+  initialize: (@data, @mode) ->
     super
     @addClass 'overlay from-top'
     @parseData()
@@ -28,15 +28,15 @@ class ListView extends SelectListView
       @li name
 
   confirmed: ({name}) ->
-    @pushTo name
+    @execute name
     @cancel()
 
-  pushTo: (remote) ->
+  execute: (remote) ->
     dir = atom.project.getRepo().getWorkingDirectory()
     view = new OutputView()
     new BufferedProcess
       command: 'git'
-      args: ['push', remote]
+      args: [@mode, remote]
       options:
         cwd: dir
       stdout: (data) ->

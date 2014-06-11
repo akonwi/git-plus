@@ -5,7 +5,7 @@ StatusView = require './status-view'
 dir = ->
   atom.project.getRepo().getWorkingDirectory()
 
-gitPush = ->
+gitFetch = ->
   # first get the remote repos
   new BufferedProcess(
     command: 'git'
@@ -13,9 +13,9 @@ gitPush = ->
     options:
       cwd: dir()
     stdout: (data) ->
-      new ListView(data.toString(), 'push')
+      new ListView(data.toString(), 'fetch')
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
   )
 
-module.exports = gitPush
+module.exports = gitFetch

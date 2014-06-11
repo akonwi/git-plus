@@ -5,6 +5,7 @@ GitPull = require './git-pull'
 GitDiff = require './git-diff'
 GitDiffAll = require './git-diff-all'
 GitPush = require './git-push'
+GitFetch = require './git-fetch'
 GitCheckoutCurrentFile = require './git-checkout-current-file'
 GitAddAndCommit = require './git-add-and-commit'
 GitCommitAmend = require './git-commit-amend'
@@ -32,6 +33,7 @@ module.exports =
     atom.workspaceView.command "git-plus:new-branch", -> GitBranch.newBranch()
     atom.workspaceView.command "git-plus:pull", -> GitPull()
     atom.workspaceView.command "git-plus:push", -> GitPush()
+    atom.workspaceView.command "git-plus:fetch", -> GitFetch()
     atom.workspaceView.command "git-plus:add-and-commit", -> GitAddAndCommit()
     atom.workspaceView.command "git-plus:add-all-and-commit", -> GitAddAllAndCommit()
     atom.workspaceView.command "git-plus:log", -> GitLog()
