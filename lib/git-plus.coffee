@@ -9,12 +9,16 @@ GitCheckoutCurrentFile = require './git-checkout-current-file'
 GitAddAndCommit = require './git-add-and-commit'
 GitCommitAmend = require './git-commit-amend'
 GitAddAllAndCommit = require './git-add-all-and-commit'
+GitLog = require './git-log'
+GitShow = require './git-show'
+GitTags = require './git-tags'
 
 module.exports =
   configDefaults:
     includeStagedDiff: true
     openInPane: true
     wordDiff: true
+    amountOfCommitsToShow: 25
 
   activate: (state) ->
     atom.workspaceView.command "git-plus:commit", -> GitCommit()
@@ -30,6 +34,10 @@ module.exports =
     atom.workspaceView.command "git-plus:push", -> GitPush()
     atom.workspaceView.command "git-plus:add-and-commit", -> GitAddAndCommit()
     atom.workspaceView.command "git-plus:add-all-and-commit", -> GitAddAllAndCommit()
+    atom.workspaceView.command "git-plus:log", -> GitLog()
+    atom.workspaceView.command "git-plus:log-current-file", -> GitLog(true)
+    atom.workspaceView.command "git-plus:show", -> GitShow()
+    atom.workspaceView.command "git-plus:tags", -> GitTags()
 
   deactivate: ->
 
