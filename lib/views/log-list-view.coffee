@@ -1,6 +1,6 @@
 Os = require 'os'
 Path = require 'path'
-fs = require 'fs'
+fs = require 'fs-plus'
 
 {$$, BufferedProcess, SelectListView} = require 'atom'
 
