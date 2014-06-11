@@ -10,6 +10,7 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
-    "fs-plus": "^2.2.0"
+    "fs-plus": "^2.2.0",
+    "fuzzaldrin": "^1.2.0"
   }
 }
