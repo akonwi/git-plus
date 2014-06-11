@@ -21,7 +21,7 @@
     "git-plus:log",
     "git-plus:log-current-file",
     "git-plus:show",
-    "git-plus:tags"
+    "git-plus:tags",
     "git-plus:remove",
     "git-plus:remove-current-file"
   ],
