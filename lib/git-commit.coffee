@@ -73,6 +73,7 @@ commit = ->
       # reset editor for commitFile
       currentEditor = null
       atom.workspaceView.trigger 'core:save'
+      atom.project.getRepo()?.refreshStatus()
     stderr: (data) ->
       new StatusView(type: 'alert', message: data.toString())
       atom.beep()
