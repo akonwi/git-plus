@@ -1,15 +1,16 @@
-{$, BufferedProcess, EditorView, View} = require 'atom'
+{BufferedProcess} = require 'atom'
 StatusView = require './views/status-view'
 
 # Public: Execute a git command.
-# {Object}
+#
+# options - An {Object} with the following keys:
 #   :args    - The {Array} containing the arguments to pass.
 #   :options - The {Object} with options to pass.
-#      :cwd  - Current working directory as {String}.
+#     :cwd  - Current working directory as {String}.
 #   :stdout  - The {Function} to pass the stdout to.
 #   :exit    - The {Function} to pass the exit code to.
 #
-# Returns: `undefined`
+# Returns nothing.
 gitCmd = ({args, options, stdout, stderr, exit}={}) ->
   command = _getGitPath()
   options ?= {}
