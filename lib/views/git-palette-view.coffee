@@ -66,7 +66,6 @@ class GitPaletteView extends SelectListView
       @setError(@getEmptyMessage(@items.length, filteredItems.length))
 
   viewForItem: ({name, description}, matchedStr) ->
-    console.log name, description, matchedStr
     $$ ->
       @li class: 'command', 'data-command-name': name, =>
         if matchedStr? then @raw(matchedStr) else @span description
