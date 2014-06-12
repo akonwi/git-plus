@@ -7,16 +7,21 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
-'.platform-darwin .editor':
+
+'.platform-darwin':
   'cmd-shift-h': 'git-plus:menu'
+'.platform-win32, .platform-linux':
+  'ctrl-shift-h': 'git-plus:menu'
+  
+'.platform-darwin .editor':
   'cmd-shift-a': 'git-plus:add'
   'cmd-shift-c': 'git-plus:commit'
   'cmd-shift-a c': 'git-plus:add-and-commit'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
 
 '.platform-win32, .platform-linux .editor':
-  'ctrl-shift-h': 'git-plus:menu'
   'ctrl-shift-a': 'git-plus:add'
   'ctrl-shift-x': 'git-plus:commit'
   'ctrl-shift-a c': 'git-plus:add-and-commit'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
+  
