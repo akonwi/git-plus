@@ -15,7 +15,7 @@ class ListView extends SelectListView
     for item in items
       remotes.push {name: item} unless item is ''
     if remotes.length is 1
-      @pushTo remotes[0].name
+      @execute remotes[0].name
     else
       @setItems remotes
       atom.workspaceView.append this
