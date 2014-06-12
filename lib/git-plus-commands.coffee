@@ -27,10 +27,13 @@ getCommands = ->
   commands = []
   if atom.project.getRepo()?
     git.refresh()
+    if atom.workspace.getActiveEditor()?.getPath()?
+      commands.push ['git-plus:log-current-file', 'Git Plus: Log Current File', -> GitLog(true)]
+      commands.push ['git-plus:remove-current-file', 'Git Plus: Remove Current File', -> GitRemove()]
+      commands.push ['git-plus:checkout-current-file', 'Git Plus: Checkout Current File', -> GitCheckoutCurrentFile()]
     commands.push ['git-plus:commit', 'Git Plus: Commit', -> GitCommit()]
     commands.push ['git-plus:commit-amend', 'Git Plus: Commit Amend', -> GitCommitAmend()]
     commands.push ['git-plus:add', 'Git Plus: Add', -> GitAdd()]
-    commands.push ['git-plus:checkout-current-file', 'Git Plus: Checkout Current File', -> GitCheckoutCurrentFile()]
     commands.push ['git-plus:checkout-all-files', 'Git Plus: Checkout All Files', -> GitCheckoutAllFiles()]
     commands.push ['git-plus:diff', 'Git Plus: Diff', -> GitDiff()]
     commands.push ['git-plus:diff-all', 'Git Plus: Diff All', -> GitDiffAll()]
@@ -43,9 +46,7 @@ getCommands = ->
     commands.push ['git-plus:add-and-commit', 'Git Plus: Add And Commit', -> GitAddAndCommit()]
     commands.push ['git-plus:add-all-and-commit', 'Git Plus: Add All And Commit', -> GitAddAllAndCommit()]
     commands.push ['git-plus:remove', 'Git Plus: Remove', -> GitRemove(true)]
-    commands.push ['git-plus:remove-current-file', 'Git Plus: Remove Current File', -> GitRemove()]
     commands.push ['git-plus:log', 'Git Plus: Log', -> GitLog()]
-    commands.push ['git-plus:log-current-file', 'Git Plus: Log Current File', -> GitLog(true)]
     commands.push ['git-plus:show', 'Git Plus: Show', -> GitShow()]
     commands.push ['git-plus:tags', 'Git Plus: Tags', -> GitTags()]
     commands.push ['git-plus:stage-files', 'Git Plus: Stage Files', -> GitStageFiles()]
