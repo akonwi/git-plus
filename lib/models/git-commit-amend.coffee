@@ -7,9 +7,9 @@ StatusView = require '../views/status-view'
 gitCommit = require './git-commit'
 
 gitMsg = ->
-  git(
-    ['log', '-1', '--format=%s'],
-    (data) -> gitCommit "- " + data.toString()
+  git.cmd(
+    args: ['log', '-1', '--format=%s'],
+    stdout: (data) -> gitCommit "- " + data.toString()
   )
 
 module.exports = gitMsg

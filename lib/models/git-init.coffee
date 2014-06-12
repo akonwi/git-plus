@@ -3,9 +3,9 @@ StatusView = require '../views/status-view'
 GitPlusCommands = require '../git-plus-commands'
 
 gitInit = ->
-  git(
-    ['init'],
-    (data) ->
+  git.cmd(
+    args: ['init'],
+    stdout: (data) ->
       new StatusView(type: 'success', message: data)
       atom.project.setPath atom.project.getPath()
       GitPlusCommands()

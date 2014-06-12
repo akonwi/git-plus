@@ -3,9 +3,9 @@ StatusView = require '../views/status-view'
 Path = require 'path'
 
 gitCheckoutAllFiles = ->
-  git(
-    ['checkout', '-f'],
-    (data) ->
+  git.cmd(
+    args: ['checkout', '-f'],
+    stdout: (data) ->
       new StatusView(type: 'success', message: data.toString())
       atom.project.getRepo()?.refreshStatus()
   )

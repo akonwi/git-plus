@@ -29,12 +29,12 @@ class CherryPickSelectBranch extends SelectListView
       "#{@currentHead}...#{item}"
     ]
 
-    git(
-      args
-      (data) ->
+    git.cmd(
+      args: args
+      stdout: (data) ->
         @save ?= ''
         @save += data
-      (exit) ->
+      exit: (exit) ->
         if exit is 0 and @save?
           new CherryPickSelectCommits(@save.split('\0')[...-1])
           @save = null

@@ -44,7 +44,7 @@ class TagView extends SelectListView
       when 'Delete'
         args = ['tag', '--delete', tag]
 
-    git(
-      args,
-      (data) -> new StatusView(type: 'success', message: data.toString())
+    git.cmd(
+      args: args
+      stdout: (data) -> new StatusView(type: 'success', message: data.toString())
     )

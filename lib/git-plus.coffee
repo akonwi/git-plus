@@ -1,5 +1,5 @@
 GitPlusCommands = require './git-plus-commands'
-GitRefreshIndex = require './models/git-refresh-index'
+git = require './git'
 
 module.exports =
   configDefaults:
@@ -7,11 +7,11 @@ module.exports =
     openInPane: true
     wordDiff: true
     amountOfCommitsToShow: 25
+    gitPath: 'git'
 
   activate: (state) ->
     GitPlusCommands()
-    GitRefreshIndex() if atom.project.getRepo()?
-
+    git.refresh() if atom.project.getRepo()?
 
   deactivate: ->
 

@@ -13,9 +13,9 @@ gitCommit = (_amendMsg="") ->
   currentPane = atom.workspace.getActivePane()
   dir = atom.project.getRepo().getWorkingDirectory()
   amendMsg = _amendMsg
-  git(
-    ['status'],
-    (data) -> prepFile data.toString()
+  git.cmd(
+    args: ['status'],
+    stdout: (data) -> prepFile data.toString()
   )
 
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
@@ -50,9 +50,9 @@ commit = ->
   cleanFile()
   args = ['commit', "--file=#{commitFilePath()}"]
   args.push  '--amend' if amendMsg != ""
-  git(
-    args,
-    (data) ->
+  git.cmd(
+    args: args,
+    stdout: (data) ->
       if atom.workspace.getActivePane().getItems().length > 1
         atom.workspace.destroyActivePaneItem()
       else

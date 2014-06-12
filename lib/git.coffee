@@ -8,60 +8,52 @@ StatusView = require './views/status-view'
 # c_exit   - The {Function} to pass the exit code to.
 #
 # Returns: `undefined`
-gitCmd = (args, c_stdout, c_exit) ->
+gitCmd = ({args, options, stdout, stderr, exit}={}) ->
+  command = getGitPath()
+  options ?= {}
+  options.cwd ?= dir()
+  stderr ?= (data) -> new StatusView(type: 'alert', message: data.toString())
+
   new BufferedProcess
-    command: 'git'
+    command: command
     args: args
-    options:
-      cwd: dir()
-    stdout: c_stdout
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
-    exit: c_exit
+    options: options
+    stdout: stdout
+    stderr: stderr
+    exit: exit
 
-gitStagedFiles = (c_stdout) ->
-  new BufferedProcess
-    command: 'git'
+gitStagedFiles = (stdout) ->
+  gitCmd(
     args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
-    options:
-      cwd: dir()
-    stdout: (data) -> c_stdout _prettify(data)
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
+    stdout: (data) -> stdout _prettify(data)
+  )
 
-gitUnstagedFiles = (c_stdout, showUntracked=false) ->
-  new BufferedProcess
-    command: 'git'
+gitUnstagedFiles = (stdout, showUntracked=false) ->
+  gitCmd(
     args: ['diff-files', '--name-status', '-z']
-    options:
-      cwd: dir()
     stdout: (data) ->
       if showUntracked
         gitUntrackedFiles(c_stdout, _prettify(data))
       else
         c_stdout _prettify(data)
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
+  )
 
-gitUntrackedFiles = (c_stdout, dataUnstaged=[]) ->
-  new BufferedProcess
-    command: 'git'
+gitUntrackedFiles = (stdout, dataUnstaged=[]) ->
+  gitCmd(
     args: ['ls-files', '-o', '--exclude-standard','-z']
-    options:
-      cwd: dir()
-    stdout: (data) -> c_stdout dataUnstaged.concat(_prettifyUntracked(data))
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
+    stdout: (data) -> stdout dataUnstaged.concat(_prettifyUntracked(data))
+  )
 
-gitDiff = (c_stdout, path) ->
-  new BufferedProcess
-    command: 'git'
+gitDiff = (stdout, path) ->
+  gitCmd(
     args: ['diff', '-p', path]
-    options:
-      cwd: dir()
-    stdout: (data) -> c_stdout _prettifyDiff(data)
-    stderr: (data) ->
-      new StatusView(type: 'alert', message: data.toString())
+    stdout: (data) -> stdout _prettifyDiff(data)
+  )
+
+gitRefreshIndex = ->
+  gitCmd(
+    args: ['add', '--refresh', '.']
+  )
 
 _prettify = (data) ->
   data = data.split('\0')[...-1]
@@ -87,7 +79,8 @@ dir = ->
   else
     atom.project.getPath()
 
-module.exports = gitCmd
+module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles
 module.exports.unstagedFiles = gitUnstagedFiles
 module.exports.diff = gitDiff
+module.exports.refresh = gitRefreshIndex

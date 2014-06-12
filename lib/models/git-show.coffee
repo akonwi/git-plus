@@ -18,9 +18,9 @@ showObject = (objectHash, file) ->
     args.push '--'
     args.push file
 
-  git(
-    args,
-    (data) -> prepFile data
+  git.cmd(
+    args: args,
+    stdout: (data) -> prepFile data
   )
 
 prepFile = (text) ->

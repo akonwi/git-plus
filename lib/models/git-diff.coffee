@@ -12,10 +12,10 @@ gitDiff = (diffAllStat="") ->
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push currentFile if diffAllStat == ""
-  git(
-    args,
-    (data) -> diffAllStat += data.toString(),
-    (exitCode) -> prepFile diffAllStat if exitCode == 0
+  git.cmd(
+    args: args,
+    stdout: (data) -> diffAllStat += data.toString(),
+    exit: (exitCode) -> prepFile diffAllStat if exitCode == 0
   )
 
 prepFile = (text) ->

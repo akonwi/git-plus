@@ -7,10 +7,9 @@ gitAdd = (all=false) ->
   currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
   toStage = if all then '.' else currentFile
   if (toStage?)
-    git(
-      ['add', '--all', toStage],
-      null,
-      (data) ->
+    git.cmd(
+      args: ['add', '--all', toStage],
+      stdout: (data) ->
         file = if toStage is '.' then 'all files' else prettify(dir, toStage)
         new StatusView(type: 'success', message: "Added #{file}")
     )

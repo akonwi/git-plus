@@ -5,7 +5,7 @@ ListView = require '../views/branch-list-view'
 StatusView = require '../views/status-view'
 
 module.exports.gitBranches = ->
-  git(
+  git.cmd(
     ['branch'],
     (data) -> new ListView(data.toString())
   )
@@ -26,9 +26,9 @@ class InputView extends View
       atom.workspaceView.focus().trigger 'core:save'
 
   createBranch: (name) ->
-    git(
-      ['checkout', '-b', name],
-      (data) -> new StatusView(type: 'success', message: data.toString())
+    git.cmd(
+      args: ['checkout', '-b', name],
+      stdout: (data) -> new StatusView(type: 'success', message: data.toString())
     )
 
 module.exports.newBranch = ->
