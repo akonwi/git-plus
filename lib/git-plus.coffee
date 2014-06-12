@@ -17,7 +17,7 @@ module.exports =
     atom.workspaceView.command 'git-plus:menu', -> new GitPaletteView()
     
     # Only keybindings get here aswell!
-    atom.workspaceView.command 'git-plus:add', -> new GitAdd()
-    atom.workspaceView.command 'git-plus:commit', -> new GitCommit()
-    atom.workspaceView.command 'git-plus:add-and-commit', -> new GitAddAndCommit()
-    atom.workspaceView.command 'git-plus:add-all-and-commit', -> new GitAddAllAndCommit()
+    atom.workspaceView.command 'git-plus:add', -> GitAdd()
+    atom.workspaceView.command 'git-plus:commit', -> GitCommit()
+    atom.workspaceView.command 'git-plus:add-and-commit', -> GitAddAndCommit()
+    atom.workspaceView.command 'git-plus:add-all-and-commit', -> GitAddAllAndCommit()
