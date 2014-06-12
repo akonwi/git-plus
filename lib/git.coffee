@@ -66,7 +66,7 @@ gitDiff = (stdout, path) ->
 
 gitRefreshIndex = ->
   gitCmd(
-    args: ['add', '--refresh', '.']
+    args: ['add', '--refresh', '--', '.']
   )
 
 _getGitPath = ->
