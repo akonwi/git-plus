@@ -1,4 +1,4 @@
-registerCommands = ->
+getCommands = ->
   GitCommit = require './models/git-commit'
   GitAdd = require './models/git-add'
   GitBranch = require './models/git-branch'
@@ -21,60 +21,37 @@ registerCommands = ->
   GitUnstageFiles = require './models/git-unstage-files'
   GitStageHunk = require './models/git-stage-hunk'
   GitCherryPick = require './models/git-cherry-pick'
-
+  
+  commands = []
   if atom.project.getRepo()?
-    atom.workspaceView.unbind 'git-plus:init'
-    atom.workspaceView.command 'git-plus:commit', -> GitCommit()
-    atom.workspaceView.command 'git-plus:commit-amend', -> GitCommitAmend()
-    atom.workspaceView.command 'git-plus:add', -> GitAdd()
-    atom.workspaceView.command 'git-plus:checkout-current-file', -> GitCheckoutCurrentFile()
-    atom.workspaceView.command 'git-plus:checkout-all-files', -> GitCheckoutAllFiles()
-    atom.workspaceView.command 'git-plus:diff', -> GitDiff()
-    atom.workspaceView.command 'git-plus:diff-all', -> GitDiffAll()
-    atom.workspaceView.command 'git-plus:add-all', -> GitAdd(true)
-    atom.workspaceView.command 'git-plus:checkout', -> GitBranch.gitBranches()
-    atom.workspaceView.command 'git-plus:new-branch', -> GitBranch.newBranch()
-    atom.workspaceView.command 'git-plus:pull', -> GitPull()
-    atom.workspaceView.command 'git-plus:push', -> GitPush()
-    atom.workspaceView.command 'git-plus:fetch', -> GitFetch()
-    atom.workspaceView.command 'git-plus:add-and-commit', -> GitAddAndCommit()
-    atom.workspaceView.command 'git-plus:add-all-and-commit', -> GitAddAllAndCommit()
-    atom.workspaceView.command 'git-plus:remove', -> GitRemove(true)
-    atom.workspaceView.command 'git-plus:remove-current-file', -> GitRemove()
-    atom.workspaceView.command 'git-plus:log', -> GitLog()
-    atom.workspaceView.command 'git-plus:log-current-file', -> GitLog(true)
-    atom.workspaceView.command 'git-plus:show', -> GitShow()
-    atom.workspaceView.command 'git-plus:tags', -> GitTags()
-    atom.workspaceView.command 'git-plus:stage-files', -> GitStageFiles()
-    atom.workspaceView.command 'git-plus:unstage-files', -> GitUnstageFiles()
-    atom.workspaceView.command 'git-plus:stage-hunk', -> GitStageHunk()
-    atom.workspaceView.command 'git-plus:cherry-pick', -> GitCherryPick()
+    commands.push ['git-plus:commit', 'Git Plus: Commit', -> GitCommit()]
+    commands.push ['git-plus:commit-amend', 'Git Plus: Commit Amend', -> GitCommitAmend()]
+    commands.push ['git-plus:add', 'Git Plus: Add', -> GitAdd()]
+    commands.push ['git-plus:checkout-current-file', 'Git Plus: Checkout Current File', -> GitCheckoutCurrentFile()]
+    commands.push ['git-plus:checkout-all-files', 'Git Plus: Checkout All Files', -> GitCheckoutAllFiles()]
+    commands.push ['git-plus:diff', 'Git Plus: Diff', -> GitDiff()]
+    commands.push ['git-plus:diff-all', 'Git Plus: Diff All', -> GitDiffAll()]
+    commands.push ['git-plus:add-all', 'Git Plus: Add All', -> GitAdd(true)]
+    commands.push ['git-plus:checkout', 'Git Plus: Checkout', -> GitBranch.gitBranches()]
+    commands.push ['git-plus:new-branch', 'Git Plus: Checkout New Branch', -> GitBranch.newBranch()]
+    commands.push ['git-plus:pull', 'Git Plus: Pull', -> GitPull()]
+    commands.push ['git-plus:push', 'Git Plus: Push', -> GitPush()]
+    commands.push ['git-plus:fetch', 'Git Plus: Fetch', -> GitFetch()]
+    commands.push ['git-plus:add-and-commit', 'Git Plus: Add And Commit', -> GitAddAndCommit()]
+    commands.push ['git-plus:add-all-and-commit', 'Git Plus: Add All And Commit', -> GitAddAllAndCommit()]
+    commands.push ['git-plus:remove', 'Git Plus: Remove', -> GitRemove(true)]
+    commands.push ['git-plus:remove-current-file', 'Git Plus: Remove Current File', -> GitRemove()]
+    commands.push ['git-plus:log', 'Git Plus: Log', -> GitLog()]
+    commands.push ['git-plus:log-current-file', 'Git Plus: Log Current File', -> GitLog(true)]
+    commands.push ['git-plus:show', 'Git Plus: Show', -> GitShow()]
+    commands.push ['git-plus:tags', 'Git Plus: Tags', -> GitTags()]
+    commands.push ['git-plus:stage-files', 'Git Plus: Stage Files', -> GitStageFiles()]
+    commands.push ['git-plus:unstage-files', 'Git Plus: Unstage Files', -> GitUnstageFiles()]
+    commands.push ['git-plus:stage-hunk', 'Git Plus: Stage Hunk', -> GitStageHunk()]
+    commands.push ['git-plus:cherry-pick', 'Git Plus: Cherry-Pick', -> GitCherryPick()]
   else
-    atom.workspaceView.command 'git-plus:init', -> GitInit()
-    atom.workspaceView.unbind 'git-plus:commit'
-    atom.workspaceView.unbind 'git-plus:commit-amend'
-    atom.workspaceView.unbind 'git-plus:add'
-    atom.workspaceView.unbind 'git-plus:checkout-current-file'
-    atom.workspaceView.unbind 'git-plus:checkout-all-files'
-    atom.workspaceView.unbind 'git-plus:diff'
-    atom.workspaceView.unbind 'git-plus:diff-all'
-    atom.workspaceView.unbind 'git-plus:add-all'
-    atom.workspaceView.unbind 'git-plus:checkout'
-    atom.workspaceView.unbind 'git-plus:new-branch'
-    atom.workspaceView.unbind 'git-plus:pull'
-    atom.workspaceView.unbind 'git-plus:push'
-    atom.workspaceView.unbind 'git-plus:fetch'
-    atom.workspaceView.unbind 'git-plus:add-and-commit'
-    atom.workspaceView.unbind 'git-plus:add-all-and-commit'
-    atom.workspaceView.unbind 'git-plus:remove'
-    atom.workspaceView.unbind 'git-plus:remove-current-file'
-    atom.workspaceView.unbind 'git-plus:log'
-    atom.workspaceView.unbind 'git-plus:log-current-file'
-    atom.workspaceView.unbind 'git-plus:show'
-    atom.workspaceView.unbind 'git-plus:tags'
-    atom.workspaceView.unbind 'git-plus:stage-files'
-    atom.workspaceView.unbind 'git-plus:unstage-files'
-    atom.workspaceView.unbind 'git-plus:cherry-pick'
-    atom.workspaceView.unbind 'git-plus:stage-hunk'
-
-module.exports = registerCommands
+    commands.push ['git-plus:init', 'Git Plus: Init', -> GitInit()]
+  
+  commands
+    
+module.exports = getCommands

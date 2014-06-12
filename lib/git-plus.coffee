@@ -1,5 +1,9 @@
-GitPlusCommands = require './git-plus-commands'
-git = require './git'
+GitAdd = require './models/git-add'
+GitCommit = require './models/git-commit'
+GitAddAndCommit = require './models/git-add-and-commit'
+GitAddAllAndCommit = require './models/git-add-all-and-commit'
+
+GitPaletteView = require './views/git-palette-view'
 
 module.exports =
   configDefaults:
@@ -10,9 +14,10 @@ module.exports =
     gitPath: 'git'
 
   activate: (state) ->
-    GitPlusCommands()
-    git.refresh() if atom.project.getRepo()?
-
-  deactivate: ->
-
-  serialize: ->
+    atom.workspaceView.command 'git-plus:menu', -> new GitPaletteView()
+    
+    # Only keybindings get here aswell!
+    atom.workspaceView.on 'git-plus:add', -> new GitAdd()
+    atom.workspaceView.on 'git-plus:commit', -> new GitCommit()
+    atom.workspaceView.on 'git-plus:add-and-commit', -> new GitAddAndCommit()
+    atom.workspaceView.on 'git-plus:add-all-and-commit', -> new GitAddAllAndCommit()

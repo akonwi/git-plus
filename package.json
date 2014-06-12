@@ -3,7 +3,14 @@
   "main": "./lib/git-plus",
   "version": "2.7.3",
   "description": "Do git things without the terminal",
-  "activationEvents": [],
+  "activationEvents": [
+    "git-plus:menu",
+    "git-plus:menu",
+    "git-plus:add",
+    "git-plus:commit",
+    "git-plus:add-and-commit",
+    "git-plus:add-all-and-commit"
+  ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
@@ -11,6 +18,7 @@
   },
   "dependencies": {
     "fs-plus": "^2.2.0",
-    "fuzzaldrin": "^1.2.0"
+    "fuzzaldrin": "^1.2.0",
+    "underscore-plus": "1.x"
   }
 }
