@@ -7,6 +7,13 @@ vim-fugitive like package for atom. make commits and other git things without th
 ![A screenshot of your spankin' package](https://raw.githubusercontent.com/akonwi/git-plus/master/commit.gif)
 
 ## Usage
+
+### Git-Plus Palette
+>- `Cmd-Shift-H` on MacOS
+>- `Ctrl-Shift-H` on Windows + Linux
+>- `Git Plus: Menu` on the atom command palette.
+
+### Commands
 1. `Git add [all]`
 
   Git add will add the current file and 'add all' will add all changed files
