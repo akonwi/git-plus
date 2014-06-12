@@ -48,8 +48,10 @@ fuzzy.match = (pattern, string, opts={}) ->
   # For each character in the string, either add it to the result
   # or wrap in template if its the next string in the pattern
   idx = 0
-
   while idx < len
+    # Ignore Whitespaces:
+    patternIdx++ if pattern[patternIdx] is ' '
+
     ch = string[idx]
     if compareString[idx] is pattern[patternIdx]
       ch = pre + ch + post
@@ -105,7 +107,7 @@ fuzzy.filter = (pattern, arr, opts) ->
   arr.reduce(
     (prev, element, idx, arr) ->
       str = element
-      str = opts.extract(element)  if opts.extract
+      str = opts.extract(element) if opts.extract
       rendered = fuzzy.match(pattern, str, opts)
       if rendered?
         prev[prev.length] =
