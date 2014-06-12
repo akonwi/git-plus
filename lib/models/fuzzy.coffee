@@ -23,10 +23,9 @@ fuzzy.simpleFilter = (pattern, array) ->
 fuzzy.test = (pattern, string) ->
   fuzzy.match(pattern, string) isnt null
 
-# If `pattern` matches `string`, wrap each matching character
-# in `opts.pre` and `opts.post`. If no match, return null
-fuzzy.match = (pattern, string, opts) ->
-  opts = opts or {}
+# If `pattern` (input) matches `string` (test against), wrap each matching
+# character in `opts.pre` and `opts.post`. If no match, return null
+fuzzy.match = (pattern, string, opts={}) ->
   patternIdx = 0
   result = []
   len = string.length

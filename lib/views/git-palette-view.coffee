@@ -45,7 +45,7 @@ class GitPaletteView extends SelectListView
     filterQuery = @getFilterQuery()
     if filterQuery.length
       options =
-        pre: '<span class="text-info" style="font-weight:bold">'
+        pre: '<span class="text-warning" style="font-weight:bold">'
         post: "</span>"
         extract: (el) => if @getFilterKey()? then el[@getFilterKey()] else el
       filteredItems = fuzzy(filterQuery, @items, options)
@@ -66,9 +66,10 @@ class GitPaletteView extends SelectListView
       @setError(@getEmptyMessage(@items.length, filteredItems.length))
 
   viewForItem: ({name, description}, matchedStr) ->
+    console.log name, description, matchedStr
     $$ ->
       @li class: 'command', 'data-command-name': name, =>
-        if matchedStr? then @raw(matchedStr) else description
+        if matchedStr? then @raw(matchedStr) else @span description
 
   confirmed: ({func}) ->
     @cancel()

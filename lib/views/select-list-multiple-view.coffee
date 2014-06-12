@@ -118,15 +118,13 @@ class SelectListMultipleView extends SelectListView
     filterQuery = @getFilterQuery()
     if filterQuery.length
       options =
-        pre: '<span class="text-info" style="font-weight:bold">'
+        pre: '<span class="text-warning" style="font-weight:bold">'
         post: "</span>"
         extract: (el) => if @getFilterKey()? then el[@getFilterKey()] else el
       filteredItems = fuzzyFilter(filterQuery, @items, options)
     else
       filteredItems = @items
-      
-    console.log filteredItems
-      
+
     @list.empty()
     if filteredItems.length
       @setError(null)
