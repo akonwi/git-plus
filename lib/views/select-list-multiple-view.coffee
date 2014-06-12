@@ -1,4 +1,4 @@
-fuzzyFilter = require('fuzzaldrin').filter
+fuzzyFilter = require('../models/fuzzy').filter
 {$, $$, View, SelectListView} = require 'atom'
 
 # Public: Provides a view that renders a list of items with an editor that
@@ -16,9 +16,9 @@ fuzzyFilter = require('fuzzaldrin').filter
 # ## Requiring in packages
 #
 # ```coffee
-# {SelectMultipleListView} = require 'atom'
+# {SelectListMultipleView} = require 'atom'
 #
-# class MySelectListView extends SelectMultipleListView
+# class MySelectListView extends SelectListMultipleView
 #   initialize: ->
 #     super
 #     @addClass('overlay from-top')
@@ -33,7 +33,7 @@ fuzzyFilter = require('fuzzaldrin').filter
 #     console.log("#{items} were selected")
 # ```
 module.exports =
-class SelectMultipleListView extends SelectListView
+class SelectListMultipleView extends SelectListView
 
   selectedItems = []
 
@@ -50,7 +50,7 @@ class SelectMultipleListView extends SelectListView
 
     @addButtons()
 
-  # Public: Function to add buttons to the SelectMultipleListView.
+  # Public: Function to add buttons to the SelectListMultipleView.
   #
   # This method can be overridden by subclasses.
   #
@@ -117,17 +117,22 @@ class SelectMultipleListView extends SelectListView
 
     filterQuery = @getFilterQuery()
     if filterQuery.length
-      filteredItems = fuzzyFilter(@items, filterQuery, key: @getFilterKey())
+      options =
+        pre: '<span class="text-info" style="font-weight:bold">'
+        post: "</span>"
+        extract: (el) => if @getFilterKey()? then el[@getFilterKey()] else el
+      filteredItems = fuzzyFilter(filterQuery, @items, options)
     else
       filteredItems = @items
-
+      
+    console.log filteredItems
+      
     @list.empty()
     if filteredItems.length
       @setError(null)
-
       for i in [0...Math.min(filteredItems.length, @maxItems)]
-        item = filteredItems[i]
-        itemView = $(@viewForItem(item))
+        item = filteredItems[i].original ? filteredItems[i]
+        itemView = $(@viewForItem(item, filteredItems[i].string ? null))
         itemView.data('select-list-item', item)
         itemView.addClass 'active' if item in selectedItems
         @list.append(itemView)
@@ -142,11 +147,12 @@ class SelectMultipleListView extends SelectListView
   #
   # This is called when the item is about to appended to the list view.
   #
-  # item -  The model item being rendered. This will always be one of the items
-  #         previously passed to {::setItems}.
+  # item          - The model item being rendered. This will always be one of
+  #                 the items previously passed to {::setItems}.
+  # matchedString - The fuzzy highlighted string.
   #
   # Returns a String of HTML, DOM element, jQuery object, or View.
-  viewForItem: (item) ->
+  viewForItem: (item, matchedString) ->
     throw new Error("Subclass must implement a viewForItem(item) method")
 
   # Public: Callback function for when the complete button is pressed.

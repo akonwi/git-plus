@@ -57,7 +57,7 @@ class GitPaletteView extends SelectListView
       @setError(null)
       for i in [0...Math.min(filteredItems.length, @maxItems)]
         item = filteredItems[i].original ? filteredItems[i]
-        itemView = $(@viewForItem(item, filteredItems[i].string ? ''))
+        itemView = $(@viewForItem(item, filteredItems[i].string ? null))
         itemView.data('select-list-item', item)
         @list.append(itemView)
 
@@ -68,7 +68,7 @@ class GitPaletteView extends SelectListView
   viewForItem: ({name, description}, matchedStr) ->
     $$ ->
       @li class: 'command', 'data-command-name': name, =>
-        @raw(if matchedStr then matchedStr else description)
+        if matchedStr? then @raw(matchedStr) else description
 
   confirmed: ({func}) ->
     @cancel()

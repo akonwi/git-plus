@@ -32,12 +32,12 @@ class SelectStageFilesView extends SelectListMultipleView
       @complete() if $(target).hasClass('btn-unstage-button')
       @cancel() if $(target).hasClass('btn-cancel-button')
 
-  viewForItem: (item) ->
+  viewForItem: (item, matchedString) ->
     $$ ->
       @li =>
         @div class: 'pull-right', =>
           @span class: 'inline-block highlight', item.mode
-        @span class: 'text-warning', item.path
+        if matchedStr? then @raw(matchedStr) else item
 
   completed: (items) ->
     files = (item.path for item in items)

@@ -34,10 +34,11 @@ class SelectStageHunks extends SelectListMultipleView
       @complete() if $(target).hasClass('btn-stage-button')
       @cancel() if $(target).hasClass('btn-cancel-button')
 
-  viewForItem: (item) ->
+  viewForItem: (item, matchedStr) ->
     viewItem = $$ ->
       @li =>
-        @div class: 'inline-block highlight', item.pos
+        @div class: 'inline-block highlight', =>
+          if matchedStr? then @raw(matchedStr) else @span item.pos
         @div class: 'text-warning gp-item-diff', style: 'white-space: pre-wrap; font-family: monospace', item.diff
 
   completed: (items) ->
