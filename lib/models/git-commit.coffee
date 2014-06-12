@@ -48,8 +48,8 @@ showFile = ->
 commit = ->
   watcher.close()
   cleanFile()
-  args = ['commit', "--file=#{commitFilePath()}"]
-  args.push  '--amend' if amendMsg != ""
+  args = ['commit', '--cleanup=strip', "--file=#{commitFilePath()}"]
+  args.push '--amend' if amendMsg is not ''
   git.cmd(
     args: args,
     stdout: (data) ->
