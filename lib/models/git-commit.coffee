@@ -37,7 +37,7 @@ prepFile = (text) ->
 
 showFile = ->
   split = ''
-  split = 'right'  if atom.config.get 'git-plus.openInPane'
+  split = 'right' if atom.config.get 'git-plus.openInPane'
   atom.workspace
     .open(commitFilePath(), split: split, activatePane: true)
     # ::open returns a promise resolving to the editor
@@ -49,7 +49,7 @@ commit = ->
   watcher.close()
   cleanFile()
   args = ['commit', '--cleanup=strip', "--file=#{commitFilePath()}"]
-  args.push '--amend' if amendMsg is not ''
+  args.push '--amend' if amendMsg isnt ''
   git.cmd(
     args: args,
     stdout: (data) ->
