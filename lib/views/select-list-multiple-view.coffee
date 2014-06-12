@@ -147,10 +147,10 @@ class SelectListMultipleView extends SelectListView
   #
   # item          - The model item being rendered. This will always be one of
   #                 the items previously passed to {::setItems}.
-  # matchedString - The fuzzy highlighted string.
+  # matchedStr - The fuzzy highlighted string.
   #
   # Returns a String of HTML, DOM element, jQuery object, or View.
-  viewForItem: (item, matchedString) ->
+  viewForItem: (item, matchedStr) ->
     throw new Error("Subclass must implement a viewForItem(item) method")
 
   # Public: Callback function for when the complete button is pressed.

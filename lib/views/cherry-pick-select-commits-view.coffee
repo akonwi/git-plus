@@ -35,10 +35,11 @@ class CherryPickSelectCommits extends SelectListMultipleView
       @complete() if $(target).hasClass('btn-pick-button')
       @cancel() if $(target).hasClass('btn-cancel-button')
 
-  viewForItem: (item) ->
+  viewForItem: (item, matchedStr) ->
     $$ ->
       @li =>
-        @div class: 'text-highlight inline-block pull-right', style: 'font-family: monospace', item.hash
+        @div class: 'text-highlight inline-block pull-right', style: 'font-family: monospace', =>
+          if matchedStr? then @raw(matchedStr) else @span item.hash
         @div class: 'text-info', "#{item.author}, #{item.time}"
         @div class: 'text-warning', item.subject
 

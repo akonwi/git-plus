@@ -16,9 +16,6 @@ class SelectStageFilesView extends SelectListMultipleView
     atom.workspaceView.append(this)
     @focusFilterEditor()
 
-  getFilterKey: ->
-    'path'
-
   addButtons: ->
     viewButton = $$ ->
       @div class: 'buttons', =>
@@ -32,9 +29,10 @@ class SelectStageFilesView extends SelectListMultipleView
       @complete() if $(target).hasClass('btn-remove-button')
       @cancel() if $(target).hasClass('btn-cancel-button')
 
-  viewForItem: (item) ->
+  viewForItem: (item, matchedStr) ->
     $$ ->
-      @li item
+      @li =>
+        if matchedStr? then @raw(matchedStr) else @span item
 
   completed: (items) ->
     files = (item for item in items when item isnt '')
