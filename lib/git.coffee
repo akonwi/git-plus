@@ -60,7 +60,7 @@ gitUntrackedFiles = (stdout, dataUnstaged=[]) ->
 
 gitDiff = (stdout, path) ->
   gitCmd(
-    args: ['diff', '-p', path]
+    args: ['diff', '-p', '-U1', path]
     stdout: (data) -> stdout _prettifyDiff(data)
   )
 
