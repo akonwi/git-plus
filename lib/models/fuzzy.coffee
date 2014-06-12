@@ -1,17 +1,11 @@
+# Fuzzy
+# https://github.com/myork/fuzzy
 #
-# * Fuzzy
-# * https://github.com/myork/fuzzy
-# *
-# * Copyright (c) 2012 Matt York
-# * Licensed under the MIT license.
+# Copyright (c) 2012 Matt York
+# Licensed under the MIT license.
 
 fuzzy = {}
-
-# Use in node or in browser
-if typeof exports isnt "undefined"
-  module.exports = fuzzy
-else
-  @fuzzy = fuzzy
+module.exports = fuzzy
 
 # Return all elements of `array` that have a fuzzy
 # match against `pattern`.
@@ -49,7 +43,7 @@ fuzzy.match = (pattern, string, opts={}) ->
   # or wrap in template if its the next string in the pattern
   idx = 0
   while idx < len
-    # Ignore Whitespaces:
+    # Ignore Whitespaces
     patternIdx++ if pattern[patternIdx] is ' '
 
     ch = string[idx]
@@ -57,54 +51,16 @@ fuzzy.match = (pattern, string, opts={}) ->
       ch = pre + ch + post
       patternIdx += 1
 
-      # consecutive characters should increase the score more than linearly
       currScore += 1 + currScore
     else
       currScore = 0
     totalScore += currScore
     result[result.length] = ch
     idx++
-
-  # return rendered string if we have a match for every char
-  if patternIdx is pattern.length
-    return (
-      rendered: result.join("")
-      score: totalScore
-    )
-  null
-
-
-# The normal entry point. Filters `arr` for matches against `pattern`.
-# It returns an array with matching values of the type:
-#
-#     [{
-#         string:   '<b>lah' // The rendered string
-#       , index:    2        // The index of the element in `arr`
-#       , original: 'blah'   // The original element in `arr`
-#     }]
-#
-# `opts` is an optional argument bag. Details:
-#
-#    opts = {
-#        // string to put before a matching character
-#        pre:     '<b>'
-#
-#        // string to put after matching character
-#      , post:    '</b>'
-#
-#        // Optional function. Input is an element from the passed in
-#        // `arr`, output should be the string to test `pattern` against.
-#        // In this example, if `arr = [{crying: 'koala'}]` we would return
-#        // 'koala'.
-#      , extract: function(arg) { return arg.crying; }
-#    }
-fuzzy.filter = (pattern, arr, opts) ->
-  opts = opts or {}
-
-  # Sort by score. Browsers are inconsistent wrt stable/unstable
-  # sorting, so force stable by using the index in the case of tie.
-  # See http://ofb.net/~sethml/is-sort-stable.html
-  arr.reduce(
+  return {rendered: result.join(""), score: totalScore} if patternIdx is pattern.length
+    
+fuzzy.filter = (pattern, arr, opts={}) ->
+  highlighted = arr.reduce(
     (prev, element, idx, arr) ->
       str = element
       str = opts.extract(element) if opts.extract
@@ -121,3 +77,83 @@ fuzzy.filter = (pattern, arr, opts) ->
     compare = b.score - a.score
     return compare if compare
     a.index - b.index
+  
+  # No matches? Sort the original array using Damerau-Levenshtein.
+  if highlighted.length < 1
+    highlighted = arr.reduce(
+      (prev, element, idx, arr) ->
+        str = element
+        str = opts.extract(element) if opts.extract
+        prev[prev.length] =
+          string: str
+          score: DamerauLevenshtein(pattern, str)
+          index: idx
+          original: element
+        prev
+      ,[]
+    ).sort (a, b) ->
+      compare = a.score - b.score
+      return compare if compare
+      b.index - a.index
+  highlighted
+  
+DamerauLevenshtein = (down, across, prices={}, damerau=true) ->
+  # https://github.com/cbaatz/damerau-levenshtein
+  switch typeof prices.insert
+    when "function"
+      insert = prices.insert
+    when "number"
+      insert = (c) ->
+        prices.insert
+    else
+      insert = (c) ->
+        1
+  switch typeof prices.remove
+    when "function"
+      remove = prices.remove
+    when "number"
+      remove = (c) ->
+        prices.remove
+    else
+      remove = (c) ->
+        1
+  switch typeof prices.substitute
+    when "function"
+      substitute = prices.substitute
+    when "number"
+      substitute = (from, to) ->
+        prices.substitute
+    else
+      substitute = (from, to) ->
+        1
+  switch typeof prices.transpose
+    when "function"
+      transpose = prices.transpose
+    when "number"
+      transpose = (backward, forward) ->
+        prices.transpose
+    else
+      transpose = (backward, forward) ->
+        1
+# ---------------------------------------------------------------------------- #
+  ds = []
+  if down is across
+    return 0
+  else
+    down = down.split("")
+    down.unshift null
+    across = across.split("")
+    across.unshift null
+    down.forEach (d, i) ->
+      ds[i] = []  unless ds[i]
+      across.forEach (a, j) ->
+        if i is 0 and j is 0
+          ds[i][j] = 0
+        else if i is 0
+          ds[i][j] = ds[i][j - 1] + insert(a)
+        else if j is 0
+          ds[i][j] = ds[i - 1][j] + remove(d)
+        else
+          ds[i][j] = Math.min(ds[i - 1][j] + remove(d), ds[i][j - 1] + insert(a), ds[i - 1][j - 1] + ((if d is a then 0 else substitute(d, a))))
+          ds[i][j] = Math.min(ds[i][j], ds[i - 2][j - 2] + ((if d is a then 0 else transpose(d, down[i - 1]))))  if damerau and i > 1 and j > 1 and down[i - 1] is a and d is across[j - 1]
+    ds[down.length - 1][across.length - 1]
