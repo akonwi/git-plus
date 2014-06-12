@@ -75,6 +75,9 @@ fuzzy.filter = (pattern, arr, opts={}) ->
     ,[]
   ).sort (a, b) ->
     compare = b.score - a.score
+    if compare is 0
+      return opts.extract(a.original).length - opts.extract(b.original).length if opts.extract
+      return a.original.length - b.original.length
     return compare if compare
     a.index - b.index
   
