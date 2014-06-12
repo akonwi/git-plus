@@ -1,9 +1,11 @@
+git = require '../git'
 GitCommit = require './git-commit'
-GitAdd = require './git-add'
 
-#Add and commit current file only
 gitAddAllAndCommit = ->
-  GitAdd(true)
-  GitCommit()
+  git.cmd(
+    args: ['add', '--all', '.'],
+    stdout: (data) ->
+      GitCommit()
+  )
 
 module.exports = gitAddAllAndCommit
