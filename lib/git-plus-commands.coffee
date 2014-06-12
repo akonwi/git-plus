@@ -1,3 +1,5 @@
+git = require './git'
+
 getCommands = ->
   GitCommit = require './models/git-commit'
   GitAdd = require './models/git-add'
@@ -24,6 +26,7 @@ getCommands = ->
   
   commands = []
   if atom.project.getRepo()?
+    git.refresh()
     commands.push ['git-plus:commit', 'Git Plus: Commit', -> GitCommit()]
     commands.push ['git-plus:commit-amend', 'Git Plus: Commit Amend', -> GitCommitAmend()]
     commands.push ['git-plus:add', 'Git Plus: Add', -> GitAdd()]

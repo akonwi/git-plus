@@ -8,7 +8,6 @@ gitInit = ->
     stdout: (data) ->
       new StatusView(type: 'success', message: data)
       atom.project.setPath atom.project.getPath()
-      GitPlusCommands()
   )
 
 module.exports = gitInit

@@ -7,7 +7,6 @@ module.exports =
 class GitPaletteView extends SelectListView
 
   initialize: ->
-    git.refresh() if atom.project.getRepo()?
     super
     @addClass('git-palette overlay from-top')
     @toggle()
@@ -45,4 +44,5 @@ class GitPaletteView extends SelectListView
         @span description, title: name
 
   confirmed: ({func}) ->
+    @cancel()
     func()
