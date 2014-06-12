@@ -2,17 +2,29 @@
 StatusView = require './views/status-view'
 
 # Public: Execute a git command.
-#
-# args     - The {Array} containing the arguments to pass.
-# c_stdout - The {Function} to pass the stdout to.
-# c_exit   - The {Function} to pass the exit code to.
+# {Object}
+#   :args    - The {Array} containing the arguments to pass.
+#   :options - The {Object} with options to pass.
+#      :cwd  - Current working directory as {String}.
+#   :stdout  - The {Function} to pass the stdout to.
+#   :exit    - The {Function} to pass the exit code to.
 #
 # Returns: `undefined`
 gitCmd = ({args, options, stdout, stderr, exit}={}) ->
-  command = getGitPath()
+  command = _getGitPath()
   options ?= {}
   options.cwd ?= dir()
   stderr ?= (data) -> new StatusView(type: 'alert', message: data.toString())
+
+  if stdout? and not exit?
+    c_stdout = stdout
+    stdout = (data) ->
+      @save ?= ''
+      @save += data
+    exit = (exit) ->
+      if exit is 0
+        c_stdout @save ?= ''
+        @save = null
 
   new BufferedProcess
     command: command
@@ -33,15 +45,16 @@ gitUnstagedFiles = (stdout, showUntracked=false) ->
     args: ['diff-files', '--name-status', '-z']
     stdout: (data) ->
       if showUntracked
-        gitUntrackedFiles(c_stdout, _prettify(data))
+        gitUntrackedFiles(stdout, _prettify(data))
       else
-        c_stdout _prettify(data)
+        stdout _prettify(data)
   )
 
 gitUntrackedFiles = (stdout, dataUnstaged=[]) ->
   gitCmd(
     args: ['ls-files', '-o', '--exclude-standard','-z']
-    stdout: (data) -> stdout dataUnstaged.concat(_prettifyUntracked(data))
+    stdout: (data) ->
+      stdout dataUnstaged.concat(_prettifyUntracked(data))
   )
 
 gitDiff = (stdout, path) ->
@@ -55,12 +68,16 @@ gitRefreshIndex = ->
     args: ['add', '--refresh', '.']
   )
 
+_getGitPath = ->
+  atom.config.get('git-plus.gitPath') ? 'git'
+
 _prettify = (data) ->
   data = data.split('\0')[...-1]
   files = [] = for mode, i in data by 2
     {mode: mode, path: data[i+1]}
 
 _prettifyUntracked = (data) ->
+  return [] if not data?
   data = data.split('\0')[...-1]
   files = [] = for file in data
     {mode: '?', path: file}
