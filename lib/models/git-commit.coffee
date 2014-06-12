@@ -23,15 +23,16 @@ prepFile = (text) ->
   watcher.close() if watcher?
   # format the text to be ignored in the commit message
   text = text.replace(/\s*\(.*\)\n/g, '')
-  text = text.replace(/\n/g, "\n# ")
+  text = text.trim().replace(/\n/g, "\n# ")
   # in order to make sure each line doesn't start with a space, the preceding
   #   line should end with a backslash
   fs.writeFileSync commitFilePath(),
-     "#{amendMsg}\n\
-      # Please enter the commit message for your changes. Lines starting\n\
-      # with '#' will be ignored, and an empty message aborts the commit.\n\
-      # Remove hyphen(-) and update commit message as necessary for amend.\n\
-      # #{text}",
+     """#{amendMsg}
+      # Please enter the commit message for your changes. Lines starting
+      # with '#' will be ignored, and an empty message aborts the commit.
+      # Remove hyphen(-) and update commit message as necessary for amend.
+      #
+      # #{text}""",
     flag: 'w+'
   showFile()
 
