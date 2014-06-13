@@ -6,8 +6,7 @@ GitShow = require './git-show'
 module.exports =
 class TagView extends SelectListView
 
-  dir = ->
-    atom.project.getRepo().getWorkingDirectory()
+  dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
   initialize: (@tag) ->
     super

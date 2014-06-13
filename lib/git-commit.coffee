@@ -11,7 +11,7 @@ amendMsg = ""
 
 gitCommit = (_amendMsg="") ->
   currentPane = atom.workspace.getActivePane()
-  dir = atom.project.getRepo().getWorkingDirectory()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   amendMsg = _amendMsg
   new BufferedProcess({
     command: 'git'

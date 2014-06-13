@@ -3,8 +3,8 @@ StatusView = require './status-view'
 RemoveListView = require './remove-list-view'
 
 gitRemove = (showSelector=false) ->
-  dir = atom.project.getRepo().getWorkingDirectory()
-  currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+  currentFile = atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
 
   if currentFile? and not showSelector
     atom.workspaceView.getActiveView().remove()

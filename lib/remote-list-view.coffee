@@ -32,7 +32,7 @@ class ListView extends SelectListView
     @cancel()
 
   execute: (remote) ->
-    dir = atom.project.getRepo().getWorkingDirectory()
+    dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
     view = new OutputView()
     new BufferedProcess
       command: 'git'

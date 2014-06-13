@@ -2,7 +2,7 @@
 OutputView = require './output-view'
 
 gitPull = ->
-  dir = atom.project.getRepo().getWorkingDirectory()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   view = new OutputView()
   new BufferedProcess({
     command: 'git'

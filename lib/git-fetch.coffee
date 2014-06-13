@@ -2,8 +2,7 @@
 ListView = require './remote-list-view'
 StatusView = require './status-view'
 
-dir = ->
-  atom.project.getRepo().getWorkingDirectory()
+dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
 gitFetch = ->
   # first get the remote repos

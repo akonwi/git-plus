@@ -8,8 +8,7 @@ StatusView = require './status-view'
 module.exports=
 class TagCreateView extends View
 
-  dir = ->
-    atom.project.getRepo().getWorkingDirectory()
+  dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
   @content: ->
     @div class: 'overlay from-top', =>

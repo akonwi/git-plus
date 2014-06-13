@@ -7,7 +7,7 @@ fs = require 'fs'
 
 
 gitMsg = () ->
-  dir = atom.project.getRepo().getWorkingDirectory()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   new BufferedProcess({
     command: 'git'
@@ -20,5 +20,5 @@ gitMsg = () ->
       gitCommit "- " + data.toString()
   })
 
-  
+
 module.exports = gitMsg
