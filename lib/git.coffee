@@ -23,9 +23,8 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
       @save ?= ''
       @save += data
     exit = (exit) ->
-      if exit is 0
-        c_stdout @save ?= ''
-        @save = null
+      c_stdout @save ?= ''
+      @save = null
 
   new BufferedProcess
     command: command
