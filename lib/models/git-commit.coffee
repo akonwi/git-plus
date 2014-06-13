@@ -10,16 +10,19 @@ dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 gitCommit = (_amend='') ->
   if amend?
     atom.workspace.open(file, activatePane: true, searchAllPanes: true)
-    return
-
-  amend = _amend
-  git.cmd(
-    args: ['status'],
-    stdout: (data) -> prepFile data, amend
-  )
+  else
+    git.stagedFiles (files) ->
+      if _amend isnt '' or files.length >= 1
+        git.cmd(
+          args: ['status'],
+          stdout: (data) -> prepFile data, _amend
+        )
+      else
+        new StatusView(type: 'error', message: 'Nothing to commit.')
 
 # FIXME?: maybe I shouldn't use the COMMIT file in .git/
-prepFile = (status, amend) ->
+prepFile = (status, _amend) ->
+  amend = _amend
   # format the status to be ignored in the commit message
   status = status.replace(/\s*\(.*\)\n/g, '')
   status = status.trim().replace(/\n/g, "\n# ")
