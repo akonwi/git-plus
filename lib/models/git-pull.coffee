@@ -4,7 +4,7 @@ git = require '../git'
 
 gitPull = ->
   view = new OutputView()
-  git(
+  git.cmd(
     args: ['pull']
     stdout: (data) -> view.addLine(data.toString())
     stderr: (data) -> view.addLine(data.toString())
