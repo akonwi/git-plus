@@ -43,5 +43,5 @@ class ListView extends SelectListView
       args: ['checkout', branch],
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
-        atom.workspaceView.trigger 'core:save'
+        atom.project.getRepo()?.refreshStatus()
     )
