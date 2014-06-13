@@ -40,7 +40,7 @@ vim-fugitive like package for atom. make commits and other git things without th
 8. `Git [push|pull]`
 
   When Pushing, if you have multiple remote repos, you can choose which to push to.  
-  The output view with feedback can be hidden by hitting the `; x` key combination.
+  The output view with feedback can be hidden by hitting the `[cmd|ctrl]-alt-.` key combination.
 
 9. `Git Add and Commit`
 
