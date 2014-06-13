@@ -3,7 +3,21 @@ StatusView = require './status-view'
 
 # if all param true, then 'git add .'
 gitAdd = (all=false)->
-  dir = atom.project.getRepo().getWorkingDirectory()
+
+  # pobetiger 2014/06/13
+  # on v0.103.0, atom.project.getRepo() returns null
+  # attempt to deref this obj will cause exception
+  # modified to check before calling getWorkingDirectory()
+  # otherwise we should use getPath()
+  # but this might be a bug in atom itself (getRepo() not working?)
+  # this work around will get add to work
+  currentRepo = atom.project.getRepo()
+
+  if (currentRepo)
+    dir = atom.project.getRepo().getWorkingDirectory()
+  else
+    dir = atom.project.getPath()
+
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   toStage = if all then '.' else currentFile
   if (toStage?)
