@@ -3,7 +3,6 @@ OutputView = require '../views/output-view'
 git = require '../git'
 
 gitPull = ->
-  dir = atom.project.getRepo().getWorkingDirectory()
   view = new OutputView()
   git(
     args: ['pull']

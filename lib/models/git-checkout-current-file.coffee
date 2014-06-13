@@ -3,7 +3,7 @@ StatusView = require '../views/status-view'
 Path = require 'path'
 
 gitCheckoutCurrentFile = ->
-  currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+  currentFile = atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
   git.cmd(
     args: ['checkout', '--', currentFile],
     stdout: (data) ->

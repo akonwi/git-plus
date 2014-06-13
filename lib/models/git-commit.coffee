@@ -2,16 +2,14 @@ fs = require 'fs-plus'
 git = require '../git'
 StatusView = require '../views/status-view'
 
-currentPane = null
-dir = ''
+currentPane = atom.workspace.getActivePane()
+dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 commitFilePath = -> dir + '/.git/COMMIT_EDITMSG'
 commitEditor = null
 watcher = null
 amendMsg = ""
 
 gitCommit = (_amendMsg="") ->
-  currentPane = atom.workspace.getActivePane()
-  dir = atom.project.getRepo().getWorkingDirectory()
   amendMsg = _amendMsg
   git.cmd(
     args: ['status'],
@@ -48,7 +46,6 @@ showFile = ->
 
 commit = ->
   watcher.close()
-  cleanFile()
   args = ['commit', '--cleanup=strip', "--file=#{commitFilePath()}"]
   args.push '--amend' if amendMsg isnt ''
   git.cmd(
@@ -65,11 +62,5 @@ commit = ->
       atom.workspaceView.trigger 'core:save'
       atom.project.getRepo()?.refreshStatus()
   )
-
-cleanFile = ->
-  text = fs.readFileSync(commitFilePath()).toString()
-  stripOut = text.indexOf "\n# Please enter"
-  text = text.slice(0, stripOut)
-  fs.writeFileSync commitFilePath(), text, flag: 'w+'
 
 module.exports = gitCommit

@@ -88,14 +88,7 @@ _prettifyDiff = (data) ->
   data[1..data.length] = ('@@' + line for line in data[1..])
   data
 
-# Public: Return the current WorkingDirectory
-#
-# Returns the current WorkingDirectory as {String}.
-dir = ->
-  if atom.project.getRepo()?
-    atom.project.getRepo().getWorkingDirectory()
-  else
-    atom.project.getPath()
+dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles

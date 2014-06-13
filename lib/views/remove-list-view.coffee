@@ -38,7 +38,7 @@ class SelectStageFilesView extends SelectListMultipleView
     files = (item for item in items when item isnt '')
     @cancel()
 
-    currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+    currentFile = atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
 
     atom.workspaceView.getActiveView().remove() if currentFile in files
     git.cmd(

@@ -2,7 +2,7 @@ git = require '../git'
 LogListView = require '../views/log-list-view'
 
 currentFile = ->
-  atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+  atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
 
 amountOfCommitsToShow = ->
   atom.config.getPositiveInt('git-plus.amountOfCommitsToShow') ? (atom.config.getDefault 'git-plus.amountOfCommitsToShow')
