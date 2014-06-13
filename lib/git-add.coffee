@@ -3,7 +3,7 @@ StatusView = require './status-view'
 
 # if all param true, then 'git add .'
 gitAdd = (all=false)->
-  dir = atom.project.getRepo().getWorkingDirectory()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   toStage = if all then '.' else currentFile
   if (toStage?)

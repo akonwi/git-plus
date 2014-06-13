@@ -7,7 +7,7 @@ fs = require 'fs'
 diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 
 gitDiff = (diffAllStat="") ->
-  dir = atom.project.getRepo().getWorkingDirectory()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   args = ['diff']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'

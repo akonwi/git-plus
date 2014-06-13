@@ -15,7 +15,7 @@ class SelectStageFilesView extends SelectListMultipleView
     atom.workspaceView.append(this)
     @focusFilterEditor()
 
-  dir = -> atom.project.getRepo().getWorkingDirectory()
+  dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
   getFilterKey: ->
     'path'
@@ -41,7 +41,7 @@ class SelectStageFilesView extends SelectListMultipleView
     files = (item for item in items when item isnt '')
     @cancel()
 
-    currentFile = atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+    currentFile = atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
     atom.workspaceView.getActiveView().remove() if currentFile in files
 
     new BufferedProcess({

@@ -10,11 +10,10 @@ GitShow = require './git-show'
 module.exports =
 class LogListView extends SelectListView
 
-  dir = ->
-    atom.project.getRepo().getWorkingDirectory()
+  dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
   currentFile = ->
-    atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+    atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
 
   showCommitFilePath = ->
     Path.join Os.tmpDir(), "atom_git_plus_commit.diff"

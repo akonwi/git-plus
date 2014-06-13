@@ -3,7 +3,7 @@ StatusView = require './status-view'
 Path = require 'path'
 
 gitCheckoutCurrentFile = ()->
-  dir = atom.project.getRepo().getWorkingDirectory()
+  dir = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   currentFile = atom.workspace.getActiveEditor()?.getPath()
   new BufferedProcess({
     command: 'git'

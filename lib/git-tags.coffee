@@ -2,8 +2,7 @@
 TagListView = require './tag-list-view'
 StatusView = require './status-view'
 
-dir = ->
-  atom.project.getRepo().getWorkingDirectory()
+dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
 gitTags = ->
   @TagListView = null

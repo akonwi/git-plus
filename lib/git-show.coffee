@@ -6,8 +6,7 @@ fs = require 'fs'
 ListView = require './branch-list-view'
 StatusView = require './status-view'
 
-dir = ->
-  atom.project.getRepo().getWorkingDirectory()
+dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
 showCommitFilePath = ->
   Path.join Os.tmpDir(), "atom_git_plus_commit.diff"

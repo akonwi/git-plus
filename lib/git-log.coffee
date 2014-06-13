@@ -2,11 +2,10 @@
 LogListView = require './log-list-view'
 StatusView = require './status-view'
 
-dir = ->
-  atom.project.getRepo().getWorkingDirectory()
+dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
 currentFile = ->
-  atom.project.getRepo().relativize atom.workspace.getActiveEditor()?.getPath()
+  atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
 
 amountOfCommitsToShow = ->
   atom.config.getPositiveInt('git-plus.amountOfCommitsToShow') ? (atom.config.getDefault 'git-plus.amountOfCommitsToShow')
