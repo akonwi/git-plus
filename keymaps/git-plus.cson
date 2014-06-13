@@ -12,9 +12,11 @@
   'cmd-shift-c': 'git-plus:commit'
   'cmd-shift-a c': 'git-plus:add-and-commit'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
+  '; x': 'git-plus:hide-output'
 
 '.platform-win32, .platform-linux .editor':
   'ctrl-shift-a': 'git-plus:add'
   'ctrl-shift-x': 'git-plus:commit'
   'ctrl-shift-a c': 'git-plus:add-and-commit'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
+  '; x': 'git-plus:hide-output'

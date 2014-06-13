@@ -9,6 +9,7 @@ module.exports =
     initialize: ->
       super
       atom.workspaceView.appendToBottom(this)
+      atom.workspaceView.command "git-plus:hide-output", => @detach()
 
     addLine: (line) ->
       @find(".output").append(line)
