@@ -3,7 +3,7 @@ Path = require 'path'
 fs = require 'fs-plus'
 
 git = require '../git'
-
+StatusView = require '../views/status-view'
 diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 
 gitDiff = (diffAllStat="") ->
@@ -11,7 +11,7 @@ gitDiff = (diffAllStat="") ->
   args = ['diff']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-  args.push currentFile if diffAllStat == ""
+  args.push currentFile if diffAllStat is ''
   git.cmd(
     args: args,
     stdout: (data) -> diffAllStat += data.toString(),
@@ -19,8 +19,11 @@ gitDiff = (diffAllStat="") ->
   )
 
 prepFile = (text) ->
-  fs.writeFileSync diffFilePath, text, flag: 'w+'
-  showFile()
+  if text.length > 0
+    fs.writeFileSync diffFilePath, text, flag: 'w+'
+    showFile()
+  else
+    new StatusView(type: 'error', message: 'Nothing to show.')
 
 showFile = ->
   split = ''
