@@ -28,8 +28,7 @@ prepFile = (text) ->
   showFile()
 
 showFile = ->
-  split = ''
-  split = 'right'  if atom.config.get 'git-plus.openInPane'
+  split = if atom.config.get('git-plus.openInPane') then 'right' else ''
   atom.workspace
     .open(showCommitFilePath(), split: split, activatePane: true)
 
