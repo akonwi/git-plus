@@ -2,6 +2,9 @@
 
 module.exports =
   class OutputView extends ScrollView
+    
+    message: ''
+    
     @content: ->
       @div class: 'git-plus info-view', =>
         @pre class: 'output'
@@ -11,9 +14,13 @@ module.exports =
       atom.workspaceView.appendToBottom(this)
 
     addLine: (line) ->
-      @find(".output").append(line)
+      @message += line
 
+    reset: ->
+      @message = ''
+    
     finish: ->
+      @find(".output").append(@message)
       setTimeout =>
         @detach()
       , 10000
