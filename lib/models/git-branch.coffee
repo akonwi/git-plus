@@ -6,8 +6,8 @@ StatusView = require '../views/status-view'
 
 module.exports.gitBranches = ->
   git.cmd(
-    ['branch'],
-    (data) -> new ListView(data.toString())
+    args: ['branch'],
+    stdout: (data) -> new ListView(data.toString())
   )
 
 class InputView extends View
