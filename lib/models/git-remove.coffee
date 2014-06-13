@@ -7,15 +7,13 @@ gitRemove = (showSelector=false) ->
 
   if currentFile? and not showSelector
     atom.workspaceView.getActiveView().remove()
-    git.cmd(
+    git.cmd
       args: ['rm', '-f', '--ignore-unmatch', currentFile],
       stdout: (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
-    )
   else
-    git.cmd(
+    git.cmd
       args: ['rm', '-r', '-n', '--ignore-unmatch', '-f', '*'],
       stdout: (data) -> new RemoveListView(prettify data)
-    )
 
 # cut off rm '' around the filenames.
 prettify = (data) ->

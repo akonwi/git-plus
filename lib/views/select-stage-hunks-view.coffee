@@ -51,12 +51,11 @@ class SelectStageHunks extends SelectListMultipleView
     patchPath = atom.project.getRepo().getWorkingDirectory() + '/.git/GITPLUS_PATCH'
     fs.writeFileSync patchPath, patch_full, flag: 'w+'
 
-    git.cmd(
+    git.cmd
       args: ['apply', '--cached', '--', patchPath],
       stdout: (data) ->
         new StatusView(type: 'success', message: data)
         fs.writeFileSync patchPath, '', flag: 'w+'
-    )
 
   _generateObjects: (data) ->
     for hunk in data when hunk isnt ''

@@ -29,7 +29,7 @@ class CherryPickSelectBranch extends SelectListView
       "#{@currentHead}...#{item}"
     ]
 
-    git.cmd(
+    git.cmd
       args: args
       stdout: (data) ->
         @save ?= ''
@@ -40,4 +40,3 @@ class CherryPickSelectBranch extends SelectListView
           @save = null
         else
           new StatusView(type: 'warning', message: "No commits available to cherry-pick.")
-    )

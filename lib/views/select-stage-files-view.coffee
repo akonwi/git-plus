@@ -38,12 +38,11 @@ class SelectStageFilesView extends SelectListMultipleView
         @div class: 'pull-right', =>
           @span class: 'inline-block highlight', item.mode
         if matchedStr? then @raw(matchedStr) else @span item.path
-        
+
   completed: (items) ->
     files = (item.path for item in items)
     @cancel()
 
-    git.cmd(
+    git.cmd
       args: ['add', '-f'].concat(files),
       stdout: (data) -> new StatusView(type: 'success', message: data)
-    )

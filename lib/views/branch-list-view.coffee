@@ -39,9 +39,8 @@ class ListView extends SelectListView
     @cancel()
 
   checkout: (branch) ->
-    git.cmd(
+    git.cmd
       args: ['checkout', branch],
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
         atom.project.getRepo()?.refreshStatus()
-    )

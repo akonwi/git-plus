@@ -10,9 +10,8 @@ amountOfCommitsToShow = ->
 gitLog = (onlyCurrentFile=false) ->
   args = ['log', '--pretty="%h;|%aN <%aE>;|%s;|%ar (%aD)"', '-s', "-n#{amountOfCommitsToShow()}"]
   args.push currentFile() if onlyCurrentFile and currentFile()?
-  git.cmd(
+  git.cmd
     args: args,
     stdout: (data) -> new LogListView(data, onlyCurrentFile)
-  )
 
 module.exports = gitLog

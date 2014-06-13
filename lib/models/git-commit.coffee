@@ -13,10 +13,9 @@ gitCommit = (_amend='') ->
   else
     git.stagedFiles (files) ->
       if _amend isnt '' or files.length >= 1
-        git.cmd(
+        git.cmd
           args: ['status'],
           stdout: (data) -> prepFile data, _amend
-        )
       else
         new StatusView(type: 'error', message: 'Nothing to commit.')
 
@@ -46,7 +45,7 @@ showFile = ->
 commit = ->
   args = ['commit', '--cleanup=strip', "--file=#{file}"]
   args.push '--amend' if amend isnt ''
-  git.cmd(
+  git.cmd
     args: args,
     stdout: (data) ->
       new StatusView(type: 'success', message: data.toString())
@@ -55,11 +54,10 @@ commit = ->
       else
         atom.workspace.destroyActivePane()
       atom.project.getRepo()?.refreshStatus()
-  )
 
 cleanup = ->
   amend = null
   currentPane.activate()
   try fs.unlinkSync "#{dir}/#{file}"
-  
+
 module.exports = gitCommit

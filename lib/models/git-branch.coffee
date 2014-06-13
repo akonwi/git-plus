@@ -1,14 +1,14 @@
 {$, EditorView, View} = require 'atom'
 
 git = require '../git'
-ListView = require '../views/branch-list-view'
 StatusView = require '../views/status-view'
+BranchListView = require '../views/branch-list-view'
 
 module.exports.gitBranches = ->
-  git.cmd(
+  git.cmd
     args: ['branch'],
-    stdout: (data) -> new ListView(data.toString())
-  )
+    stdout: (data) ->
+      new BranchListView data
 
 class InputView extends View
   @content: ->
@@ -26,10 +26,9 @@ class InputView extends View
       atom.workspaceView.focus().trigger 'core:save'
 
   createBranch: (name) ->
-    git.cmd(
+    git.cmd
       args: ['checkout', '-b', name],
       stdout: (data) -> new StatusView(type: 'success', message: data.toString())
-    )
 
 module.exports.newBranch = ->
   new InputView()

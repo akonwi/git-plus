@@ -35,38 +35,33 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
     exit: exit
 
 gitStagedFiles = (stdout) ->
-  gitCmd(
+  gitCmd
     args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     stdout: (data) -> stdout _prettify(data)
-  )
 
 gitUnstagedFiles = (stdout, showUntracked=false) ->
-  gitCmd(
+  gitCmd
     args: ['diff-files', '--name-status', '-z']
     stdout: (data) ->
       if showUntracked
         gitUntrackedFiles(stdout, _prettify(data))
       else
         stdout _prettify(data)
-  )
 
 gitUntrackedFiles = (stdout, dataUnstaged=[]) ->
-  gitCmd(
+  gitCmd
     args: ['ls-files', '-o', '--exclude-standard','-z']
     stdout: (data) ->
       stdout dataUnstaged.concat(_prettifyUntracked(data))
-  )
 
 gitDiff = (stdout, path) ->
-  gitCmd(
+  gitCmd
     args: ['diff', '-p', '-U1', path]
     stdout: (data) -> stdout _prettifyDiff(data)
-  )
 
 gitRefreshIndex = ->
-  gitCmd(
+  gitCmd
     args: ['add', '--refresh', '--', '.']
-  )
 
 _getGitPath = ->
   atom.config.get('git-plus.gitPath') ? 'git'

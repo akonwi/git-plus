@@ -18,10 +18,9 @@ showObject = (objectHash, file) ->
     args.push '--'
     args.push file
 
-  git.cmd(
+  git.cmd
     args: args,
     stdout: (data) -> prepFile data
-  )
 
 prepFile = (text) ->
   fs.writeFileSync showCommitFilePath(), text, flag: 'w+'

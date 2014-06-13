@@ -43,7 +43,6 @@ class SelectStageFilesView extends SelectListMultipleView
     files = (item.path for item in items)
     @cancel()
 
-    git.cmd(
+    git.cmd
       args: ['reset', 'HEAD', '--'].concat(files),
       stdout: (data) ->  new StatusView(type: 'success', message: data)
-    )
