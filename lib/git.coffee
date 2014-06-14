@@ -68,14 +68,15 @@ gitRefreshIndex = ->
   gitCmd
     args: ['add', '--refresh', '--', '.']
 
-gitAdd = ({file, stdout, stderr}={}) ->
+gitAdd = ({file, stdout, stderr, exit}={}) ->
+  exit ?= (code) ->
+    if code is 0
+      new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
   gitCmd
     args: ['add', '--all', file ? '.'],
     stdout: stdout if stdout?
     stderr: stderr if stderr?
-    exit: (code) ->
-      if code is 0
-        new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
+    exit: exit
 
 _getGitPath = ->
   atom.config.get('git-plus.gitPath') ? 'git'

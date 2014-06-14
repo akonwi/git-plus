@@ -4,6 +4,6 @@ GitCommit = require './git-commit'
 gitAddAndCommit = ->
   git.add
     file: atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
-    stdout: -> GitCommit()
+    exit: -> GitCommit()
 
 module.exports = gitAddAndCommit
