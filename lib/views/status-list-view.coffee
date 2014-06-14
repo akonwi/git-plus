@@ -1,7 +1,3 @@
-Os = require 'os'
-Path = require 'path'
-fs = require 'fs-plus'
-
 {$$, SelectListView} = require 'atom'
 
 git = require '../git'
@@ -14,7 +10,7 @@ class StatusListView extends SelectListView
     super
     @addClass 'overlay from-top'
     @branch = @data[0]
-    @setItems @parseData @data[1..]
+    @setItems @parseData @data[...-1]
 
     atom.workspaceView.append this
     @focusFilterEditor()
