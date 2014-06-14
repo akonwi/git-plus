@@ -22,6 +22,7 @@ class GitCommit extends Model
           args: ['status'],
           stdout: (data) => @prepFile data
       else
+        @cleanup()
         new StatusView(type: 'error', message: 'Nothing to commit.')
 
   # FIXME?: maybe I shouldn't use the COMMIT file in .git/
