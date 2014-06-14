@@ -2,10 +2,8 @@ git = require '../git'
 GitCommit = require './git-commit'
 
 gitAddAndCommit = ->
-  file = atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
-  git.cmd
-    args: ['add', '--all', file],
-    stdout: (data) ->
-      GitCommit()
+  git.add
+    file: atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
+    stdout: -> GitCommit()
 
 module.exports = gitAddAndCommit

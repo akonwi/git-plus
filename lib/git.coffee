@@ -34,6 +34,11 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
     stderr: stderr
     exit: exit
 
+gitStatus = (stdout) ->
+  gitCmd
+    args: ['status', '--porcelain', '-z']
+    stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
+
 gitStagedFiles = (stdout) ->
   gitCmd
     args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
@@ -63,6 +68,15 @@ gitRefreshIndex = ->
   gitCmd
     args: ['add', '--refresh', '--', '.']
 
+gitAdd = ({file, stdout, stderr}={}) ->
+  gitCmd
+    args: ['add', '--all', file ? '.'],
+    stdout: stdout if stdout?
+    stderr: stderr if stderr?
+    exit: (code) ->
+      if code is 0
+        new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
+
 _getGitPath = ->
   atom.config.get('git-plus.gitPath') ? 'git'
 
@@ -89,3 +103,5 @@ module.exports.stagedFiles = gitStagedFiles
 module.exports.unstagedFiles = gitUnstagedFiles
 module.exports.diff = gitDiff
 module.exports.refresh = gitRefreshIndex
+module.exports.status = gitStatus
+module.exports.add = gitAdd

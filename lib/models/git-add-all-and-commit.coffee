@@ -2,9 +2,7 @@ git = require '../git'
 GitCommit = require './git-commit'
 
 gitAddAllAndCommit = ->
-  git.cmd
-    args: ['add', '--all', '.'],
-    stdout: (data) ->
-      GitCommit()
+  git.add
+    stdout: -> GitCommit()
 
 module.exports = gitAddAllAndCommit

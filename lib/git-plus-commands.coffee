@@ -23,7 +23,8 @@ getCommands = ->
   GitUnstageFiles = require './models/git-unstage-files'
   GitStageHunk = require './models/git-stage-hunk'
   GitCherryPick = require './models/git-cherry-pick'
-  
+  GitStatus = require './models/git-status'
+
   commands = []
   if atom.project.getRepo()?
     git.refresh()
@@ -32,7 +33,7 @@ getCommands = ->
       commands.push ['git-plus:log-current-file', 'Git Plus: Log Current File', -> GitLog(true)]
       commands.push ['git-plus:remove-current-file', 'Git Plus: Remove Current File', -> GitRemove()]
       commands.push ['git-plus:checkout-current-file', 'Git Plus: Checkout Current File', -> GitCheckoutCurrentFile()]
-  
+
     commands.push ['git-plus:add-and-commit', 'Git Plus: Add And Commit', -> GitAddAndCommit()]
     commands.push ['git-plus:add-all-and-commit', 'Git Plus: Add All And Commit', -> GitAddAllAndCommit()]
     commands.push ['git-plus:commit', 'Git Plus: Commit', -> GitCommit()]
@@ -54,9 +55,10 @@ getCommands = ->
     commands.push ['git-plus:unstage-files', 'Git Plus: Unstage Files', -> GitUnstageFiles()]
     commands.push ['git-plus:stage-hunk', 'Git Plus: Stage Hunk', -> GitStageHunk()]
     commands.push ['git-plus:cherry-pick', 'Git Plus: Cherry-Pick', -> GitCherryPick()]
+    commands.push ['git-plus:status', 'Git Plus: Status', -> GitStatus()]
   else
     commands.push ['git-plus:init', 'Git Plus: Init', -> GitInit()]
-  
+
   commands
-    
+
 module.exports = getCommands

@@ -6,19 +6,20 @@ git = require '../git'
 StatusView = require '../views/status-view'
 diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 
-gitDiff = (diffAllStat="") ->
-  currentFile = atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
+gitDiff = ({diffStat, file}={}) ->
+  file ?= atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
+  diffStat ?= ''
   args = ['diff']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-  args.push currentFile if diffAllStat is ''
+  args.push file if diffStat is ''
   git.cmd
     args: args,
-    stdout: (data) -> diffAllStat += data.toString(),
-    exit: (exitCode) -> prepFile diffAllStat if exitCode == 0
+    stdout: (data) -> diffStat += data
+    exit: (code) -> prepFile diffStat if code is 0
 
 prepFile = (text) ->
-  if text.length > 0
+  if text?.length > 0
     fs.writeFileSync diffFilePath, text, flag: 'w+'
     showFile()
   else
