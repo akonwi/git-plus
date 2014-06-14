@@ -12,9 +12,11 @@ class SelectStageHunks extends SelectListMultipleView
   initialize: (data) ->
     super
     @patch_header = data[0]
-    @addClass('overlay from-top')
+    return @completed @_generateObjects(data[1..]) if data.length is 2
 
+    @addClass('overlay from-top')
     @setItems @_generateObjects(data[1..])
+
     atom.workspaceView.append(this)
     @focusFilterEditor()
 
@@ -54,8 +56,9 @@ class SelectStageHunks extends SelectListMultipleView
     git.cmd
       args: ['apply', '--cached', '--', patchPath],
       stdout: (data) ->
+        data = if data? and data isnt '' then data else 'Hunk has been staged!'
         new StatusView(type: 'success', message: data)
-        fs.writeFileSync patchPath, '', flag: 'w+'
+        try fs.unlink patchPath
 
   _generateObjects: (data) ->
     for hunk in data when hunk isnt ''
