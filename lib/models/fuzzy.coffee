@@ -58,7 +58,7 @@ fuzzy.match = (pattern, string, opts={}) ->
     result[result.length] = ch
     idx++
   return {rendered: result.join(""), score: totalScore} if patternIdx is pattern.length
-    
+
 fuzzy.filter = (pattern, arr, opts={}) ->
   highlighted = arr.reduce(
     (prev, element, idx, arr) ->
@@ -80,7 +80,7 @@ fuzzy.filter = (pattern, arr, opts={}) ->
       return a.original.length - b.original.length
     return compare if compare
     a.index - b.index
-  
+
   # No matches? Sort the original array using Damerau-Levenshtein.
   if highlighted.length < 1
     highlighted = arr.reduce(
@@ -89,7 +89,7 @@ fuzzy.filter = (pattern, arr, opts={}) ->
         str = opts.extract(element) if opts.extract
         prev[prev.length] =
           string: str
-          score: DamerauLevenshtein(pattern, str)
+          score: levenshtein(pattern, str)
           index: idx
           original: element
         prev
@@ -99,64 +99,59 @@ fuzzy.filter = (pattern, arr, opts={}) ->
       return compare if compare
       b.index - a.index
   highlighted
-  
-DamerauLevenshtein = (down, across, prices={}, damerau=true) ->
-  # https://github.com/cbaatz/damerau-levenshtein
-  switch typeof prices.insert
-    when "function"
-      insert = prices.insert
-    when "number"
-      insert = (c) ->
-        prices.insert
-    else
-      insert = (c) ->
-        1
-  switch typeof prices.remove
-    when "function"
-      remove = prices.remove
-    when "number"
-      remove = (c) ->
-        prices.remove
-    else
-      remove = (c) ->
-        1
-  switch typeof prices.substitute
-    when "function"
-      substitute = prices.substitute
-    when "number"
-      substitute = (from, to) ->
-        prices.substitute
-    else
-      substitute = (from, to) ->
-        1
-  switch typeof prices.transpose
-    when "function"
-      transpose = prices.transpose
-    when "number"
-      transpose = (backward, forward) ->
-        prices.transpose
-    else
-      transpose = (backward, forward) ->
-        1
-# ---------------------------------------------------------------------------- #
-  ds = []
-  if down is across
-    return 0
-  else
-    down = down.split("")
-    down.unshift null
-    across = across.split("")
-    across.unshift null
-    down.forEach (d, i) ->
-      ds[i] = []  unless ds[i]
-      across.forEach (a, j) ->
-        if i is 0 and j is 0
-          ds[i][j] = 0
-        else if i is 0
-          ds[i][j] = ds[i][j - 1] + insert(a)
-        else if j is 0
-          ds[i][j] = ds[i - 1][j] + remove(d)
-        else
-          ds[i][j] = Math.min(ds[i - 1][j] + remove(d), ds[i][j - 1] + insert(a), ds[i - 1][j - 1] + ((if d is a then 0 else substitute(d, a))))
-          ds[i][j] = Math.min(ds[i][j], ds[i - 2][j - 2] + ((if d is a then 0 else transpose(d, down[i - 1]))))  if damerau and i > 1 and j > 1 and down[i - 1] is a and d is across[j - 1]
-    ds[down.length - 1][across.length - 1]
+
+###
+# Copyright (c) 2011 Andrei Mackenzie
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of
+# this software and associated documentation files (the "Software"), to deal in
+# the Software without restriction, including without limitation the rights to
+# use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+# the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+###
+
+# Compute the edit distance between the two given strings
+levenshtein = (a, b) ->
+  return b.length  if a.length is 0
+  return a.length  if b.length is 0
+  matrix = []
+
+  # increment along the first column of each row
+  i = undefined
+  i = 0
+  while i <= b.length
+    matrix[i] = [i]
+    i++
+
+  # increment each column in the first row
+  j = undefined
+  j = 0
+  while j <= a.length
+    matrix[0][j] = j
+    j++
+
+  # Fill in the rest of the matrix
+  i = 1
+  while i <= b.length
+    j = 1
+    while j <= a.length
+      if b.charAt(i - 1) is a.charAt(j - 1)
+        matrix[i][j] = matrix[i - 1][j - 1]
+      else
+        # substitution
+        # insertion
+        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1)) # deletion
+      j++
+    i++
+  matrix[b.length][a.length]
