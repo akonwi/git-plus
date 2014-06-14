@@ -34,7 +34,6 @@ class GitCommit extends Model
        """#{@amend}
         # Please enter the commit message for your changes. Lines starting
         # with '#' will be ignored, and an empty message aborts the commit.
-        # Remove hyphen(-) and update commit message as necessary for amend.
         #
         # #{status}"""
     @showFile()
@@ -44,21 +43,31 @@ class GitCommit extends Model
     atom.workspace
       .open(@file, split: split, activatePane: true, searchAllPanes: true)
       .done ({buffer}) =>
-        @subscribe buffer, 'saved', => @commit()
-        @subscribe buffer, 'destroyed', => @cleanup()
+        @subscribe buffer, 'saved', =>
+          @commit()
+        @subscribe buffer, 'destroyed', =>
+          if @amend is '' then @cleanup() else @undoAmend()
 
   commit: ->
     args = ['commit', '--cleanup=strip', "--file=#{@file}"]
     args.push '--amend' if @amend isnt ''
+    @amend = ''
     git.cmd
       args: args,
-      stdout: (data) ->
+      stdout: (data) =>
         new StatusView(type: 'success', message: data)
         if atom.workspace.getActivePane().getItems().length > 1
           atom.workspace.destroyActivePaneItem()
         else
           atom.workspace.destroyActivePane()
         atom.project.getRepo()?.refreshStatus()
+
+  undoAmend: ->
+    git.cmd
+      args: ['reset', 'HEAD@{1}'],
+      stdout: =>
+        new StatusView(type: 'error', message: 'Commit amend aborted!')
+        @cleanup()
 
   cleanup: ->
     Model.resetNextInstanceId()

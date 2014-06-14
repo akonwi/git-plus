@@ -4,11 +4,14 @@ fs = require 'fs-plus'
 
 git = require '../git'
 StatusView = require '../views/status-view'
-gitCommit = require './git-commit'
+GitCommit = require './git-commit'
 
 gitMsg = ->
   git.cmd
-    args: ['log', '-1', '--format=%s'],
-    stdout: (data) -> gitCommit "- " + data.toString()
+    args: ['log', '-1', '--format=%B'],
+    stdout: (amend) ->
+      git.cmd
+        args: ['reset', '--soft', 'HEAD^']
+        exit: -> new GitCommit("#{amend?.trim()}\n")
 
 module.exports = gitMsg
