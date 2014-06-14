@@ -3,6 +3,6 @@ GitCommit = require './git-commit'
 
 gitAddAllAndCommit = ->
   git.add
-    exit: -> GitCommit()
+    exit: -> new GitCommit
 
 module.exports = gitAddAllAndCommit

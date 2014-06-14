@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "fs-plus": "^2.2.0",
-    "underscore-plus": "1.x"
+    "underscore-plus": "1.x",
+    "theorist": "~1.0.1",
+    "path": "~0.4.9"
   }
 }

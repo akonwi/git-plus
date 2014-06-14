@@ -36,7 +36,7 @@ getCommands = ->
 
     commands.push ['git-plus:add-and-commit', 'Git Plus: Add And Commit', -> GitAddAndCommit()]
     commands.push ['git-plus:add-all-and-commit', 'Git Plus: Add All And Commit', -> GitAddAllAndCommit()]
-    commands.push ['git-plus:commit', 'Git Plus: Commit', -> GitCommit()]
+    commands.push ['git-plus:commit', 'Git Plus: Commit', -> new GitCommit]
     commands.push ['git-plus:commit-amend', 'Git Plus: Commit Amend', -> GitCommitAmend()]
     commands.push ['git-plus:add-all', 'Git Plus: Add All', -> GitAdd(true)]
     commands.push ['git-plus:checkout-all-files', 'Git Plus: Checkout All Files', -> GitCheckoutAllFiles()]
