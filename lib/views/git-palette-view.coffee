@@ -38,7 +38,7 @@ class GitPaletteView extends SelectListView
 
     atom.workspaceView.append(this)
     @focusFilterEditor()
-    
+
   populateList: ->
     return unless @items?
 
@@ -51,7 +51,7 @@ class GitPaletteView extends SelectListView
       filteredItems = fuzzy(filterQuery, @items, options)
     else
       filteredItems = @items
-      
+
     @list.empty()
     if filteredItems.length
       @setError(null)
