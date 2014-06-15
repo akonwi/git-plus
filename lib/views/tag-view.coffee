@@ -1,0 +1,49 @@
+{$$, SelectListView} = require 'atom'
+
+git = require '../git'
+GitShow = require '../models/git-show'
+StatusView = require './status-view'
+
+module.exports =
+class TagView extends SelectListView
+
+  initialize: (@tag) ->
+    super
+    @addClass 'overlay from-top'
+    @parseData()
+
+  parseData: ->
+    items = []
+    items.push {tag: @tag, cmd: 'Show', description: 'git show'}
+    items.push {tag: @tag, cmd: 'Checkout', description: 'git checkout'}
+    items.push {tag: @tag, cmd: 'Verify', description: 'git tag --verify'}
+    items.push {tag: @tag, cmd: 'Delete', description: 'git tag --delete'}
+
+    @setItems items
+    atom.workspaceView.append this
+    @focusFilterEditor()
+
+  viewForItem: ({tag, cmd, description}) ->
+    $$ ->
+      @li =>
+        @div class: 'text-highlight', cmd
+        @div class: 'text-warning', "#{description} #{tag}"
+
+  getFilterKey: -> 'cmd'
+
+  confirmed: ({tag, cmd}) ->
+    @cancel()
+    switch cmd
+      when 'Show'
+        GitShow(tag)
+        return
+      when 'Checkout'
+        args = ['checkout', tag]
+      when 'Verify'
+        args = ['tag', '--verify', tag]
+      when 'Delete'
+        args = ['tag', '--delete', tag]
+
+    git.cmd
+      args: args
+      stdout: (data) -> new StatusView(type: 'success', message: data.toString())

@@ -7,6 +7,13 @@ vim-fugitive like package for atom. make commits and other git things without th
 ![A screenshot of your spankin' package](https://raw.githubusercontent.com/akonwi/git-plus/master/commit.gif)
 
 ## Usage
+
+### Git-Plus Palette
+>- `Cmd-Shift-H` on MacOS
+>- `Ctrl-Shift-H` on Windows + Linux
+>- `Git Plus: Menu` on the atom command palette.
+
+### Commands
 1. `Git add [all]`
 
   Git add will add the current file and 'add all' will add all changed files
@@ -52,6 +59,10 @@ vim-fugitive like package for atom. make commits and other git things without th
   Add all changed files and pull up the commit message file. Similar to `Git add all` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A a`
 
+11. `Git rm [current file]`
+
+  Git rm the current file or open an selector to select the files to remove. You can select multiple files at once.
+
 12. `Git Log [Current File]`
 
   Show the commit history [for the current file] and show display the selected commit.
@@ -59,10 +70,6 @@ vim-fugitive like package for atom. make commits and other git things without th
 13. `Git Show`
 
   Show the specified object, for example `HEAD`, `HEAD~2`, `3925a0d`, `origin/master` or `v2.7.3`.
-
-11. `Git rm [current file]`
-
-  Git rm the current file or open an selector to select the files to remove. You can select multiple files at once.
 
 ## Contributing
 

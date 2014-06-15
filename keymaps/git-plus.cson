@@ -7,16 +7,27 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
+
+'.platform-darwin':
+  'cmd-shift-h': 'git-plus:menu'
+  'cmd-shift-c': 'git-plus:commit'
+  'cmd-shift-a s': 'git-plus:status'
+  'cmd-shift-a a': 'git-plus:add-all-and-commit'
+  
+'.platform-win32, .platform-linux':
+  'ctrl-shift-h': 'git-plus:menu'
+  'ctrl-shift-x': 'git-plus:commit'
+  'ctrl-shift-a s': 'git-plus:status'
+  'ctrl-shift-a a': 'git-plus:add-all-and-commit'
+
 '.platform-darwin .editor':
   'cmd-shift-a': 'git-plus:add'
-  'cmd-shift-c': 'git-plus:commit'
   'cmd-shift-a c': 'git-plus:add-and-commit'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
   'cmd-alt-.': 'git-plus:hide-output'
 
-'.platform-win32, .platform-linux .editor':
+'.platform-win32 .editor, .platform-linux .editor':
   'ctrl-shift-a': 'git-plus:add'
-  'ctrl-shift-x': 'git-plus:commit'
   'ctrl-shift-a c': 'git-plus:add-and-commit'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
   'ctrl-alt-.': 'git-plus:hide-output'

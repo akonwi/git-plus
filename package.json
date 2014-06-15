@@ -4,26 +4,12 @@
   "version": "2.11.3",
   "description": "Do git things without the terminal",
   "activationEvents": [
-    "git-plus:commit",
+    "git-plus:menu",
     "git-plus:add",
-    "git-plus:add-all",
-    "git-plus:checkout-current-file",
-    "git-plus:commit-amend",
-    "git-plus:diff",
-    "git-plus:diff-all",
-    "git-plus:checkout",
-    "git-plus:new-branch",
-    "git-plus:pull",
-    "git-plus:push",
-    "git-plus:fetch",
+    "git-plus:commit",
     "git-plus:add-and-commit",
     "git-plus:add-all-and-commit",
-    "git-plus:log",
-    "git-plus:log-current-file",
-    "git-plus:show",
-    "git-plus:tags",
-    "git-plus:remove",
-    "git-plus:remove-current-file"
+    "git-plus:status"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
@@ -32,6 +18,7 @@
   },
   "dependencies": {
     "fs-plus": "^2.2.0",
-    "fuzzaldrin": "^1.2.0"
+    "fuzzaldrin": "^1.2.0",
+    "underscore-plus": "1.x"
   }
 }
