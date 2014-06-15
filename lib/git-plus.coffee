@@ -13,6 +13,7 @@ module.exports =
   configDefaults:
     includeStagedDiff: true
     openInPane: true
+    splitPane: 'right'
     wordDiff: true
     amountOfCommitsToShow: 25
     gitPath: 'git'

@@ -26,7 +26,7 @@ prepFile = (text) ->
     new StatusView(type: 'error', message: 'Nothing to show.')
 
 showFile = ->
-  split = if atom.config.get('git-plus.openInPane') then 'right' else ''
+  split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
   atom.workspace
     .open(diffFilePath, split: split, activatePane: true)
 
