@@ -1,5 +1,11 @@
 ## Changelog
 
+### 3.1.0
+
+- Git-palette doesn't show 'Git-plus:' prefix in front of commands.
+
+- Add `diff`, `diff all`, `log`, to startup commands in regular command palette
+
 ### 3.0.2
 
 - Should be able to close the views with feedback from commands through the `core:cancel` command.
