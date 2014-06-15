@@ -1,4 +1,6 @@
-## Changelog v3.0.2
+## Changelog
+
+### 3.0.2
 
 - Should be able to close the views with feedback from commands through the `core:cancel` command.
 
