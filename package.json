@@ -9,7 +9,10 @@
     "git-plus:commit",
     "git-plus:add-and-commit",
     "git-plus:add-all-and-commit",
-    "git-plus:status"
+    "git-plus:status",
+    "git-plus:log",
+    "git-plus:diff",
+    "git-plus:diff-all"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
