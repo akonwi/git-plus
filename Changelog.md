@@ -1,7 +1,9 @@
-## Changelog v3.0.0
-### Includes massive amounts of refactoring to internal api
+## Changelog v3.0.2
 
-What's new:
+- Should be able to close the views with feedback from commands through the `core:cancel` command.
+
+### 3.0.0
+#### Includes massive amounts of refactoring to internal api
 
 - Dedicated command palette for git commands. Can be opened with  
 `[cmd|ctrl]-shift-h`

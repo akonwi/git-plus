@@ -1,7 +1,7 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Do git things without the terminal",
   "activationEvents": [
     "git-plus:menu",
@@ -19,6 +19,9 @@
   "dependencies": {
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
-    "underscore-plus": "1.x"
+    "underscore-plus": "1.x",
+    "theorist": "~1.0.1",
+    "path": "~0.4.9",
+    "emissary": "~1.2.1"
   }
 }

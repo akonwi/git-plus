@@ -1,10 +1,12 @@
-{ScrollView} = require 'atom'
+{Subscriber} = require 'emissary'
+{$, ScrollView} = require 'atom'
 
 module.exports =
   class OutputView extends ScrollView
-    
+    Subscriber.includeInto (this)
+
     message: ''
-    
+
     @content: ->
       @div class: 'git-plus info-view', =>
         @pre class: 'output'
@@ -12,16 +14,20 @@ module.exports =
     initialize: ->
       super
       atom.workspaceView.appendToBottom(this)
-      atom.workspaceView.command "git-plus:hide-output", => @detach()
+      @subscribe $(window), 'core:cancel', => @detach()
 
     addLine: (line) ->
       @message += line
 
     reset: ->
       @message = ''
-    
+
     finish: ->
       @find(".output").append(@message)
       setTimeout =>
         @detach()
       , 10000
+
+    detach: ->
+      super
+      @unsubscribe()
