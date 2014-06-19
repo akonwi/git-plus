@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.2.0
+### 3.3.0
 
 - New setting to specify where to open the pane for commits and such...
 
