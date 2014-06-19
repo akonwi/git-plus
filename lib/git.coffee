@@ -106,3 +106,4 @@ module.exports.diff = gitDiff
 module.exports.refresh = gitRefreshIndex
 module.exports.status = gitStatus
 module.exports.add = gitAdd
+module.exports.dir = dir
