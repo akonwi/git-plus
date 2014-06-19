@@ -1,5 +1,6 @@
 fs = require 'fs-plus'
 path = require 'path'
+os = require 'os'
 {Model} = require 'theorist'
 
 git = require '../git'
@@ -8,7 +9,7 @@ StatusView = require '../views/status-view'
 module.exports =
 class GitCommit extends Model
 
-  file: '.git/COMMIT_EDITMSG'
+  file: './.git/COMMIT_EDITMSG'
   dir: atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   currentPane: atom.workspace.getActivePane()
 

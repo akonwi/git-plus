@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.3.1
+
+- Fix for not being able to commit on windows
+
 ### 3.3.0
 
 - New setting to specify where to open the pane for commits and such...
