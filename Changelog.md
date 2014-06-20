@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.3.1
+### 3.3.2
 
 - Fix for not being able to commit on windows
 
