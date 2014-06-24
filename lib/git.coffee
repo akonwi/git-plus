@@ -69,6 +69,7 @@ gitRefreshIndex = ->
     args: ['add', '--refresh', '--', '.']
 
 gitAdd = ({file, stdout, stderr, exit}={}) ->
+  console.log('file is:', file)
   exit ?= (code) ->
     if code is 0
       new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
@@ -97,7 +98,22 @@ _prettifyDiff = (data) ->
   data[1..data.length] = ('@@' + line for line in data[1..])
   data
 
-dir = -> atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+# Returns the root directory for a git repo,
+#   submodule first if currently in one or the project root
+dir = ->
+  if submodule = getSubmodule()
+    submodule.getWorkingDirectory()
+  else
+    atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+
+# returns filepath relativized for either a submodule or a project
+relativize = (path) ->
+  getSubmodule(path)?.relativize(path) ? atom.project.relativize(path)
+
+# returns submodule for given file or undefined
+getSubmodule = (path) ->
+  path ?= atom.workspace.getActiveEditor()?.getPath()
+  atom.project.getRepo().repo.submoduleForPath(path)
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles
@@ -107,3 +123,4 @@ module.exports.refresh = gitRefreshIndex
 module.exports.status = gitStatus
 module.exports.add = gitAdd
 module.exports.dir = dir
+module.exports.relativize = relativize
