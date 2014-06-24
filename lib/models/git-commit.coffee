@@ -63,6 +63,7 @@ class GitCommit extends Model
         else
           atom.workspace.destroyActivePane()
         atom.project.getRepo()?.refreshStatus()
+        @currentPane.activate()
 
   undoAmend: ->
     git.cmd
