@@ -43,7 +43,7 @@ class GitCommit extends Model
   showFile: ->
     split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
     atom.workspace
-      .open(@file, split: split, activatePane: true, searchAllPanes: true)
+      .open(path.join(@dir, @file), split: split, activatePane: true, searchAllPanes: true)
       .done ({buffer}) =>
         @subscribe buffer, 'saved', =>
           @commit()
