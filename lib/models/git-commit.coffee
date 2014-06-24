@@ -9,7 +9,7 @@ StatusView = require '../views/status-view'
 module.exports =
 class GitCommit extends Model
 
-  file: './.git/COMMIT_EDITMSG'
+  file: '.git/COMMIT_EDITMSG'
   dir: atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
   currentPane: atom.workspace.getActivePane()
 
@@ -51,7 +51,7 @@ class GitCommit extends Model
           if @amend is '' then @cleanup() else @undoAmend()
 
   commit: ->
-    args = ['commit', '--cleanup=strip', "--file=#{@file}"]
+    args = ['commit', '--cleanup=strip', "--file=#{path.join(@dir, @file)}"]
     args.push '--amend' if @amend isnt ''
     @amend = ''
     git.cmd
