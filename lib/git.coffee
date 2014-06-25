@@ -124,3 +124,4 @@ module.exports.status = gitStatus
 module.exports.add = gitAdd
 module.exports.dir = dir
 module.exports.relativize = relativize
+module.exports.getSubmodule = getSubmodule

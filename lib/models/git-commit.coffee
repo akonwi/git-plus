@@ -9,8 +9,20 @@ StatusView = require '../views/status-view'
 module.exports =
 class GitCommit extends Model
 
-  file: '.git/COMMIT_EDITMSG'
-  dir: atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+  file: ->
+    if @submodule ?= git.getSubmodule()
+      'COMMIT_EDITMSG'
+    else
+      '.git/COMMIT_EDITMSG'
+
+  dir: ->
+    if @submodule ?= git.getSubmodule()
+      @submodule.getPath()
+    else
+      atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+
+  filePath: -> path.join @dir(), @file()
+
   currentPane: atom.workspace.getActivePane()
 
   constructor: (@amend='') ->
@@ -32,7 +44,7 @@ class GitCommit extends Model
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, '')
     status = status.trim().replace(/\n/g, "\n# ")
-    fs.writeFileSync path.join(@dir, @file),
+    fs.writeFileSync @filePath(),
        """#{@amend}
         # Please enter the commit message for your changes. Lines starting
         # with '#' will be ignored, and an empty message aborts the commit.
@@ -43,7 +55,7 @@ class GitCommit extends Model
   showFile: ->
     split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
     atom.workspace
-      .open(path.join(@dir, @file), split: split, activatePane: true, searchAllPanes: true)
+      .open(@filePath(), split: split, activatePane: true, searchAllPanes: true)
       .done ({buffer}) =>
         @subscribe buffer, 'saved', =>
           @commit()
@@ -51,11 +63,13 @@ class GitCommit extends Model
           if @amend is '' then @cleanup() else @undoAmend()
 
   commit: ->
-    args = ['commit', '--cleanup=strip', "--file=#{path.join(@dir, @file)}"]
+    args = ['commit', '--cleanup=strip', "--file=#{@filePath()}"]
     args.push '--amend' if @amend isnt ''
     @amend = ''
     git.cmd
       args: args,
+      options:
+        cwd: @dir()
       stdout: (data) =>
         new StatusView(type: 'success', message: data)
         if atom.workspace.getActivePane().getItems().length > 1
@@ -76,4 +90,4 @@ class GitCommit extends Model
     Model.resetNextInstanceId()
     @destroy()
     @currentPane.activate()
-    try fs.unlinkSync path.join(@dir, @file)
+    try fs.unlinkSync @filePath()
