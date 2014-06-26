@@ -1,5 +1,11 @@
 ## Changelog
 
+### 3.4.0
+
+- Debut of submodule support by the plugin.
+
+- Submodule commands should be run while a submodule file is the current file
+
 ### 3.3.2
 
 - Fix for not being able to commit on windows
