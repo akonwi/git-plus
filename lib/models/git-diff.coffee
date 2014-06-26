@@ -7,7 +7,7 @@ StatusView = require '../views/status-view'
 diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 
 gitDiff = ({diffStat, file}={}) ->
-  file ?= atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
+  file ?= git.relativize(atom.workspace.getActiveEditor()?.getPath())
   diffStat ?= ''
   args = ['diff']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
