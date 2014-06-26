@@ -10,12 +10,14 @@ module.exports =
 class GitCommit extends Model
 
   file: ->
+    # git puts submodules in a `.git` folder named after the child repo
     if @submodule ?= git.getSubmodule()
       'COMMIT_EDITMSG'
     else
       '.git/COMMIT_EDITMSG'
 
   dir: ->
+    # path is different for submodules
     if @submodule ?= git.getSubmodule()
       @submodule.getPath()
     else

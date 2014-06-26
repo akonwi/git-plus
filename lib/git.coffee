@@ -69,7 +69,6 @@ gitRefreshIndex = ->
     args: ['add', '--refresh', '--', '.']
 
 gitAdd = ({file, stdout, stderr, exit}={}) ->
-  console.log('file is:', file)
   exit ?= (code) ->
     if code is 0
       new StatusView(type: 'success', message: "Added #{file ? 'all files'}")

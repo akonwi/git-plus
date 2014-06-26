@@ -2,7 +2,7 @@ git = require '../git'
 CherryPickSelectBranch = require '../views/cherry-pick-select-branch-view'
 
 gitCherryPick = ->
-  atomGit = atom.project.getRepo()
+  atomGit = atom.project.getRepo(atom.workspace.getActivePane()?.getPath())
   heads = atomGit.getReferences().heads
   currentHead = atomGit.getShortHead()
 

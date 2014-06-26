@@ -4,12 +4,10 @@ fs = require 'fs-plus'
 
 {$, BufferedProcess, EditorView, View} = require 'atom'
 StatusView = require './status-view'
+git = require '../git'
 
 module.exports=
 class TagCreateView extends View
-
-  dir = ->
-    atom.project.getRepo().getWorkingDirectory()
 
   @content: ->
     @div class: 'overlay from-top', =>
@@ -34,7 +32,7 @@ class TagCreateView extends View
       command: 'git'
       args: ['tag', '-a', tag.name, '-m', tag.message]
       options:
-        cwd: dir()
+        cwd: git.dir()
       stderr: (data) ->
         new StatusView(type: 'alert', message: data.toString())
       exit: (code) ->

@@ -16,19 +16,21 @@ class InputView extends View
       @subview 'branchEditor', new EditorView(mini: true, placeholderText: 'New branch name')
 
   initialize: ->
+    @currentPane = atom.workspace.getActivePane()
     atom.workspaceView.append this
     @branchEditor.focus()
     @branchEditor.on 'core:confirm', =>
       name = $(this).text().slice(2)
       @createBranch name
       @detach()
-      # callling save will redraw statusbar and show new branch
-      atom.workspaceView.focus().trigger 'core:save'
 
   createBranch: (name) ->
     git.cmd
       args: ['checkout', '-b', name],
-      stdout: (data) -> new StatusView(type: 'success', message: data.toString())
+      stdout: (data) =>
+        new StatusView(type: 'success', message: data.toString())
+        atom.project.getRepo()?.refreshStatus()
+        @currentPane.activate()
 
 module.exports.newBranch = ->
   new InputView()
