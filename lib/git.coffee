@@ -112,7 +112,7 @@ relativize = (path) ->
 # returns submodule for given file or undefined
 getSubmodule = (path) ->
   path ?= atom.workspace.getActiveEditor()?.getPath()
-  atom.project.getRepo().repo.submoduleForPath(path)
+  atom.project.getRepo()?.repo.submoduleForPath(path)
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles
