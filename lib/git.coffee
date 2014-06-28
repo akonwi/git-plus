@@ -40,9 +40,16 @@ gitStatus = (stdout) ->
     stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
 
 gitStagedFiles = (stdout) ->
+  files = null
   gitCmd
     args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
-    stdout: (data) -> stdout _prettify(data)
+    stdout: (data) -> files = _prettify(data)
+    stderr: (data) ->
+      # edge case of no HEAD at initial commit
+      if data.toString().contains "ambiguous argument 'HEAD'"
+        stdout [1]
+      else
+        stdout files
 
 gitUnstagedFiles = (stdout, showUntracked=false) ->
   gitCmd
@@ -67,6 +74,7 @@ gitDiff = (stdout, path) ->
 gitRefreshIndex = ->
   gitCmd
     args: ['add', '--refresh', '--', '.']
+    stderr: (data) -> # don't really need to flash an error
 
 gitAdd = ({file, stdout, stderr, exit}={}) ->
   exit ?= (code) ->
