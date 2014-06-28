@@ -50,6 +50,7 @@ gitStagedFiles = (stdout) ->
         stdout [1]
       else
         stdout files
+    exit: (code) -> stdout files
 
 gitUnstagedFiles = (stdout, showUntracked=false) ->
   gitCmd
