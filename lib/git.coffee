@@ -40,16 +40,19 @@ gitStatus = (stdout) ->
     stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
 
 gitStagedFiles = (stdout) ->
-  files = null
+  files = []
   gitCmd
     args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
-    stdout: (data) -> files = _prettify(data)
+    stdout: (data) ->
+      files = _prettify(data)
     stderr: (data) ->
       # edge case of no HEAD at initial commit
       if data.toString().contains "ambiguous argument 'HEAD'"
-        stdout [1]
+        files = [1]
       else
-        stdout files
+        new StatusView(type: 'alert', message: data.toString())
+        files = []
+    exit: (code) -> stdout(files)
 
 gitUnstagedFiles = (stdout, showUntracked=false) ->
   gitCmd
