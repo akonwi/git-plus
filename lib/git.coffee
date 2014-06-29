@@ -74,10 +74,11 @@ gitDiff = (stdout, path) ->
     args: ['diff', '-p', '-U1', path]
     stdout: (data) -> stdout _prettifyDiff(data)
 
-gitRefreshIndex = ->
+gitRefreshIndex = (exit) ->
   gitCmd
     args: ['add', '--refresh', '--', '.']
     stderr: (data) -> # don't really need to flash an error
+    exit: exit
 
 gitAdd = ({file, stdout, stderr, exit}={}) ->
   exit ?= (code) ->
@@ -87,6 +88,11 @@ gitAdd = ({file, stdout, stderr, exit}={}) ->
     args: ['add', '--all', file ? '.'],
     stdout: stdout if stdout?
     stderr: stderr if stderr?
+    exit: exit
+
+gitInit = (exit) ->
+  gitCmd
+    args: ['init']
     exit: exit
 
 _getGitPath = ->
@@ -135,3 +141,4 @@ module.exports.add = gitAdd
 module.exports.dir = dir
 module.exports.relativize = relativize
 module.exports.getSubmodule = getSubmodule
+module.exports.init = gitInit

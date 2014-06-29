@@ -1,18 +1,37 @@
-_                         = require 'underscore-plus'
-path                      = require 'path'
+_      = require 'underscore-plus'
+fs     = require 'fs-plus'
+path   = require 'path'
+wrench = require 'wrench'
+temp   = require('temp').track()
 
-{$, WorkspaceView, Workspace}  = require 'atom'
 git = require '../lib/git'
 
+fixturePath = path.join __dirname, 'fixtures', 'testDir'
+
 describe 'Git-Plus git cli wrapper', ->
+  tempPath = null
 
   beforeEach ->
-    atom.project.setPath # path.join
-    atom.workspaceView = new WorkspaceView
+    tempPath = temp.mkdirSync('git-plus-spec')
+    wrench.copyDirSyncRecursive(fixturePath, tempPath, forceDelete: true)
+    fs.renameSync(path.join(tempPath, 'git.git'), path.join(tempPath, '.git'))
+    atom.project.setPath tempPath
+
+    initDummy = jasmine.createSpy('git.init')
+
+    git.init(initDummy)
+    git.refresh(initDummy)
+
+    waitsFor ->
+      initDummy.callCount is 2
+
+  afterEach ->
+    temp.cleanupSync()
+    tempPath = null
 
   describe 'git.status', ->
     it 'returns a split git porcelain status', ->
-      dummy = jasmine.createSpy('dummy')
+      dummy = jasmine.createSpy('git.status')
 
       git.status(dummy)
       waitsFor ->
@@ -28,8 +47,7 @@ describe 'Git-Plus git cli wrapper', ->
 
   describe 'git.stagedFiles', ->
     it 'returns an array of staged files', ->
-      dummy = jasmine.createSpy('dummy')
-
+      dummy = jasmine.createSpy('git.stagedFiles')
       git.stagedFiles(dummy)
       waitsFor ->
         dummy.callCount > 0
@@ -42,7 +60,7 @@ describe 'Git-Plus git cli wrapper', ->
 
   describe 'git.unstagedFiles', ->
     it 'returns an array of unstaged files', ->
-      dummy = jasmine.createSpy('dummy')
+      dummy = jasmine.createSpy('git.unstagedFiles')
 
       git.unstagedFiles(dummy)
       waitsFor ->
@@ -56,7 +74,7 @@ describe 'Git-Plus git cli wrapper', ->
 
   describe 'git.diff', ->
     it 'returns an array with diff hunks', ->
-      dummy = jasmine.createSpy('dummy')
+      dummy = jasmine.createSpy('git.diff')
 
       git.diff(dummy, 'b.coffee')
       waitsFor ->
