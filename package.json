@@ -1,10 +1,9 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "3.4.2",
+  "version": "3.5.0",
   "description": "Do git things without the terminal",
-  "activationEvents": [
-  ],
+  "activationEvents": [],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
