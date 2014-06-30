@@ -1,5 +1,19 @@
 ## Changelog
 
+### 3.5.0
+
+- The more common commands are now accessible through keybindings  
+
+    * Add
+    * Add all and commit
+    * Add and commit
+    * Commit
+    * Diff [all]
+    * Log
+    * Status
+    * Pull
+    * Push
+
 ### 3.4.0
 
 - Debut of submodule support by the plugin.

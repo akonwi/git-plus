@@ -33,5 +33,5 @@ module.exports =
     $(window).on 'git-plus:diff-all',           -> GitDiffAll()
     $(window).on 'git-plus:log',                -> GitLog()
     $(window).on 'git-plus:status',             -> GitStatus()
-    $(window).on 'git-plus:push',             -> GitPush()
-    $(window).on 'git-plus:pull',             -> GitPull()
+    $(window).on 'git-plus:push',               -> GitPush()
+    $(window).on 'git-plus:pull',               -> GitPull()
