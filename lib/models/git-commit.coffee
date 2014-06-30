@@ -24,13 +24,11 @@ class GitCommit extends Model
       atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
   filePath: -> path.join @dir(), @file()
-
   currentPane: atom.workspace.getActivePane()
 
   constructor: (@amend='') ->
     super
     return if @assignId() isnt 1
-
     git.stagedFiles (files) =>
       if @amend isnt '' or files.length >= 1
         git.cmd
@@ -39,7 +37,6 @@ class GitCommit extends Model
       else
         @cleanup()
         new StatusView(type: 'error', message: 'Nothing to commit.')
-
 
   # FIXME?: maybe I shouldn't use the COMMIT file in .git/
   prepFile: (status) ->
