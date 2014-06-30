@@ -19,6 +19,8 @@ module.exports =
     GitLog             = require './models/git-log'
     GitPaletteView     = require './views/git-palette-view'
     GitStatus          = require './models/git-status'
+    GitPush            = require './models/git-push'
+    GitPull            = require './models/git-pull'
 
     atom.workspaceView.command 'git-plus:menu', -> new GitPaletteView()
 
@@ -31,3 +33,5 @@ module.exports =
     $(window).on 'git-plus:diff-all',           -> GitDiffAll()
     $(window).on 'git-plus:log',                -> GitLog()
     $(window).on 'git-plus:status',             -> GitStatus()
+    $(window).on 'git-plus:push',             -> GitPush()
+    $(window).on 'git-plus:pull',             -> GitPull()
