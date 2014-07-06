@@ -96,22 +96,19 @@ class GitCommit extends Model
         new StatusView(type: 'success', message: data)
         # Set @isAmending to false since it succeeded.
         @isAmending = false
-
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
-
         # Refreshing the atom repo status to refresh things like TreeView and
         # diff gutter.
         atom.project.getRepo()?.refreshStatus()
-
         # Activate the former active pane.
         @currentPane.activate()
-
         # Refresh git index to prevent bugs on our methods.
         git.refresh()
 
       stderr: (err) =>
-        if @isAmending then @undoAmend() else @cleanup()
+        # Destroying the active EditorView will trigger our cleanup method.
+        @destroyActiveEditorView()
 
   # Public: Destroys the active EditorView to trigger our cleanup method.
   destroyActiveEditorView: ->
