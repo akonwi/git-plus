@@ -28,7 +28,14 @@ class GitCommit extends Model
 
   constructor: (@amend='') ->
     super
+
+    # This prevents atom from creating more than one Editor to edit the commit
+    # message.
     return if @assignId() isnt 1
+
+    # This sets @isAmending to check if we are amending right now.
+    @isAmending = @amend.length > 0
+
     git.stagedFiles (files) =>
       if @amend isnt '' or files.length >= 1
         git.cmd
@@ -59,31 +66,54 @@ class GitCommit extends Model
         @subscribe buffer, 'saved', =>
           @commit()
         @subscribe buffer, 'destroyed', =>
-          if @amend is '' then @cleanup() else @undoAmend()
+          if @isAmending then @undoAmend() else @cleanup()
 
   commit: ->
     args = ['commit', '--cleanup=strip', "--file=#{@filePath()}"]
-    args.push '--amend' if @amend isnt ''
-    @amend = ''
     git.cmd
       args: args,
       options:
         cwd: @dir()
       stdout: (data) =>
         new StatusView(type: 'success', message: data)
-        if atom.workspace.getActivePane().getItems().length > 1
-          atom.workspace.destroyActivePaneItem()
-        else
-          atom.workspace.destroyActivePane()
+        # Set @isAmending to false since it succeeded.
+        @isAmending = false
+
+        # Destroying the active EditorView will trigger our cleanup method.
+        @destroyActiveEditorView()
+
+        # Refreshing the atom repo status to refresh things like TreeView and
+        # diff gutter.
         atom.project.getRepo()?.refreshStatus()
+
+        # Activate the former active pane.
         @currentPane.activate()
 
-  undoAmend: ->
+        # Refresh git index to prevent bugs on our methods.
+        git.refresh()
+
+      stderr: (err) =>
+        if @isAmending then @undoAmend() else @cleanup()
+
+  destroyActiveEditorView: ->
+    if atom.workspace.getActivePane().getItems().length > 1
+      atom.workspace.destroyActivePaneItem()
+    else
+      atom.workspace.destroyActivePane()
+
+  undoAmend: (err='') ->
     git.cmd
-      args: ['reset', 'HEAD@{1}'],
-      stdout: =>
-        new StatusView(type: 'error', message: 'Commit amend aborted!')
-        @cleanup()
+      args: ['reset', 'ORIG_HEAD'],
+      stdout: ->
+        new StatusView(type: 'error', message: "#{err+': '}Commit amend aborted!")
+      stderr: ->
+        new StatusView(type: 'error', message: 'ERROR! Undoing the amend failed! Please fix your repository manually!')
+      exit: =>
+        # Set @isAmending to false since the amending process has been aborted.
+        @isAmending = false
+
+        # Destroying the active EditorView will trigger our cleanup method.
+        @destroyActiveEditorView()
 
   cleanup: ->
     Model.resetNextInstanceId()
