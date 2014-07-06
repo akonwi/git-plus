@@ -9,6 +9,10 @@ StatusView = require '../views/status-view'
 module.exports =
 class GitCommit extends Model
 
+  # Public: Helper method to return the name of the file we should write our
+  #         commit message to.
+  #
+  # Returns: The filename as {String}.
   file: ->
     # git puts submodules in a `.git` folder named after the child repo
     if @submodule ?= git.getSubmodule()
@@ -16,6 +20,9 @@ class GitCommit extends Model
     else
       '.git/COMMIT_EDITMSG'
 
+  # Public: Helper method to return the current working directory.
+  #
+  # Returns: The cwd as {String}.
   dir: ->
     # path is different for submodules
     if @submodule ?= git.getSubmodule()
@@ -23,7 +30,11 @@ class GitCommit extends Model
     else
       atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
+  # Public: Helper method to join @dir() and @file() to use it with fs.
+  #
+  # Returns: The full path to our COMMIT_EDITMSG file as {String}
   filePath: -> path.join @dir(), @file()
+
   currentPane: atom.workspace.getActivePane()
 
   constructor: (@amend='') ->
@@ -45,7 +56,10 @@ class GitCommit extends Model
         @cleanup()
         new StatusView(type: 'error', message: 'Nothing to commit.')
 
-  # FIXME?: maybe I shouldn't use the COMMIT file in .git/
+  # Public: Prepares our commit message file by writing the status and a
+  #         possible amend message to it.
+  #
+  # status - The current status as {String}.
   prepFile: (status) ->
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, '')
@@ -58,6 +72,8 @@ class GitCommit extends Model
         # #{status}"""
     @showFile()
 
+  # Public: Helper method to open the commit message file and to subscribe the
+  #         'saved' and `destroyed` events of the underlaying text-buffer.
   showFile: ->
     split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
     atom.workspace
@@ -68,6 +84,8 @@ class GitCommit extends Model
         @subscribe buffer, 'destroyed', =>
           if @isAmending then @undoAmend() else @cleanup()
 
+  # Public: When the user is done editing the commit message an saves the file
+  #         this method gets invoked and commits the changes.
   commit: ->
     args = ['commit', '--cleanup=strip', "--file=#{@filePath()}"]
     git.cmd
@@ -95,12 +113,16 @@ class GitCommit extends Model
       stderr: (err) =>
         if @isAmending then @undoAmend() else @cleanup()
 
+  # Public: Destroys the active EditorView to trigger our cleanup method.
   destroyActiveEditorView: ->
     if atom.workspace.getActivePane().getItems().length > 1
       atom.workspace.destroyActivePaneItem()
     else
       atom.workspace.destroyActivePane()
 
+  # Public: Undo the amend
+  #
+  # err - The error message as {String}.
   undoAmend: (err='') ->
     git.cmd
       args: ['reset', 'ORIG_HEAD'],
@@ -115,6 +137,7 @@ class GitCommit extends Model
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
 
+  # Public: Cleans up after the EditorView gets destroyed.
   cleanup: ->
     Model.resetNextInstanceId()
     @destroy()
