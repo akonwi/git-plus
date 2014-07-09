@@ -15,5 +15,9 @@
     "underscore-plus": "1.x",
     "theorist": "~1.0.1",
     "emissary": "~1.2.1"
+  },
+  "devDependencies": {
+    "temp": "~0.8.0",
+    "wrench": "~1.5.8"
   }
 }

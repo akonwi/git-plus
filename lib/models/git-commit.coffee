@@ -35,8 +35,6 @@ class GitCommit extends Model
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
   filePath: -> path.join @dir(), @file()
 
-  currentPane: atom.workspace.getActivePane()
-
   constructor: (@amend='') ->
     super
 
@@ -46,6 +44,9 @@ class GitCommit extends Model
 
     # This sets @isAmending to check if we are amending right now.
     @isAmending = @amend.length > 0
+
+    # Save the currently active Pane.
+    @currentPane = atom.workspace.getActivePane()
 
     git.stagedFiles (files) =>
       if @amend isnt '' or files.length >= 1
