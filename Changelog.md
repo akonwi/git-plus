@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.6.0
+- Can now push tags to remote
+
 ### 3.5.0
 
 - The more common commands are now accessible through keybindings  

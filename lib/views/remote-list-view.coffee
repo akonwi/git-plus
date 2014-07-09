@@ -5,7 +5,7 @@ OutputView = require './output-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@data, @mode, @setUpstream=false) ->
+  initialize: (@data, @mode, @setUpstream=false, @tag='') ->
     super
     @addClass 'overlay from-top'
     @parseData()
@@ -35,7 +35,7 @@ class ListView extends SelectListView
   execute: (remote) ->
     view = new OutputView()
     git.cmd
-      args: [@mode, remote]
+      args: [@mode, remote, @tag]
       stdout: (data) -> view.addLine(data.toString())
       stderr: (data) -> view.addLine(data.toString())
       exit: (code) =>

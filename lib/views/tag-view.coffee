@@ -3,6 +3,7 @@
 git = require '../git'
 GitShow = require '../models/git-show'
 StatusView = require './status-view'
+RemoteListView = require '../views/remote-list-view'
 
 module.exports =
 class TagView extends SelectListView
@@ -15,6 +16,7 @@ class TagView extends SelectListView
   parseData: ->
     items = []
     items.push {tag: @tag, cmd: 'Show', description: 'git show'}
+    items.push {tag: @tag, cmd: 'Push', description: 'git push [remote]'}
     items.push {tag: @tag, cmd: 'Checkout', description: 'git checkout'}
     items.push {tag: @tag, cmd: 'Verify', description: 'git tag --verify'}
     items.push {tag: @tag, cmd: 'Delete', description: 'git tag --delete'}
@@ -36,6 +38,11 @@ class TagView extends SelectListView
     switch cmd
       when 'Show'
         GitShow(tag)
+        return
+      when 'Push'
+        git.cmd
+          args: ['remote'],
+          stdout: (data) => new RemoteListView(data, 'push', false, @tag)
         return
       when 'Checkout'
         args = ['checkout', tag]
