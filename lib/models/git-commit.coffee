@@ -11,10 +11,9 @@ class GitCommit extends Model
 
   # Public: Helper method to set the what commentchar to be used in the commit message
   setCommentChar: (char) ->
-    if char == ''
+    if char is ''
       char = '#'
     @commentchar = char
-    return
 
   # Public: Helper method to return the name of the file we should write our
   #         commit message to.
@@ -54,16 +53,13 @@ class GitCommit extends Model
     # This sets @isAmending to check if we are amending right now.
     @isAmending = @amend.length > 0
 
-    # This loads the commentchar from the config, if one is not set or not found it will default
-    # back to #
+    # load the commentchar from git config, defaults to '#'
     git.cmd
       args: ['config', '--get', 'core.commentchar'],
       stdout: (data) =>
         @setCommentChar data.trim()
-        return
       stderr: =>
         @setCommentChar '#'
-        return
 
     git.stagedFiles (files) =>
       if @amend isnt '' or files.length >= 1

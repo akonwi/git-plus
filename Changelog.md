@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.7.0
+
+- Can change commentchar in Git configs and Git-plus will use it in commit messages
+
 ### 3.6.0
 - Can now push tags to remote
 
