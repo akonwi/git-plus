@@ -9,6 +9,13 @@ StatusView = require '../views/status-view'
 module.exports =
 class GitCommit extends Model
 
+  # Public: Helper method to set the what commentchar to be used in the commit message
+  setCommentChar: (char) ->
+    if char == ''
+      char = '#'
+    @commentchar = char
+    return
+
   # Public: Helper method to return the name of the file we should write our
   #         commit message to.
   #
@@ -47,6 +54,17 @@ class GitCommit extends Model
     # This sets @isAmending to check if we are amending right now.
     @isAmending = @amend.length > 0
 
+    # This loads the commentchar from the config, if one is not set or not found it will default
+    # back to #
+    git.cmd
+      args: ['config', '--get', 'core.commentchar'],
+      stdout: (data) =>
+        @setCommentChar data.trim()
+        return
+      stderr: =>
+        @setCommentChar '#'
+        return
+
     git.stagedFiles (files) =>
       if @amend isnt '' or files.length >= 1
         git.cmd
@@ -63,13 +81,13 @@ class GitCommit extends Model
   prepFile: (status) ->
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, '')
-    status = status.trim().replace(/\n/g, "\n# ")
+    status = status.trim().replace(/\n/g, "\n#{@commentchar} ")
     fs.writeFileSync @filePath(),
        """#{@amend}
-        # Please enter the commit message for your changes. Lines starting
-        # with '#' will be ignored, and an empty message aborts the commit.
-        #
-        # #{status}"""
+        #{@commentchar} Please enter the commit message for your changes. Lines starting
+        #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
+        #{@commentchar}
+        #{@commentchar} #{status}"""
     @showFile()
 
   # Public: Helper method to open the commit message file and to subscribe the
