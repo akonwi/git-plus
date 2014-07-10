@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.7.0
+### 3.6.1
 
 - Can change commentchar in Git configs and Git-plus will use it in commit messages
 
