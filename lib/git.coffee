@@ -116,9 +116,9 @@ dir = ->
   else
     atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
-# returns filepath relativized for either a submodule or a project
+# returns filepath relativized for either a submodule, repository or a project
 relativize = (path) ->
-  getSubmodule(path)?.relativize(path) ? atom.project.relativize(path)
+  getSubmodule(path)?.relativize(path) ? atom.project.getRepo()?.relativize(path) ? atom.project.relativize(path)
 
 # returns submodule for given file or undefined
 getSubmodule = (path) ->
