@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.6.2
+
+- Patch to resolve when atom project is a subfolder of a repository
+
 ### 3.6.1
 
 - Can change commentchar in Git configs and Git-plus will use it in commit messages
