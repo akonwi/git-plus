@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.7.0
+
+- new `Reset HEAD` allows unstaging all changes
+
 ### 3.6.2
 
 - Patch to resolve when atom project is a subfolder of a repository

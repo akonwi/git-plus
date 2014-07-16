@@ -19,6 +19,7 @@ class InputView extends View
     @currentPane = atom.workspace.getActivePane()
     atom.workspaceView.append this
     @branchEditor.focus()
+    @on 'core:cancel', => @detach()
     @branchEditor.on 'core:confirm', =>
       name = $(this).text().slice(2)
       @createBranch name

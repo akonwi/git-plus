@@ -50,6 +50,7 @@ getCommands = ->
     commands.push ['git-plus:pull', 'Pull', -> GitPull()]
     commands.push ['git-plus:push', 'Push', -> GitPush()]
     commands.push ['git-plus:remove', 'Remove', -> GitRemove(true)]
+    commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset()]
     commands.push ['git-plus:show', 'Show', -> GitShow()]
     commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles()]
     commands.push ['git-plus:stage-hunk', 'Stage Hunk', -> GitStageHunk()]
