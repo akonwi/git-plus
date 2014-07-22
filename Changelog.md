@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.9.0
+
+- From the Git Status list, you can go to the modified file or open its diff file
 ### 3.8.0
 
 - Adding commands for Git stash

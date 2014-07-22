@@ -29,6 +29,7 @@ class StatusListView extends SelectListView
       return 'status-renamed icon icon-diff-renamed' if s[0] is 'R'
       return 'status-modified icon icon-diff-modified' if s[0] is 'M' or s[1] is 'M'
       return ''
+
     $$ ->
       @li =>
         @div
@@ -43,4 +44,5 @@ class StatusListView extends SelectListView
     if type is '??'
       git.add file: path
     else
-      GitDiff file: path
+      openFile = confirm("Open #{path}?")
+      if openFile then atom.workspace.open(path) else GitDiff(file: path)
