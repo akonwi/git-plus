@@ -61,7 +61,7 @@ getCommands = ->
     commands.push ['git-plus:stash-save-changes', 'Stash: Save Changes', -> GitStashSave()]
     commands.push ['git-plus:stash-pop', 'Stash: Apply (Pop)', -> GitStashPop()]
     commands.push ['git-plus:stash-apply', 'Stash: Apply (Keep)', -> GitStashApply()]
-    commands.push ['git-plus:stash-delete', 'Stash: Delete', -> GitStashDrop()]
+    commands.push ['git-plus:stash-delete', 'Stash: Delete (Drop)', -> GitStashDrop()]
     commands.push ['git-plus:status', 'Status', -> GitStatus()]
     commands.push ['git-plus:tags', 'Tags', -> GitTags()]
     commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
