@@ -21,6 +21,10 @@ getCommands = ->
   GitShow                = require './models/git-show'
   GitStageFiles          = require './models/git-stage-files'
   GitStageHunk           = require './models/git-stage-hunk'
+  GitStashApply          = require './models/git-stash-apply'
+  GitStashDrop           = require './models/git-stash-drop'
+  GitStashPop            = require './models/git-stash-pop'
+  GitStashSave           = require './models/git-stash-save'
   GitStatus              = require './models/git-status'
   GitTags                = require './models/git-tags'
   GitUnstageFiles        = require './models/git-unstage-files'
@@ -54,6 +58,10 @@ getCommands = ->
     commands.push ['git-plus:show', 'Show', -> GitShow()]
     commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles()]
     commands.push ['git-plus:stage-hunk', 'Stage Hunk', -> GitStageHunk()]
+    commands.push ['git-plus:stash-save-changes', 'Stash: Save Changes', -> GitStashSave()]
+    commands.push ['git-plus:stash-pop', 'Stash: Apply (Pop)', -> GitStashPop()]
+    commands.push ['git-plus:stash-apply', 'Stash: Apply (Keep)', -> GitStashApply()]
+    commands.push ['git-plus:stash-delete', 'Stash: Delete (Drop)', -> GitStashDrop()]
     commands.push ['git-plus:status', 'Status', -> GitStatus()]
     commands.push ['git-plus:tags', 'Tags', -> GitTags()]
     commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
