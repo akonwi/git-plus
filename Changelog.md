@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.8.0
+
+- Adding commands for Git stash
+
 ### 3.7.0
 
 - new `Reset HEAD` allows unstaging all changes
