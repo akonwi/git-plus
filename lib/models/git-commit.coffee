@@ -64,7 +64,7 @@ class GitCommit extends Model
     git.stagedFiles (files) =>
       if @amend isnt '' or files.length >= 1
         git.cmd
-          args: ['status'],
+          args: ['status', '-v'],
           stdout: (data) => @prepFile data
       else
         @cleanup()
