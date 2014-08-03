@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.10.0
+
+- Git pull lists remotes if there are multiple and remote branches
+
 ### 3.9.0
 
 - From the Git Status list, you can go to the modified file or open its diff file

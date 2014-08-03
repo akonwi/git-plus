@@ -2,6 +2,7 @@
 
 git = require '../git'
 OutputView = require './output-view'
+PullBranchListView = require './pull-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
@@ -16,7 +17,7 @@ class ListView extends SelectListView
     for item in items
       remotes.push {name: item} unless item is ''
     if remotes.length is 1
-      @execute remotes[0].name
+      @confirmed remotes[0]
     else
       @setItems remotes
       atom.workspaceView.append this
@@ -29,7 +30,10 @@ class ListView extends SelectListView
       @li name
 
   confirmed: ({name}) ->
-    @execute name
+    if @mode is 'pull'
+      new PullBranchListView(name)
+    else
+      @execute name
     @cancel()
 
   execute: (remote) ->
