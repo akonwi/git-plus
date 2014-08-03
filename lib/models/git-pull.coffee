@@ -1,13 +1,9 @@
-{BufferedProcess} = require 'atom'
-OutputView = require '../views/output-view'
 git = require '../git'
+RemoteListView = require '../views/remote-list-view'
 
 gitPull = ->
-  view = new OutputView()
   git.cmd
-    args: ['pull']
-    stdout: (data) -> view.addLine(data.toString())
-    stderr: (data) -> view.addLine(data.toString())
-    exit: (code) -> view.finish()
+    args: ['remote']
+    stdout: (data) -> new RemoteListView(data, 'pull')
 
 module.exports = gitPull
