@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.10.0
+### 3.10.1
 
 - Git pull lists remotes if there are multiple and remote branches
 
