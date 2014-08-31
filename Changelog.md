@@ -1,6 +1,10 @@
 ## Changelog
 
-3.10.2
+### 3.10.3
+
+- Fix for branch names being shortened unnecessarily.
+
+### 3.10.2
 
 - Fix 'Git Log' for windows users
 

@@ -21,7 +21,8 @@ class InputView extends View
     @branchEditor.focus()
     @on 'core:cancel', => @detach()
     @branchEditor.on 'core:confirm', =>
-      name = $(this).text().slice(2)
+      text = $(this).text().split(' ')
+      name = if text.length is 2 then text[1] else text[0]
       @createBranch name
       @detach()
 
