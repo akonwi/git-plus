@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.10.4
+
+- Fix for object names being shortened unnecessarily.
+
 ### 3.10.3
 
 - Fix for branch names being shortened unnecessarily.
