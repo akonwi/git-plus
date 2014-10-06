@@ -1,5 +1,9 @@
 # git-plus package
 
+# ATTENTION!
+  Development on this package is done. I no longer use atom and don't have time to maintain this project. If anyone is willing
+  to pick it up or make pull requests, I'm fine with that but I won't be developing new features any longer.
+
 [![endorse](https://api.coderwall.com/akonwi/endorsecount.png)](https://coderwall.com/akonwi)
 
 vim-fugitive like package for atom. make commits and other git things without the terminal
