@@ -1,7 +1,9 @@
 ## Changelog
 
-### 3.11.0
+### 4.0.0
 
+- Removed Git-Plus command palette and merged all commands into atom command palette
+- all commands are now accessible via keymappings
 - Add setting to change message display time in seconds
 
 ### 3.10.4
@@ -44,7 +46,7 @@
 
 ### 3.5.0
 
-- The more common commands are now accessible through keybindings  
+- The more common commands are now accessible through keybindings
 
     * Add
     * Add all and commit
@@ -83,7 +85,7 @@
 ### 3.0.0
 #### Includes massive amounts of refactoring to internal api
 
-- Dedicated command palette for git commands. Can be opened with  
+- Dedicated command palette for git commands. Can be opened with
 `[cmd|ctrl]-shift-h`
 
 - `Git init` is available in projects that are not git repos.
@@ -128,7 +130,7 @@
 
 ### 2.8.0
 
-- `Git log`  
+- `Git log`
   Can also configure how many commits to show in log
 
 - `Git show` commits of current file

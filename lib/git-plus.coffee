@@ -1,4 +1,5 @@
 {$} = require 'atom'
+git = require './git'
 
 module.exports =
   configDefaults:
@@ -11,28 +12,63 @@ module.exports =
     messageTimeout: 5
 
   activate: (state) ->
-    GitAdd             = require './models/git-add'
-    GitAddAllAndCommit = require './models/git-add-all-and-commit'
-    GitAddAndCommit    = require './models/git-add-and-commit'
-    GitCommit          = require './models/git-commit'
-    GitDiff            = require './models/git-diff'
-    GitDiffAll         = require './models/git-diff-all'
-    GitLog             = require './models/git-log'
-    GitPaletteView     = require './views/git-palette-view'
-    GitStatus          = require './models/git-status'
-    GitPush            = require './models/git-push'
-    GitPull            = require './models/git-pull'
+    GitAdd                 = require './models/git-add'
+    GitAddAllAndCommit     = require './models/git-add-all-and-commit'
+    GitAddAndCommit        = require './models/git-add-and-commit'
+    GitBranch              = require './models/git-branch'
+    GitCheckoutAllFiles    = require './models/git-checkout-all-files'
+    GitCheckoutCurrentFile = require './models/git-checkout-current-file'
+    GitCherryPick          = require './models/git-cherry-pick'
+    GitCommit              = require './models/git-commit'
+    GitCommitAmend         = require './models/git-commit-amend'
+    GitDiff                = require './models/git-diff'
+    GitDiffAll             = require './models/git-diff-all'
+    GitFetch               = require './models/git-fetch'
+    GitInit                = require './models/git-init'
+    GitLog                 = require './models/git-log'
+    GitStatus              = require './models/git-status'
+    GitPush                = require './models/git-push'
+    GitPull                = require './models/git-pull'
+    GitRemove              = require './models/git-remove'
+    GitShow                = require './models/git-show'
+    GitStageFiles          = require './models/git-stage-files'
+    GitStageHunk           = require './models/git-stage-hunk'
+    GitStashApply          = require './models/git-stash-apply'
+    GitStashDrop           = require './models/git-stash-drop'
+    GitStashPop            = require './models/git-stash-pop'
+    GitStashSave           = require './models/git-stash-save'
+    GitTags                = require './models/git-tags'
+    GitUnstageFiles        = require './models/git-unstage-files'
 
-    atom.workspaceView.command 'git-plus:menu', -> new GitPaletteView()
-
-    # Only keybindings get here as well!
-    $(window).on 'git-plus:add',                -> GitAdd()
-    $(window).on 'git-plus:add-all-and-commit', -> GitAddAllAndCommit()
-    $(window).on 'git-plus:add-and-commit',     -> GitAddAndCommit()
-    $(window).on 'git-plus:commit',             -> new GitCommit()
-    $(window).on 'git-plus:diff',               -> GitDiff()
-    $(window).on 'git-plus:diff-all',           -> GitDiffAll()
-    $(window).on 'git-plus:log',                -> GitLog()
-    $(window).on 'git-plus:status',             -> GitStatus()
-    $(window).on 'git-plus:push',               -> GitPush()
-    $(window).on 'git-plus:pull',               -> GitPull()
+    atom.workspaceView.command 'git-plus:add', -> GitAdd()
+    atom.workspaceView.command 'git-plus:add-all', -> GitAdd(true)
+    atom.workspaceView.command 'git-plus:add-all-and-commit', -> GitAddAllAndCommit()
+    atom.workspaceView.command 'git-plus:add-and-commit', -> GitAddAndCommit()
+    atom.workspaceView.command 'git-plus:diff', -> GitDiff()
+    atom.workspaceView.command 'git-plus:diff-all', -> GitDiffAll()
+    atom.workspaceView.command 'git-plus:log', -> GitLog()
+    atom.workspaceView.command 'git-plus:log-current-file', -> GitLog(true)
+    atom.workspaceView.command 'git-plus:status', -> GitStatus()
+    atom.workspaceView.command 'git-plus:push', -> GitPush()
+    atom.workspaceView.command 'git-plus:pull', -> GitPull()
+    atom.workspaceView.command 'git-plus:remove-current-file', -> GitRemove()
+    atom.workspaceView.command 'git-plus:remove', -> GitRemove(true)
+    atom.workspaceView.command 'git-plus:checkout-current-file', -> GitCheckoutCurrentFile()
+    atom.workspaceView.command 'git-plus:checkout', -> GitBranch.gitBranches()
+    atom.workspaceView.command 'git-plus:checkout-all-files', -> GitCheckoutAllFiles()
+    atom.workspaceView.command 'git-plus:cherry-pick', -> GitCherryPick()
+    atom.workspaceView.command 'git-plus:commit', -> new GitCommit()
+    atom.workspaceView.command 'git-plus:commit-amend', -> GitCommitAmend()
+    atom.workspaceView.command 'git-plus:fetch', -> GitFetch()
+    atom.workspaceView.command 'git-plus:new-branch', -> GitBranch.newBranch()
+    atom.workspaceView.command 'git-plus:reset-head', -> git.reset()
+    atom.workspaceView.command 'git-plus:show', -> GitShow()
+    atom.workspaceView.command 'git-plus:stage-files', -> GitStageFiles()
+    atom.workspaceView.command 'git-plus:stage-hunk', -> GitStageHunk()
+    atom.workspaceView.command 'git-plus:stash-save', -> GitStashSave()
+    atom.workspaceView.command 'git-plus:stash-pop', -> GitStashPop()
+    atom.workspaceView.command 'git-plus:stash-keep', -> GitStashApply()
+    atom.workspaceView.command 'git-plus:stash-drop', -> GitStashDrop()
+    atom.workspaceView.command 'git-plus:tags', -> GitTags()
+    atom.workspaceView.command 'git-plus:unstage-files', -> GitUnstageFiles()
+    atom.workspaceView.command 'git-plus:init', -> GitInit()

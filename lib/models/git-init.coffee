@@ -1,6 +1,5 @@
 git = require '../git'
 StatusView = require '../views/status-view'
-GitPlusCommands = require '../git-plus-commands'
 
 gitInit = ->
   git.cmd
