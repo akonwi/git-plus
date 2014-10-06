@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.11.0
+
+- Add setting to change message display time in seconds
+
 ### 3.10.4
 
 - Fix for object names being shortened unnecessarily.

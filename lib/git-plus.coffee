@@ -8,6 +8,7 @@ module.exports =
     wordDiff: true
     amountOfCommitsToShow: 25
     gitPath: 'git'
+    messageTimeout: 5
 
   activate: (state) ->
     GitAdd             = require './models/git-add'

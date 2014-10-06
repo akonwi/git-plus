@@ -26,7 +26,7 @@ module.exports =
       @find(".output").append(@message)
       setTimeout =>
         @detach()
-      , 10000
+      , atom.config.get('git-plus.messageTimeout') * 1000
 
     detach: ->
       super
