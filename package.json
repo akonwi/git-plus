@@ -35,7 +35,8 @@
     "git-plus:stash-drop",
     "git-plus:tags",
     "git-plus:unstage-files",
-    "git-plus:init"
+    "git-plus:init",
+    "git-plus:run"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",

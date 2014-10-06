@@ -39,6 +39,7 @@ module.exports =
     GitStashSave           = require './models/git-stash-save'
     GitTags                = require './models/git-tags'
     GitUnstageFiles        = require './models/git-unstage-files'
+    GitRun                 = require './models/git-run'
 
     atom.workspaceView.command 'git-plus:add', -> GitAdd()
     atom.workspaceView.command 'git-plus:add-all', -> GitAdd(true)
@@ -72,3 +73,4 @@ module.exports =
     atom.workspaceView.command 'git-plus:tags', -> GitTags()
     atom.workspaceView.command 'git-plus:unstage-files', -> GitUnstageFiles()
     atom.workspaceView.command 'git-plus:init', -> GitInit()
+    atom.workspaceView.command 'git-plus:run', -> GitRun()

@@ -2,6 +2,7 @@
 
 ### 4.0.0
 
+- Adding new command called 'Git Run'. This allows you to run git commands like in the command line. i.e. `add --all .` or `clone git@github.com:akonwi/git-plus my-git-plus`
 - Removed Git-Plus command palette and merged all commands into atom command palette
 - all commands are now accessible via keymappings
 - Add setting to change message display time in seconds
