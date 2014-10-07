@@ -2,6 +2,7 @@
 
 ### 4.0.0
 
+- THIS IS THE LAST PUSH OF NEW FEATURES. I'm stopping development of this package because I don't have time and on top of that, I don't use atom anymore
 - Adding new command called 'Git Run'. This allows you to run git commands like in the command line. i.e. `add --all .` or `clone git@github.com:akonwi/git-plus my-git-plus`
 - Removed Git-Plus command palette and merged all commands into atom command palette
 - all commands are now accessible via keymappings
