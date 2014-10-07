@@ -9,13 +9,11 @@
 # https://atom.io/docs/latest/advanced/keymaps
 
 '.platform-darwin':
-  'cmd-shift-h': 'git-plus:menu'
   'cmd-shift-c': 'git-plus:commit'
   'cmd-shift-a s': 'git-plus:status'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
 
 '.platform-win32, .platform-linux':
-  'ctrl-shift-h': 'git-plus:menu'
   'ctrl-shift-x': 'git-plus:commit'
   'ctrl-shift-a s': 'git-plus:status'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
