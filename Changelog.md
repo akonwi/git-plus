@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.1.0
+
+- Return of git-plus command palette
+
 ### 4.0.0
 
 - THIS IS THE LAST PUSH OF NEW FEATURES. I'm stopping development of this package because I don't have time and on top of that, I don't use atom anymore

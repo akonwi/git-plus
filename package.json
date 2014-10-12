@@ -4,6 +4,7 @@
   "version": "4.0.2",
   "description": "Do git things without the terminal",
   "activationEvents": [
+    "git-plus:menu",
     "git-plus:add",
     "git-plus:add-all",
     "git-plus:add-all-and-commit",
@@ -45,6 +46,8 @@
   },
   "dependencies": {
     "fs-plus": "^2.2.0",
+    "fuzzaldrin": "^1.2.0",
+    "underscore-plus": "1.x",
     "theorist": "~1.0.1",
     "emissary": "~1.2.1"
   }

@@ -1,5 +1,6 @@
 {$} = require 'atom'
 git = require './git'
+GitPaletteView = require './views/git-palette-view'
 
 module.exports =
   configDefaults:
@@ -41,6 +42,7 @@ module.exports =
     GitUnstageFiles        = require './models/git-unstage-files'
     GitRun                 = require './models/git-run'
 
+    atom.workspaceView.command 'git-plus:menu', -> new GitPaletteView()
     atom.workspaceView.command 'git-plus:add', -> GitAdd()
     atom.workspaceView.command 'git-plus:add-all', -> GitAdd(true)
     atom.workspaceView.command 'git-plus:add-all-and-commit', -> GitAddAllAndCommit()
