@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.1.1
+
+- Fix issue of commit tab not opening
+- Still need to remove dependency on Theorist
+
 ### 4.1.0
 
 - Return of git-plus command palette

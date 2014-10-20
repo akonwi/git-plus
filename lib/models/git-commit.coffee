@@ -46,9 +46,13 @@ class GitCommit extends Model
   constructor: (@amend='') ->
     super
 
+    ### TODO: Remove theorist dependency.
+    #     Highly redundant. atom won't open another editor
+    #     if 'searchAllPanes' is true in line 98
+    ###
     # This prevents atom from creating more than one Editor to edit the commit
     # message.
-    return if @assignId() isnt 1
+    #return if @assignId() isnt 1
 
     # This sets @isAmending to check if we are amending right now.
     @isAmending = @amend.length > 0
