@@ -8,7 +8,7 @@ module.exports.gitBranches = ->
   git.cmd
     args: ['branch'],
     stdout: (data) ->
-      new BranchListView data
+      new BranchListView(data)
 
 class InputView extends View
   @content: ->

@@ -1,6 +1,5 @@
 git = require '../git'
 StatusView = require '../views/status-view'
-Path = require 'path'
 
 gitCheckoutAllFiles = ->
   git.cmd

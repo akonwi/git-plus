@@ -1,7 +1,3 @@
-Os = require 'os'
-Path = require 'path'
-fs = require 'fs-plus'
-
 git = require '../git'
 StatusView = require '../views/status-view'
 GitCommit = require './git-commit'
