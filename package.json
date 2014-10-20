@@ -48,7 +48,6 @@
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
     "underscore-plus": "1.x",
-    "theorist": "~1.0.1",
     "emissary": "~1.2.1"
   }
 }
