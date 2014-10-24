@@ -88,6 +88,16 @@ gitAdd = ({file, stdout, stderr, exit}={}) ->
     stdout: stdout if stdout?
     stderr: stderr if stderr?
     exit: exit
+    
+gitMerge = ({branchName, stdout, stderr, exit}={}) ->
+  exit ?= (code) ->
+    if code is 0
+      new StatusView(type: 'success', message: 'Git merged branch #{brachName} successfully')
+  gitCmd
+    args: ['merge', branchName],
+    stdout: stdout if stdout?
+    stderr: stderr if stderr?
+    exit: exit
 
 gitResetHead = ->
   gitCmd

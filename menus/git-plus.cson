@@ -17,6 +17,7 @@
         { 'label': 'Add & Commit', 'command': 'git-plus:add-and-commit'}
         { 'label': 'Add All & Commit', 'command': 'git-plus:add-all-and-commit'}
         { 'label': 'Log', 'command': 'git-plus:log' }
+        { 'label': 'Merge', 'command': 'git-plus:merge'}
       ]
     ]
   }

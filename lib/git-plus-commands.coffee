@@ -28,6 +28,7 @@ getCommands = ->
   GitStatus              = require './models/git-status'
   GitTags                = require './models/git-tags'
   GitUnstageFiles        = require './models/git-unstage-files'
+  GitMerge               = require './models/git-merge'
 
   commands = []
   if atom.project.getRepo()?
@@ -65,6 +66,7 @@ getCommands = ->
     commands.push ['git-plus:status', 'Status', -> GitStatus()]
     commands.push ['git-plus:tags', 'Tags', -> GitTags()]
     commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
+    commands.push ['git-plus:merge', 'Merge', -> GitMerge.gitMerge()]
   else
     commands.push ['git-plus:init', 'Init', -> GitInit()]
 
