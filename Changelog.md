@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.0
+
+- New Git merge feature thanks to @herlon214
+
 ### 4.1.2
 
 - Using new atom api for configs and subscribing to make it easier for moving forward and maintenance

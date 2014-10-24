@@ -66,7 +66,7 @@ getCommands = ->
     commands.push ['git-plus:status', 'Status', -> GitStatus()]
     commands.push ['git-plus:tags', 'Tags', -> GitTags()]
     commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
-    commands.push ['git-plus:merge', 'Merge', -> GitMerge.gitMerge()]
+    commands.push ['git-plus:merge', 'Merge', -> GitMerge()]
   else
     commands.push ['git-plus:init', 'Init', -> GitInit()]
 

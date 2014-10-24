@@ -1,6 +1,5 @@
 fs = require 'fs-plus'
 {$$, SelectListView} = require 'atom'
-
 git = require '../git'
 StatusView = require './status-view'
 

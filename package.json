@@ -37,7 +37,8 @@
     "git-plus:tags",
     "git-plus:unstage-files",
     "git-plus:init",
-    "git-plus:run"
+    "git-plus:run",
+    "git-plus:merge"
   ],
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",

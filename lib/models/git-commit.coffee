@@ -7,6 +7,8 @@ StatusView = require '../views/status-view'
 
 module.exports =
 class GitCommit
+  subscriptions: []
+
   # Public: Helper method to set the commentchar to be used in
   #   the commit message
   setCommentChar: (char) ->
@@ -85,7 +87,6 @@ class GitCommit
     atom.workspace
       .open(@filePath(), split: split, activatePane: true, searchAllPanes: true)
       .done ({buffer}) =>
-        @subscriptions = []
         @subscriptions.push buffer.onDidSave => @commit()
         @subscriptions.push buffer.onDidDestroy =>
           if @isAmending then @undoAmend() else @cleanup()

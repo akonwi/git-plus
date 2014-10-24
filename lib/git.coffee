@@ -88,7 +88,7 @@ gitAdd = ({file, stdout, stderr, exit}={}) ->
     stdout: stdout if stdout?
     stderr: stderr if stderr?
     exit: exit
-    
+
 gitMerge = ({branchName, stdout, stderr, exit}={}) ->
   exit ?= (code) ->
     if code is 0
