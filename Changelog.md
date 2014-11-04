@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.2
+
+- Remove hyphenated package name in menu
+
 ### 4.2.1
 
 - Small fix in git-commit.coffee line 90 where promise returns a TextBuffer. Using given TextBuffer for subscriptions
