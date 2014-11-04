@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.2.1
+
+- Small fix in git-commit.coffee line 90 where promise returns a TextBuffer. Using given TextBuffer for subscriptions
+rather than the 'buffer' property in the TextBuffer.
+
 ### 4.2.0
 
 - New Git merge feature thanks to @herlon214
