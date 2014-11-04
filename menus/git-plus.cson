@@ -7,7 +7,7 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'git-plus'
+      'label': 'Git Plus'
       'submenu': [
         { 'label': 'Add', 'command': 'git-plus:add' }
         { 'label': 'Add All', 'command': 'git-plus:add-all' }
