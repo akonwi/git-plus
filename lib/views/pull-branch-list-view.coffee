@@ -10,10 +10,7 @@ module.exports =
       git.cmd
         args: ['branch', '-r'],
         stdout: (@data) =>
-          if @data.split("\n").length is 1
-            @pull()
-          else
-            super
+          super
 
     confirmed: ({name}) ->
       @pull(name.split('/')[1])
@@ -21,9 +18,15 @@ module.exports =
 
     pull: (remoteBranch='') ->
       view = new OutputView()
+      remote = @remote
       git.cmd
-        args: ['pull', @remote, remoteBranch]
-        stdout: (data) -> view.addLine(data.toString())
+        args: ['fetch', @remote]
+        stdout: (@data) ->
+          if @data.toString().length is 0
+            git.cmd
+              args: ['merge', remote + "/" + remoteBranch]
+              stdout: (data) -> view.addLine(data.toString())
+              stderr: (data) -> view.addLine(data.toString())
+              exit: (code) =>
+                view.finish()
         stderr: (data) -> view.addLine(data.toString())
-        exit: (code) =>
-          view.finish()
