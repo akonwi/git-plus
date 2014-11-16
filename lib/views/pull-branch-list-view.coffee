@@ -30,3 +30,12 @@ module.exports =
               exit: (code) =>
                 view.finish()
         stderr: (data) -> view.addLine(data.toString())
+
+    # Once, 'pull' is fixed in Yosemite, revert back to this
+    # pull: (remoteBranch='') ->
+    #   view = new OutputView()
+    #   git.cmd
+    #     args: ['pull', @remote, remoteBranch]
+    #     stdout: (data) -> view.addLine(data.toString())
+    #     stderr: (data) -> view.addLine(data.toString())
+    #     exit: (code) => view.finish()

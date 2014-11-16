@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.3
+
+- Temporary fix for `Git Pull` issue on yosemite mac's thanks to @Azakur4.
+
 ### 4.2.2
 
 - Remove hyphenated package name in menu
