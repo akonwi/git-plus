@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.4
+
+- Minor patch
+
 ### 4.2.3
 
 - Temporary fix for `Git Pull` issue on yosemite mac's thanks to @Azakur4.
