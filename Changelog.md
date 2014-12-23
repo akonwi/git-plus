@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.5
+
+- Handle case of no available panes after closing commit message pane
+
 ### 4.2.4
 
 - Minor patch

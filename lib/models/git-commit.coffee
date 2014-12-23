@@ -144,6 +144,6 @@ class GitCommit
 
   # Public: Cleans up after the EditorView gets destroyed.
   cleanup: ->
-    @currentPane.activate()
+    @currentPane.activate() if @currentPane.alive
     s.dispose() for s in @subscriptions
     try fs.unlinkSync @filePath()
