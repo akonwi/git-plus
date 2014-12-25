@@ -110,7 +110,7 @@ class GitCommit
         # diff gutter.
         atom.project.getRepo()?.refreshStatus()
         # Activate the former active pane.
-        @currentPane.activate()
+        @currentPane.activate() if @currentPane.alive
         # Refresh git index to prevent bugs on our methods.
         git.refresh()
 
