@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.3.0
+
+- Confirm on `Git Remove`
+
 ### 4.2.6
 
 - Handle case of no available panes after saving commit message

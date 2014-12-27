@@ -6,10 +6,11 @@ gitRemove = (showSelector=false) ->
   currentFile = git.relativize(atom.workspace.getActiveEditor()?.getPath())
 
   if currentFile? and not showSelector
-    atom.workspaceView.getActiveView().remove()
-    git.cmd
-      args: ['rm', '-f', '--ignore-unmatch', currentFile],
-      stdout: (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
+    if window.confirm 'Are you sure?'
+      atom.workspaceView.getActiveView().remove()
+      git.cmd
+        args: ['rm', '-f', '--ignore-unmatch', currentFile],
+        stdout: (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
   else
     git.cmd
       args: ['rm', '-r', '-n', '--ignore-unmatch', '-f', '*'],

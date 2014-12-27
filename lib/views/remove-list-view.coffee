@@ -26,7 +26,8 @@ class SelectStageFilesView extends SelectListMultipleView
     viewButton.appendTo(this)
 
     @on 'click', 'button', ({target}) =>
-      @complete() if $(target).hasClass('btn-remove-button')
+      if $(target).hasClass('btn-remove-button')
+        @complete() if window.confirm 'Are you sure?'
       @cancel() if $(target).hasClass('btn-cancel-button')
 
   viewForItem: (item, matchedStr) ->
