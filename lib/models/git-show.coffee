@@ -38,6 +38,8 @@ class InputView extends View
 
   initialize: (callback) ->
     atom.workspaceView.append this
+    @on 'core:cancel', =>
+      @detach()
     @objectHash.focus()
     @objectHash.on 'core:confirm', =>
       text = $(this).text().split(' ')

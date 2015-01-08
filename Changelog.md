@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.3.1
+
+- `Git Show` can be cancelled with escape
+
 ### 4.3.0
 
 - Confirm on `Git Remove`
