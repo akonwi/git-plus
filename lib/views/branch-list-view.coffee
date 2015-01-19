@@ -45,5 +45,6 @@ class ListView extends SelectListView
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
         atom.workspace.eachEditor (editor) ->
-          fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
+          fs.exists editor.getPath(), (exist) ->
+            editor.destroy() if not exist
         atom.project.getRepo()?.refreshStatus()
