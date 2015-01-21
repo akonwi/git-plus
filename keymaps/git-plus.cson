@@ -20,10 +20,10 @@
   'ctrl-shift-a s': 'git-plus:status'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
 
-'.platform-darwin .atom-text-editor':
+'.platform-darwin atom-text-editor':
   'cmd-shift-a': 'git-plus:add'
   'cmd-shift-a c': 'git-plus:add-and-commit'
 
-'.platform-win32 .atom-text-editor, .platform-linux .atom-text-editor':
+'.platform-win32 atom-text-editor, .platform-linux atom-text-editor':
   'ctrl-shift-a': 'git-plus:add'
   'ctrl-shift-a c': 'git-plus:add-and-commit'
