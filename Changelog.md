@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.3.4
+### 4.3.5
 
 - Update css selectors and keymappings with new atom API standards
 
