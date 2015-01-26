@@ -49,6 +49,7 @@
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
     "underscore-plus": "1.x",
-    "emissary": "~1.2.1"
+    "emissary": "~1.2.1",
+    "atom-space-pen-views": "^2.0.3"
   }
 }
