@@ -25,6 +25,8 @@ class StatusListView extends SelectListView
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
 
+    @storeFocusedElement()
+
   cancelled: -> @hide()
 
   hide: ->
