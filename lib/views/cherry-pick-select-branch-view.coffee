@@ -1,4 +1,5 @@
-{$$, BufferedProcess, SelectListView} = require 'atom'
+{BufferedProcess} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
 StatusView = require './status-view'
@@ -9,11 +10,21 @@ class CherryPickSelectBranch extends SelectListView
 
   initialize: (items, @currentHead) ->
     super
-    @addClass 'overlay from-top'
+    @show()
     @setItems items
 
-    atom.workspaceView.append this
     @focusFilterEditor()
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: (item) ->
     $$ ->

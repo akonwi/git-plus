@@ -1,4 +1,4 @@
-{$$, SelectListView} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
 GitDiff = require '../models/git-diff'
@@ -8,11 +8,10 @@ class StatusListView extends SelectListView
 
   initialize: (@data, @onlyCurrentFile) ->
     super
-    @addClass 'overlay from-top'
+    @show()
     @branch = @data[0]
     @setItems @parseData @data[...-1]
 
-    atom.workspaceView.append this
     @focusFilterEditor()
 
   parseData: (files) ->
@@ -21,6 +20,17 @@ class StatusListView extends SelectListView
       {type: line[1], path: line[2]}
 
   getFilterKey: -> 'path'
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: ({type, path}) ->
     getIcon = (s) ->

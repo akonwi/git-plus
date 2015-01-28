@@ -1,5 +1,5 @@
 _ = require 'underscore-plus'
-{$, $$, SelectListView} = require 'atom'
+{$, $$, SelectListView} = require 'atom-space-pen-views'
 git = require '../git'
 GitPlusCommands = require '../git-plus-commands'
 fuzzy = require('../models/fuzzy').filter
@@ -9,25 +9,30 @@ class GitPaletteView extends SelectListView
 
   initialize: ->
     super
-    @addClass('git-palette overlay from-top')
+    @addClass('git-palette')
     @toggle()
 
   getFilterKey: ->
     'description'
 
+  cancelled: -> @hide()
+
   toggle: ->
-    if @hasParent()
+    if @panel?.isVisible()
       @cancel()
     else
-      @attach()
+      @show()
 
-  attach: ->
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
     @storeFocusedElement()
 
     if @previouslyFocusedElement[0] and @previouslyFocusedElement[0] isnt document.body
       @commandElement = @previouslyFocusedElement
     else
-      @commandElement = atom.workspaceView
+      @commandElement = atom.views.getView(atom.workspace)
     @keyBindings = atom.keymap.findKeyBindings(target: @commandElement[0])
 
     commands = []
@@ -36,7 +41,6 @@ class GitPaletteView extends SelectListView
     commands = _.sortBy(commands, 'name')
     @setItems(commands)
 
-    atom.workspaceView.append(this)
     @focusFilterEditor()
 
   populateList: ->
@@ -64,6 +68,9 @@ class GitPaletteView extends SelectListView
       @selectItemView(@list.find('li:first'))
     else
       @setError(@getEmptyMessage(@items.length, filteredItems.length))
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: ({name, description}, matchedStr) ->
     $$ ->

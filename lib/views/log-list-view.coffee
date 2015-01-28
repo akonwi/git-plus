@@ -2,7 +2,8 @@ Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
 
-{$$, BufferedProcess, SelectListView} = require 'atom'
+{BufferedProcess} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 
 GitShow = require '../models/git-show'
 
@@ -17,7 +18,7 @@ class LogListView extends SelectListView
 
   initialize: (@data, @onlyCurrentFile) ->
     super
-    @addClass 'overlay from-top'
+    @show()
     @parseData()
 
   parseData: ->
@@ -27,10 +28,20 @@ class LogListView extends SelectListView
         tmp = item.match /([\w\d]{7});\|(.*);\|(.*);\|(.*)/
         {hash: tmp?[1], author: tmp?[2], title: tmp?[3], time: tmp?[4]}
     )
-    atom.workspaceView.append this
     @focusFilterEditor()
 
   getFilterKey: -> 'title'
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: (commit) ->
     $$ ->

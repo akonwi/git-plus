@@ -1,8 +1,7 @@
 # git-plus package
 
 # ATTENTION!
-  Development on this package is done. I no longer use atom and don't have time to maintain this project. If anyone is willing
-  to pick it up or make pull requests, I'm fine with that but I won't be developing new features any longer.
+  I no longer use atom and don't have time to continue developing features on this project but I will do my best to fix issues and bugs that arise. If anyone is willing to pick it up that is great but at the least, pull requests are more than welcome.
 
 [![endorse](https://api.coderwall.com/akonwi/endorsecount.png)](https://coderwall.com/akonwi)
 

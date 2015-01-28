@@ -1,4 +1,5 @@
-{$$, BufferedProcess, SelectListView} = require 'atom'
+{BufferedProcess} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
 OutputView = require './output-view'
@@ -8,7 +9,7 @@ module.exports =
 class ListView extends SelectListView
   initialize: (@data, @mode, @setUpstream=false, @tag='') ->
     super
-    @addClass 'overlay from-top'
+    @show()
     @parseData()
 
   parseData: ->
@@ -20,10 +21,20 @@ class ListView extends SelectListView
       @confirmed remotes[0]
     else
       @setItems remotes
-      atom.workspaceView.append this
       @focusFilterEditor()
 
   getFilterKey: -> 'name'
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: ({name}) ->
     $$ ->

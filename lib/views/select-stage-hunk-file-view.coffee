@@ -1,4 +1,5 @@
-{$$, BufferedProcess, SelectListView} = require 'atom'
+{BufferedProcess} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 SelectStageHunks = require './select-stage-hunks-view'
 git = require '../git'
 
@@ -7,13 +8,23 @@ class SelectStageHunkFile extends SelectListView
 
   initialize: (items) ->
     super
-    @addClass 'overlay from-top'
+    @show()
 
     @setItems items
-    atom.workspaceView.append this
     @focusFilterEditor()
 
   getFilterKey: -> 'path'
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: (item) ->
     $$ ->

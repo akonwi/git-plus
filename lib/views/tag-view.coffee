@@ -1,4 +1,4 @@
-{$$, SelectListView} = require 'atom'
+{$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
 GitShow = require '../models/git-show'
@@ -10,7 +10,7 @@ class TagView extends SelectListView
 
   initialize: (@tag) ->
     super
-    @addClass 'overlay from-top'
+    @show()
     @parseData()
 
   parseData: ->
@@ -22,8 +22,18 @@ class TagView extends SelectListView
     items.push {tag: @tag, cmd: 'Delete', description: 'git tag --delete'}
 
     @setItems items
-    atom.workspaceView.append this
     @focusFilterEditor()
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: ({tag, cmd, description}) ->
     $$ ->

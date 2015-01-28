@@ -11,7 +11,7 @@ module.exports =
 
     initialize: ->
       @subscribe $(window), 'core:cancel', => @detach()
-      atom.workspaceView.append(this)
+      atom.workspace.addBottomPanel(item: this)
       setTimeout =>
         @detach()
       , atom.config.get('git-plus.messageTimeout') * 1000
