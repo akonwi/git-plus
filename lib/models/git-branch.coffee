@@ -1,4 +1,4 @@
-{$, EditorView, View} = require 'atom'
+{$, TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
 StatusView = require '../views/status-view'
@@ -12,21 +12,25 @@ module.exports.gitBranches = ->
 
 class InputView extends View
   @content: ->
-    @div class: 'overlay from-top', =>
-      @subview 'branchEditor', new EditorView(mini: true, placeholderText: 'New branch name')
+    @div =>
+      @subview 'branchEditor', new TextEditorView(mini: true, placeholderText: 'New branch name')
 
   initialize: ->
     @currentPane = atom.workspace.getActivePane()
-    atom.workspaceView.append this
-    @branchEditor.focus()
-    @on 'core:cancel', => @detach()
+    panel = atom.workspace.addModalPanel(item: this)
+    panel.show()
 
+    destroy = =>
+      panel.destroy()
+      @currentPane.activate()
+
+    @branchEditor.focus()
+    @branchEditor.on 'core:cancel', => destroy()
     @branchEditor.on 'core:confirm', =>
       editor = @branchEditor.getEditor()
       name = editor.getWordUnderCursor()
       if name.length > 0
-        @createBranch name
-        @detach()
+        destroy()
 
   createBranch: (name) ->
     git.cmd
