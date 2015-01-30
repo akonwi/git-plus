@@ -20,7 +20,7 @@ class TagCreateView extends View
         @span class: 'pull-left', =>
           @button class: 'btn btn-success inline-block-tight gp-confirm-button', click: 'createTag', 'Create Tag'
         @span class: 'pull-right', =>
-          @button class: 'btn btn-error inline-block-tight gp-cancel-button', click: 'abort', 'Cancel'
+          @button class: 'btn btn-error inline-block-tight gp-cancel-button', click: 'destroy', 'Cancel'
 
   initialize: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
