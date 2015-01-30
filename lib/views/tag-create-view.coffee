@@ -11,7 +11,7 @@ module.exports=
 class TagCreateView extends View
 
   @content: ->
-    @div class: 'overlay from-top', =>
+    @div =>
       @div class: 'block', =>
         @subview 'tagName', new TextEditorView(mini: true, placeholderText: 'Tag')
       @div class: 'block', =>
