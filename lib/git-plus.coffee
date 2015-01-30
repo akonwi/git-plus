@@ -63,8 +63,9 @@ module.exports =
     GitRun                 = require './models/git-run'
     GitMerge               = require './models/git-merge'
 
+    atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
+
     if not atom.project.getRepo()?
-      atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
       atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
     else
       git.refresh()
