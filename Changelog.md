@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.3.7
+
+- More api upgrades
+- No longer showing git commands in regular command palette when project is not a repo
+
 ### 4.3.6
 
 - Making changes to follow the api for atom 1.0.0

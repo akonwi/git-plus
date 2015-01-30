@@ -6,7 +6,7 @@ module.exports =
     Subscriber.includeInto(this)
 
     @content = (params) ->
-      @div class: 'git-plus overlay from-bottom', =>
+      @div class: 'git-plus', =>
         @div class: "#{params.type} message", params.message
 
     initialize: ->

@@ -25,7 +25,7 @@ module.exports =
     finish: ->
       @find(".output").append(@message)
       setTimeout =>
-        @detach()
+        @destroy()
       , atom.config.get('git-plus.messageTimeout') * 1000
 
     destroy: ->

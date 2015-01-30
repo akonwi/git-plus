@@ -31,7 +31,9 @@ getCommands = ->
   GitMerge               = require './models/git-merge'
 
   commands = []
-  if atom.project.getRepo()?
+  if not atom.project.getRepo()?
+    commands.push ['git-plus:init', 'Init', -> GitInit()]
+  else
     git.refresh()
     if atom.workspace.getActiveEditor()?.getPath()?
       commands.push ['git-plus:add', 'Add', -> GitAdd()]
@@ -67,8 +69,6 @@ getCommands = ->
     commands.push ['git-plus:tags', 'Tags', -> GitTags()]
     commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
     commands.push ['git-plus:merge', 'Merge', -> GitMerge()]
-  else
-    commands.push ['git-plus:init', 'Init', -> GitInit()]
 
   commands
 
