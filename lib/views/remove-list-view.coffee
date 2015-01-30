@@ -51,7 +51,8 @@ class SelectStageFilesView extends SelectListMultipleView
 
     currentFile = git.relativize atom.workspace.getActiveEditor()?.getPath()
 
-    atom.workspaceView.getActiveView().remove() if currentFile in files
+    editor = atom.workspace.getActiveTextEditor()
+    atom.views.getView(editor).remove() if currentFile in files
     git.cmd
       args: ['rm', '-f'].concat(files),
       stdout: (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
