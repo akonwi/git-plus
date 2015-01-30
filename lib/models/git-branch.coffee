@@ -27,9 +27,10 @@ class InputView extends View
     @branchEditor.focus()
     @branchEditor.on 'core:cancel', => destroy()
     @branchEditor.on 'core:confirm', =>
-      editor = @branchEditor.getEditor()
-      name = editor.getWordUnderCursor()
+      editor = @branchEditor.getModel()
+      name = editor.getText()
       if name.length > 0
+        @createBranch name
         destroy()
 
   createBranch: (name) ->

@@ -13,8 +13,8 @@ module.exports =
 
     initialize: ->
       super
-      atom.workspaceView.appendToBottom(this)
-      @subscribe $(window), 'core:cancel', => @detach()
+      @subscribe $(window), 'core:cancel', => @destroy()
+      @panel ?= atom.workspace.addBottomPanel(item: this)
 
     addLine: (line) ->
       @message += line
@@ -25,9 +25,9 @@ module.exports =
     finish: ->
       @find(".output").append(@message)
       setTimeout =>
-        @detach()
+        @destroy()
       , atom.config.get('git-plus.messageTimeout') * 1000
 
-    detach: ->
-      super
+    destroy: ->
+      @panel.destroy()
       @unsubscribe()
