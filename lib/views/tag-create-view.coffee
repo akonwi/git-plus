@@ -27,6 +27,7 @@ class TagCreateView extends View
     @panel.show()
     @tagName.focus()
     @on 'core:cancel', => @destroy()
+    @on 'core:confirm', => @createTag()
 
   createTag: ->
     tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
