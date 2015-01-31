@@ -1,3 +1,4 @@
+{GitRepository} = require 'atom'
 git = require './git'
 
 getCommands = ->
@@ -32,45 +33,53 @@ getCommands = ->
   GitMerge               = require './models/git-merge'
 
   commands = []
-  if not atom.project.getRepo()?
-    commands.push ['git-plus:init', 'Init', -> GitInit()]
+  # If no file open
+  if not atom.workspace.getActiveEditor()?.getPath()?
+    # If no repo for project
+    if not atom.project.getRepo()?
+      commands.push ['git-plus:init', 'Init', -> GitInit()]
+  # If there is an open file
   else
     git.refresh()
-    if atom.workspace.getActiveEditor()?.getPath()?
+    # Look for repo
+    repo = GitRepository.open(atom.workspace.getActiveEditor().getPath())
+    if repo is null
+      commands.push ['git-plus:init', 'Init', -> GitInit()]
+    else
       commands.push ['git-plus:add', 'Add', -> GitAdd()]
       commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(true)]
       commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove()]
       commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> GitCheckoutCurrentFile()]
 
-    commands.push ['git-plus:add-all', 'Add All', -> GitAdd(true)]
-    commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit()]
-    commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit()]
-    commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches()]
-    commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles()]
-    commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick()]
-    commands.push ['git-plus:commit', 'Commit', -> new GitCommit]
-    commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend()]
-    commands.push ['git-plus:diff', 'Diff', -> GitDiff()]
-    commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll()]
-    commands.push ['git-plus:fetch', 'Fetch', -> GitFetch()]
-    commands.push ['git-plus:log', 'Log', -> GitLog()]
-    commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitBranch.newBranch()]
-    commands.push ['git-plus:pull', 'Pull', -> GitPull()]
-    commands.push ['git-plus:push', 'Push', -> GitPush()]
-    commands.push ['git-plus:remove', 'Remove', -> GitRemove(true)]
-    commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset()]
-    commands.push ['git-plus:show', 'Show', -> GitShow()]
-    commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles()]
-    commands.push ['git-plus:stage-hunk', 'Stage Hunk', -> GitStageHunk()]
-    commands.push ['git-plus:stash-save-changes', 'Stash: Save Changes', -> GitStashSave()]
-    commands.push ['git-plus:stash-pop', 'Stash: Apply (Pop)', -> GitStashPop()]
-    commands.push ['git-plus:stash-apply', 'Stash: Apply (Keep)', -> GitStashApply()]
-    commands.push ['git-plus:stash-delete', 'Stash: Delete (Drop)', -> GitStashDrop()]
-    commands.push ['git-plus:status', 'Status', -> GitStatus()]
-    commands.push ['git-plus:tags', 'Tags', -> GitTags()]
-    commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
-    commands.push ['git-plus:run', 'Run', -> GitRun()]
-    commands.push ['git-plus:merge', 'Merge', -> GitMerge()]
+      commands.push ['git-plus:add-all', 'Add All', -> GitAdd(true)]
+      commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit()]
+      commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit()]
+      commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches()]
+      commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles()]
+      commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick()]
+      commands.push ['git-plus:commit', 'Commit', -> new GitCommit]
+      commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend()]
+      commands.push ['git-plus:diff', 'Diff', -> GitDiff()]
+      commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll()]
+      commands.push ['git-plus:fetch', 'Fetch', -> GitFetch()]
+      commands.push ['git-plus:log', 'Log', -> GitLog()]
+      commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitBranch.newBranch()]
+      commands.push ['git-plus:pull', 'Pull', -> GitPull()]
+      commands.push ['git-plus:push', 'Push', -> GitPush()]
+      commands.push ['git-plus:remove', 'Remove', -> GitRemove(true)]
+      commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset()]
+      commands.push ['git-plus:show', 'Show', -> GitShow()]
+      commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles()]
+      commands.push ['git-plus:stage-hunk', 'Stage Hunk', -> GitStageHunk()]
+      commands.push ['git-plus:stash-save-changes', 'Stash: Save Changes', -> GitStashSave()]
+      commands.push ['git-plus:stash-pop', 'Stash: Apply (Pop)', -> GitStashPop()]
+      commands.push ['git-plus:stash-apply', 'Stash: Apply (Keep)', -> GitStashApply()]
+      commands.push ['git-plus:stash-delete', 'Stash: Delete (Drop)', -> GitStashDrop()]
+      commands.push ['git-plus:status', 'Status', -> GitStatus()]
+      commands.push ['git-plus:tags', 'Tags', -> GitTags()]
+      commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
+      commands.push ['git-plus:run', 'Run', -> GitRun()]
+      commands.push ['git-plus:merge', 'Merge', -> GitMerge()]
 
   commands
 

@@ -1,4 +1,4 @@
-{BufferedProcess} = require 'atom'
+{BufferedProcess, GitRepository} = require 'atom'
 StatusView = require './views/status-view'
 
 # Public: Execute a git command.
@@ -129,13 +129,14 @@ _prettifyDiff = (data) ->
 #   in one or the project root
 #
 # @param submodules boolean determining whether to account for submodules
-dir = (submodules=true) ->
+dir = (andSubmodules=true) ->
   found = false
-  if submodules
+  if andSubmodules
     if submodule = getSubmodule()
       found = submodule.getWorkingDirectory()
   if not found
-    found = atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+    repo = GitRepository.open(atom.workspace.getActiveEditor().getPath())
+    found = repo?.getWorkingDirectory() ? atom.project.getPath()
   found
 
 # returns filepath relativized for either a submodule, repository or a project
