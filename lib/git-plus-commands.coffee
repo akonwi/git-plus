@@ -28,6 +28,7 @@ getCommands = ->
   GitStatus              = require './models/git-status'
   GitTags                = require './models/git-tags'
   GitUnstageFiles        = require './models/git-unstage-files'
+  GitRun                 = require './models/git-run'
   GitMerge               = require './models/git-merge'
 
   commands = []
@@ -68,6 +69,7 @@ getCommands = ->
     commands.push ['git-plus:status', 'Status', -> GitStatus()]
     commands.push ['git-plus:tags', 'Tags', -> GitTags()]
     commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles()]
+    commands.push ['git-plus:run', 'Run', -> GitRun()]
     commands.push ['git-plus:merge', 'Merge', -> GitMerge()]
 
   commands
