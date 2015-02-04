@@ -124,11 +124,11 @@ _prettifyDiff = (data) ->
   data[1..data.length] = ('@@' + line for line in data[1..])
   data
 
-# Returns the root directory for a git repo.
+# Returns the working directory for a git repo.
 # Will search for submodule first if currently
 #   in one or the project root
 #
-# @param submodules boolean determining whether to account for submodules
+# @param andSubmodules boolean determining whether to account for submodules
 dir = (andSubmodules=true) ->
   found = false
   if andSubmodules
@@ -138,7 +138,8 @@ dir = (andSubmodules=true) ->
     repo = GitRepository.open(atom.workspace.getActiveEditor().getPath())
     return repo?.getWorkingDirectory() ? atom.project.getPath()
 
-# returns filepath relativized for either a submodule, repository or a project
+# returns filepath relativized for either a submodule or repository
+#   otherwise just a full path
 relativize = (path) ->
   getSubmodule(path)?.relativize(path) ? atom.project.getRepo()?.relativize(path) ? path
 

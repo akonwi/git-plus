@@ -1,5 +1,11 @@
 ## Changelog
 
+### 4.4.0
+
+- Many internal upgrades to keep up with atom 1.0.0 api
+- Commands can now be run from the Git-plus palette for files in other repos outside of the current project.
+  - This means you can open a directory of multiple Git repositories and work with individual repos while in the same project.
+
 ### 4.3.8
 
 - minor
