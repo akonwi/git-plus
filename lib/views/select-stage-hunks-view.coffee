@@ -60,7 +60,7 @@ class SelectStageHunks extends SelectListMultipleView
     patch_full = @patch_header
     patch_full += patch for {patch} in items
 
-    patchPath = atom.project.getRepo().getWorkingDirectory() + '/.git/GITPLUS_PATCH'
+    patchPath = git.dir() + '/GITPLUS_PATCH'
     fs.writeFileSync patchPath, patch_full, flag: 'w+'
 
     git.cmd

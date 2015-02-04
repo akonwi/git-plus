@@ -5,7 +5,6 @@ fs = require 'fs-plus'
 {$, TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
-ListView = require '../views/branch-list-view'
 
 showCommitFilePath = ->
   Path.join Os.tmpDir(), "atom_git_plus_commit.diff"

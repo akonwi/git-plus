@@ -5,13 +5,14 @@ fs = require 'fs-plus'
 {BufferedProcess} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
 
+git = require '../git'
 GitShow = require '../models/git-show'
 
 module.exports =
 class LogListView extends SelectListView
 
   currentFile = ->
-    atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
+    git.relativize atom.workspace.getActiveEditor()?.getPath()
 
   showCommitFilePath = ->
     Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
@@ -41,7 +42,7 @@ class LogListView extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: (commit) ->
     $$ ->
