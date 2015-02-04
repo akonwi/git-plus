@@ -133,15 +133,14 @@ dir = (andSubmodules=true) ->
   found = false
   if andSubmodules
     if submodule = getSubmodule()
-      found = submodule.getWorkingDirectory()
+      return submodule.getWorkingDirectory()
   if not found
     repo = GitRepository.open(atom.workspace.getActiveEditor().getPath())
-    found = repo?.getWorkingDirectory() ? atom.project.getPath()
-  found
+    return repo?.getWorkingDirectory() ? atom.project.getPath()
 
 # returns filepath relativized for either a submodule, repository or a project
 relativize = (path) ->
-  getSubmodule(path)?.relativize(path) ? atom.project.getRepo()?.relativize(path) ? atom.project.relativize(path)
+  getSubmodule(path)?.relativize(path) ? atom.project.getRepo()?.relativize(path) ? path
 
 # returns submodule for given file or undefined
 getSubmodule = (path) ->

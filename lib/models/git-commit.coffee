@@ -15,31 +15,20 @@ class GitCommit
     if char is '' then char = '#'
     @commentchar = char
 
-  # Public: Helper method returning the name of the file we should
-  #   write our commit message to.
-  #
-  # Returns: The filename as {String}.
-  file: ->
-    # git puts submodules in a `.git` folder named after the child repo
-    if @submodule ?= git.getSubmodule()
-      'COMMIT_EDITMSG'
-    else
-      '.git/COMMIT_EDITMSG'
-
   # Public: Helper method to return the current working directory.
   #
   # Returns: The cwd as a String.
   dir: ->
     # path is different for submodules
     if @submodule ?= git.getSubmodule()
-      @submodule.getPath()
+      @submodule.getWorkingDirectory()
     else
-      atom.project.getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+      git.dir()
 
-  # Public: Helper method to join @dir() and @file() to use it with fs.
+  # Public: Helper method to join @dir() and filename to use it with fs.
   #
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
-  filePath: -> path.join @dir(), @file()
+  filePath: -> path.join @dir(), 'COMMIT_EDITMSG'
 
   currentPane: atom.workspace.getActivePane()
 
