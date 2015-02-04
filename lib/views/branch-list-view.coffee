@@ -10,6 +10,7 @@ class ListView extends SelectListView
     super
     @show()
     @parseData()
+    @currentPane = atom.workspace.getActivePane()
 
   parseData: ->
     items = @data.split("\n")
@@ -32,7 +33,7 @@ class ListView extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: ({name}) ->
     current = false
@@ -52,9 +53,10 @@ class ListView extends SelectListView
   checkout: (branch) ->
     git.cmd
       args: ['checkout', branch],
-      stdout: (data) ->
+      stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
         atom.workspace.eachEditor (editor) ->
           fs.exists editor.getPath(), (exist) ->
             editor.destroy() if not exist
-        atom.project.getRepo()?.refreshStatus()
+        git.refresh()
+        @currentPane.activate()

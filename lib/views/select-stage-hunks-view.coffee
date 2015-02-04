@@ -1,5 +1,5 @@
 fs = require 'fs-plus'
-{$, $$, EditorView} = require 'atom'
+{$, $$} = require 'atom-space-pen-views'
 
 git = require '../git'
 OutputView = require './output-view'
@@ -14,10 +14,9 @@ class SelectStageHunks extends SelectListMultipleView
     @patch_header = data[0]
     return @completed @_generateObjects(data[1..]) if data.length is 2
 
-    @addClass('overlay from-top')
+    @show()
     @setItems @_generateObjects(data[1..])
 
-    atom.workspaceView.append(this)
     @focusFilterEditor()
 
   getFilterKey: ->
@@ -36,6 +35,17 @@ class SelectStageHunks extends SelectListMultipleView
       @complete() if $(target).hasClass('btn-stage-button')
       @cancel() if $(target).hasClass('btn-cancel-button')
 
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
+
   viewForItem: (item, matchedStr) ->
     viewItem = $$ ->
       @li =>
@@ -50,7 +60,7 @@ class SelectStageHunks extends SelectListMultipleView
     patch_full = @patch_header
     patch_full += patch for {patch} in items
 
-    patchPath = atom.project.getRepo().getWorkingDirectory() + '/.git/GITPLUS_PATCH'
+    patchPath = git.dir() + '/GITPLUS_PATCH'
     fs.writeFileSync patchPath, patch_full, flag: 'w+'
 
     git.cmd

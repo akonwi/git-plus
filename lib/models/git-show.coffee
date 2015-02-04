@@ -2,10 +2,9 @@ Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
 
-{$, EditorView, View} = require 'atom'
+{$, TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
-ListView = require '../views/branch-list-view'
 
 showCommitFilePath = ->
   Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
@@ -33,19 +32,23 @@ showFile = ->
 
 class InputView extends View
   @content: ->
-    @div class: 'overlay from-top', =>
-      @subview 'objectHash', new EditorView(mini: true, placeholderText: 'Commit hash to show')
+    @div =>
+      @subview 'objectHash', new TextEditorView(mini: true, placeholderText: 'Commit hash to show')
 
   initialize: (callback) ->
-    atom.workspaceView.append this
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
     @on 'core:cancel', =>
-      @detach()
+      @destroy()
     @objectHash.focus()
     @objectHash.on 'core:confirm', =>
-      text = $(this).text().split(' ')
+      text = @objectHash.getModel().getText().split(' ')
       name = if text.length is 2 then text[1] else text[0]
       callback text
-      @detach()
+      @destroy()
+
+  destroy: ->
+    @panel.destroy()
 
 module.exports = (objectHash, file) ->
   if not objectHash?

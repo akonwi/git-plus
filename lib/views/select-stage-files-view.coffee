@@ -1,4 +1,4 @@
-{$, $$, EditorView} = require 'atom'
+{$, $$} = require 'atom-space-pen-views'
 
 git = require '../git'
 OutputView = require './output-view'
@@ -10,10 +10,9 @@ class SelectStageFilesView extends SelectListMultipleView
 
   initialize: (items) ->
     super
-    @addClass('overlay from-top')
+    @show()
 
     @setItems items
-    atom.workspaceView.append(this)
     @focusFilterEditor()
 
   getFilterKey: ->
@@ -31,6 +30,17 @@ class SelectStageFilesView extends SelectListMultipleView
     @on 'click', 'button', ({target}) =>
       @complete() if $(target).hasClass('btn-stage-button')
       @cancel() if $(target).hasClass('btn-cancel-button')
+
+  show: ->
+    @panel ?= atom.workspace.addModalPanel(item: this)
+    @panel.show()
+
+    @storeFocusedElement()
+
+  cancelled: -> @hide()
+
+  hide: ->
+    @panel?.hide()
 
   viewForItem: (item, matchedStr) ->
     $$ ->

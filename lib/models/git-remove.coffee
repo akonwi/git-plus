@@ -7,7 +7,7 @@ gitRemove = (showSelector=false) ->
 
   if currentFile? and not showSelector
     if window.confirm 'Are you sure?'
-      atom.workspaceView.getActiveView().remove()
+      atom.workspace.getActivePaneItem().destroy()
       git.cmd
         args: ['rm', '-f', '--ignore-unmatch', currentFile],
         stdout: (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
