@@ -1,3 +1,4 @@
+{GitRepository} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
@@ -55,4 +56,6 @@ class StatusListView extends SelectListView
       git.add file: path
     else
       openFile = confirm("Open #{path}?")
-      if openFile then atom.workspace.open(path) else GitDiff(file: path)
+      repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath())
+      fullPath = repo.getWorkingDirectory() + '/' + path
+      if openFile then atom.workspace.open(fullPath) else GitDiff(file: path)
