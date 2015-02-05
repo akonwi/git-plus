@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.4.1
+
+- Fix for `Git status` not opening selected file when accessed outside of repo.
+- Fix for some commands working after second time they are selected
+
 ### 4.4.0
 
 - Many internal upgrades to keep up with atom 1.0.0 api
