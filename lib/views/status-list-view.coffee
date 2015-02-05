@@ -1,6 +1,6 @@
 {GitRepository} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
-
+fs = require 'fs'
 git = require '../git'
 GitDiff = require '../models/git-diff'
 
@@ -58,4 +58,13 @@ class StatusListView extends SelectListView
       openFile = confirm("Open #{path}?")
       repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath())
       fullPath = repo.getWorkingDirectory() + '/' + path
-      if openFile then atom.workspace.open(fullPath) else GitDiff(file: path)
+
+      fs.stat fullPath, (err, stat) ->
+        isDirectory = stat.isDirectory()
+        if openFile
+          if isDirectory
+            atom.open(pathsToOpen: fullPath, newWindow: true)
+          else
+            atom.workspace.open(fullPath)
+        else
+          GitDiff(file: path)
