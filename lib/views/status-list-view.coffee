@@ -56,7 +56,7 @@ class StatusListView extends SelectListView
       git.add file: path
     else
       openFile = confirm("Open #{path}?")
-      repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath())
+      repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath()) or atom.project.getRepo()
       fullPath = repo.getWorkingDirectory() + '/' + path
 
       fs.stat fullPath, (err, stat) ->
