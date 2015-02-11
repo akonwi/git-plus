@@ -26,13 +26,16 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
       c_stdout @save ?= ''
       @save = null
 
-  new BufferedProcess
-    command: command
-    args: args
-    options: options
-    stdout: stdout
-    stderr: stderr
-    exit: exit
+  try
+    new BufferedProcess
+      command: command
+      args: args
+      options: options
+      stdout: stdout
+      stderr: stderr
+      exit: exit
+  catch error
+    new StatusView(type: 'alert', message: 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.')
 
 gitStatus = (stdout) ->
   gitCmd
