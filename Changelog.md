@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.4.2
+
+- Gracefully handle `Git not found error` thanks to @TrangPham.
+- Fix for files not opening when selected from status list
+
 ### 4.4.1
 
 - Fix for `Git status` not opening selected file when accessed outside of repo.
