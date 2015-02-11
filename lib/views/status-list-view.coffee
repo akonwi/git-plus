@@ -1,4 +1,3 @@
-{GitRepository} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
 fs = require 'fs'
 git = require '../git'
@@ -56,8 +55,7 @@ class StatusListView extends SelectListView
       git.add file: path
     else
       openFile = confirm("Open #{path}?")
-      repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath()) or atom.project.getRepo()
-      fullPath = repo.getWorkingDirectory() + '/' + path
+      fullPath = git.getRepo().getWorkingDirectory() + '/' + path
 
       fs.stat fullPath, (err, stat) ->
         isDirectory = stat.isDirectory()
