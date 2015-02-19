@@ -151,9 +151,25 @@ getSubmodule = (path) ->
   atom.project.getRepo()?.repo.submoduleForPath(path)
 
 # Public: Get the repository of the current file or project if no current file
-# Returns a {GitRepository} or null if not found.
+# Returns a {GitRepository}-like object or null if not found.
 getRepo = ->
-  GitRepository.open(atom.workspace.getActiveEditor()?.getPath()) ? atom.project.getRepo()
+  repo = atom.project.getRepo()
+  if repo is null
+    toDestroy = GitRepository.open(atom.workspace.getActiveEditor()?.getPath())
+    if toDestroy is null then return repo
+    data = {
+      references: toDestroy.getReferences()
+      shortHead: toDestroy.getShortHead()
+      workingDirectory: toDestroy.getWorkingDirectory()
+    }
+    toDestroy.destroy()
+    return {
+      getReferences: -> data.references
+      getShortHead: -> data.shortHead
+      getWorkingDirectory: -> data.workingDirectory
+    }
+  else
+    return repo
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles
