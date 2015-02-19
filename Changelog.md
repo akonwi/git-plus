@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.4.4
+### 4.4.6
 
 - Try to keep only one instance of GitRepository floating around by using either
 `atom.project.getRepo` or calling `::destroy` on an opened instance
