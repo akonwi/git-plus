@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.4.7
+
+- Update style selectors for diff highlighting
+
 ### 4.4.6
 
 - Try to keep only one instance of GitRepository floating around by using either
