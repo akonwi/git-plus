@@ -153,12 +153,12 @@ getSubmodule = (path) ->
 # Public: Get the repository of the current file or project if no current file
 # Returns a {GitRepository}-like object or null if not found.
 getRepo = ->
-  repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath())
+  repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath(), refreshOnWindowFocus: false)
   if repo is not null
     data = {
-      references: toDestroy.getReferences()
-      shortHead: toDestroy.getShortHead()
-      workingDirectory: toDestroy.getWorkingDirectory()
+      references: repo.getReferences()
+      shortHead: repo.getShortHead()
+      workingDirectory: repo.getWorkingDirectory()
     }
     repo.destroy()
     return {
