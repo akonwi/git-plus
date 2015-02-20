@@ -156,9 +156,9 @@ getRepo = ->
   repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath())
   if repo is not null
     data = {
-      references: toDestroy.getReferences()
-      shortHead: toDestroy.getShortHead()
-      workingDirectory: toDestroy.getWorkingDirectory()
+      references: repo.getReferences()
+      shortHead: repo.getShortHead()
+      workingDirectory: repo.getWorkingDirectory()
     }
     repo.destroy()
     return {
