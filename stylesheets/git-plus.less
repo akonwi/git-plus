@@ -5,7 +5,7 @@
 @import "ui-variables";
 
 .git-plus {
-  .alert {
+  .error {
     color: @text-color-warning;
   }
 
@@ -22,18 +22,21 @@
   }
 }
 
-.meta.diff.range.unified {
-  color: @text-color-info;
-}
+atom-text-editor,
+atom-text-editor::shadow {
+  .meta.diff.range.unified {
+    color: @text-color-info;
+  }
 
-.meta.diff.header {
-  color: @text-color-info;
-}
+  .meta.diff.header {
+    color: @text-color-info;
+  }
 
-.markup.deleted.diff {
-  color: @text-color-error;
-}
+  .markup.deleted.diff {
+    color: @text-color-error;
+  }
 
-.markup.inserted.diff {
-  color: @text-color-success;
+  .markup.inserted.diff {
+    color: @text-color-success;
+  }
 }
