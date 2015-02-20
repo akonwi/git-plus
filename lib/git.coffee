@@ -167,6 +167,7 @@ getRepo = ->
       getWorkingDirectory: -> data.workingDirectory
     }
   else
+    repo.destroy()
     return atom.project.getRepo()
 
 module.exports.cmd = gitCmd
