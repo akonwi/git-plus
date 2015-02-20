@@ -15,7 +15,7 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
   command = _getGitPath()
   options ?= {}
   options.cwd ?= dir()
-  stderr ?= (data) -> new StatusView(type: 'alert', message: data.toString())
+  stderr ?= (data) -> new StatusView(type: 'error', message: data.toString())
 
   if stdout? and not exit?
     c_stdout = stdout
@@ -35,7 +35,7 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
       stderr: stderr
       exit: exit
   catch error
-    new StatusView(type: 'alert', message: 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.')
+    new StatusView(type: 'error', message: 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.')
 
 gitStatus = (stdout) ->
   gitCmd
@@ -53,7 +53,7 @@ gitStagedFiles = (stdout) ->
       if data.toString().contains "ambiguous argument 'HEAD'"
         files = [1]
       else
-        new StatusView(type: 'alert', message: data.toString())
+        new StatusView(type: 'error', message: data.toString())
         files = []
     exit: (code) -> stdout(files)
 

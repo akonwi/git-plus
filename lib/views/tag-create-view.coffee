@@ -37,7 +37,7 @@ class TagCreateView extends View
       options:
         cwd: git.dir()
       stderr: (data) ->
-        new StatusView(type: 'alert', message: data.toString())
+        new StatusView(type: 'error', message: data.toString())
       exit: (code) ->
         new StatusView(type: 'success', message: "Tag '#{tag.name}' has been created successfully!") if code is 0
     @destroy()
