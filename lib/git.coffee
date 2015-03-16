@@ -133,12 +133,10 @@ _prettifyDiff = (data) ->
 #
 # @param andSubmodules boolean determining whether to account for submodules
 dir = (andSubmodules=true) ->
-  found = false
   if andSubmodules
     if submodule = getSubmodule()
       return submodule.getWorkingDirectory()
-  if not found
-    return getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+  return getRepo()?.getWorkingDirectory() ? atom.project.getPath()
 
 # returns filepath relativized for either a submodule or repository
 #   otherwise just a full path
