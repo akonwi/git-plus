@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.4.9
+
+- Refactoring
+- Fixes issue #173
+
 ### 4.4.8
 
 - Proper fix for GitRepository trying to refresh on window focus by setting `refreshOnWindowFocus` to false
