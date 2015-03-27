@@ -97,7 +97,7 @@ class GitCommit
         @destroyActiveEditorView()
         # Refreshing the atom repo status to refresh things like TreeView and
         # diff gutter.
-        atom.project.getRepo()?.refreshStatus()
+        git.getRepo()?.refreshStatus?()
         # Activate the former active pane.
         @currentPane.activate() if @currentPane.alive
         # Refresh git index to prevent bugs on our methods.

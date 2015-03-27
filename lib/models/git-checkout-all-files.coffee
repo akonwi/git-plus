@@ -6,6 +6,6 @@ gitCheckoutAllFiles = ->
     args: ['checkout', '-f'],
     stdout: (data) ->
       new StatusView(type: 'success', message: data.toString())
-      atom.project.getRepo()?.refreshStatus()
+      git.getRepo()?.refreshStatus?()
 
 module.exports = gitCheckoutAllFiles

@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.4.10
+
+- Remove uses of `atom.project.getRepo()` 
+
 ### 4.4.9
 
 - Refactoring

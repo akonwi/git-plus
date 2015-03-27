@@ -38,7 +38,7 @@ class InputView extends View
       args: ['checkout', '-b', name],
       stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
-        atom.project.getRepo()?.refreshStatus()
+        git.getRepo()?.refreshStatus?()
         @currentPane.activate()
 
 module.exports.newBranch = ->

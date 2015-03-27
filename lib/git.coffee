@@ -141,18 +141,18 @@ dir = (andSubmodules=true) ->
 # returns filepath relativized for either a submodule or repository
 #   otherwise just a full path
 relativize = (path) ->
-  getSubmodule(path)?.relativize(path) ? atom.project.getRepo()?.relativize(path) ? path
+  getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
 
 # returns submodule for given file or undefined
 getSubmodule = (path) ->
   path ?= atom.workspace.getActiveEditor()?.getPath()
-  atom.project.getRepo()?.repo.submoduleForPath(path)
+  atom.project.getRepositories()[0]?.repo.submoduleForPath(path)
 
 # Public: Get the repository of the current file or project if no current file
 # Returns a {GitRepository}-like object or null if not found.
 getRepo = ->
   repo = GitRepository.open(atom.workspace.getActiveEditor()?.getPath(), refreshOnWindowFocus: false)
-  if repo is not null
+  if repo isnt null
     data = {
       references: repo.getReferences()
       shortHead: repo.getShortHead()
@@ -165,7 +165,7 @@ getRepo = ->
       getWorkingDirectory: -> data.workingDirectory
     }
   else
-    return atom.project.getRepo()
+    return atom.project.getRepositories()[0]
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles

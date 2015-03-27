@@ -33,10 +33,11 @@ getCommands = ->
 
   commands = []
   # If no file open and if no repo for project
-  if not atom.workspace.getActiveEditor()?.getPath()? and not atom.project.getRepo()?
+  noOpenFile = not atom.workspace.getActiveEditor()?.getPath()?
+  noRepoHere = noOpenFile and atom.project.getRepositories().length is 0
+  if noRepoHere
     commands.push ['git-plus:init', 'Init', -> GitInit()]
-  # If there is an open file or repo
-  else
+  else # there is an open file or repo
     git.refresh()
     # Look for repo
     if git.getRepo() is null

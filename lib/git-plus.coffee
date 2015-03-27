@@ -65,7 +65,7 @@ module.exports =
 
     atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
 
-    if not atom.project.getRepo()?
+    if atom.project.getRepositories().length is 0
       atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
     else
       git.refresh()

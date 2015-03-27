@@ -22,7 +22,7 @@ class InputView extends View
         args: args
         stdout: (data) =>
           new StatusView(type: 'success', message: data.toString())
-          atom.project.getRepo()?.refreshStatus()
+          git.getRepo()?.refreshStatus?()
           @currentPane.activate()
 
 module.exports = -> new InputView
