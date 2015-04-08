@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.4.12
+
+- bug fix, issue #175
+
 ### 4.4.11
 
 - Remove deprecated api code
