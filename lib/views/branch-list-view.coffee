@@ -45,7 +45,6 @@ class ListView extends SelectListView
         @div class: 'pull-right', =>
           @span('Current') if current
 
-
   confirmed: ({name}) ->
     @checkout name.match(/\*?(.*)/)[1]
     @cancel()
@@ -55,7 +54,7 @@ class ListView extends SelectListView
       args: ['checkout', branch],
       stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
-        atom.workspace.eachEditor (editor) ->
+        atom.workspace.observeTextEditors (editor) ->
           fs.exists editor.getPath(), (exist) ->
             editor.destroy() if not exist
         git.refresh()

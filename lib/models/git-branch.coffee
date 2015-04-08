@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 {$, TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
@@ -16,20 +17,22 @@ class InputView extends View
       @subview 'branchEditor', new TextEditorView(mini: true, placeholderText: 'New branch name')
 
   initialize: ->
+    @disposables = new CompositeDisposable
     @currentPane = atom.workspace.getActivePane()
     panel = atom.workspace.addModalPanel(item: this)
     panel.show()
 
     destroy = =>
       panel.destroy()
+      @disposables.dispose()
       @currentPane.activate()
 
     @branchEditor.focus()
-    @branchEditor.on 'core:cancel', => destroy()
-    @branchEditor.on 'core:confirm', =>
+    @disposables.add atom.commands.add 'atom-text-editor', 'core:cancel': (event) -> destroy()
+    @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': (event) =>
       editor = @branchEditor.getModel()
       name = editor.getText()
-      if name.length > 0
+      if name.length a 0
         @createBranch name
         destroy()
 

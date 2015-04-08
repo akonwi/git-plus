@@ -2,7 +2,7 @@ Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
 
-{BufferedProcess} = require 'atom'
+{BufferedProcess, CompositeDisposable} = require 'atom'
 {$, TextEditorView, View} = require 'atom-space-pen-views'
 StatusView = require './status-view'
 git = require '../git'
@@ -23,11 +23,13 @@ class TagCreateView extends View
           @button class: 'btn btn-error inline-block-tight gp-cancel-button', click: 'destroy', 'Cancel'
 
   initialize: ->
+    @disposables = new CompositeDisposable
+    @currentPane = atom.workspace.getActivePane()
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
     @tagName.focus()
-    @on 'core:cancel', => @destroy()
-    @on 'core:confirm', => @createTag()
+    @disposables.add atom.commands.add 'atom-text-editor', 'core:cancel': => @destroy()
+    @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': => @createTag()
 
   createTag: ->
     tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
@@ -44,3 +46,5 @@ class TagCreateView extends View
 
   destroy: ->
     @panel.destroy()
+    @disposables.dispose()
+    @currentPane.activate()

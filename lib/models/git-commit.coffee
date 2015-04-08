@@ -1,3 +1,4 @@
+{CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
 path = require 'path'
 os = require 'os'
@@ -7,8 +8,6 @@ StatusView = require '../views/status-view'
 
 module.exports =
 class GitCommit
-  subscriptions: []
-
   # Public: Helper method to set the commentchar to be used in
   #   the commit message
   setCommentChar: (char) ->
@@ -33,6 +32,8 @@ class GitCommit
   currentPane: atom.workspace.getActivePane()
 
   constructor: (@amend='') ->
+    @disposables = new CompositeDisposable
+
     # Check if we are amending right now.
     @isAmending = @amend.length > 0
 
@@ -77,8 +78,8 @@ class GitCommit
       .open(@filePath(), split: split, searchAllPanes: true)
       .done (textBuffer) =>
         if textBuffer?
-          @subscriptions.push textBuffer.onDidSave => @commit()
-          @subscriptions.push textBuffer.onDidDestroy =>
+          @disposables.add textBuffer.onDidSave => @commit()
+          @disposables.add textBuffer.onDidDestroy =>
             if @isAmending then @undoAmend() else @cleanup()
 
   # Public: When the user is done editing the commit message an saves the file
@@ -134,5 +135,5 @@ class GitCommit
   # Public: Cleans up after the EditorView gets destroyed.
   cleanup: ->
     @currentPane.activate() if @currentPane.alive
-    s.dispose() for s in @subscriptions
+    @disposables.dispose()
     try fs.unlinkSync @filePath()

@@ -77,7 +77,15 @@ gitDiff = (stdout, path) ->
     args: ['diff', '-p', '-U1', path]
     stdout: (data) -> stdout _prettifyDiff(data)
 
+# Two-fold, refresh index as well as status
 gitRefreshIndex = ->
+  repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
+  if repo is not null
+    repo.refreshStatus()
+    repo.destroy()
+  else
+    if repo = atom.project.getRepositories()[0]
+      repo.refreshStatus()
   gitCmd
     args: ['add', '--refresh', '--', '.']
     stderr: (data) -> # don't really need to flash an error
