@@ -32,7 +32,7 @@ class InputView extends View
     @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': (event) =>
       editor = @branchEditor.getModel()
       name = editor.getText()
-      if name.length a 0
+      if name.length > 0
         @createBranch name
         destroy()
 
