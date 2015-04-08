@@ -50,7 +50,7 @@ gitStagedFiles = (stdout) ->
       files = _prettify(data)
     stderr: (data) ->
       # edge case of no HEAD at initial commit
-      if data.toString().contains "ambiguous argument 'HEAD'"
+      if data.toString().includes "ambiguous argument 'HEAD'"
         files = [1]
       else
         new StatusView(type: 'error', message: data.toString())
