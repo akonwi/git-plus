@@ -2,7 +2,7 @@ git = require '../git'
 StatusView = require '../views/status-view'
 
 gitCheckoutCurrentFile = ->
-  currentFile = git.relativize(atom.workspace.getActiveEditor()?.getPath())
+  currentFile = git.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   git.cmd
     args: ['checkout', '--', currentFile],
     stdout: (data) ->

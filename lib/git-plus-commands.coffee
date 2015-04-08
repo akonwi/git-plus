@@ -33,7 +33,7 @@ getCommands = ->
 
   commands = []
   # If no file open and if no repo for project
-  noOpenFile = not atom.workspace.getActiveEditor()?.getPath()?
+  noOpenFile = not atom.workspace.getActiveTextEditor()?.getPath()?
   noRepoHere = noOpenFile and atom.project.getRepositories().length is 0
   if noRepoHere
     commands.push ['git-plus:init', 'Init', -> GitInit()]

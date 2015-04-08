@@ -12,7 +12,7 @@ module.exports =
 class LogListView extends SelectListView
 
   currentFile = ->
-    git.relativize atom.workspace.getActiveEditor()?.getPath()
+    git.relativize atom.workspace.getActiveTextEditor()?.getPath()
 
   showCommitFilePath = ->
     Path.join Os.tmpDir(), "atom_git_plus_commit.diff"

@@ -69,7 +69,7 @@ module.exports =
       atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
     else
       git.refresh()
-      if atom.workspace.getActiveEditor()?.getPath()?
+      if atom.workspace.getActiveTextEditor()?.getPath()?
         atom.commands.add 'atom-workspace', 'git-plus:add', -> GitAdd()
         atom.commands.add 'atom-workspace', 'git-plus:log-current-file', -> GitLog(true)
         atom.commands.add 'atom-workspace', 'git-plus:remove-current-file', -> GitRemove()

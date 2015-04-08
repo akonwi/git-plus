@@ -3,7 +3,7 @@ StatusView = require '../views/status-view'
 
 gitAdd = (addAll=false) ->
   if not addAll
-    file = git.relativize(atom.workspace.getActiveEditor()?.getPath())
+    file = git.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   else
     file = null
 
