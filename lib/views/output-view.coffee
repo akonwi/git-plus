@@ -1,5 +1,5 @@
 {Subscriber} = require 'emissary'
-{$, ScrollView} = require 'atom'
+{$, ScrollView} = require 'atom-space-pen-views'
 
 module.exports =
   class OutputView extends ScrollView
