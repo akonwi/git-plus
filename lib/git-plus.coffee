@@ -5,6 +5,7 @@ module.exports =
   config:
     includeStagedDiff:
       title: 'Include staged diffs?'
+      description: 'description'
       type: 'boolean'
       default: true
     openInPane:
@@ -23,6 +24,7 @@ module.exports =
     amountOfCommitsToShow:
       type: 'integer'
       default: 25
+      minimum: 1
     gitPath:
       type: 'string'
       default: 'git'

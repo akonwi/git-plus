@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.4.13
+
+- bug fix for those using 1.0.0 preview
+
 ### 4.4.12
 
 - bug fix, issue #175

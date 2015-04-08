@@ -33,7 +33,7 @@ class GitPaletteView extends SelectListView
       @commandElement = @previouslyFocusedElement
     else
       @commandElement = atom.views.getView(atom.workspace)
-    @keyBindings = atom.keymap.findKeyBindings(target: @commandElement[0])
+    @keyBindings = atom.keymaps.findKeyBindings(target: @commandElement[0])
 
     commands = []
     for command in GitPlusCommands()
