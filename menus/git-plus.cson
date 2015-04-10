@@ -1,7 +1,11 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
-  '.overlayer':
-    'Git add file': 'git-plus:add'
+  'atom-text-editor': [
+    {
+      'label': 'Git add file',
+      'command': 'git-plus:add'
+    }
+  ]
 
 'menu': [
   {
