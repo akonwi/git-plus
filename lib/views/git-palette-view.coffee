@@ -70,7 +70,7 @@ class GitPaletteView extends SelectListView
       @setError(@getEmptyMessage(@items.length, filteredItems.length))
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: ({name, description}, matchedStr) ->
     $$ ->
