@@ -32,17 +32,18 @@ class TagCreateView extends View
     @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': => @createTag()
 
   createTag: ->
-    tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
-    new BufferedProcess
-      command: 'git'
-      args: ['tag', '-a', tag.name, '-m', tag.message]
-      options:
-        cwd: git.dir()
-      stderr: (data) ->
-        new StatusView(type: 'error', message: data.toString())
-      exit: (code) ->
-        new StatusView(type: 'success', message: "Tag '#{tag.name}' has been created successfully!") if code is 0
-    @destroy()
+    git.dir().then (path) =>
+      tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
+      new BufferedProcess
+        command: 'git'
+        args: ['tag', '-a', tag.name, '-m', tag.message]
+        options:
+          cwd: path
+        stderr: (data) ->
+          new StatusView(type: 'error', message: data.toString())
+        exit: (code) ->
+          new StatusView(type: 'success', message: "Tag '#{tag.name}' has been created successfully!") if code is 0
+      @destroy()
 
   destroy: ->
     @panel.destroy()

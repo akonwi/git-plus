@@ -25,7 +25,6 @@ class GitPaletteView extends SelectListView
 
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
-    @panel.show()
 
     @storeFocusedElement()
 
@@ -35,13 +34,20 @@ class GitPaletteView extends SelectListView
       @commandElement = atom.views.getView(atom.workspace)
     @keyBindings = atom.keymaps.findKeyBindings(target: @commandElement[0])
 
-    commands = []
-    for command in GitPlusCommands()
-      commands.push({name: command[0], description: command[1], func: command[2]})
-    commands = _.sortBy(commands, 'name')
-    @setItems(commands)
-
-    @focusFilterEditor()
+    GitPlusCommands()
+      .catch =>
+        debugger
+        (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
+        @setItems(commands)
+        @focusFilterEditor()
+        @panel.show()
+      .then (commands) =>
+        debugger
+        commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
+        commands = _.sortBy(commands, 'name')
+        @setItems(commands)
+        @focusFilterEditor()
+        @panel.show()
 
   populateList: ->
     return unless @items?

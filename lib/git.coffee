@@ -1,5 +1,6 @@
 {BufferedProcess, GitRepository} = require 'atom'
 StatusView = require './views/status-view'
+RepoListView = require './views/repo-list-view'
 
 # Public: Execute a git command.
 #
@@ -141,10 +142,13 @@ _prettifyDiff = (data) ->
 #
 # @param andSubmodules boolean determining whether to account for submodules
 dir = (andSubmodules=true) ->
-  if andSubmodules
-    if submodule = getSubmodule()
-      return submodule.getWorkingDirectory()
-  return getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+  new Promise (resolve, reject) ->
+    if andSubmodules
+      if submodule = getSubmodule()
+        resolve(submodule.getWorkingDirectory())
+    getRepo()
+    .then (repo) -> resolve(repo.getWorkingDirectory())
+    .catch (error) - reject(error)
 
 # returns filepath relativized for either a submodule or repository
 #   otherwise just a full path
@@ -154,26 +158,35 @@ relativize = (path) ->
 # returns submodule for given file or undefined
 getSubmodule = (path) ->
   path ?= atom.workspace.getActiveTextEditor()?.getPath()
-  atom.project.getRepositories()[0]?.repo.submoduleForPath(path)
+  repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
+  submodule = repo?.repo.submoduleForPath(path)
+  repo.destroy()
+  submodule
 
 # Public: Get the repository of the current file or project if no current file
-# Returns a {GitRepository}-like object or null if not found.
+# Returns a {Promise} that resolves to a repository like object
 getRepo = ->
-  repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
-  if repo isnt null
-    data = {
-      references: repo.getReferences()
-      shortHead: repo.getShortHead()
-      workingDirectory: repo.getWorkingDirectory()
-    }
-    repo.destroy()
-    return {
-      getReferences: -> data.references
-      getShortHead: -> data.shortHead
-      getWorkingDirectory: -> data.workingDirectory
-    }
-  else
-    return atom.project.getRepositories()[0]
+  new Promise (resolve, reject) ->
+    repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
+    if repo isnt null
+      data = {
+        references: repo.getReferences()
+        shortHead: repo.getShortHead()
+        workingDirectory: repo.getWorkingDirectory()
+      }
+      repo.destroy()
+      resolve({
+        getReferences: -> data.references
+        getShortHead: -> data.shortHead
+        getWorkingDirectory: -> data.workingDirectory
+      })
+    else
+      repos = atom.project.getRepositories()
+      if repos.length is 0
+        reject("No repos found")
+      if repos.length > 1
+        resolve(new RepoListView(atom.project.getRepositories()).result)
+      if repos[0]? then resolve(atom.project.getRepositories()[0]) else reject("No repos found")
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles

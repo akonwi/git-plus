@@ -9,10 +9,11 @@ gitLog = (onlyCurrentFile=false) ->
 
   args = ['log', "--pretty='%h;|%aN <%aE>;|%s;|%ar (%aD)'", '-s', "-n#{amountOfCommitsToShow()}"]
   args.push currentFile if onlyCurrentFile and currentFile?
-  git.cmd
-    args: args
-    options:
-      cwd: git.dir(false)
-    stdout: (data) -> new LogListView(data, onlyCurrentFile)
+  git.dir(false).then (dir) ->
+    git.cmd
+      args: args
+      options:
+        cwd: dir
+      stdout: (data) -> new LogListView(data, onlyCurrentFile)
 
 module.exports = gitLog

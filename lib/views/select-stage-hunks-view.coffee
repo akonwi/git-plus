@@ -60,15 +60,16 @@ class SelectStageHunks extends SelectListMultipleView
     patch_full = @patch_header
     patch_full += patch for {patch} in items
 
-    patchPath = git.dir() + '/GITPLUS_PATCH'
-    fs.writeFileSync patchPath, patch_full, flag: 'w+'
+    git.dir().then (path) ->
+      patchPath = path + '/GITPLUS_PATCH'
+      fs.writeFileSync patchPath, patch_full, flag: 'w+'
 
-    git.cmd
-      args: ['apply', '--cached', '--', patchPath],
-      stdout: (data) ->
-        data = if data? and data isnt '' then data else 'Hunk has been staged!'
-        new StatusView(type: 'success', message: data)
-        try fs.unlink patchPath
+      git.cmd
+        args: ['apply', '--cached', '--', patchPath],
+        stdout: (data) ->
+          data = if data? and data isnt '' then data else 'Hunk has been staged!'
+          new StatusView(type: 'success', message: data)
+          try fs.unlink patchPath
 
   _generateObjects: (data) ->
     for hunk in data when hunk isnt ''

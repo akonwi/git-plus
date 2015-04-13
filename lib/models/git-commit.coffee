@@ -21,14 +21,16 @@ class GitCommit
   dir: ->
     # path is different for submodules
     if @submodule ?= git.getSubmodule()
-      @submodule.getWorkingDirectory()
+      new Promise (resolve) -> resolve(@submodule.getWorkingDirectory())
     else
       git.dir()
 
   # Public: Helper method to join @dir() and filename to use it with fs.
   #
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
-  filePath: -> path.join @dir(), 'COMMIT_EDITMSG'
+  filePath: ->
+    @dir().then (dir) ->
+      path.join(dir(), 'COMMIT_EDITMSG')
 
   currentPane: atom.workspace.getActivePane()
 
@@ -63,13 +65,14 @@ class GitCommit
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, '')
     status = status.trim().replace(/\n/g, "\n#{@commentchar} ")
-    fs.writeFileSync @filePath(),
-       """#{@amend}
-        #{@commentchar} Please enter the commit message for your changes. Lines starting
-        #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
-        #{@commentchar}
-        #{@commentchar} #{status}"""
-    @showFile()
+    @filePath().then (filePath) =>
+      fs.writeFileSync filePath(),
+         """#{@amend}
+          #{@commentchar} Please enter the commit message for your changes. Lines starting
+          #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
+          #{@commentchar}
+          #{@commentchar} #{status}"""
+      @showFile()
 
   # Public: Helper method to open the commit message file and to subscribe the
   #         'saved' and `destroyed` events of the underlaying text-buffer.
