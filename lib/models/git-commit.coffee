@@ -93,6 +93,8 @@ class GitCommit
         cwd: @dir()
       stdout: (data) =>
         new StatusView(type: 'success', message: data)
+        if @andPush
+          new GitPush()
         # Set @isAmending to false since it succeeded.
         @isAmending = false
         # Destroying the active EditorView will trigger our cleanup method.
@@ -108,9 +110,6 @@ class GitCommit
       stderr: (err) =>
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
-      exit: =>
-        if @andPush
-          new GitPush()
 
   # Public: Destroys the active EditorView to trigger our cleanup method.
   destroyActiveEditorView: ->
