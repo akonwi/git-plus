@@ -5,6 +5,7 @@ os = require 'os'
 
 git = require '../git'
 StatusView = require '../views/status-view'
+GitPush = require './git-push'
 
 module.exports =
 class GitCommit
@@ -31,7 +32,7 @@ class GitCommit
 
   currentPane: atom.workspace.getActivePane()
 
-  constructor: (@amend='') ->
+  constructor: (@amend='',@andPush=false) ->
     @disposables = new CompositeDisposable
 
     # Check if we are amending right now.
@@ -107,6 +108,9 @@ class GitCommit
       stderr: (err) =>
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
+      exit: =>
+        if @andPush
+          new GitPush()
 
   # Public: Destroys the active EditorView to trigger our cleanup method.
   destroyActiveEditorView: ->

@@ -3,6 +3,7 @@ git = require './git'
 getCommands = ->
   GitAdd                 = require './models/git-add'
   GitAddAllAndCommit     = require './models/git-add-all-and-commit'
+  GitAddAllCommitAndPush = require './models/git-add-all-commit-and-push'
   GitAddAndCommit        = require './models/git-add-and-commit'
   GitBranch              = require './models/git-branch'
   GitCheckoutAllFiles    = require './models/git-checkout-all-files'
@@ -47,9 +48,9 @@ getCommands = ->
       commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(true)]
       commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove()]
       commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> GitCheckoutCurrentFile()]
-
       commands.push ['git-plus:add-all', 'Add All', -> GitAdd(true)]
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit()]
+      commands.push ['git-plus:add-all-commit-and-push', 'Add All Commit And Push', -> GitAddAllCommitAndPush()]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit()]
       commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches()]
       commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles()]
