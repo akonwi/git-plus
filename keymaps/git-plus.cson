@@ -13,12 +13,14 @@
   'cmd-shift-c': 'git-plus:commit'
   'cmd-shift-a s': 'git-plus:status'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
+  'cmd-shift-a p': 'git-plus:add-all-commit-and-push'
 
 '.platform-win32, .platform-linux':
   'ctrl-shift-h': 'git-plus:menu'
   'ctrl-shift-x': 'git-plus:commit'
   'ctrl-shift-a s': 'git-plus:status'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
+  'ctrl-shift-a p': 'git-plus:add-all-commit-and-push'
 
 '.platform-darwin atom-text-editor':
   'cmd-shift-a': 'git-plus:add'
