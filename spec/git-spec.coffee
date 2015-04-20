@@ -10,11 +10,9 @@ describe "Git-Plus git module", ->
   describe "git.dir", ->
     it "returns a promise", ->
       waitsForPromise ->
-        git.dir().catch (error) -> expect(erro).toEqual 'No repos found'
-        # .then (dir) ->
-        #   expect(dir).toContain 'git-plus'
-        #   expect(dir).toContain 'akonwi'
+        git.dir().then (dir) ->
+          expect(dir).toContain 'akonwi'
 
-  # describe "git.getSubmodule", ->
-  #   it "returns null when there is no submodule", ->
-  #     expect(git.getSubmodule(atom.workspace.getActiveTextEditor().getPath())).toEqual null
+  describe "git.getSubmodule", ->
+    it "returns null when there is no submodule", ->
+      expect(git.getSubmodule("~/.atom/packages/git-plus/lib/git.coffee")).toBeFalsy()

@@ -12,10 +12,10 @@ RepoListView = require './views/repo-list-view'
 #   :exit    - The {Function} to pass the exit code to.
 #
 # Returns nothing.
-gitCmd = ({args, options, stdout, stderr, exit}={}) ->
+gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
   command = _getGitPath()
   options ?= {}
-  options.cwd ?= dir()
+  options.cwd ?= cwd
   stderr ?= (data) -> new StatusView(type: 'error', message: data.toString())
 
   if stdout? and not exit?
@@ -28,6 +28,7 @@ gitCmd = ({args, options, stdout, stderr, exit}={}) ->
       @save = null
 
   try
+    debugger
     new BufferedProcess
       command: command
       args: args
@@ -79,24 +80,25 @@ gitDiff = (stdout, path) ->
     stdout: (data) -> stdout _prettifyDiff(data)
 
 # Two-fold, refresh index as well as status
-gitRefreshIndex = ->
-  repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
+gitRefreshIndex = (repo=null)->
+  if repo is null
+    repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
+    repo.refreshStatus?()
+    repo.destroy?()
   if repo is not null
     repo.refreshStatus()
-    repo.destroy()
-  else
-    if repo = atom.project.getRepositories()[0]
-      repo.refreshStatus()
   gitCmd
     args: ['add', '--refresh', '--', '.']
     stderr: (data) -> # don't really need to flash an error
 
-gitAdd = ({file, stdout, stderr, exit}={}) ->
+gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
+  debugger
   exit ?= (code) ->
     if code is 0
       new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
   gitCmd
-    args: ['add', '--all', file ? '.'],
+    args: ['add', '--all', file ? '.']
+    cwd: repo.getWorkingDirectory()
     stdout: stdout if stdout?
     stderr: stderr if stderr?
     exit: exit
@@ -143,12 +145,10 @@ _prettifyDiff = (data) ->
 # @param andSubmodules boolean determining whether to account for submodules
 dir = (andSubmodules=true) ->
   new Promise (resolve, reject) ->
-    if andSubmodules
-      if submodule = getSubmodule()
-        resolve(submodule.getWorkingDirectory())
-    getRepo()
-    .then (repo) -> resolve(repo.getWorkingDirectory())
-    .catch (error) - reject(error)
+    if andSubmodules and submodule = getSubmodule()
+      resolve(submodule.getWorkingDirectory())
+    else
+      getRepo().then (repo) -> resolve(repo.getWorkingDirectory())
 
 # returns filepath relativized for either a submodule or repository
 #   otherwise just a full path
@@ -160,7 +160,7 @@ getSubmodule = (path) ->
   path ?= atom.workspace.getActiveTextEditor()?.getPath()
   repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
   submodule = repo?.repo.submoduleForPath(path)
-  repo.destroy()
+  repo?.destroy?()
   submodule
 
 # Public: Get the repository of the current file or project if no current file
