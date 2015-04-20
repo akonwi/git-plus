@@ -1,9 +1,9 @@
 git = require '../git'
 GitCommit = require './git-commit'
 
-gitAddAllCommitAndPush = ->
-  git.add
+gitAddAllCommitAndPush = (repo) ->
+  git.add repo,
     exit: ->
-      new GitCommit('',true)
+      new GitCommit(repo, andPush: true)
 
 module.exports = gitAddAllCommitAndPush

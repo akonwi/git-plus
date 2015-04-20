@@ -7,7 +7,7 @@ PullBranchListView = require './pull-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@data, @mode, @setUpstream=false, @tag='') ->
+  initialize: (@repo, @data, @mode, @setUpstream=false, @tag='') ->
     super
     @show()
     @parseData()
@@ -51,6 +51,7 @@ class ListView extends SelectListView
     view = new OutputView()
     git.cmd
       args: [@mode, remote, @tag]
+      cwd: @repo.getWorkingDirectory()
       stdout: (data) -> view.addLine(data.toString())
       stderr: (data) -> view.addLine(data.toString())
       exit: (code) =>
@@ -58,6 +59,7 @@ class ListView extends SelectListView
           view.reset()
           git.cmd
             args: [@mode, '-u', remote, 'HEAD']
+            cwd: @repo.getWorkingDirectory()
             stdout: (data) -> view.addLine(data.toString())
             stderr: (data) -> view.addLine(data.toString())
             exit: (code) -> view.finish()

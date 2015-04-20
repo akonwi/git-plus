@@ -43,10 +43,11 @@ gitStatus = (stdout) ->
     args: ['status', '--porcelain', '-z']
     stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
 
-gitStagedFiles = (stdout) ->
+gitStagedFiles = (repo, stdout) ->
   files = []
   gitCmd
     args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+    cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       files = _prettify(data)
     stderr: (data) ->

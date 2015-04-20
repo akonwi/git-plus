@@ -1,9 +1,10 @@
 git = require '../git'
 RemoteListView = require '../views/remote-list-view'
 
-gitPush = ->
+gitPush = (repo) ->
   git.cmd
-    args: ['remote'],
-    stdout: (data) -> new RemoteListView(data, 'push')
+    args: ['remote']
+    cwd: repo.getWorkingDirectory()
+    stdout: (data) -> new RemoteListView(repo, data, 'push')
 
 module.exports = gitPush

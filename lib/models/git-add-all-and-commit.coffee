@@ -1,8 +1,8 @@
 git = require '../git'
 GitCommit = require './git-commit'
 
-gitAddAllAndCommit = ->
-  git.add
-    exit: -> new GitCommit
+gitAddAllAndCommit = (repo) ->
+  git.add repo,
+    exit: -> new GitCommit(repo)
 
 module.exports = gitAddAllAndCommit

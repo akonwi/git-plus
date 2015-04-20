@@ -21,23 +21,22 @@ class GitCommit
   dir: ->
     # path is different for submodules
     if @submodule ?= git.getSubmodule()
-      new Promise (resolve) -> resolve(@submodule.getWorkingDirectory())
+      @submodule.getWorkingDirectory()
     else
-      git.dir()
+      @repo.getWorkingDirectory()
 
   # Public: Helper method to join @dir() and filename to use it with fs.
   #
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
   filePath: ->
-    @dir().then (dir) ->
-      path.join(dir(), 'COMMIT_EDITMSG')
+    path.join(@dir(), 'COMMIT_EDITMSG')
 
-  currentPane: atom.workspace.getActivePane()
-
-  constructor: (@amend='',@andPush=false) ->
+  constructor: (@repo, {@amend, @andPush}={}) ->
+    @currentPane = atom.workspace.getActivePane()
     @disposables = new CompositeDisposable
 
     # Check if we are amending right now.
+    @amend ?= ''
     @isAmending = @amend.length > 0
 
     # Load the commentchar from git config, defaults to '#'
@@ -48,10 +47,11 @@ class GitCommit
       stderr: =>
         @setCommentChar '#'
 
-    git.stagedFiles (files) =>
+    git.stagedFiles @repo, (files) =>
       if @amend isnt '' or files.length >= 1
         git.cmd
           args: ['status'],
+          cwd: @repo.getWorkingDirectory()
           stdout: (data) => @prepFile data
       else
         @cleanup()
@@ -65,14 +65,13 @@ class GitCommit
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, '')
     status = status.trim().replace(/\n/g, "\n#{@commentchar} ")
-    @filePath().then (filePath) =>
-      fs.writeFileSync filePath(),
-         """#{@amend}
-          #{@commentchar} Please enter the commit message for your changes. Lines starting
-          #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
-          #{@commentchar}
-          #{@commentchar} #{status}"""
-      @showFile()
+    fs.writeFileSync @filePath(),
+      """#{@amend}
+      #{@commentchar} Please enter the commit message for your changes. Lines starting
+      #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
+      #{@commentchar}
+      #{@commentchar} #{status}"""
+    @showFile()
 
   # Public: Helper method to open the commit message file and to subscribe the
   #         'saved' and `destroyed` events of the underlaying text-buffer.
@@ -97,7 +96,7 @@ class GitCommit
       stdout: (data) =>
         new StatusView(type: 'success', message: data)
         if @andPush
-          new GitPush()
+          new GitPush(@repo)
         # Set @isAmending to false since it succeeded.
         @isAmending = false
         # Destroying the active EditorView will trigger our cleanup method.
@@ -142,4 +141,5 @@ class GitCommit
   cleanup: ->
     @currentPane.activate() if @currentPane.alive
     @disposables.dispose()
+    @repo.destroy if @repo.destroyable
     try fs.unlinkSync @filePath()

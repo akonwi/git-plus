@@ -25,5 +25,4 @@ module.exports =
       , atom.config.get('git-plus.messageTimeout') * 1000
 
     destroy: ->
-      debugger
       @panel.destroy()
