@@ -3,7 +3,11 @@
 ### 4.5.0
 
 - Remove some more deprecations (@Azakur4)
+<<<<<<< HEAD
 - New command `Git Add All Commit And Push` (@TwanoO67)
+=======
+- New command `Git Add All And Push` (@TwanoO67)
+>>>>>>> Update changelog
 
 ### 4.4.13
 
