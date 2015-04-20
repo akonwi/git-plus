@@ -41,12 +41,13 @@ getCommands = ->
   git.getRepo()
     .then (repo) ->
       commands = []
-      git.refresh()
-      commands.push ['git-plus:add', 'Add', -> GitAdd()]
-      commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(true)]
-      commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove()]
+      git.refresh repo
+      commands.push ['git-plus:add', 'Add', -> GitAdd(repo)]
+      commands.push ['git-plus:add-all', 'Add All', -> GitAdd(repo, addAll: true)]
+      commands.push ['git-plus:log', 'Log', -> GitLog(repo)]
+      commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(repo, onlyCurrentFile: true)]
+      commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove(repo)]
       commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> GitCheckoutCurrentFile()]
-      commands.push ['git-plus:add-all', 'Add All', -> GitAdd(true)]
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit()]
       commands.push ['git-plus:add-all-commit-and-push', 'Add All Commit And Push', -> GitAddAllCommitAndPush()]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit()]
@@ -58,7 +59,6 @@ getCommands = ->
       commands.push ['git-plus:diff', 'Diff', -> GitDiff()]
       commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll()]
       commands.push ['git-plus:fetch', 'Fetch', -> GitFetch()]
-      commands.push ['git-plus:log', 'Log', -> GitLog()]
       commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitBranch.newBranch()]
       commands.push ['git-plus:pull', 'Pull', -> GitPull()]
       commands.push ['git-plus:push', 'Push', -> GitPush()]

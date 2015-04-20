@@ -1,12 +1,12 @@
 git = require '../git'
 StatusView = require '../views/status-view'
 
-gitAdd = (addAll=false) ->
+gitAdd = (repo, {addAll}={}) ->
   if not addAll
-    file = git.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+    file = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   else
     file = null
 
-  git.add(file: file)
+  git.add(repo, file: file)
 
 module.exports = gitAdd

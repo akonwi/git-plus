@@ -36,13 +36,11 @@ class GitPaletteView extends SelectListView
 
     GitPlusCommands()
       .catch =>
-        debugger
         (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
         @setItems(commands)
         @focusFilterEditor()
         @panel.show()
       .then (commands) =>
-        debugger
         commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
         commands = _.sortBy(commands, 'name')
         @setItems(commands)

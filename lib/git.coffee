@@ -6,8 +6,8 @@ RepoListView = require './views/repo-list-view'
 #
 # options - An {Object} with the following keys:
 #   :args    - The {Array} containing the arguments to pass.
+#   :cwd  - Current working directory as {String}.
 #   :options - The {Object} with options to pass.
-#     :cwd  - Current working directory as {String}.
 #   :stdout  - The {Function} to pass the stdout to.
 #   :exit    - The {Function} to pass the exit code to.
 #
@@ -28,7 +28,6 @@ gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
       @save = null
 
   try
-    debugger
     new BufferedProcess
       command: command
       args: args
@@ -92,8 +91,8 @@ gitRefreshIndex = (repo=null)->
     stderr: (data) -> # don't really need to flash an error
 
 gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
-  debugger
   exit ?= (code) ->
+    repo.destroy() if repo.destroyable
     if code is 0
       new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
   gitCmd
@@ -169,24 +168,16 @@ getRepo = ->
   new Promise (resolve, reject) ->
     repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
     if repo isnt null
-      data = {
-        references: repo.getReferences()
-        shortHead: repo.getShortHead()
-        workingDirectory: repo.getWorkingDirectory()
-      }
-      repo.destroy()
-      resolve({
-        getReferences: -> data.references
-        getShortHead: -> data.shortHead
-        getWorkingDirectory: -> data.workingDirectory
-      })
+      repo.destroyable = true
+      resolve(repo)
     else
-      repos = atom.project.getRepositories()
+      repos = atom.project.getRepositories().filter (r) -> r?
       if repos.length is 0
         reject("No repos found")
-      if repos.length > 1
+      else if repos.length > 1
         resolve(new RepoListView(atom.project.getRepositories()).result)
-      if repos[0]? then resolve(atom.project.getRepositories()[0]) else reject("No repos found")
+      else
+        resolve(repos[0])
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles
