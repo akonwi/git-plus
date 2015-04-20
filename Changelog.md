@@ -1,5 +1,10 @@
 ## Changelog
 
+### 4.5.0
+
+- Remove some more deprecations (@Azakur4)
+- New command `Git Add All And Push` (@TwanoO67)
+
 ### 4.4.13
 
 - bug fix for those using 1.0.0 preview
