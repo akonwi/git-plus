@@ -1,11 +1,12 @@
 git = require '../git'
 GitDiff = require './git-diff'
 
-gitStat = ->
+gitStat = (repo) ->
   args = ['diff', '--stat']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   git.cmd
-    args: args,
-    stdout: (data) -> GitDiff diffStat: data
+    args: args
+    cwd: repo.getWorkingDirectory()
+    stdout: (data) -> GitDiff(repo, diffStat: data)
 
 module.exports = gitStat

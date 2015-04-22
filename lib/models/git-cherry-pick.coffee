@@ -1,8 +1,7 @@
 git = require '../git'
 CherryPickSelectBranch = require '../views/cherry-pick-select-branch-view'
 
-gitCherryPick = ->
-  repo = git.getRepo()
+gitCherryPick = (repo) ->
   heads = repo.getReferences().heads
   currentHead = repo.getShortHead()
 
@@ -10,6 +9,6 @@ gitCherryPick = ->
     heads[i] = head.replace('refs/heads/', '')
 
   heads = heads.filter (head) -> head isnt currentHead
-  new CherryPickSelectBranch(heads, currentHead)
+  new CherryPickSelectBranch(repo, heads, currentHead)
 
 module.exports = gitCherryPick
