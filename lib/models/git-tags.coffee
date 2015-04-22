@@ -1,11 +1,12 @@
 git = require '../git'
 TagListView = require '../views/tag-list-view'
 
-gitTags = ->
+gitTags = (repo) ->
   @TagListView = null
   git.cmd
-    args: ['tag', '-ln'],
-    stdout: (data) -> @TagListView = new TagListView(data),
-    exit: -> new TagListView('') if not @TagListView?
+    args: ['tag', '-ln']
+    cwd: repo.getWorkingDirectory()
+    stdout: (data) -> @TagListView = new TagListView(repo, data),
+    exit: -> new TagListView(repo) if not @TagListView?
 
 module.exports = gitTags

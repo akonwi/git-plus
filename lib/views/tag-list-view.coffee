@@ -7,7 +7,7 @@ TagCreateView = require './tag-create-view'
 module.exports =
 class TagListView extends SelectListView
 
-  initialize: (@data) ->
+  initialize: (@repo, @data='') ->
     super
     @show()
     @parseData()
@@ -24,7 +24,6 @@ class TagListView extends SelectListView
       items = []
 
     items.push {tag: '+ Add Tag', annotation: 'Add a tag referencing the current commit.'}
-
     @setItems items
     @focusFilterEditor()
 
@@ -33,13 +32,11 @@ class TagListView extends SelectListView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
 
-  hide: ->
-    @panel?.hide()
+  hide: -> @panel?.hide()
 
   viewForItem: ({tag, annotation}) ->
     $$ ->
@@ -50,6 +47,6 @@ class TagListView extends SelectListView
   confirmed: ({tag}) ->
     @cancel()
     if tag is '+ Add Tag'
-      new TagCreateView()
+      new TagCreateView(@repo)
     else
-      new TagView(tag)
+      new TagView(@repo, tag)

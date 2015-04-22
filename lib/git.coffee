@@ -38,9 +38,10 @@ gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
   catch error
     new StatusView(type: 'error', message: 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.')
 
-gitStatus = (stdout) ->
+gitStatus = (repo, stdout) ->
   gitCmd
     args: ['status', '--porcelain', '-z']
+    cwd: repo.getWorkingDirectory()
     stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
 
 gitStagedFiles = (repo, stdout) ->
@@ -59,24 +60,27 @@ gitStagedFiles = (repo, stdout) ->
         files = []
     exit: (code) -> stdout(files)
 
-gitUnstagedFiles = (stdout, showUntracked=false) ->
+gitUnstagedFiles = (repo, {showUntracked}={}, stdout) ->
   gitCmd
     args: ['diff-files', '--name-status', '-z']
+    cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       if showUntracked
-        gitUntrackedFiles(stdout, _prettify(data))
+        gitUntrackedFiles(repo, _prettify(data), stdout)
       else
         stdout _prettify(data)
 
-gitUntrackedFiles = (stdout, dataUnstaged=[]) ->
+gitUntrackedFiles = (repo, dataUnstaged=[], stdout) ->
   gitCmd
     args: ['ls-files', '-o', '--exclude-standard','-z']
+    cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       stdout dataUnstaged.concat(_prettifyUntracked(data))
 
-gitDiff = (stdout, path) ->
+gitDiff = (repo, path, stdout) ->
   gitCmd
     args: ['diff', '-p', '-U1', path]
+    cwd: repo.getWorkingDirectory()
     stdout: (data) -> stdout _prettifyDiff(data)
 
 # Two-fold, refresh index as well as status

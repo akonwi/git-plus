@@ -5,7 +5,7 @@ StatusView = require './status-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@data) ->
+  initialize: (@repo, @data) ->
     super
     @show()
     @parseData()
@@ -25,13 +25,11 @@ class ListView extends SelectListView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
 
-  hide: ->
-    @panel?.hide()
+  hide: -> @panel?.hide()
 
   viewForItem: ({name}) ->
     current = false
@@ -43,16 +41,16 @@ class ListView extends SelectListView
         @div class: 'pull-right', =>
           @span('Current') if current
 
-
   confirmed: ({name}) ->
     @checkout name.match(/\*?(.*)/)[1]
     @cancel()
 
   checkout: (branch) ->
     git.cmd
-      args: ['merge', branch],
-      stdout: (data) ->
+      args: ['merge', branch]
+      cwd: @repo.getWorkingDirectory()
+      stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
         atom.workspace.eachEditor (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
-        git.getRepo()?.refreshStatus?()
+        git.refresh @repo

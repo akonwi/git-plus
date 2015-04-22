@@ -8,10 +8,9 @@ SelectListMultipleView = require './select-list-multiple-view'
 module.exports =
 class SelectStageFilesView extends SelectListMultipleView
 
-  initialize: (items) ->
+  initialize: (@repo, items) ->
     super
     @show()
-
     @setItems items
     @focusFilterEditor()
 
@@ -54,5 +53,8 @@ class SelectStageFilesView extends SelectListMultipleView
     @cancel()
 
     git.cmd
-      args: ['add', '-f'].concat(files),
-      stdout: (data) -> new StatusView(type: 'success', message: data)
+      args: ['add', '-f'].concat(files)
+      cwd: @repo.getWorkingDirectory()
+      stdout: (data) =>
+        new StatusView(type: 'success', message: data)
+        @repo.destroy() if @repo.destroyable

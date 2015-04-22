@@ -1,7 +1,7 @@
 git = require '../git'
 StatusListView = require '../views/status-list-view'
 
-gitStatus = ->
-  git.status (data) -> new StatusListView(data)
+gitStatus = (repo) ->
+  git.status repo, (data) -> new StatusListView(repo, data)
 
 module.exports = gitStatus

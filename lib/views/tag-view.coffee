@@ -7,8 +7,7 @@ RemoteListView = require '../views/remote-list-view'
 
 module.exports =
 class TagView extends SelectListView
-
-  initialize: (@tag) ->
+  initialize: (@repo, @tag) ->
     super
     @show()
     @parseData()
@@ -27,13 +26,11 @@ class TagView extends SelectListView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
 
-  hide: ->
-    @panel?.hide()
+  hide: -> @panel?.hide()
 
   viewForItem: ({tag, cmd, description}) ->
     $$ ->
@@ -47,12 +44,13 @@ class TagView extends SelectListView
     @cancel()
     switch cmd
       when 'Show'
-        GitShow(tag)
+        GitShow(@repo, tag)
         return
       when 'Push'
         git.cmd
-          args: ['remote'],
-          stdout: (data) => new RemoteListView(data, 'push', false, @tag)
+          args: ['remote']
+          cwd: @repo.getWorkingDirectory()
+          stdout: (data) => new RemoteListView(@repo, data, mode: 'push', tag: @tag)
         return
       when 'Checkout'
         args = ['checkout', tag]
@@ -63,4 +61,5 @@ class TagView extends SelectListView
 
     git.cmd
       args: args
+      cwd: @repo.getWorkingDirectory()
       stdout: (data) -> new StatusView(type: 'success', message: data.toString())

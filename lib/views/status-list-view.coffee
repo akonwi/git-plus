@@ -7,13 +7,11 @@ StatusView = require '../views/status-view'
 
 module.exports =
 class StatusListView extends SelectListView
-
-  initialize: (@data, @onlyCurrentFile) ->
+  initialize: (@repo, @data, {@onlyCurrentFile}={}) ->
     super
     @show()
     @branch = @data[0]
     @setItems @parseData @data[...-1]
-
     @focusFilterEditor()
 
   parseData: (files) ->
@@ -26,13 +24,11 @@ class StatusListView extends SelectListView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
 
-  hide: ->
-    @panel?.hide()
+  hide: -> @panel?.hide()
 
   viewForItem: ({type, path}) ->
     getIcon = (s) ->
@@ -54,12 +50,12 @@ class StatusListView extends SelectListView
   confirmed: ({type, path}) ->
     @cancel()
     if type is '??'
-      git.add file: path
+      git.add @repo, file: path
     else
       openFile = confirm("Open #{path}?")
-      fullPath = Path.join(git.getRepo().getWorkingDirectory(), path)
+      fullPath = Path.join(@repo.getWorkingDirectory(), path)
 
-      fs.stat fullPath, (err, stat) ->
+      fs.stat fullPath, (err, stat) =>
         if err
           new StatusView(type: 'error', message: err.message)
         else
@@ -70,4 +66,4 @@ class StatusListView extends SelectListView
             else
               atom.workspace.open(fullPath)
           else
-            GitDiff(file: path)
+            GitDiff(@repo, file: path)

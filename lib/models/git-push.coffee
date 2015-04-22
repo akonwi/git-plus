@@ -5,6 +5,6 @@ gitPush = (repo) ->
   git.cmd
     args: ['remote']
     cwd: repo.getWorkingDirectory()
-    stdout: (data) -> new RemoteListView(repo, data, 'push')
+    stdout: (data) -> new RemoteListView(repo, data, mode: 'push')
 
 module.exports = gitPush

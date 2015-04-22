@@ -1,6 +1,6 @@
 {CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
-path = require 'path'
+Path = require 'path'
 os = require 'os'
 
 git = require '../git'
@@ -28,8 +28,7 @@ class GitCommit
   # Public: Helper method to join @dir() and filename to use it with fs.
   #
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
-  filePath: ->
-    path.join(@dir(), 'COMMIT_EDITMSG')
+  filePath: -> Path.join(@dir(), 'COMMIT_EDITMSG')
 
   constructor: (@repo, {@amend, @andPush}={}) ->
     @currentPane = atom.workspace.getActivePane()
@@ -136,6 +135,7 @@ class GitCommit
 
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
+        @cleanup()
 
   # Public: Cleans up after the EditorView gets destroyed.
   cleanup: ->

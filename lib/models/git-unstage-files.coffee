@@ -1,7 +1,7 @@
 git = require '../git'
 SelectUnstageFiles = require '../views/select-unstage-files-view'
 
-gitUnstageFiles = ->
-  git.stagedFiles (data) -> new SelectUnstageFiles(data)
+gitUnstageFiles = (repo) ->
+  git.stagedFiles repo, (data) -> new SelectUnstageFiles(repo, data)
 
 module.exports = gitUnstageFiles

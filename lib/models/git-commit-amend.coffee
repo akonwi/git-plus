@@ -9,6 +9,7 @@ gitCommitAmend = (repo) ->
     stdout: (amend) ->
       git.cmd
         args: ['reset', '--soft', 'HEAD^']
+        cwd: repo.getWorkingDirectory()
         exit: -> new GitCommit(repo, amend: "#{amend?.trim()}\n")
 
 module.exports = gitCommitAmend

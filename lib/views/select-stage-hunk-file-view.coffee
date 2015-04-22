@@ -6,10 +6,9 @@ git = require '../git'
 module.exports =
 class SelectStageHunkFile extends SelectListView
 
-  initialize: (items) ->
+  initialize: (@repo, items) ->
     super
     @show()
-
     @setItems items
     @focusFilterEditor()
 
@@ -18,7 +17,6 @@ class SelectStageHunkFile extends SelectListView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
@@ -35,7 +33,6 @@ class SelectStageHunkFile extends SelectListView
 
   confirmed: ({path}) ->
     @cancel()
-    git.diff(
-      (data) -> new SelectStageHunks(data),
-      path
+    git.diff(@repo, path,
+      (data) => new SelectStageHunks(@repo, data)
     )

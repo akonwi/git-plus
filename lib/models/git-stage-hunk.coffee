@@ -1,9 +1,9 @@
 git = require '../git'
 SelectStageHunkFile = require '../views/select-stage-hunk-file-view'
 
-gitStageHunk = ->
-  git.unstagedFiles(
-    (data) -> new SelectStageHunkFile(data)
+gitStageHunk = (repo) ->
+  git.unstagedFiles(repo, null,
+    (data) -> new SelectStageHunkFile(repo, data)
   )
 
 module.exports = gitStageHunk
