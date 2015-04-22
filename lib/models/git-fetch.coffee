@@ -1,9 +1,10 @@
 git = require '../git'
 ListView = require '../views/remote-list-view'
 
-gitFetch = ->
+gitFetch = (repo) ->
   git.cmd
-    args: ['remote'],
-    stdout: (data) -> new ListView(data.toString(), 'fetch')
+    args: ['remote']
+    cwd: repo.getWorkingDirectory()
+    stdout: (data) -> new ListView(repo, data.toString(), mode: 'fetch')
 
 module.exports = gitFetch

@@ -113,11 +113,13 @@ gitMerge = ({branchName, stdout, stderr, exit}={}) ->
     stderr: stderr if stderr?
     exit: exit
 
-gitResetHead = ->
+gitResetHead = (repo) ->
   gitCmd
     args: ['reset', 'HEAD']
+    cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       new StatusView(type: 'success', message: 'All changes unstaged')
+      repo.destroy() if repo.destroyable
 
 _getGitPath = ->
   atom.config.get('git-plus.gitPath') ? 'git'

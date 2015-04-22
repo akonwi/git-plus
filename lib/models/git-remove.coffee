@@ -2,24 +2,31 @@ git = require '../git'
 StatusView = require '../views/status-view'
 RemoveListView = require '../views/remove-list-view'
 
-gitRemove = (showSelector=false) ->
-  currentFile = git.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+gitRemove = (repo, {showSelector}={}) ->
+  currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
 
   if currentFile? and not showSelector
     if window.confirm 'Are you sure?'
       atom.workspace.getActivePaneItem().destroy()
       git.cmd
-        args: ['rm', '-f', '--ignore-unmatch', currentFile],
-        stdout: (data) ->  new StatusView(type: 'success', message: "Removed #{prettify data}")
+        args: ['rm', '-f', '--ignore-unmatch', currentFile]
+        cwd: repo.getWorkingDirectory()
+        stdout: (data) ->
+          new StatusView(type: 'success', message: "Removed #{prettify data}")
+          repo.destroy() if repo.destroyable
   else
     git.cmd
-      args: ['rm', '-r', '-n', '--ignore-unmatch', '-f', '*'],
-      stdout: (data) -> new RemoveListView(prettify data)
+      args: ['rm', '-r', '-n', '--ignore-unmatch', '-f', '*']
+      cwd: repo.getWorkingDirectory()
+      stdout: (data) -> new RemoveListView(repo, prettify(data))
 
 # cut off rm '' around the filenames.
 prettify = (data) ->
   data = data.match(/rm ('.*')/g)
-  for file, i in data
-    data[i] = file.match(/rm '(.*)'/)[1]
+  if data
+    for file, i in data
+      data[i] = file.match(/rm '(.*)'/)[1]
+  else
+    data
 
 module.exports = gitRemove

@@ -7,7 +7,7 @@ PullBranchListView = require './pull-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@repo, @data, @mode, @setUpstream=false, @tag='') ->
+  initialize: (@repo, @data, {@mode, @tag}={tag: ''}) ->
     super
     @show()
     @parseData()

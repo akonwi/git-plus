@@ -10,7 +10,7 @@ git = require '../git'
 showCommitFilePath = ->
   Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
 
-showObject = (objectHash, file) ->
+showObject = (repo, objectHash, file) ->
   args = ['show']
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push objectHash
@@ -19,7 +19,8 @@ showObject = (objectHash, file) ->
     args.push file
 
   git.cmd
-    args: args,
+    args: args
+    cwd: repo.getWorkingDirectory()
     stdout: (data) -> prepFile data
 
 prepFile = (text) ->
@@ -52,8 +53,8 @@ class InputView extends View
   destroy: ->
     @panel.destroy()
 
-module.exports = (objectHash, file) ->
+module.exports = (repo, objectHash, file) ->
   if not objectHash?
     new InputView(showObject)
   else
-    showObject(objectHash, file)
+    showObject(repo, objectHash, file)
