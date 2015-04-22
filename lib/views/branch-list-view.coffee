@@ -5,7 +5,7 @@ StatusView = require './status-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@data) ->
+  initialize: (@repo, @data) ->
     super
     @show()
     @parseData()
@@ -50,11 +50,13 @@ class ListView extends SelectListView
 
   checkout: (branch) ->
     git.cmd
-      args: ['checkout', branch],
+      args: ['checkout', branch]
+      cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
-        atom.workspace.observeTextEditors (editor) ->
-          fs.exists editor.getPath(), (exist) ->
+        atom.workspace.observeTextEditors (editor) =>
+          fs.exists editor.getPath(), (exist) =>
             editor.destroy() if not exist
-        git.refresh()
+            @repo.destroy() if @repo.destroyable
+        git.refresh @repo
         @currentPane.activate()
