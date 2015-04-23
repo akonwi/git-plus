@@ -144,7 +144,7 @@ dir = (andSubmodules=true) ->
   if andSubmodules
     if submodule = getSubmodule()
       return submodule.getWorkingDirectory()
-  return getRepo()?.getWorkingDirectory() ? atom.project.getPath()
+  return getRepo()?.getWorkingDirectory() ? atom.project.getPaths()[0]
 
 # returns filepath relativized for either a submodule or repository
 #   otherwise just a full path
