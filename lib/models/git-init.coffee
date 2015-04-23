@@ -5,20 +5,16 @@ StatusView = require '../views/status-view'
 gitInit = ->
   currentFile = atom.workspace.getActiveTextEditor()?.getPath()
   if not currentFile and atom.project.getPaths().length > 1
-    promise = new ProjectsListView().result.then (path) ->
-      git.cmd
-        args: ['init']
-        cwd: path
-        stdout: (data) ->
-          new StatusView(type: 'success', message: data)
-          atom.project.setPath(path)
+    promise = new ProjectsListView().result.then (path) -> init(path)
   else
-    path = atom.project.getPaths()[0]
-    git.cmd
-      args: ['init']
-      cwd: path
-      stdout: (data) ->
-        new StatusView(type: 'success', message: data)
-        atom.project.setPath(path)
+    init(atom.project.getPaths()[0])
+
+init = (path) ->
+  git.cmd
+    args: ['init']
+    cwd: path
+    stdout: (data) ->
+      new StatusView(type: 'success', message: data)
+      atom.project.setPath(path)
 
 module.exports = gitInit

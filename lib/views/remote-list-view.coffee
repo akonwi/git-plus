@@ -34,7 +34,7 @@ class ListView extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: ({name}) ->
     $$ ->
@@ -42,7 +42,10 @@ class ListView extends SelectListView
 
   confirmed: ({name}) ->
     if @mode is 'pull'
-      new PullBranchListView(name)
+      git.cmd
+        args: ['branch', '-r'],
+        cwd: @repo.getWorkingDirectory()
+        stdout: (data) => new PullBranchListView(@repo, data, name)
     else
       @execute name
     @cancel()
