@@ -53,6 +53,7 @@ class ListView extends SelectListView
       args: ['merge', branch],
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
-        atom.workspace.getTextEditors.forEach (editor) ->
+        textEditors = atom.workspace.getTextEditors()
+        textEditors.forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.getRepo()?.refreshStatus?()
