@@ -22,6 +22,4 @@ module.exports =
         args: ['pull', @remote, remoteBranch]
         stdout: (data) -> view.addLine(data.toString())
         stderr: (data) -> view.addLine(data.toString())
-        exit: (code) =>
-          view.finish()
-          git.getRepo()?.refreshStatus?()
+        exit: (code) => view.finish()
