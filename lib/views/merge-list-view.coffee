@@ -31,7 +31,7 @@ class ListView extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: ({name}) ->
     current = false
@@ -53,6 +53,6 @@ class ListView extends SelectListView
       args: ['merge', branch],
       stdout: (data) ->
         new StatusView(type: 'success', message: data.toString())
-        atom.workspace.eachEditor (editor) ->
+        atom.workspace.getTextEditors.forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.getRepo()?.refreshStatus?()
