@@ -39,7 +39,7 @@ class SelectStageFilesView extends SelectListMultipleView
     @repo.destroy() if @repo.destroyable
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: (item, matchedStr) ->
     $$ ->
