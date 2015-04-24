@@ -32,7 +32,7 @@ class GitCommit
 
   currentPane: atom.workspace.getActivePane()
 
-  constructor: (@amend='',@andPush=false) ->
+  constructor: (@amend = '', @andPush = false) ->
     @disposables = new CompositeDisposable
 
     # Check if we are amending right now.

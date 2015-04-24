@@ -34,7 +34,7 @@ class ListView extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: ({name}) ->
     $$ ->
