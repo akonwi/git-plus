@@ -46,14 +46,17 @@ class ListView extends SelectListView
         args: ['branch', '-r'],
         cwd: @repo.getWorkingDirectory()
         stdout: (data) => new PullBranchListView(@repo, data, name)
+    else if @mode is 'fetch-prune'
+      @mode = 'fecth'
+      @execute name, '--prune'
     else
       @execute name
     @cancel()
 
-  execute: (remote) ->
+  execute: (remote, args='') ->
     view = new OutputView()
     git.cmd
-      args: [@mode, remote, @tag]
+      args: [@mode, args, remote, @tag]
       cwd: @repo.getWorkingDirectory()
       stdout: (data) -> view.addLine(data.toString())
       stderr: (data) -> view.addLine(data.toString())

@@ -10,8 +10,7 @@ module.exports =
       super
 
     confirmed: ({name}) ->
-      console.log name
-      @pull(name.substring(name.indexOf('/') + 1))
+      @pull name.substring(name.indexOf('/') + 1)
       @cancel()
 
     pull: (remoteBranch='') ->

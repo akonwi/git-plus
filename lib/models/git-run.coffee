@@ -34,3 +34,5 @@ module.exports =
             new StatusView(type: 'success', message: data.toString())
             git.refresh @repo
             @currentPane.activate()
+
+module.exports = -> new InputView
