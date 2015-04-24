@@ -6,6 +6,8 @@ getCommands = ->
   GitAddAllCommitAndPush = require './models/git-add-all-commit-and-push'
   GitAddAndCommit        = require './models/git-add-and-commit'
   GitBranch              = require './models/git-branch'
+  GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
+  GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
   GitCheckoutAllFiles    = require './models/git-checkout-all-files'
   GitCheckoutCurrentFile = require './models/git-checkout-current-file'
   GitCherryPick          = require './models/git-cherry-pick'
@@ -14,6 +16,7 @@ getCommands = ->
   GitDiff                = require './models/git-diff'
   GitDiffAll             = require './models/git-diff-all'
   GitFetch               = require './models/git-fetch'
+  GitFetchPrune          = require './models/git-fetch-prune.coffee'
   GitInit                = require './models/git-init'
   GitLog                 = require './models/git-log'
   GitPull                = require './models/git-pull'
@@ -52,6 +55,8 @@ getCommands = ->
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit()]
       commands.push ['git-plus:add-all-commit-and-push', 'Add All Commit And Push', -> GitAddAllCommitAndPush()]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit()]
+      commands.push ['git-plus:delete-local-branch', 'Delete Local Branch', -> GitDeleteLocalBranch()]
+      commands.push ['git-plus:delete-remote-branch', 'Delete Remote Branch', -> GitDeleteRemoteBranch()]
       commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches()]
       commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles()]
       commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick()]
@@ -60,6 +65,7 @@ getCommands = ->
       commands.push ['git-plus:diff', 'Diff', -> GitDiff()]
       commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll()]
       commands.push ['git-plus:fetch', 'Fetch', -> GitFetch()]
+      commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> GitFetchPrune()]
       commands.push ['git-plus:log', 'Log', -> GitLog()]
       commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitBranch.newBranch()]
       commands.push ['git-plus:pull', 'Pull', -> GitPull()]
