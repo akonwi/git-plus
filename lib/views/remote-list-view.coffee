@@ -7,7 +7,7 @@ PullBranchListView = require './pull-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@data, @mode, @setUpstream=false, @tag='') ->
+  initialize: (@data, @mode, @setUpstream = false, @tag = '') ->
     super
     @show()
     @parseData()
@@ -34,7 +34,7 @@ class ListView extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: ({name}) ->
     $$ ->
@@ -43,14 +43,17 @@ class ListView extends SelectListView
   confirmed: ({name}) ->
     if @mode is 'pull'
       new PullBranchListView(name)
+    else if @mode is 'fetch-prune'
+      @mode = 'fecth'
+      @execute name, '--prune'
     else
       @execute name
     @cancel()
 
-  execute: (remote) ->
+  execute: (remote, args = '') ->
     view = new OutputView()
     git.cmd
-      args: [@mode, remote, @tag]
+      args: [@mode, args, remote, @tag]
       stdout: (data) -> view.addLine(data.toString())
       stderr: (data) -> view.addLine(data.toString())
       exit: (code) =>

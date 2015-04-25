@@ -6,6 +6,6 @@ gitInit = ->
     args: ['init'],
     stdout: (data) ->
       new StatusView(type: 'success', message: data)
-      atom.project.setPath(atom.project.getPath())
+      atom.project.setPaths(atom.project.getPaths())
 
 module.exports = gitInit

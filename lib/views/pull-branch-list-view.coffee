@@ -13,29 +13,13 @@ module.exports =
           super
 
     confirmed: ({name}) ->
-      @pull(name.split('/')[1])
+      @pull name.substring(name.indexOf('/') + 1)
       @cancel()
 
     pull: (remoteBranch='') ->
       view = new OutputView()
-      remote = @remote
       git.cmd
-        args: ['fetch', @remote]
-        stdout: (@data) ->
-          if @data.toString().length is 0
-            git.cmd
-              args: ['merge', remote + "/" + remoteBranch]
-              stdout: (data) -> view.addLine(data.toString())
-              stderr: (data) -> view.addLine(data.toString())
-              exit: (code) =>
-                view.finish()
+        args: ['pull', @remote, remoteBranch]
+        stdout: (data) -> view.addLine(data.toString())
         stderr: (data) -> view.addLine(data.toString())
-
-    # Once, 'pull' is fixed in Yosemite, revert back to this
-    # pull: (remoteBranch='') ->
-    #   view = new OutputView()
-    #   git.cmd
-    #     args: ['pull', @remote, remoteBranch]
-    #     stdout: (data) -> view.addLine(data.toString())
-    #     stderr: (data) -> view.addLine(data.toString())
-    #     exit: (code) => view.finish()
+        exit: (code) => view.finish()

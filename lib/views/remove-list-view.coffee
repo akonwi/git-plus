@@ -38,7 +38,7 @@ class SelectStageFilesView extends SelectListMultipleView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: (item, matchedStr) ->
     $$ ->
