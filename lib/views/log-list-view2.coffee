@@ -1,3 +1,5 @@
+git = require '../git'
+
 Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
@@ -8,6 +10,9 @@ fs = require 'fs-plus'
 
 git = require '../git'
 GitShow = require '../models/git-show'
+
+amountOfCommitsToShow = ->
+  atom.config.get('git-plus.amountOfCommitsToShow')
 
 module.exports =
 class LogListView extends ScrollView
@@ -23,20 +28,15 @@ class LogListView extends ScrollView
   getTitle: -> 'git-plus: Log'
 
   initialize: ->
-    headerRow = $$$ ->
-      @tr =>
-        @td 'Date'
-        @td 'Message'
-        @td 'Short Hash'
+    super
+    @skipCommits = 0
 
-    @commitsListView.append(headerRow)
-
-  parseData: (@data) ->
+  parseData: (data) ->
     separator = ';|'
     newline = '_.;._'
-    @data = @data.substring(0, @data.length - newline.length - 1)
+    data = data.substring(0, data.length - newline.length - 1)
 
-    @commits = @data.split(newline).map (line) ->
+    commits = data.split(newline).map (line) ->
       if line.trim() isnt ''
         tmpData = line.trim().split(separator)
         commit = {}
@@ -50,16 +50,55 @@ class LogListView extends ScrollView
 
         return commit
 
-  renderLog: ->
-    @commits.forEach (commit) =>
+    @renderLog commits
+
+  renderHeader: ->
+    headerRow = $$$ ->
+      @tr =>
+        @td 'Date'
+        @td 'Message'
+        @td class: 'hashShort', 'Short Hash'
+
+    @commitsListView.append(headerRow)
+
+  renderLog: (commits) ->
+    commits.forEach (commit) =>
       @renderCommit commit
+
+    @skipCommits += amountOfCommitsToShow()
 
   renderCommit: (commit) ->
     commitRow = $$$ ->
       @tr =>
-        # @td class: 'author', "#{commit.author.substring(0, 1)}"
         @td class: 'date', "#{commit.date} by #{commit.author}"
         @td class: 'message', "#{commit.message}"
         @td class: 'hashShort', "#{commit.hashShort}"
 
     @commitsListView.append(commitRow)
+
+  branchLog: ->
+    @skipCommits = 0
+    @commitsListView.empty()
+    @onlyCurrentFile = false
+    @currentFile = null
+    @renderHeader()
+    @getLog()
+
+  currentFileLog: (@onlyCurrentFile, @currentFile) ->
+    @skipCommits = 0
+    @commitsListView.empty()
+    @renderHeader()
+    @getLog()
+
+  getLog: () ->
+    args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
+    args.push @currentFile if @onlyCurrentFile and @currentFile?
+
+    console.log args
+
+    git.cmd
+      args: args
+      options:
+        cwd: git.dir(false)
+      stdout: (data) =>
+        @parseData data
