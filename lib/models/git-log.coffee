@@ -1,5 +1,6 @@
 git = require '../git'
 LogListView = require '../views/log-list-view'
+ViewUriLog = 'atom://git-plus:log'
 
 amountOfCommitsToShow = ->
   atom.config.get('git-plus.amountOfCommitsToShow')
@@ -7,12 +8,14 @@ amountOfCommitsToShow = ->
 gitLog = (repo, {onlyCurrentFile}={}) ->
   currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
 
-  args = ['log', "--pretty='%h;|%aN <%aE>;|%s;|%ar (%aD)'", '-s', "-n#{amountOfCommitsToShow()}"]
-  args.push currentFile if onlyCurrentFile and currentFile?
-  git.cmd
-    args: args
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) -> new LogListView(data, onlyCurrentFile)
-    exit: -> repo.destroy() if repo.destroyable
+  atom.workspace.addOpener (filePath) ->
+    new LogListView(repo) if filePath is ViewUriLog
+
+  atom.workspace.open(ViewUriLog).done (logListView) ->
+    if logListView instanceof LogListView
+      if onlyCurrentFile
+        logListView.currentFileLog(onlyCurrentFile, currentFile)
+      else
+        logListView.branchLog()
 
 module.exports = gitLog
