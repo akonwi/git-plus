@@ -54,7 +54,7 @@ class LogListView extends ScrollView
 
   renderHeader: ->
     headerRow = $$$ ->
-      @tr =>
+      @tr class: 'commit-header', =>
         @td 'Date'
         @td 'Message'
         @td class: 'hashShort', 'Short Hash'
@@ -69,7 +69,7 @@ class LogListView extends ScrollView
 
   renderCommit: (commit) ->
     commitRow = $$$ ->
-      @tr =>
+      @tr class: 'commit-row', =>
         @td class: 'date', "#{commit.date} by #{commit.author}"
         @td class: 'message', "#{commit.message}"
         @td class: 'hashShort', "#{commit.hashShort}"
@@ -93,8 +93,6 @@ class LogListView extends ScrollView
   getLog: () ->
     args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
     args.push @currentFile if @onlyCurrentFile and @currentFile?
-
-    console.log args
 
     git.cmd
       args: args

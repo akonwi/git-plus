@@ -42,33 +42,42 @@ atom-text-editor::shadow {
 }
 
 .git-plus-log {
+    color: @text-color;
     background-color: @base-background-color;
     overflow-y: auto;
 
     #git-plus-commits {
-        color: @text-color;
+        .commit-header, .commit-row {
+            td {
+                padding: 8px 10px;
+                border-bottom: 1px solid #000;
+                vertical-align: top;
+            }
 
-        td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #000;
-            vertical-align: top;
+            .hashShort {
+                text-align: right;
+            }
         }
 
-        .author {
-            width: 30%;
-        }
+        .commit-row {
+            cursor: pointer;
 
-        .date {
-            width: 35%;
-        }
+            .author {
+                width: 30%;
+            }
 
-        .message {
-            width: 50%;
-        }
+            .date {
+                width: 35%;
+            }
 
-        .hashShort {
-            width: 10%;
-            text-align: right;
+            .message {
+                width: 50%;
+            }
+
+            .hashShort {
+                width: 10%;
+                text-align: right;
+            }
         }
     }
 }
