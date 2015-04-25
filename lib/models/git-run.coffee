@@ -29,6 +29,7 @@ class InputView extends View
       git.cmd
         args: args
         stdout: (data) =>
+          console.log data
           new StatusView(type: 'success', message: data.toString())
           git.getRepo()?.refreshStatus?()
           @currentPane.activate()

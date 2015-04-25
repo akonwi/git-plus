@@ -2,54 +2,112 @@ Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
 
+{Disposable} = require 'atom'
 {BufferedProcess} = require 'atom'
-{$$, SelectListView} = require 'atom-space-pen-views'
+{$, $$$, ScrollView} = require 'atom-space-pen-views'
 
 git = require '../git'
 GitShow = require '../models/git-show'
 
+amountOfCommitsToShow = ->
+  atom.config.get('git-plus.amountOfCommitsToShow')
+
 module.exports =
-class LogListView extends SelectListView
+class LogListView extends ScrollView
+  @content: ->
+    @div class: 'git-plus-log native-key-bindings', tabindex: -1, =>
+      @table id: 'git-plus-commits', outlet: 'commitsListView'
 
-  currentFile = ->
-    git.relativize atom.workspace.getActiveTextEditor()?.getPath()
+  onDidChangeTitle: -> new Disposable
+  onDidChangeModified: -> new Disposable
 
-  showCommitFilePath = ->
-    Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
+  getURI: -> 'atom://git-plus:log'
 
-  initialize: (@data, @onlyCurrentFile) ->
+  getTitle: -> 'git-plus: Log'
+
+  initialize: ->
     super
-    @show()
-    @parseData()
+    @skipCommits = 0
 
-  parseData: ->
-    @data = @data.split("\n")[...-1]
-    @setItems(
-      for item in @data when item != ''
-        tmp = item.match /([\w\d]{7});\|(.*);\|(.*);\|(.*)/
-        {hash: tmp?[1], author: tmp?[2], title: tmp?[3], time: tmp?[4]}
-    )
-    @focusFilterEditor()
+    self = @
 
-  getFilterKey: -> 'title'
+    $(@).on 'click', '.commit-row', ->
+      self.showCommitLog $(this).attr('hash')
 
-  show: ->
-    @panel ?= atom.workspace.addModalPanel(item: this)
-    @panel.show()
+    $(@).scroll =>
+      if $(@).scrollTop() + $(@).height() is $(@).prop('scrollHeight')
+        @getLog()
 
-    @storeFocusedElement()
+  parseData: (data) ->
+    if data.length > 0
+      separator = ';|'
+      newline = '_.;._'
+      data = data.substring(0, data.length - newline.length - 1)
 
-  cancelled: -> @hide()
+      commits = data.split(newline).map (line) ->
+        if line.trim() isnt ''
+          tmpData = line.trim().split(separator)
+          commit = {}
 
-  hide: ->
-    @panel?.destroy()
+          commit.hashShort = tmpData[0]
+          commit.hash =  tmpData[1]
+          commit.author = tmpData[2]
+          commit.email = tmpData[3]
+          commit.message = tmpData[4]
+          commit.date = tmpData[5]
 
-  viewForItem: (commit) ->
-    $$ ->
-      @li =>
-        @div class: 'text-highlight text-huge', commit.title
-        @div class: '', "#{commit.hash} by #{commit.author}"
-        @div class: 'text-info', commit.time
+          return commit
 
-  confirmed: ({hash}) ->
-    GitShow(hash, currentFile() if @onlyCurrentFile)
+      @renderLog commits
+
+  renderHeader: ->
+    headerRow = $$$ ->
+      @tr class: 'commit-header', =>
+        @td 'Date'
+        @td 'Message'
+        @td class: 'hashShort', 'Short Hash'
+
+    @commitsListView.append(headerRow)
+
+  renderLog: (commits) ->
+    commits.forEach (commit) =>
+      @renderCommit commit
+
+    @skipCommits += amountOfCommitsToShow()
+
+  renderCommit: (commit) ->
+    commitRow = $$$ ->
+      @tr class: 'commit-row', hash: "#{commit.hash}", =>
+        @td class: 'date', "#{commit.date} by #{commit.author}"
+        @td class: 'message', "#{commit.message}"
+        @td class: 'hashShort', "#{commit.hashShort}"
+
+    @commitsListView.append(commitRow)
+
+  showCommitLog: (hash) ->
+    GitShow(hash, @currentFile if @onlyCurrentFile)
+
+  branchLog: ->
+    @skipCommits = 0
+    @commitsListView.empty()
+    @onlyCurrentFile = false
+    @currentFile = null
+    @renderHeader()
+    @getLog()
+
+  currentFileLog: (@onlyCurrentFile, @currentFile) ->
+    @skipCommits = 0
+    @commitsListView.empty()
+    @renderHeader()
+    @getLog()
+
+  getLog: () ->
+    args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
+    args.push @currentFile if @onlyCurrentFile and @currentFile?
+
+    git.cmd
+      args: args
+      options:
+        cwd: git.dir(false)
+      stdout: (data) =>
+        @parseData data

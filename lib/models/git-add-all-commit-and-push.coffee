@@ -4,6 +4,6 @@ GitCommit = require './git-commit'
 gitAddAllCommitAndPush = ->
   git.add
     exit: ->
-      new GitCommit('',true)
+      new GitCommit('', true)
 
 module.exports = gitAddAllCommitAndPush

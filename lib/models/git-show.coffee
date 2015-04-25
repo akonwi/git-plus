@@ -50,7 +50,8 @@ class InputView extends View
       @destroy()
 
   destroy: ->
-    @panel.destroy()
+    @disposables?.dispose()
+    @panel?.destroy()
 
 module.exports = (objectHash, file) ->
   if not objectHash?
