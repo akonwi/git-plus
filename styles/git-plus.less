@@ -40,3 +40,35 @@ atom-text-editor::shadow {
     color: @text-color-success;
   }
 }
+
+.git-plus-log {
+    background-color: @base-background-color;
+    overflow-y: auto;
+
+    #git-plus-commits {
+        color: @text-color;
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #000;
+            vertical-align: top;
+        }
+
+        .author {
+            width: 30%;
+        }
+
+        .date {
+            width: 25%;
+        }
+
+        .message {
+            width: 50%;
+        }
+
+        .hashShort {
+            width: 10%;
+            text-align: right;
+        }
+    }
+}
