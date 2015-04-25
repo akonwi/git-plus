@@ -1,5 +1,5 @@
 git = require '../git'
-LogListView = require '../views/log-list-view2'
+LogListView = require '../views/log-list-view'
 ViewUriLog = 'atom://git-plus:log'
 
 gitLog = (onlyCurrentFile=false) ->
