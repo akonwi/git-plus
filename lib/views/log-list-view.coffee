@@ -1,11 +1,9 @@
 Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
-
 {Disposable} = require 'atom'
 {BufferedProcess} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
-
 git = require '../git'
 GitShow = require '../models/git-show'
 
@@ -29,14 +27,11 @@ class LogListView extends ScrollView
     super
     @skipCommits = 0
 
-    self = @
+    @on 'click', '.commit-row', ({currentTarget}) =>
+      @showCommitLog currentTarget.getAttribute('hash')
 
-    $(@).on 'click', '.commit-row', ->
-      self.showCommitLog $(this).attr('hash')
-
-    $(@).scroll =>
-      if $(@).scrollTop() + $(@).height() is $(@).prop('scrollHeight')
-        @getLog()
+    @scroll =>
+      @getLog() if @scrollTop() + @height() is @prop('scrollHeight')
 
   parseData: (data) ->
     if data.length > 0
@@ -47,16 +42,14 @@ class LogListView extends ScrollView
       commits = data.split(newline).map (line) ->
         if line.trim() isnt ''
           tmpData = line.trim().split(separator)
-          commit = {}
-
-          commit.hashShort = tmpData[0]
-          commit.hash =  tmpData[1]
-          commit.author = tmpData[2]
-          commit.email = tmpData[3]
-          commit.message = tmpData[4]
-          commit.date = tmpData[5]
-
-          return commit
+          return {
+            hashShort: tmpData[0]
+            hash: tmpData[1]
+            author: tmpData[2]
+            email: tmpData[3]
+            message: tmpData[4]
+            date: tmpData[5]
+          }
 
       @renderLog commits
 
