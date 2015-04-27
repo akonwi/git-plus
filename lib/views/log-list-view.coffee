@@ -23,13 +23,11 @@ class LogListView extends ScrollView
 
   getTitle: -> 'git-plus: Log'
 
-  initialize: ->
+  initialize: (@repo) ->
     super
     @skipCommits = 0
-
     @on 'click', '.commit-row', ({currentTarget}) =>
       @showCommitLog currentTarget.getAttribute('hash')
-
     @scroll =>
       @getLog() if @scrollTop() + @height() is @prop('scrollHeight')
 
@@ -63,9 +61,7 @@ class LogListView extends ScrollView
     @commitsListView.append(headerRow)
 
   renderLog: (commits) ->
-    commits.forEach (commit) =>
-      @renderCommit commit
-
+    commits.forEach (commit) => @renderCommit commit
     @skipCommits += amountOfCommitsToShow()
 
   renderCommit: (commit) ->
@@ -78,7 +74,7 @@ class LogListView extends ScrollView
     @commitsListView.append(commitRow)
 
   showCommitLog: (hash) ->
-    GitShow(hash, @currentFile if @onlyCurrentFile)
+    GitShow(@repo, hash, @currentFile if @onlyCurrentFile)
 
   branchLog: ->
     @skipCommits = 0
@@ -94,13 +90,12 @@ class LogListView extends ScrollView
     @renderHeader()
     @getLog()
 
-  getLog: () ->
+  getLog: ->
     args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
     args.push @currentFile if @onlyCurrentFile and @currentFile?
 
     git.cmd
       args: args
-      options:
-        cwd: git.dir(false)
+      cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
         @parseData data

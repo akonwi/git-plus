@@ -89,7 +89,7 @@ gitRefreshIndex = (repo=null)->
     repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
     repo.refreshStatus?()
     repo.destroy?()
-  if repo is not null
+  else
     repo.refreshStatus()
   gitCmd
     args: ['add', '--refresh', '--', '.']
