@@ -29,7 +29,8 @@ class ListView extends SelectListView
 
   cancelled: -> @hide()
 
-  hide: -> @panel?.hide()
+  hide: ->
+    @panel?.destroy()
 
   viewForItem: ({name}) ->
     current = false
@@ -42,15 +43,15 @@ class ListView extends SelectListView
           @span('Current') if current
 
   confirmed: ({name}) ->
-    @checkout name.match(/\*?(.*)/)[1]
+    @merge name.match(/\*?(.*)/)[1]
     @cancel()
 
-  checkout: (branch) ->
+  merge: (branch) ->
     git.cmd
       args: ['merge', branch]
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
-        atom.workspace.eachEditor (editor) ->
+        atom.workspace.getTextEditors.forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.refresh @repo
