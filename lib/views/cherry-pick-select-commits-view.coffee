@@ -42,7 +42,6 @@ class CherryPickSelectCommits extends SelectListMultipleView
 
   cancelled: ->
     @hide()
-    @repo.destroy() if @repo.destroyable
 
   hide: ->
     @panel?.hide()

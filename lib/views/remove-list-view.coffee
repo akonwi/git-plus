@@ -31,12 +31,10 @@ class SelectStageFilesView extends SelectListMultipleView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: ->
     @hide()
-    @repo.destroy() if @repo.destroyable
 
   hide: ->
     @panel?.destroy()
