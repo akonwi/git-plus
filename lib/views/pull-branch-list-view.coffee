@@ -15,26 +15,9 @@ module.exports =
 
     pull: (remoteBranch='') ->
       view = new OutputView()
-      remote = @remote
       git.cmd
-        args: ['fetch', @remote]
+        args: ['pull', @remote, remoteBranch]
         cwd: @repo.getWorkingDirectory()
-        stdout: (data) =>
-          if data.toString().length is 0
-            git.cmd
-              args: ['merge', remote + "/" + remoteBranch]
-              cwd: @repo.getWorkingDirectory()
-              stdout: (data) -> view.addLine(data.toString())
-              stderr: (data) -> view.addLine(data.toString())
-              exit: (code) =>
-                view.finish()
+        stdout: (data) -> view.addLine(data.toString())
         stderr: (data) -> view.addLine(data.toString())
-
-    # Once, 'pull' is fixed in Yosemite, revert back to this
-    # pull: (remoteBranch='') ->
-    #   view = new OutputView()
-    #   git.cmd
-    #     args: ['pull', @remote, remoteBranch]
-    #     stdout: (data) -> view.addLine(data.toString())
-    #     stderr: (data) -> view.addLine(data.toString())
-    #     exit: (code) => view.finish()
+        exit: (code) => view.finish()
