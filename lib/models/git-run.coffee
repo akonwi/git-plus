@@ -18,7 +18,7 @@ module.exports =
       @commandEditor.focus()
 
       @disposables.add atom.commands.add 'atom-text-editor', 'core:cancel': (e) =>
-        @panel.destroy()
+        @panel?.destroy()
         @currentPane.activate()
         @disposables.dispose()
 
