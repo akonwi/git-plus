@@ -42,6 +42,6 @@ class TagCreateView extends View
     @destroy()
 
   destroy: ->
-    @panel.destroy()
+    @panel?.destroy()
     @disposables.dispose()
     @currentPane.activate()

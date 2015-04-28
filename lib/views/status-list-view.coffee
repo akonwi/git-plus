@@ -28,7 +28,7 @@ class StatusListView extends SelectListView
 
   cancelled: -> @hide()
 
-  hide: -> @panel?.hide()
+  hide: -> @panel?.destroy()
 
   viewForItem: ({type, path}) ->
     getIcon = (s) ->
