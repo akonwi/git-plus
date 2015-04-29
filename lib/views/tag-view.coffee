@@ -30,7 +30,7 @@ class TagView extends SelectListView
 
   cancelled: -> @hide()
 
-  hide: -> @panel?.hide()
+  hide: -> @panel?.destroy()
 
   viewForItem: ({tag, cmd, description}) ->
     $$ ->

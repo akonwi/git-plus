@@ -44,7 +44,7 @@ class CherryPickSelectCommits extends SelectListMultipleView
     @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: (item, matchedStr) ->
     $$ ->

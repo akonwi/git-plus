@@ -39,7 +39,7 @@ class SelectStageHunks extends SelectListMultipleView
 
   cancelled: -> @hide()
 
-  hide: -> @panel?.hide()
+  hide: -> @panel?.destroy()
 
   viewForItem: (item, matchedStr) ->
     viewItem = $$ ->

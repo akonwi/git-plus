@@ -22,7 +22,7 @@ class SelectStageHunkFile extends SelectListView
   cancelled: -> @hide()
 
   hide: ->
-    @panel?.hide()
+    @panel?.destroy()
 
   viewForItem: (item) ->
     $$ ->
