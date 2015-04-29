@@ -7,7 +7,6 @@ amountOfCommitsToShow = ->
 
 gitLog = (repo, {onlyCurrentFile}={}) ->
   currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
-
   atom.workspace.addOpener (filePath) ->
     new LogListView(repo) if filePath is ViewUriLog
 

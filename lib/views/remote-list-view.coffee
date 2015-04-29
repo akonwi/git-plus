@@ -53,10 +53,14 @@ class ListView extends SelectListView
       @execute name
     @cancel()
 
-  execute: (remote, args='') ->
+  execute: (remote, extraArgs='') ->
     view = new OutputView()
+    args = [@mode]
+    if extraArgs.length > 0
+      args.push extraArgs
+    args = args.concat([remote, @tag])
     git.cmd
-      args: [@mode, args, remote, @tag]
+      args: args
       cwd: @repo.getWorkingDirectory()
       stdout: (data) -> view.addLine(data.toString())
       stderr: (data) -> view.addLine(data.toString())

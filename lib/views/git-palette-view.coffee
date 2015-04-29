@@ -38,14 +38,14 @@ class GitPaletteView extends SelectListView
       .catch =>
         (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
         @setItems(commands)
-        @focusFilterEditor()
         @panel.show()
+        @focusFilterEditor()
       .then (commands) =>
         commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
         commands = _.sortBy(commands, 'name')
         @setItems(commands)
-        @focusFilterEditor()
         @panel.show()
+        @focusFilterEditor()
 
   populateList: ->
     return unless @items?

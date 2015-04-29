@@ -93,7 +93,6 @@ class LogListView extends ScrollView
   getLog: ->
     args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
     args.push @currentFile if @onlyCurrentFile and @currentFile?
-
     git.cmd
       args: args
       cwd: @repo.getWorkingDirectory()
