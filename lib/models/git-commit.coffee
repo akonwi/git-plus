@@ -100,11 +100,11 @@ class GitCommit
         @isAmending = false
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
-        # Refreshing the atom repo status to refresh things like TreeView and
-        # diff gutter.
-        @repo.refreshStatus()
+        # Refreshing the atom repo status to refresh things like TreeView and diff gutter.
         # Activate the former active pane.
         @currentPane.activate() if @currentPane.alive
+        # Refresh git index to prevent bugs on our methods.
+        git.refresh @repo
 
       stderr: (err) =>
         # Destroying the active EditorView will trigger our cleanup method.

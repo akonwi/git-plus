@@ -9,7 +9,7 @@ diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 gitDiff = (repo, {diffStat, file}={}) ->
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
-    repo.destroy() if repo.destroyable()
+    repo.destroy() if repo.destroyable
     return new StatusView(type: 'error', message: "No open file. Select 'Diff All'.")
   diffStat ?= ''
   args = ['diff']
