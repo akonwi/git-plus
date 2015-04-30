@@ -9,9 +9,7 @@ module.exports =
 class ListView extends SelectListView
   initialize: (@repo, @data, {@mode, @tag}) ->
     super
-    
-    @tag = '' unless @tag
-
+    @tag ?= ''
     @show()
     @parseData()
 
