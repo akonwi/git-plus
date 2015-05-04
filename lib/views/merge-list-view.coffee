@@ -52,6 +52,6 @@ class ListView extends SelectListView
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
         new StatusView(type: 'success', message: data.toString())
-        atom.workspace.getTextEditors.forEach (editor) ->
+        atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.refresh @repo
