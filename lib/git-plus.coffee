@@ -36,8 +36,8 @@ module.exports =
       description: 'How long should success/error messages be shown?'
 
   activate: (state) ->
-    repos = atom.project.getRepositories().filter (repo) -> repo?
-    if repos.length is 0
-      atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
-    else
-      atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
+    # repos = atom.project.getRepositories().filter (repo) -> repo?
+    # if repos.length is 0
+      # atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
+    # else
+    atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
