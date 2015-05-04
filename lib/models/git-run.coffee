@@ -35,4 +35,4 @@ module.exports =
             git.refresh @repo
             @currentPane.activate()
 
-module.exports = -> new InputView
+module.exports = (repo) -> new InputView(repo)

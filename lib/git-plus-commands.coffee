@@ -85,6 +85,5 @@ getCommands = ->
 
       return commands
     .catch ->
-      
 
 module.exports = getCommands
