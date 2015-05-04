@@ -34,15 +34,18 @@ class GitPaletteView extends SelectListView
       @commandElement = atom.views.getView(atom.workspace)
     @keyBindings = atom.keymaps.findKeyBindings(target: @commandElement[0])
 
+    console.log GitPlusCommands()
+
     GitPlusCommands()
-      .catch =>
-        (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
+      .then (commands) =>
+        console.log 'here'
+        commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
+        commands = _.sortBy(commands, 'name')
         @setItems(commands)
         @panel.show()
         @focusFilterEditor()
-      .then (commands) =>
-        commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
-        commands = _.sortBy(commands, 'name')
+      .catch =>
+        (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
         @setItems(commands)
         @panel.show()
         @focusFilterEditor()
