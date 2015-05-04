@@ -84,5 +84,7 @@ getCommands = ->
       commands.push ['git-plus:merge', 'Merge', -> GitMerge(repo)]
 
       return commands
+    .catch ->
+      
 
 module.exports = getCommands

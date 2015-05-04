@@ -38,13 +38,14 @@ class GitPaletteView extends SelectListView
 
     GitPlusCommands()
       .then (commands) =>
-        console.log 'here'
         commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
         commands = _.sortBy(commands, 'name')
         @setItems(commands)
         @panel.show()
         @focusFilterEditor()
       .catch =>
+        GitInit = require '../models/git-init'
+
         (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
         @setItems(commands)
         @panel.show()
