@@ -34,8 +34,6 @@ class GitPaletteView extends SelectListView
       @commandElement = atom.views.getView(atom.workspace)
     @keyBindings = atom.keymaps.findKeyBindings(target: @commandElement[0])
 
-    console.log GitPlusCommands()
-
     GitPlusCommands()
       .then (commands) =>
         commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
