@@ -5,6 +5,6 @@ gitDeleteLocalBranch = (repo) ->
   git.cmd
     args: ['branch']
     cwd: repo.getWorkingDirectory()
-    stdout: (data) -> new ListView(repo, data.toString())
+    stdout: (data) -> new ListView(repo, data.toString(), false)
 
 module.exports = gitDeleteLocalBranch
