@@ -5,6 +5,6 @@ gitFetch = (repo) ->
   git.cmd
     args: ['remote']
     cwd: repo.getWorkingDirectory()
-    stdout: (data) -> new ListView(repo, data.toString(), mode: 'fetch')
+    stdout: (data) -> new ListView(repo, data.toString(), mode: 'fetch-prune')
 
 module.exports = gitFetch

@@ -48,7 +48,7 @@ class ListView extends SelectListView
         cwd: @repo.getWorkingDirectory()
         stdout: (data) => new PullBranchListView(@repo, data, name)
     else if @mode is 'fetch-prune'
-      @mode = 'fecth'
+      @mode = 'fetch'
       @execute name, '--prune'
     else
       @execute name
