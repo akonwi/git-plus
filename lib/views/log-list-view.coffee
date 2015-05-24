@@ -1,7 +1,5 @@
-Os = require 'os'
-Path = require 'path'
-fs = require 'fs-plus'
 {Disposable} = require 'atom'
+
 {BufferedProcess} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
 git = require '../git'
@@ -21,9 +19,13 @@ class LogListView extends ScrollView
 
   getURI: -> 'atom://git-plus:log'
 
+<<<<<<< HEAD
   getTitle: -> 'git-plus: Log'
 
   initialize: (@repo) ->
+=======
+  initialize: (@data, @onlyCurrentFile) ->
+>>>>>>> Remove unused function
     super
     @skipCommits = 0
     @on 'click', '.commit-row', ({currentTarget}) =>
