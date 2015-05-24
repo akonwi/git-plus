@@ -1,7 +1,3 @@
-Os = require 'os'
-Path = require 'path'
-fs = require 'fs-plus'
-
 {BufferedProcess} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
 
@@ -13,9 +9,6 @@ class LogListView extends SelectListView
 
   currentFile = ->
     git.relativize atom.workspace.getActiveTextEditor()?.getPath()
-
-  showCommitFilePath = ->
-    Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
 
   initialize: (@data, @onlyCurrentFile) ->
     super
