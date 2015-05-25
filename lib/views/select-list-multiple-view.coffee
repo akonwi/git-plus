@@ -59,7 +59,7 @@ class SelectListMultipleView extends SelectListView
   # confirm the selections!
   #
   # #### Example (Default)
-  # ```coffeee
+  # ```coffee
   # addButtons: ->
   #   viewButton = $$ ->
   #     @div class: 'buttons', =>
