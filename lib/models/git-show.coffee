@@ -12,6 +12,7 @@ showCommitFilePath = (objectHash) ->
 
 showObject = (repo, objectHash, file) ->
   args = ['show']
+  args.push '--format=full'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push objectHash
   if file?
