@@ -7,8 +7,8 @@ fs = require 'fs-plus'
 
 git = require '../git'
 
-showCommitFilePath = ->
-  Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
+showCommitFilePath = (objectHash) ->
+  Path.join Os.tmpDir(), "#{objectHash}.diff"
 
 showObject = (repo, objectHash, file) ->
   args = ['show']
@@ -21,16 +21,22 @@ showObject = (repo, objectHash, file) ->
   git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
-    stdout: (data) -> prepFile data
+    stdout: (data) -> prepFile data, objectHash
 
-prepFile = (text) ->
-  fs.writeFileSync showCommitFilePath(), text, flag: 'w+'
-  showFile()
+prepFile = (text, objectHash) ->
+  fs.writeFileSync showCommitFilePath(objectHash), text, flag: 'w+'
+  showFile(objectHash)
 
-showFile = ->
+showFile = (objectHash) ->
+  disposables = new CompositeDisposable
   split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
   atom.workspace
-    .open(showCommitFilePath(), split: split, activatePane: true)
+    .open(showCommitFilePath(objectHash), split: split, activatePane: true)
+    .done (textBuffer) =>
+      if textBuffer?
+        disposables.add textBuffer.onDidDestroy =>
+          disposables.dispose()
+          try fs.unlinkSync showCommitFilePath(objectHash)
 
 class InputView extends View
   @content: ->
