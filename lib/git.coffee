@@ -110,7 +110,7 @@ gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
 gitMerge = ({branchName, stdout, stderr, exit}={}) ->
   exit ?= (code) ->
     if code is 0
-      new StatusView(type: 'success', message: 'Git merged branch #{brachName} successfully')
+      new StatusView(type: 'success', message: 'Git merged branch #{branchName} successfully')
   gitCmd
     args: ['merge', branchName],
     stdout: stdout if stdout?
