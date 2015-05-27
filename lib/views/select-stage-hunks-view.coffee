@@ -3,7 +3,7 @@ fs = require 'fs-plus'
 
 git = require '../git'
 OutputView = require './output-view'
-StatusView = require './status-view'
+notifier = require '../notifier'
 SelectListMultipleView = require './select-list-multiple-view'
 
 module.exports =
@@ -62,7 +62,7 @@ class SelectStageHunks extends SelectListMultipleView
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
         data = if data? and data isnt '' then data else 'Hunk has been staged!'
-        new StatusView(type: 'success', message: data)
+        notifier.addSuccess(data)
         @repo.destroy() if @repo.destroyable
         try fs.unlink patchPath
 

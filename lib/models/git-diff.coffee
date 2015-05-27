@@ -3,14 +3,14 @@ Path = require 'path'
 fs = require 'fs-plus'
 
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
 
 gitDiff = (repo, {diffStat, file}={}) ->
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
     repo.destroy() if repo.destroyable
-    return new StatusView(type: 'error', message: "No open file. Select 'Diff All'.")
+    return notifier.addError "No open file. Select 'Diff All'."
   diffStat ?= ''
   args = ['diff']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
@@ -27,7 +27,7 @@ prepFile = (text) ->
     fs.writeFileSync diffFilePath, text, flag: 'w+'
     showFile()
   else
-    new StatusView(type: 'error', message: 'Nothing to show.')
+    notifier.addInfo 'Nothing to show.'
 
 showFile = ->
   split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')

@@ -1,5 +1,4 @@
 git = require '../git'
-StatusView = require '../views/status-view'
 
 gitAdd = (repo, {addAll}={}) ->
   if not addAll

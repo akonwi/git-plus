@@ -1,5 +1,5 @@
 git = require '../git'
-OutputView = require './output-view'
+notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 
 module.exports =
@@ -21,19 +21,13 @@ module.exports =
       @cancel()
 
     delete: (branch = '', remote = '', isRemote = false) ->
-      view = new OutputView()
-
       if not isRemote
         git.cmd
           args: ['branch', '-D', branch]
           cwd: @repo.getWorkingDirectory()
-          stdout: (data) -> view.addLine(data.toString())
-          stderr: (data) -> view.addLine(data.toString())
-          exit: (code) => view.finish()
+          stdout: (data) -> notifier.addSuccess(data.toString())
       else
         git.cmd
           args: ['push', remote, '--delete', branch]
           cwd: @repo.getWorkingDirectory()
-          stdout: (data) -> view.addLine(data.toString())
-          stderr: (data) -> view.addLine(data.toString())
-          exit: (code) => view.finish()
+          stderr: (data) -> notifier.addSuccess(data.toString())

@@ -1,5 +1,5 @@
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 
 gitStashDrop = (repo) ->
   git.cmd
@@ -9,7 +9,10 @@ gitStashDrop = (repo) ->
       env: process.env.NODE_ENV
     }
     stdout: (data) ->
-      new StatusView(type: 'success', message: data)
+      notifier.addSuccess(data) if data.toString().length > 0
+      repo.destroy() if repo.destroyable
+    stderr: (data) ->
+      notifier.addError(data)
       repo.destroy() if repo.destroyable
 
 module.exports = gitStashDrop

@@ -3,7 +3,7 @@ fs = require 'fs'
 Path = require 'path'
 git = require '../git'
 GitDiff = require '../models/git-diff'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 
 module.exports =
 class StatusListView extends SelectListView
@@ -57,7 +57,7 @@ class StatusListView extends SelectListView
 
       fs.stat fullPath, (err, stat) =>
         if err
-          new StatusView(type: 'error', message: err.message)
+          notifier.addError(err.message)
         else
           isDirectory = stat?.isDirectory()
           if openFile

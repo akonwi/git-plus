@@ -19,6 +19,7 @@ showObject = (repo, objectHash, file) ->
     args.push '--'
     args.push file
 
+  debugger
   git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
@@ -44,7 +45,7 @@ class InputView extends View
     @div =>
       @subview 'objectHash', new TextEditorView(mini: true, placeholderText: 'Commit hash to show')
 
-  initialize: (callback) ->
+  initialize: (@repo) ->
     @disposables = new CompositeDisposable
     @currentPane = atom.workspace.getActivePane()
     @panel ?= atom.workspace.addModalPanel(item: this)
@@ -54,7 +55,7 @@ class InputView extends View
     @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': =>
       text = @objectHash.getModel().getText().split(' ')
       name = if text.length is 2 then text[1] else text[0]
-      callback text
+      showObject(@repo, text)
       @destroy()
 
   destroy: ->
@@ -62,7 +63,8 @@ class InputView extends View
     @panel?.destroy()
 
 module.exports = (repo, objectHash, file) ->
+  debugger
   if not objectHash?
-    new InputView(showObject)
+    new InputView(repo)
   else
     showObject(repo, objectHash, file)

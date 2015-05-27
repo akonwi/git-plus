@@ -2,7 +2,7 @@
 
 git = require '../git'
 GitShow = require '../models/git-show'
-StatusView = require './status-view'
+notifier = require '../notifier'
 RemoteListView = require '../views/remote-list-view'
 
 module.exports =
@@ -62,4 +62,4 @@ class TagView extends SelectListView
     git.cmd
       args: args
       cwd: @repo.getWorkingDirectory()
-      stdout: (data) -> new StatusView(type: 'success', message: data.toString())
+      stdout: (data) -> notifier.addSuccess(data.toString())

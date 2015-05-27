@@ -1,5 +1,5 @@
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 RemoveListView = require '../views/remove-list-view'
 
 gitRemove = (repo, {showSelector}={}) ->
@@ -12,7 +12,7 @@ gitRemove = (repo, {showSelector}={}) ->
         args: ['rm', '-f', '--ignore-unmatch', currentFile]
         cwd: repo.getWorkingDirectory()
         stdout: (data) ->
-          new StatusView(type: 'success', message: "Removed #{prettify data}")
+          notifier.addSuccess("Removed #{prettify data}")
           repo.destroy() if repo.destroyable
   else
     git.cmd

@@ -2,7 +2,7 @@
 {$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
-StatusView = require './status-view'
+notifier = require '../notifier'
 CherryPickSelectCommits = require './cherry-pick-select-commits-view'
 
 module.exports =
@@ -51,5 +51,5 @@ class CherryPickSelectBranch extends SelectListView
           new CherryPickSelectCommits(repo, @save.split('\0')[...-1])
           @save = null
         else
-          new StatusView(type: 'warning', message: "No commits available to cherry-pick.")
+          notifier.addInfo "No commits available to cherry-pick."
           repo.destroy() if repo.destroyable

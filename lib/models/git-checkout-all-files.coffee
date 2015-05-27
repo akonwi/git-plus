@@ -1,12 +1,12 @@
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 
 gitCheckoutAllFiles = (repo) ->
   git.cmd
     args: ['checkout', '-f']
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
-      new StatusView(type: 'success', message: data.toString())
+      notifier.addSuccess "File changes checked out successfully!"
       git.refresh repo
 
 module.exports = gitCheckoutAllFiles

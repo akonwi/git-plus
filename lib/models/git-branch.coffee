@@ -34,7 +34,8 @@ class InputView extends View
     git.cmd
       args: ['checkout', '-b', name]
       cwd: @repo.getWorkingDirectory()
-      stdout: (data) =>
+      # using `stderr` for success
+      stderr: (data) =>
         notifier.addSuccess data.toString()
         git.refresh @repo
         @repo.destroy() if @repo.destroyable

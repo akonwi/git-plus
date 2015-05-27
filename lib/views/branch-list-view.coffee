@@ -1,7 +1,7 @@
 fs = require 'fs-plus'
 {$$, SelectListView} = require 'atom-space-pen-views'
 git = require '../git'
-StatusView = require './status-view'
+notifier = require '../notifier'
 
 module.exports =
 class ListView extends SelectListView
@@ -52,8 +52,9 @@ class ListView extends SelectListView
     git.cmd
       args: ['checkout', branch]
       cwd: @repo.getWorkingDirectory()
-      stdout: (data) =>
-        new StatusView(type: 'success', message: data.toString())
+      # using `stderr` for success here
+      stderr: (data) =>
+        notifier.addSuccess data.toString()
         atom.workspace.observeTextEditors (editor) =>
           fs.exists editor.getPath(), (exist) =>
             editor.destroy() if not exist

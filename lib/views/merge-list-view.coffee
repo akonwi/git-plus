@@ -1,7 +1,7 @@
 fs = require 'fs-plus'
 {$$, SelectListView} = require 'atom-space-pen-views'
 git = require '../git'
-StatusView = require './status-view'
+notifier = require '../notifier'
 
 module.exports =
 class ListView extends SelectListView
@@ -51,7 +51,7 @@ class ListView extends SelectListView
       args: ['merge', branch]
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
-        new StatusView(type: 'success', message: data.toString())
+        notifier.addSuccess data.toString()
         atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.refresh @repo

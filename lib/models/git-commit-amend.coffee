@@ -1,5 +1,4 @@
 git = require '../git'
-StatusView = require '../views/status-view'
 GitCommit = require './git-commit'
 
 gitCommitAmend = (repo) ->

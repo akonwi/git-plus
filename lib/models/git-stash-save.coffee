@@ -1,7 +1,8 @@
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 
 gitStashSave = (repo) ->
+  notification = notifier.addInfo('Saving...', dismissable: true)
   git.cmd
     args: ['stash', 'save']
     cwd: repo.getWorkingDirectory()
@@ -9,7 +10,8 @@ gitStashSave = (repo) ->
       env: process.env.NODE_ENV
     }
     stdout: (data) ->
-      new StatusView(type: 'success', message: data)
+      notification.dismiss()
+      notifier.addSuccess(data)
       repo.destroy() if repo.destroyable
 
 module.exports = gitStashSave

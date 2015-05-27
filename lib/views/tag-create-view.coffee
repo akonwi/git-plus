@@ -4,7 +4,7 @@ fs = require 'fs-plus'
 
 {BufferedProcess, CompositeDisposable} = require 'atom'
 {$, TextEditorView, View} = require 'atom-space-pen-views'
-StatusView = require './status-view'
+notifier = require '../notifier'
 git = require '../git'
 
 module.exports=
@@ -36,9 +36,9 @@ class TagCreateView extends View
       args: ['tag', '-a', tag.name, '-m', tag.message]
       cwd: @repo.getWorkingDirectory()
       stderr: (data) ->
-        new StatusView(type: 'error', message: data.toString())
+        notifier.addError(data.toString())
       exit: (code) ->
-        new StatusView(type: 'success', message: "Tag '#{tag.name}' has been created successfully!") if code is 0
+        notifier.addSuccess("Tag '#{tag.name}' has been created successfully!") if code is 0
     @destroy()
 
   destroy: ->
