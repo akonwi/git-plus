@@ -1,6 +1,6 @@
 {BufferedProcess, GitRepository} = require 'atom'
-StatusView = require './views/status-view'
 RepoListView = require './views/repo-list-view'
+notifier = require './notifier'
 
 # Public: Execute a git command.
 #
@@ -16,7 +16,7 @@ gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
   command = _getGitPath()
   options ?= {}
   options.cwd ?= cwd
-  stderr ?= (data) -> new StatusView(type: 'error', message: data.toString())
+  stderr ?= (data) -> notifier.addError data.toString()
 
   if stdout? and not exit?
     c_stdout = stdout
@@ -36,7 +36,7 @@ gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
       stderr: stderr
       exit: exit
   catch error
-    new StatusView(type: 'error', message: 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.')
+    notifier.addError 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.'
 
 gitStatus = (repo, stdout) ->
   gitCmd
@@ -56,7 +56,7 @@ gitStagedFiles = (repo, stdout) ->
       if data.toString().includes "ambiguous argument 'HEAD'"
         files = [1]
       else
-        new StatusView(type: 'error', message: data.toString())
+        notifier.addError data.toString()
         files = []
     exit: (code) -> stdout(files)
 
@@ -99,7 +99,7 @@ gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
   exit ?= (code) ->
     repo.destroy() if repo.destroyable
     if code is 0
-      new StatusView(type: 'success', message: "Added #{file ? 'all files'}")
+      notifier.addSuccess "Added #{file ? 'all files'}"
   gitCmd
     args: ['add', '--all', file ? '.']
     cwd: repo.getWorkingDirectory()
@@ -110,7 +110,7 @@ gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
 gitMerge = ({branchName, stdout, stderr, exit}={}) ->
   exit ?= (code) ->
     if code is 0
-      new StatusView(type: 'success', message: 'Git merged branch #{branchName} successfully')
+      notifier.addSuccess 'Git merged branch #{branchName} successfully'
   gitCmd
     args: ['merge', branchName],
     stdout: stdout if stdout?
@@ -122,7 +122,7 @@ gitResetHead = (repo) ->
     args: ['reset', 'HEAD']
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
-      new StatusView(type: 'success', message: 'All changes unstaged')
+      notifier.addSuccess 'All changes unstaged'
       repo.destroy() if repo.destroyable
 
 _getGitPath = ->

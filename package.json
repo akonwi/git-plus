@@ -9,7 +9,21 @@
   "activationCommands": {
     "atom-workspace": [
       "git-plus:menu",
-      "git-plus:init"
+      "git-plus:add",
+      "git-plus:add-all",
+      "git-plus:commit",
+      "git-plus:commit-amend",
+      "git-plus:add-and-commit",
+      "git-plus:add-all-and-commit",
+      "git-plus:add-all-commit-and-push",
+      "git-plus:checkout-current-file",
+      "git-plus:checkout",
+      "git-plus:diff",
+      "git-plus:diff-all",
+      "git-plus:remove",
+      "git-plus:remove-current-file",
+      "git-plus:show",
+      "git-plus:log"
     ]
   },
   "repository": "https://github.com/akonwi/git-plus",

@@ -4,7 +4,7 @@ Path = require 'path'
 os = require 'os'
 
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 GitPush = require './git-push'
 
 module.exports =
@@ -54,7 +54,7 @@ class GitCommit
           stdout: (data) => @prepFile data
       else
         @cleanup()
-        new StatusView(type: 'error', message: 'Nothing to commit.')
+        notifier.addInfo 'Nothing to commit.'
 
   # Public: Prepares our commit message file by writing the status and a
   #         possible amend message to it.
@@ -93,7 +93,7 @@ class GitCommit
       options:
         cwd: @dir()
       stdout: (data) =>
-        new StatusView(type: 'success', message: data)
+        notifier.addSuccess data
         if @andPush
           new GitPush(@repo)
         # Set @isAmending to false since it succeeded.
@@ -124,9 +124,9 @@ class GitCommit
     git.cmd
       args: ['reset', 'ORIG_HEAD'],
       stdout: ->
-        new StatusView(type: 'error', message: "#{err+': '}Commit amend aborted!")
+        notifer.addError "#{err+': '}Commit amend aborted!"
       stderr: ->
-        new StatusView(type: 'error', message: 'ERROR! Undoing the amend failed! Please fix your repository manually!')
+        notifer.addError 'ERROR! Undoing the amend failed! Please fix your repository manually!'
       exit: =>
         # Set @isAmending to false since the amending process has been aborted.
         @isAmending = false

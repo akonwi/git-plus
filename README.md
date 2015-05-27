@@ -22,49 +22,53 @@ vim-fugitive like package for atom. make commits and other git things without th
   Git add will add the current file and 'add all' will add all changed files
   Default key binding: `Cmd-Shift-A`
 
-2. `Git commit`
+2. `Git add all commit and push`
+
+  `Cmd-Shift-A P`
+
+3. `Git commit`
 
   Will pull up a commit message file. The commit will be made when the file is saved NOT when the pane is closed. You can just cancel by closing the tab.
   Default key binding: `Cmd-Shift-C`(*`Ctrl-Shift-X`* on Windows + Linux)
 
-3. `Git commit amend`
+4. `Git commit amend`
 
   Will amend the changes to previous commit.
 
-4. `Git checkout current file`
+5. `Git checkout current file`
 
   Undo changes and checkout current file.
 
-5. `Git [checkout]`
+6. `Git [checkout]`
 
   Change branches
 
-6. `Git Diff [All]`
+7. `Git Diff [All]`
 
   Shows diff for current file or All the files. Diff can either be with staged or unstaged as selected in options.
 
-7. `Git new branch`
+8. `Git new branch`
 
   Create a new branch
 
-8. `Git [push|pull]`
+9. `Git [push|pull]`
 
   When Pushing, if you have multiple remote repos, you can choose which to push to.
-9. `Git Add and Commit`
+10. `Git Add and Commit`
 
   Add the current file and pull up the commit message file. Similar to `Git add` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A c`
 
-10. `Git Add All and Commit`
+11. `Git Add All and Commit`
 
   Add all changed files and pull up the commit message file. Similar to `Git add all` and `Git commit` in succession.
   Default key binding: `Cmd-Shift-A a`
 
-11. `Git rm [current file]`
+12. `Git rm [current file]`
 
   Git rm the current file or open an selector to select the files to remove. You can select multiple files at once.
 
-12. `Git Log [Current File]`
+13. `Git Log [Current File]`
 
   Show the commit history [for the current file] and show display the selected commit.
 

@@ -2,7 +2,7 @@
 {$, TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
-StatusView = require '../views/status-view'
+notifier = require '../notifier'
 BranchListView = require '../views/branch-list-view'
 
 class InputView extends View
@@ -35,7 +35,7 @@ class InputView extends View
       args: ['checkout', '-b', name]
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
-        new StatusView(type: 'success', message: data.toString())
+        notifier.addSuccess data.toString()
         git.refresh @repo
         @repo.destroy() if @repo.destroyable
         @currentPane.activate()
