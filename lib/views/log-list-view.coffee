@@ -1,6 +1,3 @@
-Os = require 'os'
-Path = require 'path'
-fs = require 'fs-plus'
 {Disposable} = require 'atom'
 {BufferedProcess} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
