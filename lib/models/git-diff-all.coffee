@@ -7,6 +7,6 @@ gitStat = (repo) ->
   git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
-    stdout: (data) -> GitDiff(repo, diffStat: data)
+    stdout: (data) -> GitDiff(repo, diffStat: data, file: '.')
 
 module.exports = gitStat
