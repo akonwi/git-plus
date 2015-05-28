@@ -14,7 +14,7 @@ init = (path) ->
     args: ['init']
     cwd: path
     stdout: (data) ->
-      notifer.addSuccess data
+      notifier.addSuccess data
       atom.project.setPaths([path])
 
 module.exports = gitInit
