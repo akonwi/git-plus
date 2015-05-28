@@ -19,7 +19,6 @@ showObject = (repo, objectHash, file) ->
     args.push '--'
     args.push file
 
-  debugger
   git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
