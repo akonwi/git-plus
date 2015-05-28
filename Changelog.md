@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.0.2
+
+- Fix typo of 'notifer' to 'notifier'
+- Brought back the `messageTimeout` setting for remaining StatusViews
+
 ### 5.0.1
 
 - Major release to be compatible with atom 1.0.0
