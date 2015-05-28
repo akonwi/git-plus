@@ -1,5 +1,13 @@
 ## Changelog
 
+### 5.0.0
+
+- Major release to be compatible with atom 1.0.0
+- If a window has more than one project with a git repository and a command is attempted,
+  then you can choose which repo to manipulate.
+- New layout for commits in `Git log` command
+- Most StatusViews of command output have been moved to the new notificaton system in atom
+
 ### 4.5.0
 
 - Remove some more deprecations (@Azakur4)
