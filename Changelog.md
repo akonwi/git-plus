@@ -1,6 +1,6 @@
 ## Changelog
 
-### 5.0.0
+### 5.0.1
 
 - Major release to be compatible with atom 1.0.0
 - If a window has more than one project with a git repository and a command is attempted,
