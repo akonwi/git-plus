@@ -62,11 +62,15 @@ module.exports =
       type: 'string'
       default: 'git'
       description: 'Where is your git?'
+    messageTimeout:
+      type: 'integer'
+      default: 5
+      description: 'How long should success/error messages be shown?'  
 
   activate: (state) ->
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
-      atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()  
+      atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
     atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
     atom.commands.add 'atom-workspace', 'git-plus:add', -> git.getRepo().then((repo) -> GitAdd(repo))
     atom.commands.add 'atom-workspace', 'git-plus:add-all', -> git.getRepo().then((repo) -> GitAdd(repo, addAll: true))
