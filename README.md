@@ -1,7 +1,4 @@
-# git-plus package
-
-# ATTENTION!
-  I no longer use atom and don't have time to continue developing features on this project but I will do my best to fix issues and bugs that arise. If anyone is willing to pick it up that is great but at the least, pull requests are more than welcome.
+# Git-Plus package
 
 [![endorse](https://api.coderwall.com/akonwi/endorsecount.png)](https://coderwall.com/akonwi)
 
@@ -16,7 +13,8 @@ vim-fugitive like package for atom. make commits and other git things without th
 >- `Ctrl-Shift-H` on Windows + Linux
 >- `Git Plus: Menu` on the atom command palette.
 
-### Commands
+### Commands (All commands are available for keymapping)
+  __Note: This list is not exclusive__
 1. `Git add [all]`
 
   Git add will add the current file and 'add all' will add all changed files
