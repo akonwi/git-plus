@@ -22,7 +22,7 @@ showObject = (repo, objectHash, file) ->
   git.cmd
     args: args
     cwd: repo.getWorkingDirectory()
-    stdout: (data) -> prepFile data, objectHash
+    stdout: (data) -> prepFile(data, objectHash) if data.length > 0
 
 prepFile = (text, objectHash) ->
   fs.writeFileSync showCommitFilePath(objectHash), text, flag: 'w+'
@@ -62,7 +62,6 @@ class InputView extends View
     @panel?.destroy()
 
 module.exports = (repo, objectHash, file) ->
-  debugger
   if not objectHash?
     new InputView(repo)
   else
