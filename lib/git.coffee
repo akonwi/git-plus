@@ -91,6 +91,11 @@ gitRefreshIndex = (repo=null)->
     repo.destroy?()
   else
     repo.refreshStatus()
+    atom.project.getRepositories()
+      .filter (r) ->
+        r.path is repo.path
+      .forEach (r) ->
+        r.refreshStatus()
   gitCmd
     args: ['add', '--refresh', '--', '.']
     stderr: (data) -> # don't really need to flash an error
