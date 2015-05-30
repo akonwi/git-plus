@@ -124,9 +124,9 @@ class GitCommit
     git.cmd
       args: ['reset', 'ORIG_HEAD'],
       stdout: ->
-        notifer.addError "#{err+': '}Commit amend aborted!"
+        notifier.addError "#{err+': '}Commit amend aborted!"
       stderr: ->
-        notifer.addError 'ERROR! Undoing the amend failed! Please fix your repository manually!'
+        notifier.addError 'ERROR! Undoing the amend failed! Please fix your repository manually!'
       exit: =>
         # Set @isAmending to false since the amending process has been aborted.
         @isAmending = false
