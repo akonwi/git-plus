@@ -3,6 +3,7 @@
 ### 5.0.4
 
 - Fix typo of 'notifer' to 'notifier'
+- Fix issue #139
 
 ### 5.0.3
 
