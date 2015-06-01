@@ -31,7 +31,7 @@ class InputView extends View
         cwd: @repo.getWorkingDirectory()
         stdout: (data) =>
           notifier.addSuccess(data.toString()) if data.toString().length > 0
-          git.refresh @repo
+          git.refresh()
           @currentPane.activate()
 
 module.exports = (repo) -> new InputView(repo)

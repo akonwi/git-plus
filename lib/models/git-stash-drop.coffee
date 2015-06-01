@@ -10,9 +10,7 @@ gitStashDrop = (repo) ->
     }
     stdout: (data) ->
       notifier.addSuccess(data) if data.toString().length > 0
-      repo.destroy() if repo.destroyable
     stderr: (data) ->
       notifier.addError(data)
-      repo.destroy() if repo.destroyable
 
 module.exports = gitStashDrop

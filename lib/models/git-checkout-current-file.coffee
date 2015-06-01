@@ -8,7 +8,6 @@ gitCheckoutCurrentFile = (repo)->
     cwd: repo.getWorkingDirectory()
     stdout: (data) -> # There is no output from this command
       notifier.addSuccess 'File changes checked out successfully'
-      git.refresh repo
-      repo.destroy() if repo.destroyable
+      git.refresh()
 
 module.exports = gitCheckoutCurrentFile

@@ -35,16 +35,10 @@ getCommands = ->
   GitRun                 = require './models/git-run'
   GitMerge               = require './models/git-merge'
 
-  #     # If no file open and if no repo for project
-  #     noOpenFile = not atom.workspace.getActiveTextEditor()?.getPath()?
-  # noRepoHere = noOpenFile and atom.project.getRepositories().length is 0
-  # if noRepoHere
-  #   commands.push ['git-plus:init', 'Init', -> GitInit()]
-  #   return new Promise (resolve, reject) -> resolve(commands)
   git.getRepo()
     .then (repo) ->
+      git.refresh()
       commands = []
-      git.refresh repo
       commands.push ['git-plus:add', 'Add', -> GitAdd(repo)]
       commands.push ['git-plus:add-all', 'Add All', -> GitAdd(repo, addAll: true)]
       commands.push ['git-plus:log', 'Log', -> GitLog(repo)]

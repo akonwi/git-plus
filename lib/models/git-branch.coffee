@@ -37,8 +37,7 @@ class InputView extends View
       # using `stderr` for success
       stderr: (data) =>
         notifier.addSuccess data.toString()
-        git.refresh @repo
-        @repo.destroy() if @repo.destroyable
+        git.refresh()
         @currentPane.activate()
 
 module.exports.newBranch = (repo) ->

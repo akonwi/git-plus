@@ -65,7 +65,7 @@ module.exports =
     messageTimeout:
       type: 'integer'
       default: 5
-      description: 'How long should success/error messages be shown?'  
+      description: 'How long should success/error messages be shown?'
 
   activate: (state) ->
     repos = atom.project.getRepositories().filter (r) -> r?

@@ -54,4 +54,4 @@ class ListView extends SelectListView
         notifier.addSuccess data.toString()
         atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
-        git.refresh @repo
+        git.refresh()

@@ -42,7 +42,7 @@ class GitPaletteView extends SelectListView
         @setItems(commands)
         @panel.show()
         @focusFilterEditor()
-      .catch =>
+      .catch (err) =>
         (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
         @setItems(commands)
         @panel.show()

@@ -62,4 +62,3 @@ class CherryPickSelectCommits extends SelectListMultipleView
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
         notifier.addSuccess data
-        @repo.destroy() if @repo.destroyable

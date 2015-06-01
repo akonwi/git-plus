@@ -56,7 +56,6 @@ class SelectStageFilesView extends SelectListMultipleView
       cwd: @repo.getWorkingDirectory()
       stdout: (data) ->
         notifier.addSuccess "Removed #{prettify data}"
-        @repo.destroy() if @repo?.destroyable
 
   # cut off rm '' around the filenames.
   prettify = (data) ->

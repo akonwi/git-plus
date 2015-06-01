@@ -7,6 +7,6 @@ gitCheckoutAllFiles = (repo) ->
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       notifier.addSuccess "File changes checked out successfully!"
-      git.refresh repo
+      git.refresh()
 
 module.exports = gitCheckoutAllFiles

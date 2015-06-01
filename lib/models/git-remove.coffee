@@ -13,7 +13,6 @@ gitRemove = (repo, {showSelector}={}) ->
         cwd: repo.getWorkingDirectory()
         stdout: (data) ->
           notifier.addSuccess("Removed #{prettify data}")
-          repo.destroy() if repo.destroyable
   else
     git.cmd
       args: ['rm', '-r', '-n', '--ignore-unmatch', '-f', '*']

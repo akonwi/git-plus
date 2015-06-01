@@ -104,7 +104,7 @@ class GitCommit
         @currentPane.activate() if @currentPane.alive
         # Refreshing the atom repo status to refresh things like TreeView and diff gutter.
         # Refresh git index to prevent bugs on our methods.
-        git.refresh @repo
+        git.refresh()
 
       stderr: (err) =>
         # Destroying the active EditorView will trigger our cleanup method.
@@ -139,5 +139,4 @@ class GitCommit
   cleanup: ->
     @currentPane.activate() if @currentPane.alive
     @disposables.dispose()
-    @repo.destroy if @repo.destroyable
     try fs.unlinkSync @filePath()

@@ -52,4 +52,3 @@ class CherryPickSelectBranch extends SelectListView
           @save = null
         else
           notifier.addInfo "No commits available to cherry-pick."
-          repo.destroy() if repo.destroyable

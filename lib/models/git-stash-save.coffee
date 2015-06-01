@@ -12,6 +12,5 @@ gitStashSave = (repo) ->
     stdout: (data) ->
       notification.dismiss()
       notifier.addSuccess(data)
-      repo.destroy() if repo.destroyable
 
 module.exports = gitStashSave

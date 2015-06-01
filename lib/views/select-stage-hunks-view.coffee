@@ -63,7 +63,6 @@ class SelectStageHunks extends SelectListMultipleView
       stdout: (data) =>
         data = if data? and data isnt '' then data else 'Hunk has been staged!'
         notifier.addSuccess(data)
-        @repo.destroy() if @repo.destroyable
         try fs.unlink patchPath
 
   _generateObjects: (data) ->
