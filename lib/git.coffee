@@ -1,4 +1,4 @@
-{BufferedProcess} = require 'atom'
+{BufferedProcess, GitRepository} = require 'atom'
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
