@@ -8,6 +8,8 @@ vim-fugitive like package for atom. make commits and other git things without th
 
 ## Usage
 
+# IMPORTANT: Make sure your gitconfig file is configured or at least your `user.email` and `user.name` variables are initialized
+
 ### Git-Plus Palette
 >- `Cmd-Shift-H` on MacOS
 >- `Ctrl-Shift-H` on Windows + Linux
