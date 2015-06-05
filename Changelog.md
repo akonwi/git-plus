@@ -1,5 +1,11 @@
 ## Changelog
 
+### 5.0.5
+
+- Fix #199
+- Fix #198
+- Fix #197
+
 ### 5.0.4
 
 - Fix typo of 'notifer' to 'notifier'
