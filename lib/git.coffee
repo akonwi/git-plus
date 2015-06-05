@@ -119,7 +119,9 @@ gitResetHead = (repo) ->
       notifier.addSuccess 'All changes unstaged'
 
 _getGitPath = ->
-  atom.config.get('git-plus.gitPath') ? 'git'
+  p = atom.config.get('git-plus.gitPath') ? 'git'
+  console.log "Git-plus: Using git at", p
+  return p
 
 _prettify = (data) ->
   data = data.split('\0')[...-1]
