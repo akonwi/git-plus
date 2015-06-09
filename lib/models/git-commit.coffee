@@ -75,14 +75,34 @@ class GitCommit
   # Public: Helper method to open the commit message file and to subscribe the
   #         'saved' and `destroyed` events of the underlaying text-buffer.
   showFile: ->
-    split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
     atom.workspace
-      .open(@filePath(), split: split, searchAllPanes: true)
-      .done (textBuffer) =>
-        if textBuffer?
-          @disposables.add textBuffer.onDidSave => @commit()
-          @disposables.add textBuffer.onDidDestroy =>
-            if @isAmending then @undoAmend() else @cleanup()
+      .open(@filePath(), searchAllPanes: true)
+      .done (textEditor) => @splitPane(textEditor)
+
+  splitPane: (oldEditor) ->
+    pane = atom.workspace.paneForURI(@filePath())
+    splitDir = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane') else 'right'
+    options = { copyActiveItem: true }
+    hookEvents = (textEditor) =>
+      oldEditor.destroy()
+      @disposables.add textEditor.onDidSave => @commit()
+      @disposables.add textEditor.onDidDestroy =>
+        if @isAmending then @undoAmend() else @cleanup()
+
+    directions =
+      left: =>
+        pane = pane.splitLeft options
+        hookEvents(pane.getActiveEditor())
+      right: ->
+        pane = pane.splitRight options
+        hookEvents(pane.getActiveEditor())
+      up: ->
+        pane = pane.splitUp options
+        hookEvents(pane.getActiveEditor())
+      down: ->
+        pane = pane.splitDown options
+        hookEvents(pane.getActiveEditor())
+    directions[splitDir]()
 
   # Public: When the user is done editing the commit message an saves the file
   #         this method gets invoked and commits the changes.

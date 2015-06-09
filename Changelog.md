@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.1.0
+
+- The Split Pane direction setting actually works now.
+  > Possible choices are [right up down left]. Defaults to right.
+
 ### 5.0.7
 
 - Fix #199
