@@ -83,8 +83,7 @@ gitDiff = (repo, path, stdout) ->
     cwd: repo.getWorkingDirectory()
     stdout: (data) -> stdout _prettifyDiff(data)
 
-# Two-fold, refresh index as well as status
-gitRefreshIndex = ->
+gitRefresh = ->
   atom.project.getRepositories().forEach (r) -> r?.refreshStatus()
   gitCmd
     args: ['add', '--refresh', '--', '.']
@@ -168,8 +167,8 @@ getSubmodule = (path) ->
 # Returns a {Promise} that resolves to a repository like object
 getRepo = ->
   new Promise (resolve, reject) ->
-    getRepoForCurrentFile().then (repo) ->
-      resolve(repo) if repo isnt null
+    getRepoForCurrentFile().then (repo) -> resolve(repo)
+    .catch (e) ->
       repos = atom.project.getRepositories().filter (r) -> r?
       if repos.length is 0
         reject("No repos found")
@@ -179,19 +178,24 @@ getRepo = ->
         resolve(repos[0])
 
 getRepoForCurrentFile = ->
-  project = atom.project
-  path = atom.workspace.getActiveTextEditor()?.getPath()
-  directory = project.getDirectories().filter((d) -> d.contains(path))[0]
-  if directory?
-    return project.repositoryForDirectory(directory)
-  else
-    return Promise.resolve(null)
+  new Promise (resolve, reject) ->
+    project = atom.project
+    path = atom.workspace.getActiveTextEditor()?.getPath()
+    directory = project.getDirectories().filter((d) -> d.contains(path))[0]
+    if directory?
+      project.repositoryForDirectory(directory).then (repo) ->
+        submodule = repo.repo.submoduleForPath(path)
+        if submodule? then resolve(submodule) else resolve(repo)
+      .catch (e) ->
+        reject(e)
+    else
+      reject "no current file"
 
 module.exports.cmd = gitCmd
 module.exports.stagedFiles = gitStagedFiles
 module.exports.unstagedFiles = gitUnstagedFiles
 module.exports.diff = gitDiff
-module.exports.refresh = gitRefreshIndex
+module.exports.refresh = gitRefresh
 module.exports.status = gitStatus
 module.exports.reset = gitResetHead
 module.exports.add = gitAdd
