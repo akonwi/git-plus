@@ -46,10 +46,10 @@ module.exports =
       default: true
       description: 'Allow commands to open new panes'
     splitPane:
-      title: 'Split pane direction(up, right, down, or left)'
+      title: 'Split pane direction (up, right, down, or left)'
       type: 'string'
       default: 'right'
-      description: 'Where should new panes go?(Defaults to right)'
+      description: 'Where should new panes go? (Defaults to right)'
     wordDiff:
       type: 'boolean'
       default: true

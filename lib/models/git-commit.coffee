@@ -62,7 +62,7 @@ class GitCommit
   # status - The current status as {String}.
   prepFile: (status) ->
     # format the status to be ignored in the commit message
-    status = status.replace(/\s*\(.*\)\n/g, '')
+    status = status.replace(/\s*\(.*\)\n/g, "\n")
     status = status.trim().replace(/\n/g, "\n#{@commentchar} ")
     fs.writeFileSync @filePath(),
       """#{@amend}
