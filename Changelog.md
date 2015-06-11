@@ -1,9 +1,13 @@
 ## Changelog
 
+### 5.1.2
+
+- #206: Fix for commit file syntax highlighting not working sometimes. (@Gwasanaethau)
+
 ### 5.1.1
 
 - Fix for commands not working in submodules
-- Fix typos with 'Git Fetch Prune'
+- Fix typos with 'Git Fetch Prune' (@Azakur4)
 
 ### 5.1.0
 
