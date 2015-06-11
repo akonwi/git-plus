@@ -100,16 +100,6 @@ gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
     stderr: stderr if stderr?
     exit: exit
 
-gitMerge = ({branchName, stdout, stderr, exit}={}) ->
-  exit ?= (code) ->
-    if code is 0
-      notifier.addSuccess 'Git merged branch #{branchName} successfully'
-  gitCmd
-    args: ['merge', branchName],
-    stdout: stdout if stdout?
-    stderr: stderr if stderr?
-    exit: exit
-
 gitResetHead = (repo) ->
   gitCmd
     args: ['reset', 'HEAD']
