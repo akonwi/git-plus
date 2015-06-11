@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.1.1
+
+- Fix for commands not working in submodules
+- Fix typos with 'Git Fetch Prune'
+
 ### 5.1.0
 
 - The Split Pane direction setting actually works now.
