@@ -175,11 +175,7 @@ getRepoForCurrentFile = ->
     if directory?
       project.repositoryForDirectory(directory).then (repo) ->
         submodule = repo.repo.submoduleForPath(path)
-        if submodule?
-          console.debug "Git-plus: submodule path is", submodule.getPath()
-          console.debug "Git-plus: submodule working directory is", submodule.getWorkingDirectory()
-          resolve(submodule)
-        else resolve(repo)
+        if submodule? then resolve(submodule) else resolve(repo)
       .catch (e) ->
         reject(e)
     else
