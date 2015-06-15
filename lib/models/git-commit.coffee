@@ -81,7 +81,7 @@ class GitCommit
 
   splitPane: (oldEditor) ->
     pane = atom.workspace.paneForURI(@filePath())
-    splitDir = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane') else 'right'
+    splitDir = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
     options = { copyActiveItem: true }
     hookEvents = (textEditor) =>
       oldEditor.destroy()
@@ -116,14 +116,10 @@ class GitCommit
         notifier.addSuccess data
         if @andPush
           new GitPush(@repo)
-        # Set @isAmending to false since it succeeded.
         @isAmending = false
-        # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
         # Activate the former active pane.
         @currentPane.activate() if @currentPane.alive
-        # Refreshing the atom repo status to refresh things like TreeView and diff gutter.
-        # Refresh git index to prevent bugs on our methods.
         git.refresh()
 
       stderr: (err) =>
