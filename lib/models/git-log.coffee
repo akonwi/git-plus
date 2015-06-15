@@ -6,15 +6,17 @@ amountOfCommitsToShow = ->
   atom.config.get('git-plus.amountOfCommitsToShow')
 
 gitLog = (repo, {onlyCurrentFile}={}) ->
-  currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+  # opener doesn't get overwritten with a new instance of LogListView
   atom.workspace.addOpener (filePath) ->
-    new LogListView(repo) if filePath is ViewUriLog
+    return new LogListView if filePath is ViewUriLog
 
-  atom.workspace.open(ViewUriLog).done (logListView) ->
-    if logListView instanceof LogListView
+  atom.workspace.open(ViewUriLog).done (view) ->
+    if view instanceof LogListView
+      view.setRepo repo
       if onlyCurrentFile
-        logListView.currentFileLog(onlyCurrentFile, currentFile)
+        currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+        view.currentFileLog(onlyCurrentFile, currentFile)
       else
-        logListView.branchLog()
+        view.branchLog()
 
 module.exports = gitLog

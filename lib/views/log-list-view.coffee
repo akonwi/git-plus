@@ -20,7 +20,7 @@ class LogListView extends ScrollView
 
   getTitle: -> 'git-plus: Log'
 
-  initialize: (@repo) ->
+  initialize: ->
     super
     @skipCommits = 0
     @on 'click', '.commit-row', ({currentTarget}) =>
@@ -28,6 +28,8 @@ class LogListView extends ScrollView
     @scroll =>
       @getLog() if @scrollTop() + @height() is @prop('scrollHeight')
 
+  setRepo: (@repo) ->
+    
   parseData: (data) ->
     if data.length > 0
       separator = ';|'
