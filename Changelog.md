@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.1.3
+
+- Git log command now works with submodules and different repos
+
 ### 5.1.2
 
 - #206: Fix for commit file syntax highlighting not working sometimes. (@Gwasanaethau)
