@@ -1,4 +1,3 @@
-fs = require 'fs-plus'
 git = require '../git'
 BranchListView = require '../views/branch-list-view'
 
