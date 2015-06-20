@@ -23,6 +23,7 @@
       "git-plus:remove",
       "git-plus:remove-current-file",
       "git-plus:checkout",
+      "git-plus:checkout-remote",
       "git-plus:checkout-current-file",
       "git-plus:checkout-all-files",
       "git-plus:cherry-pick",

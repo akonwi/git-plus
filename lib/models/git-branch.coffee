@@ -4,6 +4,7 @@
 git = require '../git'
 notifier = require '../notifier'
 BranchListView = require '../views/branch-list-view'
+RemoteBranchListView = require '../views/remote-branch-list-view'
 
 class InputView extends View
   @content: ->
@@ -49,3 +50,10 @@ module.exports.gitBranches = (repo) ->
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
       new BranchListView(repo, data)
+
+module.exports.gitRemoteBranches = (repo) ->
+  git.cmd
+    args: ['branch', '-r']
+    cwd: repo.getWorkingDirectory()
+    stdout: (data) ->
+      new RemoteBranchListView(repo, data)

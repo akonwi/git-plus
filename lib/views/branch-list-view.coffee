@@ -5,6 +5,8 @@ notifier = require '../notifier'
 
 module.exports =
 class ListView extends SelectListView
+  args: ['checkout']
+
   initialize: (@repo, @data) ->
     super
     @show()
@@ -50,8 +52,8 @@ class ListView extends SelectListView
 
   checkout: (branch) ->
     git.cmd
-      args: ['checkout', branch]
       cwd: @repo.getWorkingDirectory()
+      args: @args.concat(branch)
       # using `stderr` for success here
       stderr: (data) =>
         notifier.addSuccess data.toString()
