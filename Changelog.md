@@ -1,6 +1,6 @@
 ## Changelog
 
-### 5.1.4
+### 5.1.5
 
 - Git log command now works with submodules and different repos
 - new command: `Remote Checkout`
