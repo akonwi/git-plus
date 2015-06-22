@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.2.0
+
+- add support for Git pull using rebase (@maxcnunes)
+
 ### 5.1.7
 
 - Git log command now works with submodules and different repos
