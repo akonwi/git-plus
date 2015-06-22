@@ -62,6 +62,7 @@ getCommands = ->
       commands.push ['git-plus:fetch', 'Fetch', -> GitFetch(repo)]
       commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> GitFetchPrune(repo)]
       commands.push ['git-plus:pull', 'Pull', -> GitPull(repo)]
+      commands.push ['git-plus:pull-using-rebase', 'Pull Using Rebase', -> GitPull(repo, rebase: true)]
       commands.push ['git-plus:push', 'Push', -> GitPush(repo)]
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
       commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]

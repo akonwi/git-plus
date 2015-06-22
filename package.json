@@ -20,6 +20,7 @@
       "git-plus:status",
       "git-plus:push",
       "git-plus:pull",
+      "git-plus:pull-using-rebase",
       "git-plus:remove",
       "git-plus:remove-current-file",
       "git-plus:checkout",
