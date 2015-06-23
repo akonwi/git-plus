@@ -1,12 +1,16 @@
+{CompositeDisposable} = require 'atom'
 Os = require 'os'
 Path = require 'path'
 fs = require 'fs-plus'
 
 git = require '../git'
 notifier = require '../notifier'
-diffFilePath = Path.join Os.tmpDir(), "atom_git_plus.diff"
+
+disposables = new CompositeDisposable
+diffFilePath = null
 
 gitDiff = (repo, {diffStat, file}={}) ->
+  diffFilePath = Path.join(repo.getPath(), "atom_git_plus.diff")
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
     return notifier.addError "No open file. Select 'Diff All'."
@@ -29,7 +33,34 @@ prepFile = (text) ->
     notifier.addInfo 'Nothing to show.'
 
 showFile = ->
-  split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
-  atom.workspace.open(diffFilePath, split: split, activatePane: true)
+  atom.workspace
+  .open(diffFilePath, searchAllPanes: true)
+  .done (editor) ->
+    splitPane(editor)
+
+splitPane = (oldEditor) ->
+  pane = atom.workspace.paneForURI(diffFilePath)
+  splitDir = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
+  options = { copyActiveItem: true }
+  hookEvents = (textEditor) ->
+    oldEditor.destroy()
+    disposables.add textEditor.onDidDestroy =>
+      fs.unlink diffFilePath
+
+  directions =
+    left: =>
+      pane = pane.splitLeft options
+      hookEvents(pane.getActiveEditor())
+    right: =>
+      pane = pane.splitRight options
+      hookEvents(pane.getActiveEditor())
+    up: =>
+      pane = pane.splitUp options
+      hookEvents(pane.getActiveEditor())
+    down: =>
+      pane = pane.splitDown options
+      hookEvents(pane.getActiveEditor())
+  directions[splitDir]()
+  oldEditor.destroy()
 
 module.exports = gitDiff
