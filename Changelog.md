@@ -3,6 +3,7 @@
 ### 5.2.0
 
 - add support for Git pull using rebase (@maxcnunes)
+- Git diff opens panes with respect to the 'open in pane' setting
 
 ### 5.1.7
 
