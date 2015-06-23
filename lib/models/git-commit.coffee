@@ -77,11 +77,16 @@ class GitCommit
   showFile: ->
     atom.workspace
       .open(@filePath(), searchAllPanes: true)
-      .done (textEditor) => @splitPane(textEditor)
+      .done (textEditor) =>
+        if atom.config.get('git-plus.openInPane')
+          @splitPane(atom.config.get('git-plus.splitPane'), textEditor)
+        else
+          @disposables.add textEditor.onDidSave => @commit()
+          @disposables.add textEditor.onDidDestroy =>
+            if @isAmending then @undoAmend() else @cleanup()
 
-  splitPane: (oldEditor) ->
+  splitPane: (splitDir, oldEditor) ->
     pane = atom.workspace.paneForURI(@filePath())
-    splitDir = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
     options = { copyActiveItem: true }
     hookEvents = (textEditor) =>
       oldEditor.destroy()
