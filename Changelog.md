@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.2.2
+
+- fix 'Git log current file'
+
 ### 5.2.1
 
 - add support for Git pull using rebase (@maxcnunes)
