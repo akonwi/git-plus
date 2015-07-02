@@ -58,7 +58,7 @@ class ListView extends SelectListView
       stderr: (data) =>
         notifier.addSuccess data.toString()
         atom.workspace.observeTextEditors (editor) =>
-          if filepath = editor.getPath()
+          if filepath = editor.getPath()?.toString()
             fs.exists filepath, (exists) =>
               editor.destroy() if not exists
         git.refresh()
