@@ -55,11 +55,11 @@
     'name': 'markup.deleted.diff'
   }
   {
-    'match': '\\[\\-(.*)?\\-\\]'
+    'match': '\\[\\-.*?\\-\\]'
     'name': 'markup.deleted.diff'
   }
   {
-    'match': '\\{\\+(.*)?\\+\\}'
+    'match': '\\{\\+.*?\\+\\}'
     'name': 'markup.inserted.diff'
   }
 
