@@ -1,6 +1,6 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
-  'atom-text-editor': [
+  'atom-text-editor:not(.mini)': [
     {
       'label': 'Git add file',
       'command': 'git-plus:add'
