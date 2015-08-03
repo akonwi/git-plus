@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.2.3
+- Make git-diff highlighting non-greedy. Thanks to @Victorystick
+
 ### 5.2.2
 
 - fix 'Git log current file'
