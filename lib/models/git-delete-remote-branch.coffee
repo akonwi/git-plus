@@ -6,6 +6,6 @@ gitDeleteRemoteBranch = (repo) ->
     args: ['branch', '-r']
     cwd: repo.getWorkingDirectory()
     stdout: (data) ->
-      new ListView(repo, data.toString())
+      new ListView(repo, data.toString(), isRemote: true)
 
 module.exports = gitDeleteRemoteBranch
