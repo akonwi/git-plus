@@ -2,6 +2,7 @@
 
 ### 5.2.5
 - Fix #233 (@hotoiledgoblins)
+- Add 'Git checkout remote' to atom command palette
 
 ### 5.2.4
 - Fix #243
