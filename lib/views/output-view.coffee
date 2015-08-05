@@ -10,7 +10,6 @@ module.exports =
 
     initialize: ->
       super
-      @panel ?= atom.workspace.addBottomPanel(item: this)
 
     addLine: (line) ->
       @message += line
@@ -19,6 +18,7 @@ module.exports =
       @message = ''
 
     finish: ->
+      @panel ?= atom.workspace.addBottomPanel(item: this)
       @find(".output").append(@message)
       setTimeout =>
         @destroy()
