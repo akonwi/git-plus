@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.2.5
+- Fix #233 (@hotoiledgoblins)
+
 ### 5.2.4
 - Fix #243
 - Fix #42
