@@ -5,13 +5,13 @@ BranchListView = require './branch-list-view'
 module.exports =
   # Extension of BranchListView
   class DeleteBranchListView extends BranchListView
-    initialize: (@repo, @data) -> super
+    initialize: (@repo, @data, @isRemote) -> super
 
     confirmed: ({name}) ->
       if name.startsWith "*"
         name = name.slice(1)
 
-      if name.indexOf('/') is -1
+      if not @isRemote
         @delete name
       else
         branch = name.substring(name.indexOf('/') + 1)
