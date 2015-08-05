@@ -47,6 +47,7 @@ getCommands = ->
       commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles(repo)]
       commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> GitCheckoutCurrentFile(repo)]
       commands.push ['git-plus:commit', 'Commit', -> new GitCommit(repo)]
+      commands.push ['git-plus:commit-all', 'Commit -all', -> new GitCommit(repo, stageChanges: true)]
       commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend(repo)]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit(repo)]
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit(repo)]

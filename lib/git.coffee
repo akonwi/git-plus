@@ -89,12 +89,15 @@ gitRefresh = ->
     args: ['add', '--refresh', '--', '.']
     stderr: (data) -> # don't really need to flash an error
 
-gitAdd = (repo, {file, stdout, stderr, exit}={}) ->
+gitAdd = (repo, {file, stdout, stderr, exit, update}={}) ->
+  args = ['add']
+  if update then args.push '--update' else args.push '--all'
+  if file then args.push file else '.'
   exit ?= (code) ->
     if code is 0
       notifier.addSuccess "Added #{file ? 'all files'}"
   gitCmd
-    args: ['add', '--all', file ? '.']
+    args: args
     cwd: repo.getWorkingDirectory()
     stdout: stdout if stdout?
     stderr: stderr if stderr?
