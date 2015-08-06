@@ -9,12 +9,6 @@ GitPush = require './git-push'
 
 module.exports =
 class GitCommit
-  # Public: Helper method to set the commentchar to be used in
-  #   the commit message
-  setCommentChar: (char) ->
-    if char is '' then char = '#'
-    @commentchar = char
-
   # Public: Helper method to return the current working directory.
   #
   # Returns: The cwd as a String.
@@ -39,12 +33,12 @@ class GitCommit
     @isAmending = @amend.length > 0
 
     # Load the commentchar from git config, defaults to '#'
+    @commentchar = '#'
     git.cmd
       args: ['config', '--get', 'core.commentchar'],
       stdout: (data) =>
-        @setCommentChar data.trim()
-      stderr: =>
-        @setCommentChar '#'
+        if data.trim() isnt ''
+          @commentchar = data.trim()
 
     git.stagedFiles @repo, (files) =>
       if @amend isnt '' or files.length >= 1
