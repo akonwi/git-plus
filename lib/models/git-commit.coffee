@@ -1,6 +1,6 @@
 {CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
-Path = require 'path'
+Path = require 'flavored-path'
 os = require 'os'
 
 git = require '../git'
@@ -58,13 +58,22 @@ class GitCommit
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, "\n")
     status = status.trim().replace(/\n/g, "\n#{@commentchar} ")
-    fs.writeFileSync @filePath(),
-      """#{@amend}
-      #{@commentchar} Please enter the commit message for your changes. Lines starting
-      #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
-      #{@commentchar}
-      #{@commentchar} #{status}"""
-    @showFile()
+
+    @getTemplate().then (template) =>
+      fs.writeFileSync @filePath(),
+        """#{ if @amend.length > 0 then @amend else template}
+        #{@commentchar} Please enter the commit message for your changes. Lines starting
+        #{@commentchar} with '#{@commentchar}' will be ignored, and an empty message aborts the commit.
+        #{@commentchar}
+        #{@commentchar} #{status}"""
+      @showFile()
+
+  getTemplate: ->
+    new Promise (resolve, reject) ->
+      git.cmd
+        args: ['config', '--get', 'commit.template']
+        stdout: (data) =>
+          resolve (if data.trim() isnt '' then fs.readFileSync(Path.get(data.trim())) else '')
 
   # Public: Helper method to open the commit message file and to subscribe the
   #         'saved' and `destroyed` events of the underlaying text-buffer.
