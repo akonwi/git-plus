@@ -1,7 +1,8 @@
 ## Changelog
 
-### 5.3.1
-- Fix #226
+### 5.3.2
+- Fix #226: remove COMMIT_EDITMSG file from repo when committing
+- Fix #228: Don't show color codes in diff when `color.ui=always`
 
 ### 5.3.0
 - Fix #233 (@hotoiledgoblins)

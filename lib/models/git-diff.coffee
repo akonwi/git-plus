@@ -15,7 +15,7 @@ gitDiff = (repo, {diffStat, file}={}) ->
   if not file
     return notifier.addError "No open file. Select 'Diff All'."
   diffStat ?= ''
-  args = ['diff']
+  args = ['diff', '--color=never']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push file if diffStat is ''
