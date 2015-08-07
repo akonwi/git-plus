@@ -148,7 +148,7 @@ class GitCommit
     git.cmd
       args: ['reset', 'ORIG_HEAD'],
       stdout: ->
-        notifier.addError "#{err+': '}Commit amend aborted!"
+        notifier.addError "#{err}: Commit amend aborted!"
       stderr: ->
         notifier.addError 'ERROR! Undoing the amend failed! Please fix your repository manually!'
       exit: =>
