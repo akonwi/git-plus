@@ -1,6 +1,9 @@
 ## Changelog
 
-### 5.3.5
+### 5.3.1
+- Fix #226
+
+### 5.3.0
 - Fix #233 (@hotoiledgoblins)
 - Add 'Git checkout remote' to atom command palette
 - Respect `commit.template` config option

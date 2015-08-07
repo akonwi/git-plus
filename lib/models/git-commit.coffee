@@ -22,7 +22,7 @@ class GitCommit
   # Public: Helper method to join @dir() and filename to use it with fs.
   #
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
-  filePath: -> Path.join(@dir(), 'COMMIT_EDITMSG')
+  filePath: -> Path.join(@repo.getPath(), 'COMMIT_EDITMSG')
 
   constructor: (@repo, {@amend, @andPush}={}) ->
     @currentPane = atom.workspace.getActivePane()
