@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.3.4
+- unlink COMMIT_EDITMSG file after commits
+
 ### 5.3.3
 - #231: Shift-Enter confirms stage/unstage in dialogs
 

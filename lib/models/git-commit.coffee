@@ -130,9 +130,7 @@ class GitCommit
         @currentPane.activate() if @currentPane.alive
         git.refresh()
 
-      stderr: (err) =>
-        # Destroying the active EditorView will trigger our cleanup method.
-        @destroyActiveEditorView()
+      stderr: (err) => @destroyActiveEditorView()
 
   # Public: Destroys the active EditorView to trigger our cleanup method.
   destroyActiveEditorView: ->
@@ -140,6 +138,7 @@ class GitCommit
       atom.workspace.destroyActivePaneItem()
     else
       atom.workspace.destroyActivePane()
+    @cleanup()
 
   # Public: Undo the amend
   #
@@ -157,7 +156,6 @@ class GitCommit
 
         # Destroying the active EditorView will trigger our cleanup method.
         @destroyActiveEditorView()
-        @cleanup()
 
   # Public: Cleans up after the EditorView gets destroyed.
   cleanup: ->
