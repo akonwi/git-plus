@@ -47,7 +47,7 @@ class SelectListMultipleView extends SelectListView
 
     @on 'mousedown', ({target}) =>
       false if target is @list[0] or $(target).hasClass('btn')
-
+    @on 'keypress', ({keyCode}) => @complete() if keyCode is 13
     @addButtons()
 
   # Public: Function to add buttons to the SelectListMultipleView.

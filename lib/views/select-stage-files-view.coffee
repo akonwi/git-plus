@@ -14,8 +14,7 @@ class SelectStageFilesView extends SelectListMultipleView
     @setItems items
     @focusFilterEditor()
 
-  getFilterKey: ->
-    'path'
+  getFilterKey: -> 'path'
 
   addButtons: ->
     viewButton = $$ ->
@@ -33,7 +32,6 @@ class SelectStageFilesView extends SelectListMultipleView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
@@ -51,9 +49,11 @@ class SelectStageFilesView extends SelectListMultipleView
   completed: (items) ->
     files = (item.path for item in items)
     @cancel()
-
     git.cmd
       args: ['add', '-f'].concat(files)
       cwd: @repo.getWorkingDirectory()
       stdout: (data) =>
-        notifier.addSuccess data
+        if data is ''
+          notifier.addSuccess 'File(s) staged successfully'
+        else
+          notifier.addSuccess data
