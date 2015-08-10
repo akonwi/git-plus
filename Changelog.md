@@ -2,6 +2,7 @@
 
 ### 5.3.4
 - unlink COMMIT_EDITMSG file after commits
+- Respect no 'open pane' setting with commit window
 
 ### 5.3.3
 - #231: Shift-Enter confirms stage/unstage in dialogs

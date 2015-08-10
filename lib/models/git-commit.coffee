@@ -79,7 +79,7 @@ class GitCommit
   #         'saved' and `destroyed` events of the underlaying text-buffer.
   showFile: ->
     atom.workspace
-      .open(@filePath(), searchAllPanes: true)
+      .open(@filePath(), split: 'left', searchAllPanes: true)
       .done (textEditor) =>
         if atom.config.get('git-plus.openInPane')
           @splitPane(atom.config.get('git-plus.splitPane'), textEditor)
