@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.3.5
+- #209: Only destroy textEditor for 'COMMIT_EDITMSG'
+
 ### 5.3.4
 - unlink COMMIT_EDITMSG file after commits
 - Respect no 'open pane' setting with commit window
