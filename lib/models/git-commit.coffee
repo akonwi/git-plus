@@ -79,7 +79,7 @@ class GitCommit
   #         'saved' and `destroyed` events of the underlaying text-buffer.
   showFile: ->
     atom.workspace
-      .open(@filePath(), split: 'left', searchAllPanes: true)
+      .open(@filePath(), searchAllPanes: true)
       .done (textEditor) =>
         if atom.config.get('git-plus.openInPane')
           @splitPane(atom.config.get('git-plus.splitPane'), textEditor)
@@ -125,20 +125,19 @@ class GitCommit
         if @andPush
           new GitPush(@repo)
         @isAmending = false
-        @destroyActiveEditorView()
+        @destroyCommitEditor()
         # Activate the former active pane.
         @currentPane.activate() if @currentPane.alive
         git.refresh()
 
-      stderr: (err) => @destroyActiveEditorView()
+      stderr: (err) => @destroyCommitEditor()
 
-  # Public: Destroys the active EditorView to trigger our cleanup method.
-  destroyActiveEditorView: ->
-    if atom.workspace.getActivePane().getItems().length > 1
-      atom.workspace.destroyActivePaneItem()
-    else
-      atom.workspace.destroyActivePane()
+  destroyCommitEditor: ->
     @cleanup()
+    atom.workspace.getTextEditors().some (editor) ->
+      if editor.getURI().includes 'COMMIT_EDITMSG'
+        editor.destroy()
+        return true
 
   # Public: Undo the amend
   #
@@ -155,7 +154,7 @@ class GitCommit
         @isAmending = false
 
         # Destroying the active EditorView will trigger our cleanup method.
-        @destroyActiveEditorView()
+        @destroyCommitEditor()
 
   # Public: Cleans up after the EditorView gets destroyed.
   cleanup: ->
