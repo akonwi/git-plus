@@ -11,7 +11,7 @@ describe "Git-Plus git module", ->
     it "returns a promise", ->
       waitsForPromise ->
         git.dir().then (dir) ->
-          expect(dir).toContain 'akonwi'
+          expect(dir).toContain 'git-plus'
 
   describe "git.getSubmodule", ->
     it "returns null when there is no submodule", ->
