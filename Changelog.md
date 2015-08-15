@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.4.1
+- #260: Destroy 'COMMIT_EDITMSG' pane not just editor
+
 ### 5.4.0
 - #201: Add `Commit All` command. Equivalent of `git commit -a`
 
