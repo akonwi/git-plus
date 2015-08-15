@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.4.0
+- #201: Add `Commit All` command. Equivalent of `git commit -a`
+
 ### 5.3.5
 - #209: Only destroy textEditor for 'COMMIT_EDITMSG'
 
