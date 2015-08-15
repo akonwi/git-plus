@@ -142,10 +142,14 @@ class GitCommit
 
   destroyCommitEditor: ->
     @cleanup()
-    atom.workspace.getTextEditors().some (editor) ->
-      if editor.getURI().includes 'COMMIT_EDITMSG'
-        editor.destroy()
-        return true
+    atom.workspace.getPanes().some (pane) ->
+      pane.getItems().some (paneItem) ->
+        if paneItem.getURI().includes 'COMMIT_EDITMSG'
+          if pane.getItems().length is 1
+            pane.destroy()
+          else
+            paneItem.destroy()
+          return true
 
   # Public: Undo the amend
   #
