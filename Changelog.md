@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.4.2
+- #261
+
 ### 5.4.1
 - #260: Destroy 'COMMIT_EDITMSG' pane not just editor
 

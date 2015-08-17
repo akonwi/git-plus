@@ -144,7 +144,7 @@ class GitCommit
     @cleanup()
     atom.workspace.getPanes().some (pane) ->
       pane.getItems().some (paneItem) ->
-        if paneItem.getURI().includes 'COMMIT_EDITMSG'
+        if paneItem?.getURI?()?.includes 'COMMIT_EDITMSG'
           if pane.getItems().length is 1
             pane.destroy()
           else
