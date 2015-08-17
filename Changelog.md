@@ -1,8 +1,11 @@
 ## Changelog
 
+### 5.4.4
+- # 263
+
 ### 5.4.3
 - Add deactivate method to package
-- Refactoring 
+- Refactoring
 
 ### 5.4.2
 - #261

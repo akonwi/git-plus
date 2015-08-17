@@ -151,8 +151,8 @@ relativize = (path) ->
 # returns submodule for given file or undefined
 getSubmodule = (path) ->
   path ?= atom.workspace.getActiveTextEditor()?.getPath()
-  repo = atom.project.getRepositories().filter(({repo}) ->
-    repo.submoduleForPath path
+  repo = atom.project.getRepositories().filter((r) ->
+    r?.repo.submoduleForPath path
   )[0]?.repo?.submoduleForPath path
 
 # Public: Get the repository of the current file or project if no current file
