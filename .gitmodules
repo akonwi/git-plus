@@ -1,0 +1,6 @@
+[submodule "foo"]
+	path = foo
+	url = /Users/angoh/stuff/foo
+[submodule "spec/foo"]
+	path = spec/foo
+	url = /Users/angoh/stuff/foo
