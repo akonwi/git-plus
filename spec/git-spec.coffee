@@ -14,5 +14,5 @@ describe "Git-Plus git module", ->
           expect(dir).toContain 'git-plus'
 
   describe "git.getSubmodule", ->
-    it "returns null when there is no submodule", ->
-      expect(git.getSubmodule("~/.atom/packages/git-plus/lib/git.coffee")).toBeFalsy()
+    it "returns undefined when there is no submodule", ->
+      expect(git.getSubmodule("~/.atom/packages/git-plus/lib/git.coffee")).toBe undefined
