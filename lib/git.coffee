@@ -1,4 +1,4 @@
-{BufferedProcess, GitRepository} = require 'atom'
+{BufferedProcess} = require 'atom'
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
@@ -151,10 +151,9 @@ relativize = (path) ->
 # returns submodule for given file or undefined
 getSubmodule = (path) ->
   path ?= atom.workspace.getActiveTextEditor()?.getPath()
-  repo = GitRepository.open(atom.workspace.getActiveTextEditor()?.getPath(), refreshOnWindowFocus: false)
-  submodule = repo?.repo.submoduleForPath(path)
-  repo?.destroy?()
-  submodule
+  repo = atom.project.getRepositories().filter(({repo}) ->
+    repo.submoduleForPath path
+  )[0]?.repo?.submoduleForPath path
 
 # Public: Get the repository of the current file or project if no current file
 # Returns a {Promise} that resolves to a repository like object
