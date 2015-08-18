@@ -6,13 +6,13 @@ pathToSubmoduleFile = Path.get "~/.atom/packages/git-plus/spec/foo/foo.txt"
 
 describe "Git-Plus git module", ->
   describe "git.getRepo", ->
-    it "returns a promise", ->
+    it "returns a promise resolving to repository", ->
       waitsForPromise ->
         git.getRepo().then (repo) ->
           expect(repo.getWorkingDirectory()).toContain 'git-plus'
 
   describe "git.dir", ->
-    it "returns a promise", ->
+    it "returns a promise resolving to absolute path of repo", ->
       waitsForPromise ->
         git.dir().then (dir) ->
           expect(dir).toContain 'git-plus'
