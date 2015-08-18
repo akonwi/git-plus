@@ -23,3 +23,8 @@ describe "Git-Plus git module", ->
 
     it "returns a submodule when given file is in a submodule of a project repo", ->
       expect(git.getSubmodule(pathToSubmoduleFile)).toBeTruthy()
+
+  describe "git.relativize", ->
+    it "returns relativized filepath for files in repo", ->
+      expect(git.relativize pathToRepoFile).toBe 'lib/git.coffee'
+      expect(git.relativize pathToSubmoduleFile).toBe 'foo.txt'
