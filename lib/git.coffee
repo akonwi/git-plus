@@ -4,39 +4,30 @@ notifier = require './notifier'
 
 # Public: Execute a git command.
 #
+# args    - An {Array} containing the arguments for the command.
 # options - An {Object} with the following keys:
-#   :args    - The {Array} containing the arguments to pass.
 #   :cwd  - Current working directory as {String}.
 #   :options - The {Object} with options to pass.
-#   :stdout  - The {Function} to pass the stdout to.
-#   :exit    - The {Function} to pass the exit code to.
 #
-# Returns nothing.
-gitCmd = ({args, cwd, options, stdout, stderr, exit}={}) ->
-  command = _getGitPath()
-  options ?= {}
-  options.cwd ?= cwd
-  stderr ?= (data) -> notifier.addError data.toString()
-
-  if stdout? and not exit?
-    c_stdout = stdout
-    stdout = (data) ->
-      @save ?= ''
-      @save += data
-    exit = (exit) ->
-      c_stdout @save ?= ''
-      @save = null
-
-  try
-    new BufferedProcess
-      command: command
-      args: args
-      options: options
-      stdout: stdout
-      stderr: stderr
-      exit: exit
-  catch error
-    notifier.addError 'Git Plus is unable to locate git command. Please ensure process.env.PATH can access git.'
+# Returns a {Promise}.
+gitCmd = (args, {cwd, options}={}) ->
+  new Promise (resolve, reject) ->
+    command = _getGitPath()
+    options ?= {}
+    options.cwd ?= cwd
+    output = ''
+    try
+      new BufferedProcess
+        command: command
+        args: args
+        options: options
+        stdout: (data) -> output += data
+        stderr: (data) -> reject data.toString()
+        exit: (code) ->
+          if code is 0 then resolve output else resolve false
+    catch
+      notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
+      reject "Couldn't find git"
 
 gitStatus = (repo, stdout) ->
   gitCmd
@@ -45,20 +36,29 @@ gitStatus = (repo, stdout) ->
     stdout: (data) -> stdout(if data.length > 2 then data.split('\0') else [])
 
 gitStagedFiles = (repo, stdout) ->
-  files = []
-  gitCmd
-    args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) ->
-      files = _prettify(data)
-    stderr: (data) ->
-      # edge case of no HEAD at initial commit
-      if data.toString().includes "ambiguous argument 'HEAD'"
-        files = [1]
-      else
-        notifier.addError data.toString()
-        files = []
-    exit: (code) -> stdout(files)
+  args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+  gitCmd(args, cwd: repo.getWorkingDirectory())
+  .then (data) -> _prettify data
+  .catch (error) ->
+    if error.includes "ambiguous argument 'HEAD'"
+      Promise.resolve [1]
+    else
+      notifier.addError error
+      Promise.resolve []
+
+  # gitCmd
+  #   args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+  #   cwd: repo.getWorkingDirectory()
+  #   stdout: (data) ->
+  #     files = _prettify(data)
+  #   stderr: (data) ->
+  #     # edge case of no HEAD at initial commit
+  #     if data.toString().includes "ambiguous argument 'HEAD'"
+  #       files = [1]
+  #     else
+  #       notifier.addError data.toString()
+  #       files = []
+  #   exit: (code) -> stdout(files)
 
 gitUnstagedFiles = (repo, {showUntracked}={}, stdout) ->
   gitCmd
@@ -89,19 +89,15 @@ gitRefresh = ->
     args: ['add', '--refresh', '--', '.']
     stderr: (data) -> # don't really need to flash an error
 
-gitAdd = (repo, {file, stdout, stderr, exit, update}={}) ->
+gitAdd = (repo, {file, update}={}) ->
   args = ['add']
   if update then args.push '--update' else args.push '--all'
   if file then args.push file else '.'
-  exit ?= (code) ->
-    if code is 0
+  gitCmd(args, cwd: repo.getWorkingDirectory())
+  .then (output) ->
+    if output isnt false
       notifier.addSuccess "Added #{file ? 'all files'}"
-  gitCmd
-    args: args
-    cwd: repo.getWorkingDirectory()
-    stdout: stdout if stdout?
-    stderr: stderr if stderr?
-    exit: exit
+      true
 
 gitResetHead = (repo) ->
   gitCmd
