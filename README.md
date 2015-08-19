@@ -15,7 +15,12 @@ vim-fugitive like package for atom. make commits and other git things without th
 >- `Ctrl-Shift-H` on Windows + Linux
 >- `Git Plus: Menu` on the atom command palette.
 
-### Commands (All commands are available for keymapping)
+### Commands
+_Commands are accessible for keybindings by dasherizing the command title._
+> Git Add ==  `git-plus:add`
+
+> Git Add All Commit And Push == `git-plus:add-all-commit-and-push`
+
   __Note: This list is not exclusive__
 1. `Git add [all]`
 
