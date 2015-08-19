@@ -42,6 +42,14 @@ describe "Git-Plus git module", ->
         fs.writeFileSync pathToSubmoduleFile, 'foofi'
         git.add(repo, file: pathToSubmoduleFile).then (success) -> expect(success).toBe true
 
+  describe "git.reset", ->
+    it "resets and unstages all files", ->
+      spyOn(git, 'cmd').andCallThrough()
+      waitsForPromise ->
+        repo = git.getSubmodule(pathToSubmoduleFile)
+        git.reset(repo).then () ->
+          expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD'], cwd: repo.getWorkingDirectory()
+
   describe "git.stagedFiles", ->
     it "returns an empty array when there are no staged files", ->
       waitsForPromise ->
@@ -50,6 +58,8 @@ describe "Git-Plus git module", ->
           expect(files.length).toEqual 0
 
     it "returns an array with size 1 when there is a staged file", ->
+      spyOn(git, 'cmd').andCallFake () ->
+        Promise.resolve("M somefile.txt")
       waitsForPromise ->
         git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
         .then (files) ->
