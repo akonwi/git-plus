@@ -36,7 +36,7 @@ describe "Git-Plus git module", ->
         git.cmd().then () -> expect(true).toBeTruthy()
 
   describe "git.add", ->
-    it "stages a file", ->
+    it "calls git.cmd with ['add', '--all', {fileName}]", ->
       spyOn(git, 'cmd').andCallFake () ->
         args = git.cmd.mostRecentCall.args[0]
         if args[0] is 'add' and args[1] is '--all' and args[2] is pathToSubmoduleFile
@@ -45,7 +45,7 @@ describe "Git-Plus git module", ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.add(repo, file: pathToSubmoduleFile).then (success) -> expect(success).toBe true
 
-    it "stages all files if no file is specified", ->
+    it "calls git.cmd with ['add', '--all', '.'] when no file is specified", ->
       spyOn(git, 'cmd').andCallFake () ->
         args = git.cmd.mostRecentCall.args[0]
         if args[0] is 'add' and args[1] is '--all' and args[2] is '.'
@@ -54,7 +54,7 @@ describe "Git-Plus git module", ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.add(repo).then (success) -> expect(success).toBe true
 
-    it "stages modified files when the update option is true", ->
+    it "calls git.cmd with ['add', '--update'...] when update option is true", ->
       spyOn(git, 'cmd').andCallFake () ->
         args = git.cmd.mostRecentCall.args[0]
         if args[0] is 'add' and args[1] is '--update'
@@ -62,7 +62,7 @@ describe "Git-Plus git module", ->
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.add(repo, update: true).then (success) -> expect(success).toBe true
-        
+
   describe "git.reset", ->
     it "resets and unstages all files", ->
       spyOn(git, 'cmd').andCallThrough()
