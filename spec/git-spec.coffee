@@ -37,11 +37,32 @@ describe "Git-Plus git module", ->
 
   describe "git.add", ->
     it "stages a file", ->
+      spyOn(git, 'cmd').andCallFake () ->
+        args = git.cmd.mostRecentCall.args[0]
+        if args[0] is 'add' and args[1] is '--all' and args[2] is pathToSubmoduleFile
+          Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
-        fs.writeFileSync pathToSubmoduleFile, 'foofi'
         git.add(repo, file: pathToSubmoduleFile).then (success) -> expect(success).toBe true
 
+    it "stages all files if no file is specified", ->
+      spyOn(git, 'cmd').andCallFake () ->
+        args = git.cmd.mostRecentCall.args[0]
+        if args[0] is 'add' and args[1] is '--all' and args[2] is '.'
+          Promise.resolve true
+      waitsForPromise ->
+        repo = git.getSubmodule(pathToSubmoduleFile)
+        git.add(repo).then (success) -> expect(success).toBe true
+
+    it "stages modified files when the update option is true", ->
+      spyOn(git, 'cmd').andCallFake () ->
+        args = git.cmd.mostRecentCall.args[0]
+        if args[0] is 'add' and args[1] is '--update'
+          Promise.resolve true
+      waitsForPromise ->
+        repo = git.getSubmodule(pathToSubmoduleFile)
+        git.add(repo, update: true).then (success) -> expect(success).toBe true
+        
   describe "git.reset", ->
     it "resets and unstages all files", ->
       spyOn(git, 'cmd').andCallThrough()
