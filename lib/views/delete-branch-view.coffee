@@ -11,7 +11,7 @@ module.exports =
       if name.startsWith "*"
         name = name.slice(1)
 
-      if not @isRemote
+      unless @isRemote
         @delete name
       else
         branch = name.substring(name.indexOf('/') + 1)

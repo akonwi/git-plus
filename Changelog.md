@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.4.6
+ - Refactor to fix #266
+
 ### 5.4.5
 - #265
 
