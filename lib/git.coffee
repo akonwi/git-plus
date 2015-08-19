@@ -34,7 +34,6 @@ module.exports = {
     args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     @cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
-      debugger
       _prettify data
     .catch (error) ->
       if error.includes "ambiguous argument 'HEAD'"
@@ -46,7 +45,7 @@ module.exports = {
   add: (repo, {file, update}={}) ->
     args = ['add']
     if update then args.push '--update' else args.push '--all'
-    if file then args.push file else '.'
+    args.push(if file then file else '.')
     @cmd(args, cwd: repo.getWorkingDirectory())
     .then (output) ->
       if output isnt false
