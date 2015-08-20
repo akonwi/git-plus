@@ -143,12 +143,9 @@ _getGitPath = ->
   return p
 
 _prettify = (data) ->
-  # return [] if data is ''
-  # data = [data[0], data.substring(1)]
-  # data = data.split('\0')[...-1]
   return [] if data is ''
   data = data.split(/\n/)
-  [] = for file in data
+  data.map (file) ->
     {mode: file[0], path: file.substring(1).trim()}
 
 _prettifyUntracked = (data) ->
@@ -175,15 +172,6 @@ getRepoForCurrentFile = ->
     else
       reject "no current file"
 
-# module.exports.cmd = gitCmd
-# module.exports.stagedFiles = gitStagedFiles
-# module.exports.unstagedFiles = gitUnstagedFiles
 # module.exports.diff = gitDiff
 # module.exports.refresh = gitRefresh
 # module.exports.status = gitStatus
-# module.exports.reset = gitResetHead
-# module.exports.add = gitAdd
-# module.exports.dir = dir
-# module.exports.relativize = relativize
-# module.exports.getSubmodule = getSubmodule
-# module.exports.getRepo = getRepo
