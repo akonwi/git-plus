@@ -2,7 +2,7 @@
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
-module.exports = {
+module.exports = git = {
   # Public: Execute a git command.
   #
   # args    - An {Array} containing the arguments for the command.
@@ -42,6 +42,15 @@ module.exports = {
       else
         notifier.addError error
         Promise.resolve []
+
+  unstagedFiles: (repo, {showUntracked}={}) ->
+    args = ['diff-files', '--name-status', '-z']
+    @cmd(args, cwd: repo.getWorkingDirectory())
+    .then (data) ->
+      if showUntracked
+        gitUntrackedFiles(repo, _prettify(data))
+      else
+        _prettify(data)
 
   add: (repo, {file, update}={}) ->
     args = ['add']
@@ -110,22 +119,11 @@ module.exports = {
   #       files = []
   #   exit: (code) -> stdout(files)
 
-gitUnstagedFiles = (repo, {showUntracked}={}, stdout) ->
-  gitCmd
-    args: ['diff-files', '--name-status', '-z']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) ->
-      if showUntracked
-        gitUntrackedFiles(repo, _prettify(data), stdout)
-      else
-        stdout _prettify(data)
 
-gitUntrackedFiles = (repo, dataUnstaged=[], stdout) ->
-  gitCmd
-    args: ['ls-files', '-o', '--exclude-standard','-z']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) ->
-      stdout dataUnstaged.concat(_prettifyUntracked(data))
+gitUntrackedFiles = (repo, dataUnstaged=[]) ->
+  args = ['ls-files', '-o', '--exclude-standard','-z']
+  git.cmd(args, cwd: repo.getWorkingDirectory())
+  .then (data) -> dataUnstaged.concat(_prettifyUntracked(data))
 
 gitDiff = (repo, path, stdout) ->
   gitCmd
@@ -154,10 +152,9 @@ _prettify = (data) ->
     {mode: file[0], path: file.substring(1).trim()}
 
 _prettifyUntracked = (data) ->
-  return [] if not data?
-  data = data.split('\0')[...-1]
-  files = [] = for file in data
-    {mode: '?', path: file}
+  return [] if data is ''
+  data = data.split(/\n/)
+  data.map (file) -> {mode: '?', path: file}
 
 _prettifyDiff = (data) ->
   data = data.split(/^@@(?=[ \-\+\,0-9]*@@)/gm)
