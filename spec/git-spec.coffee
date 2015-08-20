@@ -1,6 +1,7 @@
 fs = require 'fs-plus'
-git = require '../lib/git'
 Path = require 'flavored-path'
+git = require '../lib/git'
+mock = require './mock'
 
 pathToRepoFile = Path.get "~/.atom/packages/git-plus/lib/git.coffee"
 pathToSubmoduleFile = Path.get "~/.atom/packages/git-plus/spec/foo/foo.txt"
@@ -37,31 +38,25 @@ describe "Git-Plus git module", ->
 
   describe "git.add", ->
     it "calls git.cmd with ['add', '--all', {fileName}]", ->
-      spyOn(git, 'cmd').andCallFake () ->
-        args = git.cmd.mostRecentCall.args[0]
-        if args[0] is 'add' and args[1] is '--all' and args[2] is pathToSubmoduleFile
-          Promise.resolve true
+      cmd = mock(git, 'cmd').do () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
-        git.add(repo, file: pathToSubmoduleFile).then (success) -> expect(success).toBe true
+        git.add(repo, file: pathToSubmoduleFile).then (success) ->
+          cmd.verifyCalledWith(['add', '--all', pathToSubmoduleFile], cwd: repo.getWorkingDirectory())
 
     it "calls git.cmd with ['add', '--all', '.'] when no file is specified", ->
-      spyOn(git, 'cmd').andCallFake () ->
-        args = git.cmd.mostRecentCall.args[0]
-        if args[0] is 'add' and args[1] is '--all' and args[2] is '.'
-          Promise.resolve true
+      cmd = mock(git, 'cmd').do () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
-        git.add(repo).then (success) -> expect(success).toBe true
+        git.add(repo).then (success) ->
+          cmd.verifyCalledWith(['add', '--all', '.'], cwd: repo.getWorkingDirectory())
 
     it "calls git.cmd with ['add', '--update'...] when update option is true", ->
-      spyOn(git, 'cmd').andCallFake () ->
-        args = git.cmd.mostRecentCall.args[0]
-        if args[0] is 'add' and args[1] is '--update'
-          Promise.resolve true
+      cmd = mock(git, 'cmd').do () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
-        git.add(repo, update: true).then (success) -> expect(success).toBe true
+        git.add(repo, update: true).then (success) ->
+          cmd.verifyCalledWith(['add', '--update', '.'], cwd: repo.getWorkingDirectory())
 
   describe "git.reset", ->
     it "resets and unstages all files", ->
