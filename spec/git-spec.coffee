@@ -88,3 +88,55 @@ describe "Git-Plus git module", ->
         git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
         .then (files) ->
           expect(files.length).toEqual 4
+
+  describe "git.unstagedFiles", ->
+    it "returns an empty array when there are no unstaged files", ->
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve ''
+      waitsForPromise ->
+        git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        .then (files) ->
+          expect(files.length).toEqual 0
+
+    it "returns an array with size 1 when there is an unstaged file", ->
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve "M\tsomefile.txt"
+      waitsForPromise ->
+        git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        .then (files) ->
+          expect(files.length).toEqual 1
+          expect(files[0].mode).toEqual 'M'
+
+    it "returns an array with size 4 when there are 4 unstaged files", ->
+      spyOn(git, 'cmd').andCallFake () ->
+        Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
+      waitsForPromise ->
+        git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        .then (files) ->
+          expect(files.length).toEqual 4
+          expect(files[1].mode).toEqual 'A'
+          expect(files[3].mode).toEqual 'M'
+
+    describe "git.unstagedFiles and showUntracked: true", ->
+      it "returns an array with size 1 when there is only an untracked file", ->
+        spyOn(git, 'cmd').andCallFake () ->
+          if git.cmd.callCount is 2
+            Promise.resolve "somefile.txt"
+          else
+            Promise.resolve ''
+        waitsForPromise ->
+          git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile), showUntracked: true)
+          .then (files) ->
+            expect(files.length).toEqual 1
+            expect(files[0].mode).toEqual '?'
+
+      it "returns an array of size 2 when there is an untracked file and an unstaged file", ->
+        spyOn(git, 'cmd').andCallFake () ->
+          if git.cmd.callCount is 2
+            Promise.resolve "untracked.txt"
+          else
+            Promise.resolve 'M\tunstaged.file'
+        waitsForPromise ->
+          git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile), showUntracked: true)
+          .then (files) ->
+            expect(files.length).toEqual 2
+            expect(files[0].mode).toEqual 'M'
+            expect(files[1].mode).toEqual '?'
