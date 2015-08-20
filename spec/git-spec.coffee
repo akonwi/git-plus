@@ -60,7 +60,7 @@ describe "Git-Plus git module", ->
 
   describe "git.reset", ->
     it "resets and unstages all files", ->
-      spyOn(git, 'cmd').andCallThrough()
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.reset(repo).then () ->
