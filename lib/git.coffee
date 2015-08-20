@@ -33,7 +33,7 @@ module.exports = git = {
   stagedFiles: (repo, stdout) ->
     # args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     args = ['diff-index', '--cached', 'HEAD', '--name-status']
-    @cmd(args, cwd: repo.getWorkingDirectory())
+    git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
       _prettify data
     .catch (error) ->
@@ -45,7 +45,7 @@ module.exports = git = {
 
   unstagedFiles: (repo, {showUntracked}={}) ->
     args = ['diff-files', '--name-status', '-z']
-    @cmd(args, cwd: repo.getWorkingDirectory())
+    git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
       if showUntracked
         gitUntrackedFiles(repo, _prettify(data))
@@ -56,7 +56,7 @@ module.exports = git = {
     args = ['add']
     if update then args.push '--update' else args.push '--all'
     args.push(if file then file else '.')
-    @cmd(args, cwd: repo.getWorkingDirectory())
+    git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (output) ->
       if output isnt false
         notifier.addSuccess "Added #{file ? 'all files'}"
@@ -86,7 +86,7 @@ module.exports = git = {
   # returns filepath relativized for either a submodule or repository
   #   otherwise just a full path
   relativize: (path) ->
-    @getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
+    git.getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
 
   # Returns the working directory for a git repo.
   # Will search for submodule first if currently
@@ -95,13 +95,13 @@ module.exports = git = {
   # @param andSubmodules boolean determining whether to account for submodules
   dir: (andSubmodules=true) ->
     new Promise (resolve, reject) =>
-      if andSubmodules and submodule = @getSubmodule()
+      if andSubmodules and submodule = git.getSubmodule()
         resolve(submodule.getWorkingDirectory())
       else
-        @getRepo().then (repo) -> resolve(repo.getWorkingDirectory())
+        git.getRepo().then (repo) -> resolve(repo.getWorkingDirectory())
 
   reset: (repo) ->
-    @cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'
+    git.cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'
 
 }
 
