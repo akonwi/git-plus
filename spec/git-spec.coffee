@@ -38,25 +38,25 @@ describe "Git-Plus git module", ->
 
   describe "git.add", ->
     it "calls git.cmd with ['add', '--all', {fileName}]", ->
-      cmd = mock(git, 'cmd').do () -> Promise.resolve true
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.add(repo, file: pathToSubmoduleFile).then (success) ->
-          cmd.verifyCalledWith(['add', '--all', pathToSubmoduleFile], cwd: repo.getWorkingDirectory())
+          expect(git.cmd).toHaveBeenCalledWith(['add', '--all', pathToSubmoduleFile], cwd: repo.getWorkingDirectory())
 
     it "calls git.cmd with ['add', '--all', '.'] when no file is specified", ->
-      cmd = mock(git, 'cmd').do () -> Promise.resolve true
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.add(repo).then (success) ->
-          cmd.verifyCalledWith(['add', '--all', '.'], cwd: repo.getWorkingDirectory())
+          expect(git.cmd).toHaveBeenCalledWith(['add', '--all', '.'], cwd: repo.getWorkingDirectory())
 
     it "calls git.cmd with ['add', '--update'...] when update option is true", ->
-      cmd = mock(git, 'cmd').do () -> Promise.resolve true
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve true
       waitsForPromise ->
         repo = git.getSubmodule(pathToSubmoduleFile)
         git.add(repo, update: true).then (success) ->
-          cmd.verifyCalledWith(['add', '--update', '.'], cwd: repo.getWorkingDirectory())
+          expect(git.cmd).toHaveBeenCalledWith(['add', '--update', '.'], cwd: repo.getWorkingDirectory())
 
   describe "git.reset", ->
     it "resets and unstages all files", ->
