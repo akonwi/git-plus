@@ -68,15 +68,23 @@ describe "Git-Plus git module", ->
 
   describe "git.stagedFiles", ->
     it "returns an empty array when there are no staged files", ->
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve ''
       waitsForPromise ->
         git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
         .then (files) ->
           expect(files.length).toEqual 0
 
     it "returns an array with size 1 when there is a staged file", ->
-      spyOn(git, 'cmd').andCallFake () ->
-        Promise.resolve("M somefile.txt")
+      spyOn(git, 'cmd').andCallFake () -> Promise.resolve("M\tsomefile.txt")
       waitsForPromise ->
         git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
         .then (files) ->
-           expect(files.length).toEqual 1
+          expect(files.length).toEqual 1
+
+    it "returns an array with size 4 when there are 4 staged files", ->
+      spyOn(git, 'cmd').andCallFake () ->
+        Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
+      waitsForPromise ->
+        git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        .then (files) ->
+          expect(files.length).toEqual 4

@@ -8,7 +8,7 @@ module.exports = {
   # args    - An {Array} containing the arguments for the command.
   # options - An {Object} with the following keys:
   #   :cwd  - Current working directory as {String}.
-  #   :options - The {Object} with options to pass.
+  #   :options - The {Object} with options used by child_process
   #
   # Returns a {Promise}.
   cmd: (args, {cwd, options}={}) ->
@@ -31,7 +31,8 @@ module.exports = {
         reject "Couldn't find git"
 
   stagedFiles: (repo, stdout) ->
-    args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+    # args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+    args = ['diff-index', '--cached', 'HEAD', '--name-status']
     @cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
       _prettify data
@@ -144,11 +145,13 @@ _getGitPath = ->
   return p
 
 _prettify = (data) ->
-  return [] if data is ''
-  data = [data[0], data.substring(1)]
+  # return [] if data is ''
+  # data = [data[0], data.substring(1)]
   # data = data.split('\0')[...-1]
-  [] = for mode, i in data by 2
-    {mode: mode, path: data[i+1]}
+  return [] if data is ''
+  data = data.split(/\n/)
+  [] = for file in data
+    {mode: file[0], path: file.substring(1).trim()}
 
 _prettifyUntracked = (data) ->
   return [] if not data?
