@@ -140,3 +140,11 @@ describe "Git-Plus git module", ->
             expect(files.length).toEqual 2
             expect(files[0].mode).toEqual 'M'
             expect(files[1].mode).toEqual '?'
+
+    describe "git.status", ->
+      it "calls git.cmd with 'status' as the first argument", ->
+        spyOn(git, 'cmd').andCallFake () ->
+          args = git.cmd.mostRecentCall.args
+          if args[0][0] is 'status'
+            Promise.resolve true
+        git.status(git.getSubmodule(pathToSubmoduleFile)).then () -> expect(true).toBeTruthy()

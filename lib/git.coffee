@@ -30,6 +30,10 @@ module.exports = git = {
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
 
+  status: (repo) ->
+    git.cmd(['status', '--porcelain', '-z'], cwd: repo.getWorkingDirectory())
+    .then (data) -> if data.length > 2 then data.split('\0') else []
+
   stagedFiles: (repo, stdout) ->
     # args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     args = ['diff-index', '--cached', 'HEAD', '--name-status']
@@ -174,4 +178,3 @@ getRepoForCurrentFile = ->
 
 # module.exports.diff = gitDiff
 # module.exports.refresh = gitRefresh
-# module.exports.status = gitStatus
