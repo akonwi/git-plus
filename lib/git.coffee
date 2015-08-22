@@ -34,6 +34,12 @@ module.exports = git = {
     git.cmd(['status', '--porcelain', '-z'], cwd: repo.getWorkingDirectory())
     .then (data) -> if data.length > 2 then data.split('\0') else []
 
+  refresh: () ->
+    atom.project.getRepositories().forEach (repo) ->
+      if repo?
+        repo.refreshStatus()
+        git.cmd ['add', '--refresh', '--', '.'], cwd: repo.getWorkingDirectory()
+
   stagedFiles: (repo, stdout) ->
     # args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     args = ['diff-index', '--cached', 'HEAD', '--name-status']
@@ -136,10 +142,11 @@ gitDiff = (repo, path, stdout) ->
     stdout: (data) -> stdout _prettifyDiff(data)
 
 gitRefresh = ->
-  atom.project.getRepositories().forEach (r) -> r?.refreshStatus()
-  gitCmd
-    args: ['add', '--refresh', '--', '.']
-    stderr: (data) -> # don't really need to flash an error
+  atom.project.getRepositories().forEach (r) ->
+     r?.refreshStatus()
+    gitCmd
+      args: ['add', '--refresh', '--', '.']
+      stderr: (data) -> # don't really need to flash an error
 
 _getGitPath = ->
   p = atom.config.get('git-plus.gitPath') ? 'git'

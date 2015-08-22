@@ -148,3 +148,24 @@ describe "Git-Plus git module", ->
           if args[0][0] is 'status'
             Promise.resolve true
         git.status(git.getSubmodule(pathToSubmoduleFile)).then () -> expect(true).toBeTruthy()
+
+    describe "git.refresh", ->
+      mockRepo = {
+        getWorkingDirectory: () -> 'dir'
+        refreshStatus: () -> undefined
+      }
+      it "calls git.cmd with 'add' and '--refresh' arguments for each repo in project", ->
+        spyOn(git, 'cmd').andCallFake () ->
+          args = git.cmd.mostRecentCall.args[0]
+          expect(args[0]).toBe 'add'
+          expect(args[1]).toBe '--refresh'
+        spyOn(mockRepo, 'getWorkingDirectory').andCallFake () ->
+          expect(mockRepo.getWorkingDirectory.callCount).toBe 1
+        git.refresh()
+
+      it "calls repo.refreshStatus for each repo in project", ->
+        spyOn(atom.project, 'getRepositories').andCallFake () -> [ mockRepo ]
+        spyOn(mockRepo, 'refreshStatus')
+        spyOn(git, 'cmd').andCallFake () -> undefined
+        git.refresh()
+        expect(mockRepo.refreshStatus.callCount).toBe 1
