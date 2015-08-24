@@ -141,7 +141,7 @@ module.exports = git = {
   # returns submodule for given file or undefined
   getSubmodule: (path) ->
     path ?= atom.workspace.getActiveTextEditor()?.getPath()
-    repo = atom.project.getRepositories().filter((r) ->
+    atom.project.getRepositories().filter((r) ->
       r?.repo.submoduleForPath path
     )[0]?.repo?.submoduleForPath path
     debugger
