@@ -144,6 +144,8 @@ module.exports = git = {
     repo = atom.project.getRepositories().filter((r) ->
       r?.repo.submoduleForPath path
     )[0]?.repo?.submoduleForPath path
+    debugger
+    repo
 
   # Returns the working directory for a git repo.
   # Will search for submodule first if currently
