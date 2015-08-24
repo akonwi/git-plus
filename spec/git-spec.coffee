@@ -3,12 +3,24 @@ Path = require 'flavored-path'
 git = require '../lib/git'
 mock = require './mock'
 
-pathToRepoFile = Path.get "~/.atom/packages/git-plus/lib/git.coffee"
-pathToSubmoduleFile = Path.get "~/.atom/packages/git-plus/spec/foo/foo.txt"
+pathToRepoFile = Path.get "~/some/repository/directory/file"
+pathToSubmoduleFile = Path.get "~/some/submodule/file"
 
-mockRepo = {
-  getWorkingDirectory: () -> 'dir'
+mockRepo =
+  getWorkingDirectory: () -> Path.get "~/some/repository"
   refreshStatus: () -> undefined
+  relativize: (path) -> "directory/file" if path is pathToRepoFile
+  repo:
+    submoduleForPath: (path) -> undefined
+
+mockSubmodule =
+  getWorkingDirectory: () -> Path.get "~/some/submodule"
+  relativize: (path) -> "file" if path is pathToSubmoduleFile
+
+mockRepoWithSubmodule = Object.create(mockRepo)
+mockRepoWithSubmodule.repo = {
+  submoduleForPath: (path) ->
+    mockSubmodule if path is pathToSubmoduleFile
 }
 
 describe "Git-Plus git module", ->
@@ -29,12 +41,14 @@ describe "Git-Plus git module", ->
       expect(git.getSubmodule(pathToRepoFile)).toBe undefined
 
     it "returns a submodule when given file is in a submodule of a project repo", ->
-      expect(git.getSubmodule(pathToSubmoduleFile)).toBeTruthy()
+      spyOn(atom.project, 'getRepositories').andCallFake () -> [mockRepoWithSubmodule]
+      expect(git.getSubmodule(pathToSubmoduleFile).getWorkingDirectory()).toEqual Path.get "~/some/submodule"
 
   describe "git.relativize", ->
     it "returns relativized filepath for files in repo", ->
-      expect(git.relativize pathToRepoFile).toBe 'lib/git.coffee'
-      expect(git.relativize pathToSubmoduleFile).toBe 'foo.txt'
+      spyOn(atom.project, 'getRepositories').andCallFake () -> [mockRepo, mockRepoWithSubmodule]
+      expect(git.relativize pathToRepoFile).toBe 'directory/file'
+      expect(git.relativize pathToSubmoduleFile).toBe "file"
 
   describe "git.cmd", ->
     it "returns a promise", ->
@@ -71,14 +85,14 @@ describe "Git-Plus git module", ->
     it "returns an empty array when there are no staged files", ->
       spyOn(git, 'cmd').andCallFake () -> Promise.resolve ''
       waitsForPromise ->
-        git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        git.stagedFiles(mockRepo)
         .then (files) ->
           expect(files.length).toEqual 0
 
     it "returns an array with size 1 when there is a staged file", ->
       spyOn(git, 'cmd').andCallFake () -> Promise.resolve("M\tsomefile.txt")
       waitsForPromise ->
-        git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        git.stagedFiles(mockRepo)
         .then (files) ->
           expect(files.length).toEqual 1
 
@@ -86,7 +100,7 @@ describe "Git-Plus git module", ->
       spyOn(git, 'cmd').andCallFake () ->
         Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
       waitsForPromise ->
-        git.stagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        git.stagedFiles(mockRepo)
         .then (files) ->
           expect(files.length).toEqual 4
 
@@ -94,14 +108,14 @@ describe "Git-Plus git module", ->
     it "returns an empty array when there are no unstaged files", ->
       spyOn(git, 'cmd').andCallFake () -> Promise.resolve ''
       waitsForPromise ->
-        git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        git.unstagedFiles(mockRepo)
         .then (files) ->
           expect(files.length).toEqual 0
 
     it "returns an array with size 1 when there is an unstaged file", ->
       spyOn(git, 'cmd').andCallFake () -> Promise.resolve "M\tsomefile.txt"
       waitsForPromise ->
-        git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        git.unstagedFiles(mockRepo)
         .then (files) ->
           expect(files.length).toEqual 1
           expect(files[0].mode).toEqual 'M'
@@ -110,7 +124,7 @@ describe "Git-Plus git module", ->
       spyOn(git, 'cmd').andCallFake () ->
         Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
       waitsForPromise ->
-        git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile))
+        git.unstagedFiles(mockRepo)
         .then (files) ->
           expect(files.length).toEqual 4
           expect(files[1].mode).toEqual 'A'
@@ -124,7 +138,7 @@ describe "Git-Plus git module", ->
           else
             Promise.resolve ''
         waitsForPromise ->
-          git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile), showUntracked: true)
+          git.unstagedFiles(mockRepo, showUntracked: true)
           .then (files) ->
             expect(files.length).toEqual 1
             expect(files[0].mode).toEqual '?'
@@ -136,7 +150,7 @@ describe "Git-Plus git module", ->
           else
             Promise.resolve 'M\tunstaged.file'
         waitsForPromise ->
-          git.unstagedFiles(git.getSubmodule(pathToSubmoduleFile), showUntracked: true)
+          git.unstagedFiles(mockRepo, showUntracked: true)
           .then (files) ->
             expect(files.length).toEqual 2
             expect(files[0].mode).toEqual 'M'
@@ -148,7 +162,7 @@ describe "Git-Plus git module", ->
           args = git.cmd.mostRecentCall.args
           if args[0][0] is 'status'
             Promise.resolve true
-        git.status(git.getSubmodule(pathToSubmoduleFile)).then () -> expect(true).toBeTruthy()
+        git.status(mockRepo).then () -> expect(true).toBeTruthy()
 
     describe "git.refresh", ->
       it "calls git.cmd with 'add' and '--refresh' arguments for each repo in project", ->
@@ -171,6 +185,6 @@ describe "Git-Plus git module", ->
       it "calls git.cmd with ['diff', '-p', '-U1'] and the file path", ->
         spyOn(git, 'cmd').andCallFake () ->
           args = git.cmd.mostRecentCall.args[0]
-          if args[0] is 'diff' and args[1] is '-p' and args[2] is '-U1' and args[3] is pathToSubmoduleFile
+          if args[0] is 'diff' and args[1] is '-p' and args[2] is '-U1' and args[3] is pathToRepoFile
             Promise.resolve(true)
-        git.diff(git.getSubmodule(pathToSubmoduleFile), pathToSubmoduleFile)
+        git.diff(mockRepo, pathToRepoFile)
