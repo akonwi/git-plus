@@ -1,3 +1,0 @@
-[submodule "test-submodule"]
-	path = spec/foo
-	url = git@github.com:akonwi/foo
