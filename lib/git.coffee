@@ -2,6 +2,46 @@
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
+gitUntrackedFiles = (repo, dataUnstaged=[]) ->
+  args = ['ls-files', '-o', '--exclude-standard','-z']
+  git.cmd(args, cwd: repo.getWorkingDirectory())
+  .then (data) -> dataUnstaged.concat(_prettifyUntracked(data))
+
+_getGitPath = ->
+  p = atom.config.get('git-plus.gitPath') ? 'git'
+  console.log "Git-plus: Using git at", p
+  return p
+
+_prettify = (data) ->
+  return [] if data is ''
+  data = data.split(/\n/)
+  data.map (file) ->
+    {mode: file[0], path: file.substring(1).trim()}
+
+_prettifyUntracked = (data) ->
+  return [] if data is ''
+  data = data.split(/\n/)
+  data.map (file) -> {mode: '?', path: file}
+
+_prettifyDiff = (data) ->
+  data = data.split(/^@@(?=[ \-\+\,0-9]*@@)/gm)
+  data[1..data.length] = ('@@' + line for line in data[1..])
+  data
+
+getRepoForCurrentFile = ->
+  new Promise (resolve, reject) ->
+    project = atom.project
+    path = atom.workspace.getActiveTextEditor()?.getPath()
+    directory = project.getDirectories().filter((d) -> d.contains(path))[0]
+    if directory?
+      project.repositoryForDirectory(directory).then (repo) ->
+        submodule = repo.repo.submoduleForPath(path)
+        if submodule? then resolve(submodule) else resolve(repo)
+      .catch (e) ->
+        reject(e)
+    else
+      reject "no current file"
+
 module.exports = git = {
   # Public: Execute a git command.
   #
@@ -30,6 +70,9 @@ module.exports = git = {
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
 
+  reset: (repo) ->
+    git.cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'
+
   status: (repo) ->
     git.cmd(['status', '--porcelain', '-z'], cwd: repo.getWorkingDirectory())
     .then (data) -> if data.length > 2 then data.split('\0') else []
@@ -39,6 +82,15 @@ module.exports = git = {
       if repo?
         repo.refreshStatus()
         git.cmd ['add', '--refresh', '--', '.'], cwd: repo.getWorkingDirectory()
+
+  # returns filepath relativized for either a submodule or repository
+  #   otherwise just a full path
+  relativize: (path) ->
+    git.getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
+
+  diff: (repo, path) ->
+    git.cmd(['diff', '-p', '-U1', path], cwd: repo.getWorkingDirectory())
+    .then (data) -> _prettifyDiff(data)
 
   stagedFiles: (repo, stdout) ->
     # args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
@@ -93,11 +145,6 @@ module.exports = git = {
       r?.repo.submoduleForPath path
     )[0]?.repo?.submoduleForPath path
 
-  # returns filepath relativized for either a submodule or repository
-  #   otherwise just a full path
-  relativize: (path) ->
-    git.getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
-
   # Returns the working directory for a git repo.
   # Will search for submodule first if currently
   #   in one or the project root
@@ -109,79 +156,4 @@ module.exports = git = {
         resolve(submodule.getWorkingDirectory())
       else
         git.getRepo().then (repo) -> resolve(repo.getWorkingDirectory())
-
-  reset: (repo) ->
-    git.cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'
-
 }
-
-  # gitCmd
-  #   args: ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
-  #   cwd: repo.getWorkingDirectory()
-  #   stdout: (data) ->
-  #     files = _prettify(data)
-  #   stderr: (data) ->
-  #     # edge case of no HEAD at initial commit
-  #     if data.toString().includes "ambiguous argument 'HEAD'"
-  #       files = [1]
-  #     else
-  #       notifier.addError data.toString()
-  #       files = []
-  #   exit: (code) -> stdout(files)
-
-
-gitUntrackedFiles = (repo, dataUnstaged=[]) ->
-  args = ['ls-files', '-o', '--exclude-standard','-z']
-  git.cmd(args, cwd: repo.getWorkingDirectory())
-  .then (data) -> dataUnstaged.concat(_prettifyUntracked(data))
-
-gitDiff = (repo, path, stdout) ->
-  gitCmd
-    args: ['diff', '-p', '-U1', path]
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) -> stdout _prettifyDiff(data)
-
-gitRefresh = ->
-  atom.project.getRepositories().forEach (r) ->
-     r?.refreshStatus()
-    gitCmd
-      args: ['add', '--refresh', '--', '.']
-      stderr: (data) -> # don't really need to flash an error
-
-_getGitPath = ->
-  p = atom.config.get('git-plus.gitPath') ? 'git'
-  console.log "Git-plus: Using git at", p
-  return p
-
-_prettify = (data) ->
-  return [] if data is ''
-  data = data.split(/\n/)
-  data.map (file) ->
-    {mode: file[0], path: file.substring(1).trim()}
-
-_prettifyUntracked = (data) ->
-  return [] if data is ''
-  data = data.split(/\n/)
-  data.map (file) -> {mode: '?', path: file}
-
-_prettifyDiff = (data) ->
-  data = data.split(/^@@(?=[ \-\+\,0-9]*@@)/gm)
-  data[1..data.length] = ('@@' + line for line in data[1..])
-  data
-
-getRepoForCurrentFile = ->
-  new Promise (resolve, reject) ->
-    project = atom.project
-    path = atom.workspace.getActiveTextEditor()?.getPath()
-    directory = project.getDirectories().filter((d) -> d.contains(path))[0]
-    if directory?
-      project.repositoryForDirectory(directory).then (repo) ->
-        submodule = repo.repo.submoduleForPath(path)
-        if submodule? then resolve(submodule) else resolve(repo)
-      .catch (e) ->
-        reject(e)
-    else
-      reject "no current file"
-
-# module.exports.diff = gitDiff
-# module.exports.refresh = gitRefresh

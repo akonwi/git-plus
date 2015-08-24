@@ -169,3 +169,11 @@ describe "Git-Plus git module", ->
         spyOn(git, 'cmd').andCallFake () -> undefined
         git.refresh()
         expect(mockRepo.refreshStatus.callCount).toBe 1
+
+    describe "git.diff", ->
+      it "calls git.cmd with ['diff', '-p', '-U1'] and the file path", ->
+        spyOn(git, 'cmd').andCallFake () ->
+          args = git.cmd.mostRecentCall.args[0]
+          if args[0] is 'diff' and args[1] is '-p' and args[2] is '-U1' and args[3] is pathToSubmoduleFile
+            Promise.resolve(true)
+        git.diff(git.getSubmodule(pathToSubmoduleFile), pathToSubmoduleFile)
