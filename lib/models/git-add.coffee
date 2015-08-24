@@ -1,11 +1,8 @@
 git = require '../git'
 
-gitAdd = (repo, {addAll}={}) ->
-  if not addAll
-    file = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
-  else
+module.exports = (repo, {addAll}={}) ->
+  if addAll
     file = null
-
+  else
+    file = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   git.add(repo, file: file)
-
-module.exports = gitAdd
