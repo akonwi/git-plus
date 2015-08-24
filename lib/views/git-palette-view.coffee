@@ -1,6 +1,5 @@
 _ = require 'underscore-plus'
 {$, $$, SelectListView} = require 'atom-space-pen-views'
-git = require '../git'
 GitPlusCommands = require '../git-plus-commands'
 GitInit = require '../models/git-init'
 fuzzy = require('../models/fuzzy').filter
