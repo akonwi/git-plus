@@ -20,7 +20,7 @@ describe "GitAdd", ->
     GitAdd(mockRepo)
     expect(git.add).toHaveBeenCalledWith mockRepo, file: mockRepo.relativize(pathToRepoFile)
 
-  it "calls git.add with '.' if `addAll` is true", ->
+  it "calls git.add with {file: null} if `addAll` is true", ->
     spyOn(git, 'add')
     GitAdd(mockRepo, addAll: true)
     expect(git.add).toHaveBeenCalledWith mockRepo, file: null
