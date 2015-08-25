@@ -34,29 +34,29 @@ class GitCommit
 
     # Load the commentchar from git config, defaults to '#'
     @commentchar = '#'
-    git.cmd
-      args: ['config', '--get', 'core.commentchar'],
-      stdout: (data) =>
-        if data.trim() isnt ''
-          @commentchar = data.trim()
-
-    if @stageChanges
-      git.add @repo,
-        update: true,
-        exit: (code) => @getStagedFiles()
-    else
-      @getStagedFiles()
+    git.cmd(['config', '--get', 'core.commentchar'])
+    .then (data) =>
+      # unless data.trim?() is ''
+      if data
+        @commentchar = data.trim()
+    .then =>
+      if @stageChanges
+        git.add(@repo, update: true)
+        .then => @getStagedFiles()
+      else
+        @getStagedFiles()
 
   getStagedFiles: ->
-    git.stagedFiles @repo, (files) =>
-      if @amend isnt '' or files.length >= 1
-        git.cmd
-          args: ['status'],
-          cwd: @repo.getWorkingDirectory()
-          stdout: (data) => @prepFile data
+    git.stagedFiles(@repo)
+    .then (files) =>
+      if not @isAmending or files.length >= 1
+        git.cmd(['status'], cwd: @repo.getWorkingDirectory())
       else
-        @cleanup()
-        notifier.addInfo 'Nothing to commit.'
+        Promise.reject "Nothing to commit."
+    .then (status) => @prepFile status
+    .catch (error) =>
+      @cleanup()
+      notifier.addInfo error
 
   # Public: Prepares our commit message file by writing the status and a
   #         possible amend message to it.
@@ -66,7 +66,6 @@ class GitCommit
     # format the status to be ignored in the commit message
     status = status.replace(/\s*\(.*\)\n/g, "\n")
     status = status.trim().replace(/\n/g, "\n#{@commentchar} ")
-
     @getTemplate().then (template) =>
       fs.writeFileSync @filePath(),
         """#{ if @amend.length > 0 then @amend else template}
@@ -77,11 +76,9 @@ class GitCommit
       @showFile()
 
   getTemplate: ->
-    new Promise (resolve, reject) ->
-      git.cmd
-        args: ['config', '--get', 'commit.template']
-        stdout: (data) =>
-          resolve (if data.trim() isnt '' then fs.readFileSync(Path.get(data.trim())) else '')
+    git.cmd(['config', '--get', 'commit.template'])
+    .then (data) =>
+      if data then fs.readFileSync(Path.get(data.trim())) else ''
 
   # Public: Helper method to open the commit message file and to subscribe the
   #         'saved' and `destroyed` events of the underlaying text-buffer.
@@ -124,21 +121,13 @@ class GitCommit
   #         this method gets invoked and commits the changes.
   commit: ->
     args = ['commit', '--cleanup=strip', "--file=#{@filePath()}"]
-    git.cmd
-      args: args,
-      options:
-        cwd: @dir()
-      stdout: (data) =>
-        notifier.addSuccess data
-        if @andPush
-          new GitPush(@repo)
-        @isAmending = false
-        @destroyCommitEditor()
-        # Activate the former active pane.
-        @currentPane.activate() if @currentPane.alive
-        git.refresh()
-
-      stderr: (err) => @destroyCommitEditor()
+    git.cmd(args, cwd: @dir())
+    .then (data) =>
+      notifier.addSuccess data
+      @destroyCommitEditor()
+      if @andPush
+        new GitPush(@repo)
+      git.refresh()
 
   destroyCommitEditor: ->
     @cleanup()
