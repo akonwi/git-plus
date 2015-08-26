@@ -130,61 +130,59 @@ describe "Git-Plus git module", ->
           expect(files[1].mode).toEqual 'A'
           expect(files[3].mode).toEqual 'M'
 
-    describe "git.unstagedFiles and showUntracked: true", ->
-      it "returns an array with size 1 when there is only an untracked file", ->
-        spyOn(git, 'cmd').andCallFake ->
-          if git.cmd.callCount is 2
-            Promise.resolve "somefile.txt"
-          else
-            Promise.resolve ''
-        waitsForPromise ->
-          git.unstagedFiles(mockRepo, showUntracked: true)
-          .then (files) ->
-            expect(files.length).toEqual 1
-            expect(files[0].mode).toEqual '?'
+  describe "git.unstagedFiles and showUntracked: true", ->
+    it "returns an array with size 1 when there is only an untracked file", ->
+      spyOn(git, 'cmd').andCallFake ->
+        if git.cmd.callCount is 2
+          Promise.resolve "somefile.txt"
+        else
+          Promise.resolve ''
+          waitsForPromise ->
+            git.unstagedFiles(mockRepo, showUntracked: true)
+            .then (files) ->
+              expect(files.length).toEqual 1
+              expect(files[0].mode).toEqual '?'
 
-      it "returns an array of size 2 when there is an untracked file and an unstaged file", ->
-        spyOn(git, 'cmd').andCallFake ->
-          if git.cmd.callCount is 2
-            Promise.resolve "untracked.txt"
-          else
-            Promise.resolve 'M\tunstaged.file'
-        waitsForPromise ->
-          git.unstagedFiles(mockRepo, showUntracked: true)
-          .then (files) ->
-            expect(files.length).toEqual 2
-            expect(files[0].mode).toEqual 'M'
-            expect(files[1].mode).toEqual '?'
+    it "returns an array of size 2 when there is an untracked file and an unstaged file", ->
+      spyOn(git, 'cmd').andCallFake ->
+        if git.cmd.callCount is 2
+          Promise.resolve "untracked.txt"
+        else
+          Promise.resolve 'M\tunstaged.file'
+      waitsForPromise ->
+        git.unstagedFiles(mockRepo, showUntracked: true)
+        .then (files) ->
+          expect(files.length).toEqual 2
+          expect(files[0].mode).toEqual 'M'
+          expect(files[1].mode).toEqual '?'
 
-    describe "git.status", ->
-      it "calls git.cmd with 'status' as the first argument", ->
-        spyOn(git, 'cmd').andCallFake ->
-          args = git.cmd.mostRecentCall.args
-          if args[0][0] is 'status'
-            Promise.resolve true
-        git.status(mockRepo).then -> expect(true).toBeTruthy()
+  describe "git.status", ->
+    it "calls git.cmd with 'status' as the first argument", ->
+      spyOn(git, 'cmd').andCallFake ->
+        args = git.cmd.mostRecentCall.args
+        if args[0][0] is 'status'
+          Promise.resolve true
+      git.status(mockRepo).then -> expect(true).toBeTruthy()
 
-    describe "git.refresh", ->
-      it "calls git.cmd with 'add' and '--refresh' arguments for each repo in project", ->
-        spyOn(git, 'cmd').andCallFake ->
-          args = git.cmd.mostRecentCall.args[0]
-          expect(args[0]).toBe 'add'
-          expect(args[1]).toBe '--refresh'
-        spyOn(mockRepo, 'getWorkingDirectory').andCallFake ->
-          expect(mockRepo.getWorkingDirectory.callCount).toBe 1
-        git.refresh()
+  describe "git.refresh", ->
+    it "calls git.cmd with 'add' and '--refresh' arguments for each repo in project", ->
+      spyOn(git, 'cmd').andCallFake ->
+        args = git.cmd.mostRecentCall.args[0]
+        expect(args[0]).toBe 'add'
+        expect(args[1]).toBe '--refresh'
+      spyOn(mockRepo, 'getWorkingDirectory').andCallFake ->
+        expect(mockRepo.getWorkingDirectory.callCount).toBe 1
+      git.refresh()
 
-      it "calls repo.refreshStatus for each repo in project", ->
-        spyOn(atom.project, 'getRepositories').andCallFake -> [ mockRepo ]
-        spyOn(mockRepo, 'refreshStatus')
-        spyOn(git, 'cmd').andCallFake -> undefined
-        git.refresh()
-        expect(mockRepo.refreshStatus.callCount).toBe 1
+    it "calls repo.refreshStatus for each repo in project", ->
+      spyOn(atom.project, 'getRepositories').andCallFake -> [ mockRepo ]
+      spyOn(mockRepo, 'refreshStatus')
+      spyOn(git, 'cmd').andCallFake -> undefined
+      git.refresh()
+      expect(mockRepo.refreshStatus.callCount).toBe 1
 
-    describe "git.diff", ->
-      it "calls git.cmd with ['diff', '-p', '-U1'] and the file path", ->
-        spyOn(git, 'cmd').andCallFake ->
-          args = git.cmd.mostRecentCall.args[0]
-          if args[0] is 'diff' and args[1] is '-p' and args[2] is '-U1' and args[3] is pathToRepoFile
-            Promise.resolve(true)
-        git.diff(mockRepo, pathToRepoFile)
+  describe "git.diff", ->
+    it "calls git.cmd with ['diff', '-p', '-U1'] and the file path", ->
+      spyOn(git, 'cmd').andCallFake -> Promise.resolve "string"
+      git.diff(mockRepo, pathToRepoFile)
+      expect(git.cmd).toHaveBeenCalledWith ['diff', '-p', '-U1', pathToRepoFile], cwd: mockRepo.getWorkingDirectory()
