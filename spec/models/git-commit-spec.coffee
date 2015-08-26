@@ -3,12 +3,12 @@ Path = require 'flavored-path'
 
 {repo, workspace, pathToRepoFile} = require '../fixtures'
 git = require '../../lib/git'
-GitCommit = require '../../lib/models/git-commit'
+GitCommit = require '../../lib/models/git-commit-beta'
 
 mockGit = ->
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
-    if args[0] is 'config'
+    if args[2] is 'core.commentchar'
       Promise.resolve ''
     else if args[0] is 'status'
       Promise.resolve "M #{pathToRepoFile}"
@@ -27,24 +27,27 @@ mockAtom = ->
 
 describe "GitCommit", ->
   describe "a regular commit", ->
-    it "has all false options", ->
-      mockGit()
-      mockAtom()
-      commit = new GitCommit(repo)
-      expect(commit.isAmending).toBeFalsy()
-      expect(commit.andPush).toBeFalsy()
-      expect(commit.stageChanges).toBeFalsy()
+    it "saves the current pane", ->
+      commit = GitCommit(repo)
+      expect(commit.currentPane).toBeDefined()
 
-    describe "::dir", ->
-      it "returns the working directory of repo", ->
-        mockGit()
-        mockAtom()
-        commit = new GitCommit(repo)
-        expect(commit.dir()).toEqual repo.getWorkingDirectory()
+    describe "::start", ->
+      it "gets the commentchar from configs", ->
+        waitsForPromise ->
+          mockGit()
+          GitCommit(repo).start().then ->
+            expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
 
-    describe "::filePath", ->
-      it "returns #{Path.join repo.getPath(), 'COMMIT_EDITMSG'}", ->
-        mockGit()
-        mockAtom()
-        commit = new GitCommit(repo)
-        expect(commit.filePath()).toEqual Path.join repo.getPath(), 'COMMIT_EDITMSG'
+    # describe "::dir", ->
+    #   it "returns the working directory of repo", ->
+    #     mockGit()
+    #     mockAtom()
+    #     commit = new GitCommit(repo)
+    #     expect(commit.dir()).toEqual repo.getWorkingDirectory()
+    #
+    # describe "::filePath", ->
+    #   it "returns #{Path.join repo.getPath(), 'COMMIT_EDITMSG'}", ->
+    #     mockGit()
+    #     mockAtom()
+    #     commit = new GitCommit(repo)
+    #     expect(commit.filePath()).toEqual Path.join repo.getPath(), 'COMMIT_EDITMSG'
