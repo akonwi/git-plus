@@ -6,6 +6,11 @@ git = require '../git'
 notifier = require '../notifier'
 GitPush = require './git-push'
 
+disposables = new CompositeDisposable
+
+dir = (repo) ->
+  (git.getSubmodule() or repo).getWorkingDirectory()
+
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
     if files.length >= 1
@@ -30,12 +35,34 @@ prepFile = (status, filePath) ->
         #{commentchar}
         #{commentchar} #{status}"""
 
+commit = (directory, filePath) ->
+  args = ['commit', '--cleanup=strip', "--file=#{filePath}"]
+  git.cmd(args, cwd: directory)
+  # .then (data) =>
+  #   notifier.addSuccess data
+  #   @destroyCommitEditor()
+  #   if @andPush
+  #     new GitPush(@repo)
+  #   git.refresh()
+
+showFile = (filePath) ->
+  atom.workspace.open(filePath, searchAllPanes: true).done (textEditor) -> textEditor
+    #   if atom.config.get('git-plus.openInPane')
+    #     @splitPane(atom.config.get('git-plus.splitPane'), textEditor)
+      # else
+    # disposables.add textEditor.onDidSave => commit()
+    # disposables.add textEditor.onDidDestroy =>
+    #       if @isAmending then @undoAmend() else @cleanup()
+
 module.exports = (repo) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane: atom.workspace.getActivePane()
   start: ->
     getStagedFiles(repo)
     .then (status) -> prepFile status, filePath
+    .then -> showFile filePath
+    .then (textEditor) ->
+      disposables.add textEditor.onDidSave -> commit dir(repo), filePath
     .catch (message) ->
       notifier.addInfo message
 

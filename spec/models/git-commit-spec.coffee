@@ -5,11 +5,19 @@ Path = require 'flavored-path'
 git = require '../../lib/git'
 GitCommit = require '../../lib/models/git-commit-beta'
 
+commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 status =
   replace: -> status
   trim: -> status
 
+textEditor =
+  onDidSave: (@save) ->
+
 mockGit = ->
+  spyOn(textEditor, 'onDidSave').andCallThrough()
+  spyOn(atom.workspace, 'open').andCallFake ->
+    done: (cb) -> cb textEditor
+
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
 
@@ -30,13 +38,14 @@ describe "GitCommit", ->
   describe "a regular commit", ->
     commit = null
     beforeEach -> commit = GitCommit repo
-    
+
     it "saves the current pane", ->
       expect(commit.currentPane).toBeDefined()
 
     describe "::start", ->
       beforeEach ->
         mockGit()
+        atom.config.set "git-plus.openInPane", false
         waitsForPromise ->
           commit.start()
 
@@ -54,5 +63,12 @@ describe "GitCommit", ->
 
       it "writes to a file and the commentchar is default '#'", ->
         argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-        expect(argsTo_fsWriteFile[0]).toEqual Path.join(repo.getPath(), 'COMMIT_EDITMSG')
+        expect(argsTo_fsWriteFile[0]).toEqual commitFilePath
         expect(argsTo_fsWriteFile[1].charAt(0)).toBe '#'
+
+      it "shows the file", ->
+        expect(atom.workspace.open).toHaveBeenCalled()
+
+      it "calls git.cmd with ['commit'...] on textEditor save", ->
+        textEditor.save()
+        expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
