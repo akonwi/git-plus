@@ -58,8 +58,10 @@ describe "GitCommit", ->
           GitCommit(repo).start().then ->
             expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
 
-      it "writes to a file", ->
+      it "writes to a file and the commentchar is default '#'", ->
         waitsForPromise ->
           mockGit()
           GitCommit(repo).start().then ->
-            expect(fs.writeFileSync.mostRecentCall.args[0]).toEqual Path.join(repo.getPath(), 'COMMIT_EDITMSG')
+            argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+            expect(argsTo_fsWriteFile[0]).toEqual Path.join(repo.getPath(), 'COMMIT_EDITMSG')
+            expect(argsTo_fsWriteFile[1].charAt(0)).toBe '#'
