@@ -38,31 +38,36 @@ prepFile = (status, filePath) ->
 commit = (directory, filePath) ->
   args = ['commit', '--cleanup=strip', "--file=#{filePath}"]
   git.cmd(args, cwd: directory)
-  # .then (data) =>
-  #   notifier.addSuccess data
+  .then (data) ->
+    notifier.addSuccess data
   #   @destroyCommitEditor()
   #   if @andPush
   #     new GitPush(@repo)
-  #   git.refresh()
+    git.refresh()
+
+cleanup = (currentPane, filePath) ->
+  currentPane.activate() if currentPane.alive
+  disposables.dispose()
+  try fs.unlinkSync filePath
 
 showFile = (filePath) ->
   atom.workspace.open(filePath, searchAllPanes: true).done (textEditor) -> textEditor
     #   if atom.config.get('git-plus.openInPane')
     #     @splitPane(atom.config.get('git-plus.splitPane'), textEditor)
       # else
-    # disposables.add textEditor.onDidSave => commit()
     # disposables.add textEditor.onDidDestroy =>
     #       if @isAmending then @undoAmend() else @cleanup()
 
 module.exports = (repo) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
-  currentPane: atom.workspace.getActivePane()
+  currentPane = atom.workspace.getActivePane()
   start: ->
     getStagedFiles(repo)
     .then (status) -> prepFile status, filePath
     .then -> showFile filePath
     .then (textEditor) ->
       disposables.add textEditor.onDidSave -> commit dir(repo), filePath
+      disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
     .catch (message) ->
       notifier.addInfo message
 

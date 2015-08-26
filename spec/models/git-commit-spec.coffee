@@ -9,42 +9,54 @@ commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 status =
   replace: -> status
   trim: -> status
-
 textEditor =
-  onDidSave: (@save) ->
+  onDidSave: (@save) -> dispose: ->
+  onDidDestroy: (@destroy) -> dispose: ->
+currentPane =
+  alive: true
+  activate: -> undefined
 
 mockGit = ->
-  spyOn(textEditor, 'onDidSave').andCallThrough()
+  spyOn(currentPane, 'activate')
+
   spyOn(atom.workspace, 'open').andCallFake ->
     done: (cb) -> cb textEditor
+  spyOn(atom.workspace, 'getActivePane').andReturn currentPane
 
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
 
   spyOn(fs, 'writeFileSync')
+  spyOn(fs, 'unlinkSync')
+
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
     if args[0] is 'config'
       Promise.resolve ''
     else if args[0] is 'status'
       Promise.resolve status
+    else if args[0] is 'commit'
+      Promise.resolve 'commit success'
 
   spyOn(git, 'stagedFiles').andCallFake ->
     args = git.stagedFiles.mostRecentCall.args
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
       Promise.resolve [pathToRepoFile]
 
+  spyOn(git, 'refresh')
+
 describe "GitCommit", ->
   describe "a regular commit", ->
     commit = null
-    beforeEach -> commit = GitCommit repo
+    beforeEach ->
+      mockGit()
+      commit = GitCommit repo
 
     it "saves the current pane", ->
-      expect(commit.currentPane).toBeDefined()
+      expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
     describe "::start", ->
       beforeEach ->
-        mockGit()
         atom.config.set "git-plus.openInPane", false
         waitsForPromise ->
           commit.start()
@@ -72,3 +84,8 @@ describe "GitCommit", ->
       it "calls git.cmd with ['commit'...] on textEditor save", ->
         textEditor.save()
         expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+
+      it "cancels the commit on textEditor destroy", ->
+        textEditor.destroy()
+        expect(currentPane.activate).toHaveBeenCalled()
+        expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
