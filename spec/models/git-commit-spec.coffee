@@ -5,7 +5,6 @@ Path = require 'flavored-path'
 git = require '../../lib/git'
 GitCommit = require '../../lib/models/git-commit-beta'
 
-# status = jasmine.createSpyObj('status', ['replace', 'trim'])
 status =
   replace: -> status
   trim: -> status
@@ -30,38 +29,29 @@ mockGit = ->
 describe "GitCommit", ->
   describe "a regular commit", ->
     it "saves the current pane", ->
-      commit = GitCommit(repo)
-      expect(commit.currentPane).toBeDefined()
+      expect(GitCommit(repo).currentPane).toBeDefined()
 
     describe "::start", ->
-      it "gets the commentchar from configs", ->
+      commit = null
+      beforeEach ->
+        mockGit()
+        commit = GitCommit(repo)
         waitsForPromise ->
-          mockGit()
-          GitCommit(repo).start().then ->
-            expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
+          commit.start()
+
+      it "gets the commentchar from configs", ->
+        expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
 
       it "gets staged files", ->
-        waitsForPromise ->
-          mockGit()
-          GitCommit(repo).start().then ->
-            expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
+        expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
 
       it "removes lines with '(...)' from status", ->
-        waitsForPromise ->
-          mockGit()
-          GitCommit(repo).start().then ->
-            expect(status.replace).toHaveBeenCalled()
+        expect(status.replace).toHaveBeenCalled()
 
       it "gets the commit template from git configs", ->
-        waitsForPromise ->
-          mockGit()
-          GitCommit(repo).start().then ->
-            expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
+        expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
 
       it "writes to a file and the commentchar is default '#'", ->
-        waitsForPromise ->
-          mockGit()
-          GitCommit(repo).start().then ->
-            argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-            expect(argsTo_fsWriteFile[0]).toEqual Path.join(repo.getPath(), 'COMMIT_EDITMSG')
-            expect(argsTo_fsWriteFile[1].charAt(0)).toBe '#'
+        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+        expect(argsTo_fsWriteFile[0]).toEqual Path.join(repo.getPath(), 'COMMIT_EDITMSG')
+        expect(argsTo_fsWriteFile[1].charAt(0)).toBe '#'
