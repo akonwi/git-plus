@@ -6,10 +6,38 @@ git = require '../git'
 notifier = require '../notifier'
 GitPush = require './git-push'
 
+getStagedFiles = (repo) ->
+  git.stagedFiles(repo).then (files) ->
+    if files.length >= 1
+      git.cmd(['status'], cwd: repo.getWorkingDirectory())
+    else
+      Promise.reject "Nothing to commit."
+
+getTemplate = ->
+  git.cmd(['config', '--get', 'commit.template']).then (filePath) ->
+    if filePath then fs.readFileSync(Path.get(filePath.trim())) else ''
+
+prepFile = (status, filePath) ->
+  git.cmd(['config', '--get', 'core.commentchar']).then (commentchar) ->
+    commentchar = if commentchar then commentchar.trim() else '#'
+    status = status.replace(/\s*\(.*\)\n/g, "\n")
+    status = status.trim().replace(/\n/g, "\n#{commentchar} ")
+    getTemplate().then (template) ->
+      fs.writeFileSync filePath,
+        """#{commentchar} Please enter the commit message for your changes. Lines starting
+        #{commentchar} with '#{commentchar}' will be ignored, and an empty message aborts the commit.
+        #{commentchar}
+        #{commentchar} #{status}"""
+
 module.exports = (repo) ->
+  filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane: atom.workspace.getActivePane()
   start: ->
-    git.cmd(['config', '--get', 'core.commentchar'])
+    getStagedFiles(repo)
+    .then (status) -> prepFile status, filePath
+    .catch (message) ->
+      notifier.addInfo message
+
 # class GitCommit
 #   # Public: Helper method to return the current working directory.
 #   #

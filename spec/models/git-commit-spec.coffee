@@ -5,25 +5,27 @@ Path = require 'flavored-path'
 git = require '../../lib/git'
 GitCommit = require '../../lib/models/git-commit-beta'
 
+# status = jasmine.createSpyObj('status', ['replace', 'trim'])
+status =
+  replace: -> status
+  trim: -> status
+
 mockGit = ->
+  spyOn(status, 'replace').andCallFake -> status
+  spyOn(status, 'trim').andCallThrough()
+
+  spyOn(fs, 'writeFileSync')
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
-    if args[2] is 'core.commentchar'
+    if args[0] is 'config'
       Promise.resolve ''
     else if args[0] is 'status'
-      Promise.resolve "M #{pathToRepoFile}"
+      Promise.resolve status
 
   spyOn(git, 'stagedFiles').andCallFake ->
     args = git.stagedFiles.mostRecentCall.args
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
       Promise.resolve [pathToRepoFile]
-
-  spyOn(fs, 'writeFileSync')
-
-mockAtom = ->
-  spyOn(atom.workspace, 'getActivePane').andCallFake workspace.getActivePane
-  spyOn(atom.workspace, 'open').andCallFake workspace.open
-  spyOn(atom.workspace, 'getPanes').andCallFake workspace.getPanes
 
 describe "GitCommit", ->
   describe "a regular commit", ->
@@ -38,16 +40,26 @@ describe "GitCommit", ->
           GitCommit(repo).start().then ->
             expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
 
-    # describe "::dir", ->
-    #   it "returns the working directory of repo", ->
-    #     mockGit()
-    #     mockAtom()
-    #     commit = new GitCommit(repo)
-    #     expect(commit.dir()).toEqual repo.getWorkingDirectory()
-    #
-    # describe "::filePath", ->
-    #   it "returns #{Path.join repo.getPath(), 'COMMIT_EDITMSG'}", ->
-    #     mockGit()
-    #     mockAtom()
-    #     commit = new GitCommit(repo)
-    #     expect(commit.filePath()).toEqual Path.join repo.getPath(), 'COMMIT_EDITMSG'
+      it "gets staged files", ->
+        waitsForPromise ->
+          mockGit()
+          GitCommit(repo).start().then ->
+            expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
+
+      it "removes lines with '(...)' from status", ->
+        waitsForPromise ->
+          mockGit()
+          GitCommit(repo).start().then ->
+            expect(status.replace).toHaveBeenCalled()
+
+      it "gets the commit template from git configs", ->
+        waitsForPromise ->
+          mockGit()
+          GitCommit(repo).start().then ->
+            expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
+
+      it "writes to a file", ->
+        waitsForPromise ->
+          mockGit()
+          GitCommit(repo).start().then ->
+            expect(fs.writeFileSync.mostRecentCall.args[0]).toEqual Path.join(repo.getPath(), 'COMMIT_EDITMSG')
