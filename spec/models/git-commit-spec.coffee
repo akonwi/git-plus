@@ -28,14 +28,15 @@ mockGit = ->
 
 describe "GitCommit", ->
   describe "a regular commit", ->
+    commit = null
+    beforeEach -> commit = GitCommit repo
+    
     it "saves the current pane", ->
-      expect(GitCommit(repo).currentPane).toBeDefined()
+      expect(commit.currentPane).toBeDefined()
 
     describe "::start", ->
-      commit = null
       beforeEach ->
         mockGit()
-        commit = GitCommit(repo)
         waitsForPromise ->
           commit.start()
 
