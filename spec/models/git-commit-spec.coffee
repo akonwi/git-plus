@@ -25,6 +25,8 @@ commitPane =
     getURI: -> commitFilePath
   ]
 commentchar_config = ''
+templateFile = ''
+commitTemplate = 'foobar'
 
 setupMocks = ->
   spyOn(currentPane, 'activate')
@@ -37,13 +39,18 @@ setupMocks = ->
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
 
+  spyOn(fs, 'readFileSync').andCallFake ->
+    if fs.readFileSync.mostRecentCall.args[0] is 'template'
+      commitTemplate
+    else
+      ''
   spyOn(fs, 'writeFileSync')
   spyOn(fs, 'unlinkSync')
 
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
     if args[0] is 'config' and args[2] is 'commit.template'
-      Promise.resolve ''
+      Promise.resolve templateFile
     else if args[0] is 'config' and args[2] is 'core.commentchar'
       Promise.resolve commentchar_config
     else if args[0] is 'status'
@@ -120,3 +127,22 @@ describe "GitCommit", ->
         GitCommit(repo).start().then ->
           argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
           expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe commentchar_config
+
+    describe "when commit.template config is not set", ->
+      it "commit file starts with a blank line", ->
+        setupMocks()
+        waitsForPromise ->
+          GitCommit(repo).start().then ->
+            argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+            expect(argsTo_fsWriteFile[1].charAt(0)).toEqual "\n"
+
+    describe "when commit.template config is set", ->
+      it "commit file starts with content of that file", ->
+        templateFile = 'template'
+        setupMocks()
+        GitCommit(repo).start()
+        waitsFor ->
+          fs.writeFileSync.callCount > 0
+        runs ->
+          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+          expect(argsTo_fsWriteFile[1].indexOf(commitTemplate)).toBe 0
