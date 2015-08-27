@@ -24,6 +24,7 @@ commitPane =
   getItems: -> [
     getURI: -> commitFilePath
   ]
+commentchar_config = ''
 
 setupMocks = ->
   spyOn(currentPane, 'activate')
@@ -41,8 +42,10 @@ setupMocks = ->
 
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
-    if args[0] is 'config'
+    if args[0] is 'config' and args[2] is 'commit.template'
       Promise.resolve ''
+    else if args[0] is 'config' and args[2] is 'core.commentchar'
+      Promise.resolve commentchar_config
     else if args[0] is 'status'
       Promise.resolve status
     else if args[0] is 'commit'
@@ -57,19 +60,17 @@ setupMocks = ->
 
 describe "GitCommit", ->
   describe "a regular commit", ->
-    commit = null
-    beforeEach ->
+    it "gets the current pane", ->
       setupMocks()
-      commit = GitCommit repo
-
-    it "saves the current pane", ->
+      GitCommit repo
       expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
     describe "::start", ->
       beforeEach ->
         atom.config.set "git-plus.openInPane", false
+        setupMocks()
         waitsForPromise ->
-          commit.start()
+          GitCommit(repo).start()
 
       it "gets the commentchar from configs", ->
         expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
@@ -83,10 +84,9 @@ describe "GitCommit", ->
       it "gets the commit template from git configs", ->
         expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
 
-      it "writes to a file and the commentchar is default '#'", ->
+      it "writes to a file", ->
         argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
         expect(argsTo_fsWriteFile[0]).toEqual commitFilePath
-        expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe '#'
 
       it "shows the file", ->
         expect(atom.workspace.open).toHaveBeenCalled()
@@ -105,3 +105,18 @@ describe "GitCommit", ->
         textEditor.destroy()
         expect(currentPane.activate).toHaveBeenCalled()
         expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
+
+    describe "when core.commentchar config is not set", ->
+      it "uses '#' in commit file", ->
+        setupMocks()
+        GitCommit(repo).start().then ->
+          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+          expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe '#'
+
+    describe "when core.commentchar config is set to '$'", ->
+      it "uses '$' as the commentchar", ->
+        commentchar_config = '$'
+        setupMocks()
+        GitCommit(repo).start().then ->
+          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+          expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe commentchar_config
