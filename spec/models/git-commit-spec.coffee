@@ -15,13 +15,23 @@ textEditor =
 currentPane =
   alive: true
   activate: -> undefined
+  getItems: -> [
+    getURI: -> pathToRepoFile
+  ]
+commitPane =
+  alive: true
+  destroy: -> textEditor.destroy()
+  getItems: -> [
+    getURI: -> commitFilePath
+  ]
 
-mockGit = ->
+setupMocks = ->
   spyOn(currentPane, 'activate')
+  spyOn(commitPane, 'destroy')
 
-  spyOn(atom.workspace, 'open').andCallFake ->
-    done: (cb) -> cb textEditor
   spyOn(atom.workspace, 'getActivePane').andReturn currentPane
+  spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
+  spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
 
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
@@ -49,7 +59,7 @@ describe "GitCommit", ->
   describe "a regular commit", ->
     commit = null
     beforeEach ->
-      mockGit()
+      setupMocks()
       commit = GitCommit repo
 
     it "saves the current pane", ->
@@ -76,7 +86,7 @@ describe "GitCommit", ->
       it "writes to a file and the commentchar is default '#'", ->
         argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
         expect(argsTo_fsWriteFile[0]).toEqual commitFilePath
-        expect(argsTo_fsWriteFile[1].charAt(0)).toBe '#'
+        expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe '#'
 
       it "shows the file", ->
         expect(atom.workspace.open).toHaveBeenCalled()
@@ -84,6 +94,12 @@ describe "GitCommit", ->
       it "calls git.cmd with ['commit'...] on textEditor save", ->
         textEditor.save()
         expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+
+      ## Tough to test and keep mocks here because the commitPane is destroyed
+      ## in a separate promise from commit::start
+      # it "closes the commit pane when commit is successful", ->
+      #   textEditor.save()
+      #   expect(commitPane.destroy).toHaveBeenCalled()
 
       it "cancels the commit on textEditor destroy", ->
         textEditor.destroy()
