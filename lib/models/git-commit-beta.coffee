@@ -20,7 +20,7 @@ getStagedFiles = (repo) ->
 
 getTemplate = ->
   git.cmd(['config', '--get', 'commit.template']).then (filePath) ->
-    if filePath then fs.readFileSync(Path.get(filePath.trim())) else ''
+    if filePath then fs.readFileSync(Path.get(filePath.trim())).toString().trim() else ''
 
 prepFile = (status, filePath) ->
   git.cmd(['config', '--get', 'core.commentchar']).then (commentchar) ->
