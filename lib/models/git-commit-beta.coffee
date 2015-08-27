@@ -29,7 +29,7 @@ prepFile = (status, filePath) ->
     status = status.trim().replace(/\n/g, "\n#{commentchar} ")
     getTemplate().then (template) ->
       fs.writeFileSync filePath,
-        """
+        """\t
         #{commentchar} Please enter the commit message for your changes. Lines starting
         #{commentchar} with '#{commentchar}' will be ignored, and an empty message aborts the commit.
         #{commentchar}
