@@ -30,7 +30,7 @@ commitTemplate = 'foobar'
 
 setupMocks = ->
   spyOn(currentPane, 'activate')
-  spyOn(commitPane, 'destroy')
+  spyOn(commitPane, 'destroy').andCallThrough()
 
   spyOn(atom.workspace, 'getActivePane').andReturn currentPane
   spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
@@ -106,11 +106,10 @@ describe "GitCommit", ->
         textEditor.save()
         expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
 
-      ## Tough to test and keep mocks here because the commitPane is destroyed
-      ## in a separate promise from commit::start
-      # it "closes the commit pane when commit is successful", ->
-      #   textEditor.save()
-      #   expect(commitPane.destroy).toHaveBeenCalled()
+      it "closes the commit pane when commit is successful", ->
+        textEditor.save()
+        waitsFor -> commitPane.destroy.callCount > 0
+        runs -> expect(commitPane.destroy).toHaveBeenCalled()
 
       it "cancels the commit on textEditor destroy", ->
         textEditor.destroy()
@@ -156,3 +155,10 @@ describe "GitCommit", ->
       setupMocks()
       GitCommit(repo, stageChanges: true).start().then ->
         expect(git.add).toHaveBeenCalledWith repo, update: true
+
+  describe "when 'andPush' option is true", ->
+    it "calls git.cmd with ['remote'...] as args", ->
+      setupMocks()
+      GitCommit(repo, andPush: true).start().then -> textEditor.save()
+      waitsFor -> git.cmd.mostRecentCall.args?[0].args[0] is 'remote'
+      runs -> expect(true).toBe true

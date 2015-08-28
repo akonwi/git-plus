@@ -51,8 +51,6 @@ commit = (directory, filePath) ->
   .then (data) ->
     notifier.addSuccess data
     destroyCommitEditor()
-  #   if @andPush
-  #     new GitPush(@repo)
     git.refresh()
 
 cleanup = (currentPane, filePath) ->
@@ -67,7 +65,7 @@ showFile = (filePath) -> atom.workspace.open(filePath, searchAllPanes: true)
     # disposables.add textEditor.onDidDestroy =>
     #       if @isAmending then @undoAmend() else @cleanup()
 
-module.exports = (repo, {stageChanges}={}) ->
+module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   startCommit = ->
@@ -75,7 +73,8 @@ module.exports = (repo, {stageChanges}={}) ->
     .then (status) -> prepFile status, filePath
     .then -> showFile filePath
     .then (textEditor) ->
-      disposables.add textEditor.onDidSave -> commit(dir(repo), filePath)
+      disposables.add textEditor.onDidSave ->
+        commit(dir(repo), filePath).then -> new GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
     .catch (message) ->
       notifier.addInfo message
