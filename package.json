@@ -29,6 +29,7 @@
       "git-plus:checkout-all-files",
       "git-plus:cherry-pick",
       "git-plus:commit",
+      "git-plus:commit-all",
       "git-plus:commit-amend",
       "git-plus:fetch",
       "git-plus:new-branch",

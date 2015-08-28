@@ -47,6 +47,7 @@ setupMocks = ->
   spyOn(fs, 'writeFileSync')
   spyOn(fs, 'unlinkSync')
 
+  spyOn(git, 'refresh')
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
     if args[0] is 'config' and args[2] is 'commit.template'
@@ -63,7 +64,10 @@ setupMocks = ->
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
       Promise.resolve [pathToRepoFile]
 
-  spyOn(git, 'refresh')
+  spyOn(git, 'add').andCallFake ->
+    args = git.add.mostRecentCall.args
+    if args[0].getWorkingDirectory() is repo.getWorkingDirectory() and args[1].update
+      Promise.resolve true
 
 describe "GitCommit", ->
   describe "a regular commit", ->
@@ -146,3 +150,9 @@ describe "GitCommit", ->
         runs ->
           argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
           expect(argsTo_fsWriteFile[1].indexOf(commitTemplate)).toBe 0
+
+  describe "when 'stageChanges' option is true", ->
+    it "calls git.add with update option set to true", ->
+      setupMocks()
+      GitCommit(repo, stageChanges: true).start().then ->
+        expect(git.add).toHaveBeenCalledWith repo, update: true

@@ -11,7 +11,7 @@ GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
 GitCheckoutAllFiles    = require './models/git-checkout-all-files'
 GitCheckoutCurrentFile = require './models/git-checkout-current-file'
 GitCherryPick          = require './models/git-cherry-pick'
-GitCommit              = require './models/git-commit'
+GitCommit              = require './models/git-commit-beta'
 GitCommitAmend         = require './models/git-commit-amend'
 GitDiff                = require './models/git-diff'
 GitDiffAll             = require './models/git-diff-all'
@@ -77,8 +77,8 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add', -> git.getRepo().then((repo) -> GitAdd(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add-all', -> git.getRepo().then((repo) -> GitAdd(repo, addAll: true))
-    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit', -> git.getRepo().then((repo) -> new GitCommit(repo))
-    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit-all', -> git.getRepo().then((repo) -> new GitCommit(repo, stageChanges: true))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit', -> git.getRepo().then((repo) -> GitCommit(repo).start())
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit-all', -> git.getRepo().then((repo) -> GitCommit(repo, stageChanges: true).start())
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit-amend', -> git.getRepo().then((repo) -> new GitCommitAmend(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add-and-commit', -> git.getRepo().then((repo) -> GitAddAndCommit(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add-all-and-commit', -> git.getRepo().then((repo) -> GitAddAllAndCommit(repo))

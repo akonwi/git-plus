@@ -67,10 +67,10 @@ showFile = (filePath) -> atom.workspace.open(filePath, searchAllPanes: true)
     # disposables.add textEditor.onDidDestroy =>
     #       if @isAmending then @undoAmend() else @cleanup()
 
-module.exports = (repo) ->
+module.exports = (repo, {stageChanges}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
-  start: ->
+  startCommit = ->
     getStagedFiles(repo)
     .then (status) -> prepFile status, filePath
     .then -> showFile filePath
@@ -79,6 +79,12 @@ module.exports = (repo) ->
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
     .catch (message) ->
       notifier.addInfo message
+
+  start: ->
+    if stageChanges
+      git.add(repo, update: stageChanges)
+      .then -> startCommit()
+    else startCommit()
 
 # class GitCommit
 #   # Public: Helper method to return the current working directory.

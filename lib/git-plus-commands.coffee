@@ -11,7 +11,7 @@ getCommands = ->
   GitCheckoutAllFiles    = require './models/git-checkout-all-files'
   GitCheckoutCurrentFile = require './models/git-checkout-current-file'
   GitCherryPick          = require './models/git-cherry-pick'
-  GitCommit              = require './models/git-commit'
+  GitCommit              = require './models/git-commit-beta'
   GitCommitAmend         = require './models/git-commit-amend'
   GitDiff                = require './models/git-diff'
   GitDiffAll             = require './models/git-diff-all'
@@ -46,8 +46,8 @@ getCommands = ->
       commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove(repo)]
       commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles(repo)]
       commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> GitCheckoutCurrentFile(repo)]
-      commands.push ['git-plus:commit', 'Commit', -> new GitCommit(repo)]
-      commands.push ['git-plus:commit-all', 'Commit All', -> new GitCommit(repo, stageChanges: true)]
+      commands.push ['git-plus:commit', 'Commit', -> GitCommit(repo).start()]
+      commands.push ['git-plus:commit-all', 'Commit All', -> GitCommit(repo, stageChanges: true).start()]
       commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend(repo)]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit(repo)]
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit(repo)]
