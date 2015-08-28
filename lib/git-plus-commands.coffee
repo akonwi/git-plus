@@ -2,7 +2,6 @@ git = require './git'
 
 getCommands = ->
   GitAdd                 = require './models/git-add'
-  GitAddAllAndCommit     = require './models/git-add-all-and-commit'
   GitAddAllCommitAndPush = require './models/git-add-all-commit-and-push'
   GitAddAndCommit        = require './models/git-add-and-commit'
   GitBranch              = require './models/git-branch'
@@ -50,7 +49,7 @@ getCommands = ->
       commands.push ['git-plus:commit-all', 'Commit All', -> GitCommit(repo, stageChanges: true).start()]
       commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend(repo)]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit(repo)]
-      commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit(repo)]
+      commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> git.add(repo).then -> GitCommit(repo).start()]
       commands.push ['git-plus:add-all-commit-and-push', 'Add All Commit And Push', -> GitAddAllCommitAndPush(repo)]
       commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches(repo)]
       commands.push ['git-plus:checkout-remote', 'Checkout Remote', -> GitBranch.gitRemoteBranches(repo)]
