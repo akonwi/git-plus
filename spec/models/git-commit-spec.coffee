@@ -71,71 +71,68 @@ setupMocks = ->
 
 describe "GitCommit", ->
   describe "a regular commit", ->
-    it "gets the current pane", ->
+    beforeEach ->
+      atom.config.set "git-plus.openInPane", false
       setupMocks()
-      GitCommit repo
+      waitsForPromise ->
+        GitCommit(repo)
+
+    it "gets the current pane", ->
       expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
-    describe "::start", ->
-      beforeEach ->
-        atom.config.set "git-plus.openInPane", false
-        setupMocks()
-        waitsForPromise ->
-          GitCommit(repo).start()
+    it "gets the commentchar from configs", ->
+      expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
 
-      it "gets the commentchar from configs", ->
-        expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
+    it "gets staged files", ->
+      expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
 
-      it "gets staged files", ->
-        expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
+    it "removes lines with '(...)' from status", ->
+      expect(status.replace).toHaveBeenCalled()
 
-      it "removes lines with '(...)' from status", ->
-        expect(status.replace).toHaveBeenCalled()
+    it "gets the commit template from git configs", ->
+      expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
 
-      it "gets the commit template from git configs", ->
-        expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
+    it "writes to a file", ->
+      argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+      expect(argsTo_fsWriteFile[0]).toEqual commitFilePath
 
-      it "writes to a file", ->
+    it "shows the file", ->
+      expect(atom.workspace.open).toHaveBeenCalled()
+
+    it "calls git.cmd with ['commit'...] on textEditor save", ->
+      textEditor.save()
+      expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+
+    it "closes the commit pane when commit is successful", ->
+      textEditor.save()
+      waitsFor -> commitPane.destroy.callCount > 0
+      runs -> expect(commitPane.destroy).toHaveBeenCalled()
+
+    it "cancels the commit on textEditor destroy", ->
+      textEditor.destroy()
+      expect(currentPane.activate).toHaveBeenCalled()
+      expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
+
+  describe "when core.commentchar config is not set", ->
+    it "uses '#' in commit file", ->
+      setupMocks()
+      GitCommit(repo).then ->
         argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-        expect(argsTo_fsWriteFile[0]).toEqual commitFilePath
+        expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe '#'
 
-      it "shows the file", ->
-        expect(atom.workspace.open).toHaveBeenCalled()
-
-      it "calls git.cmd with ['commit'...] on textEditor save", ->
-        textEditor.save()
-        expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
-
-      it "closes the commit pane when commit is successful", ->
-        textEditor.save()
-        waitsFor -> commitPane.destroy.callCount > 0
-        runs -> expect(commitPane.destroy).toHaveBeenCalled()
-
-      it "cancels the commit on textEditor destroy", ->
-        textEditor.destroy()
-        expect(currentPane.activate).toHaveBeenCalled()
-        expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
-
-    describe "when core.commentchar config is not set", ->
-      it "uses '#' in commit file", ->
-        setupMocks()
-        GitCommit(repo).start().then ->
-          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-          expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe '#'
-
-    describe "when core.commentchar config is set to '$'", ->
-      it "uses '$' as the commentchar", ->
-        commentchar_config = '$'
-        setupMocks()
-        GitCommit(repo).start().then ->
-          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-          expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe commentchar_config
+  describe "when core.commentchar config is set to '$'", ->
+    it "uses '$' as the commentchar", ->
+      commentchar_config = '$'
+      setupMocks()
+      GitCommit(repo).then ->
+        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+        expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe commentchar_config
 
     describe "when commit.template config is not set", ->
       it "commit file starts with a blank line", ->
         setupMocks()
         waitsForPromise ->
-          GitCommit(repo).start().then ->
+          GitCommit(repo).then ->
             argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
             expect(argsTo_fsWriteFile[1].charAt(0)).toEqual "\n"
 
@@ -143,7 +140,7 @@ describe "GitCommit", ->
       it "commit file starts with content of that file", ->
         templateFile = 'template'
         setupMocks()
-        GitCommit(repo).start()
+        GitCommit(repo)
         waitsFor ->
           fs.writeFileSync.callCount > 0
         runs ->
@@ -153,12 +150,18 @@ describe "GitCommit", ->
   describe "when 'stageChanges' option is true", ->
     it "calls git.add with update option set to true", ->
       setupMocks()
-      GitCommit(repo, stageChanges: true).start().then ->
+      GitCommit(repo, stageChanges: true).then ->
         expect(git.add).toHaveBeenCalledWith repo, update: true
 
-  describe "when 'andPush' option is true", ->
-    it "calls git.cmd with ['remote'...] as args", ->
-      setupMocks()
-      GitCommit(repo, andPush: true).start().then -> textEditor.save()
-      waitsFor -> git.cmd.mostRecentCall.args?[0].args[0] is 'remote'
-      runs -> expect(true).toBe true
+  ## Tough as nails to test because GitPush is called outside of test
+  # describe "when 'andPush' option is true", ->
+  #   it "calls git.cmd with ['remote'...] as args", ->
+  #     setupMocks()
+  #     GitCommit(repo, andPush: true).then ->
+  #       runs ->
+  #         textEditor.save()
+  #       waitsFor((->
+  #         git.cmd.mostRecentCall.args[0][0] is 'remote'),
+  #         "some stuff", 10000
+  #       )
+  #       expect(git.cmd).toHaveBeenCalledWith ['remote']
