@@ -74,16 +74,13 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
     .then -> showFile filePath
     .then (textEditor) ->
       disposables.add textEditor.onDidSave ->
-        commit(dir(repo), filePath).then -> new GitPush(repo) if andPush
+        commit(dir(repo), filePath).then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
-    .catch (message) ->
-      notifier.addInfo message
+    .catch (message) -> notifier.addInfo message
 
-  start: ->
-    if stageChanges
-      git.add(repo, update: stageChanges)
-      .then -> startCommit()
-    else startCommit()
+  if stageChanges
+    git.add(repo, update: stageChanges).then -> startCommit()
+  else startCommit()
 
 # class GitCommit
 #   # Public: Helper method to return the current working directory.
