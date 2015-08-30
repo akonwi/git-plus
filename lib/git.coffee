@@ -7,11 +7,6 @@ gitUntrackedFiles = (repo, dataUnstaged=[]) ->
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> dataUnstaged.concat(_prettifyUntracked(data))
 
-_getGitPath = ->
-  p = atom.config.get('git-plus.gitPath') ? 'git'
-  console.log "Git-plus: Using git at", p
-  return p
-
 _prettify = (data) ->
   return [] if data is ''
   data = data.split(/\n/)
@@ -53,16 +48,15 @@ module.exports = git = {
   # Returns a {Promise}.
   cmd: (args, {cwd, options}={}) ->
     new Promise (resolve, reject) ->
-      command = _getGitPath()
       options ?= {}
       options.cwd ?= cwd
       output = ''
       try
         new BufferedProcess
-          command: command
+          command: atom.config.get('git-plus.gitPath') ? 'git'
           args: args
           options: options
-          stdout: (data) -> output += data
+          stdout: (data) -> output += data.toString()
           stderr: (data) -> reject data.toString()
           exit: (code) ->
             if code is 0 then resolve output else resolve false

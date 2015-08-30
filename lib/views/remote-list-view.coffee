@@ -7,7 +7,7 @@ PullBranchListView = require './pull-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@repo, @data, {@mode, @tag, @extraArgs}) ->
+  initialize: (@repo, @data, {@mode, @tag, @extraArgs}={}) ->
     super
     @tag ?= ''
     @extraArgs ?= []
@@ -44,10 +44,8 @@ class ListView extends SelectListView
 
   confirmed: ({name}) ->
     if @mode is 'pull'
-      git.cmd
-        args: ['branch', '-r'],
-        cwd: @repo.getWorkingDirectory()
-        stdout: (data) => new PullBranchListView(@repo, data, name, @extraArgs)
+      git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
+      .then (data) => new PullBranchListView(@repo, data, name, @extraArgs)
     else if @mode is 'fetch-prune'
       @mode = 'fetch'
       @execute name, '--prune'
@@ -61,17 +59,22 @@ class ListView extends SelectListView
     if extraArgs.length > 0
       args.push extraArgs
     args = args.concat([remote, @tag])
-    git.cmd
+    command = atom.config.get('git-plus.gitPath') ? 'git'
+    new BufferedProcess
+      command: command
       args: args
-      cwd: @repo.getWorkingDirectory()
+      options:
+        cwd: @repo.getWorkingDirectory()
       stdout: (data) -> view.addLine(data.toString())
       stderr: (data) -> view.addLine(data.toString())
       exit: (code) =>
         if code is 128
           view.reset()
-          git.cmd
+          new BufferedProcess
+            command: command
             args: [@mode, '-u', remote, 'HEAD']
-            cwd: @repo.getWorkingDirectory()
+            options:
+              cwd: @repo.getWorkingDirectory()
             stdout: (data) -> view.addLine(data.toString())
             stderr: (data) -> view.addLine(data.toString())
             exit: (code) -> view.finish()
