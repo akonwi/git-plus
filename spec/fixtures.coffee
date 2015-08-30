@@ -1,13 +1,13 @@
 Path = require 'flavored-path'
 
-module.exports =
+module.exports = mocks =
   pathToRepoFile: Path.get "~/some/repository/directory/file"
 
   repo:
     getPath: -> Path.join this.getWorkingDirectory, ".git"
     getWorkingDirectory: -> Path.get "~/some/repository"
     refreshStatus: -> undefined
-    relativize: (path) -> "directory/file" if path is pathToRepoFile
+    relativize: (path) -> "directory/file" if path is mocks.pathToRepoFile
     repo:
       submoduleForPath: (path) -> undefined
 
