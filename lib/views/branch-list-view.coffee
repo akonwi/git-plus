@@ -51,15 +51,13 @@ class ListView extends SelectListView
     @cancel()
 
   checkout: (branch) ->
-    git.cmd
-      cwd: @repo.getWorkingDirectory()
-      args: @args.concat(branch)
+    git.cmd(@args.concat(branch), cwd: @repo.getWorkingDirectory())
       # using `stderr` for success here
-      stderr: (data) =>
-        notifier.addSuccess data.toString()
-        atom.workspace.observeTextEditors (editor) =>
-          if filepath = editor.getPath()?.toString()
-            fs.exists filepath, (exists) =>
-              editor.destroy() if not exists
-        git.refresh()
-        @currentPane.activate()
+    .catch (data) =>
+      notifier.addSuccess data.toString()
+      atom.workspace.observeTextEditors (editor) =>
+        if filepath = editor.getPath()?.toString()
+          fs.exists filepath, (exists) =>
+            editor.destroy() if not exists
+      git.refresh()
+      @currentPane.activate()
