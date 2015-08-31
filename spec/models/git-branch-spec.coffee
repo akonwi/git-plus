@@ -1,6 +1,10 @@
 git = require '../../lib/git'
 {repo, pathToRepoFile} = require '../fixtures'
-{gitBranches, newBranch} = require '../../lib/models/git-branch'
+{
+  gitBranches,
+  gitRemoteBranches,
+  newBranch
+} = require '../../lib/models/git-branch'
 
 describe "GitBranch", ->
   beforeEach ->
@@ -13,6 +17,15 @@ describe "GitBranch", ->
 
     it "displays a list of the repo's branches", ->
       expect(git.cmd).toHaveBeenCalledWith ['branch'], cwd: repo.getWorkingDirectory()
+      expect(atom.workspace.addModalPanel).toHaveBeenCalled()
+
+  describe ".gitRemoteBranches", ->
+    beforeEach ->
+      spyOn(git, 'cmd').andReturn Promise.resolve 'branch1\nbranch2'
+      waitsForPromise -> gitRemoteBranches(repo)
+
+    it "displays a list of the repo's remote branches", ->
+      expect(git.cmd).toHaveBeenCalledWith ['branch', '-r'], cwd: repo.getWorkingDirectory()
       expect(atom.workspace.addModalPanel).toHaveBeenCalled()
 
   describe ".newBranch", ->
