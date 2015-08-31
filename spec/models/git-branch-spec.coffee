@@ -1,6 +1,10 @@
 git = require '../../lib/git'
 {repo, pathToRepoFile} = require '../fixtures'
-{gitBranches, newBranch} = require '../../lib/models/git-branch'
+{
+  gitBranches,
+  gitRemoteBranches,
+  newBranch
+} = require '../../lib/models/git-branch'
 
 describe "GitBranch", ->
   beforeEach ->
@@ -15,6 +19,15 @@ describe "GitBranch", ->
       expect(git.cmd).toHaveBeenCalledWith ['branch'], cwd: repo.getWorkingDirectory()
       expect(atom.workspace.addModalPanel).toHaveBeenCalled()
 
+  describe ".gitRemoteBranches", ->
+    beforeEach ->
+      spyOn(git, 'cmd').andReturn Promise.resolve 'branch1\nbranch2'
+      waitsForPromise -> gitRemoteBranches(repo)
+
+    it "displays a list of the repo's remote branches", ->
+      expect(git.cmd).toHaveBeenCalledWith ['branch', '-r'], cwd: repo.getWorkingDirectory()
+      expect(atom.workspace.addModalPanel).toHaveBeenCalled()
+
   describe ".newBranch", ->
     beforeEach ->
       spyOn(git, 'cmd').andReturn -> Promise.reject 'new branch created'
@@ -23,6 +36,7 @@ describe "GitBranch", ->
     it "displays a text input", ->
       expect(atom.workspace.addModalPanel).toHaveBeenCalled()
 
+    ## Tweaks out about 'git' being undefined for some reason
     # it "creates a branch with the name entered in the input view", ->
     #   branchName = 'neat/-branch'
     #   @view.branchEditor.setText branchName

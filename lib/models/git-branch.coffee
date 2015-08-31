@@ -44,8 +44,5 @@ module.exports.gitBranches = (repo) ->
   .then (data) -> new BranchListView(repo, data)
 
 module.exports.gitRemoteBranches = (repo) ->
-  git.cmd
-    args: ['branch', '-r']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) ->
-      new RemoteBranchListView(repo, data)
+  git.cmd(['branch', '-r'], cwd: repo.getWorkingDirectory())
+  .then (data) -> new RemoteBranchListView(repo, data)
