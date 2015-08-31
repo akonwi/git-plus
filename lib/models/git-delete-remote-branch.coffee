@@ -1,11 +1,6 @@
 git = require '../git'
 ListView = require '../views/delete-branch-view'
 
-gitDeleteRemoteBranch = (repo) ->
-  git.cmd
-    args: ['branch', '-r']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) ->
-      new ListView(repo, data.toString(), isRemote: true)
-
-module.exports = gitDeleteRemoteBranch
+module.exports = (repo) ->
+  git.cmd(['branch', '-r'], cwd: repo.getWorkingDirectory())
+  .then (data) -> new ListView(repo, data, isRemote: true)
