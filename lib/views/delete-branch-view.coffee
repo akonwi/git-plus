@@ -22,12 +22,8 @@ module.exports =
 
     delete: (branch, remote = '') ->
       if remote.length is 0
-        git.cmd
-          args: ['branch', '-D', branch]
-          cwd: @repo.getWorkingDirectory()
-          stdout: (data) -> notifier.addSuccess(data.toString())
+        git.cmd(['branch', '-D', branch], cwd: @repo.getWorkingDirectory())
+        .then (data) -> notifier.addSuccess(data)
       else
-        git.cmd
-          args: ['push', remote, '--delete', branch]
-          cwd: @repo.getWorkingDirectory()
-          stderr: (data) -> notifier.addSuccess(data.toString())
+        git.cmd(['push', remote, '--delete', branch], cwd: @repo.getWorkingDirectory())
+        .catch (data) -> notifier.addSuccess(data)
