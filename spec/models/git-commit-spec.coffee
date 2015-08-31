@@ -21,6 +21,7 @@ currentPane =
 commitPane =
   alive: true
   destroy: -> textEditor.destroy()
+  splitRight: -> undefined
   getItems: -> [
     getURI: -> commitFilePath
   ]
@@ -31,10 +32,12 @@ commitTemplate = 'foobar'
 setupMocks = ->
   spyOn(currentPane, 'activate')
   spyOn(commitPane, 'destroy').andCallThrough()
+  spyOn(commitPane, 'splitRight')
 
   spyOn(atom.workspace, 'getActivePane').andReturn currentPane
   spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
   spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
+  spyOn(atom.workspace, 'paneForURI').andReturn commitPane
 
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
@@ -46,6 +49,8 @@ setupMocks = ->
       ''
   spyOn(fs, 'writeFileSync')
   spyOn(fs, 'unlinkSync')
+
+  atom.config.set 'git-plus.openInPane', false
 
   spyOn(git, 'refresh')
   spyOn(git, 'cmd').andCallFake ->
@@ -152,6 +157,14 @@ describe "GitCommit", ->
       setupMocks()
       GitCommit(repo, stageChanges: true).then ->
         expect(git.add).toHaveBeenCalledWith repo, update: true
+
+  ## atom.config.get('git-plus.openInPane') is always false inside the module
+  # describe "when the `git-plus.openInPane` setting is true", ->
+  #   it "defaults to opening to the right", ->
+  #     setupMocks()
+  #     atom.config.set 'git-plus.openInPane', false
+  #     waitsForPromise -> GitCommit(repo).then ->
+  #       expect(commitPane.splitRight).toHaveBeenCalled()
 
   ## Tough as nails to test because GitPush is called outside of test
   # describe "when 'andPush' option is true", ->
