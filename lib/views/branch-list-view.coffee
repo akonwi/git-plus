@@ -28,13 +28,11 @@ class ListView extends SelectListView
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
-
     @storeFocusedElement()
 
   cancelled: -> @hide()
 
-  hide: ->
-    @panel?.destroy()
+  hide: -> @panel?.destroy()
 
   viewForItem: ({name}) ->
     current = false

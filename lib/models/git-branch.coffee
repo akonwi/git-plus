@@ -14,32 +14,27 @@ class InputView extends View
   initialize: (@repo) ->
     @disposables = new CompositeDisposable
     @currentPane = atom.workspace.getActivePane()
-    panel = atom.workspace.addModalPanel(item: this)
-    panel.show()
-
-    destroy = =>
-      panel.destroy()
-      @disposables.dispose()
-      @currentPane.activate()
+    @panel = atom.workspace.addModalPanel(item: this)
+    @panel.show()
 
     @branchEditor.focus()
-    @disposables.add atom.commands.add 'atom-text-editor', 'core:cancel': (event) -> destroy()
-    @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': (event) =>
-      editor = @branchEditor.getModel()
-      name = editor.getText()
-      if name.length > 0
-        @createBranch name
-        destroy()
+    @disposables.add atom.commands.add 'atom-text-editor', 'core:cancel': (event) => @destroy()
+    @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': (event) => @createBranch()
 
-  createBranch: (name) ->
-    git.cmd
-      args: ['checkout', '-b', name]
-      cwd: @repo.getWorkingDirectory()
-      # using `stderr` for success
-      stderr: (data) =>
-        notifier.addSuccess data.toString()
-        git.refresh()
-        @currentPane.activate()
+  destroy: ->
+    @panel.destroy()
+    @disposables.dispose()
+    @currentPane.activate()
+
+  createBranch: ->
+    @destroy()
+    name = @branchEditor.getModel().getText()
+    if name.length > 0
+      git.cmd(['checkout', '-b', name], cwd: @repo.getWorkingDirectory())
+        # using `stderr` for success
+      .catch (data) =>
+          notifier.addSuccess data
+          git.refresh()
 
 module.exports.newBranch = (repo) ->
   new InputView(repo)
