@@ -7,7 +7,6 @@ git = require '../git'
 notifier = require '../notifier'
 
 disposables = new CompositeDisposable
-diffFilePath = null
 
 module.exports = (repo, {diffStat, file}={}) ->
   diffFilePath = Path.join(repo.getPath(), "atom_git_plus.diff")
@@ -20,46 +19,42 @@ module.exports = (repo, {diffStat, file}={}) ->
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push file if diffStat is ''
   git.cmd(args, cwd: repo.getWorkingDirectory())
-  .then (data) -> prepFile data
+  .then (data) -> prepFile data, diffFilePath
+  .then -> showFile diffFilePath
+  .then (textEditor) -> disposables.add textEditor.onDidDestroy ->
+    fs.unlink diffFilePath
+  .catch (message) -> notifer.addInfo message
 
-prepFile = (text) ->
-  if text?.length > 0
-    fs.writeFile diffFilePath, text, flag: 'w+', (err) ->
-      if err
-        notifier.addInfo 'Nothing to show.'
-      else
-        showFile()
+prepFile = (text, filePath) ->
+  new Promise (resolve, reject) ->
+    if text?.length is 0
+      reject 'Nothing to show.'
+    else
+      fs.writeFile filePath, text, flag: 'w+', (err) ->
+        if err
+          reject err
+        else
+          resolve true
 
-showFile = ->
-  atom.workspace
-  .open(diffFilePath, searchAllPanes: true)
-  .done (textEditor) ->
+showFile = (filePath) ->
+  atom.workspace.open(filePath, searchAllPanes: true).done (textEditor) ->
     if atom.config.get('git-plus.openInPane')
       splitPane(atom.config.get('git-plus.splitPane'), textEditor)
     else
-      disposables.add textEditor.onDidDestroy =>
-        fs.unlink diffFilePath
+      textEditor
 
 splitPane = (splitDir, oldEditor) ->
-  pane = atom.workspace.paneForURI(diffFilePath)
+  pane = atom.workspace.paneForURI(oldEditor.getURI())
   options = { copyActiveItem: true }
-  hookEvents = (textEditor) ->
-    oldEditor.destroy()
-    disposables.add textEditor.onDidDestroy =>
-      fs.unlink diffFilePath
-
   directions =
-    left: =>
-      pane = pane.splitLeft options
-      hookEvents(pane.getActiveEditor())
-    right: =>
-      pane = pane.splitRight options
-      hookEvents(pane.getActiveEditor())
-    up: =>
-      pane = pane.splitUp options
-      hookEvents(pane.getActiveEditor())
-    down: =>
-      pane = pane.splitDown options
-      hookEvents(pane.getActiveEditor())
-  directions[splitDir]()
+    left: ->
+      pane.splitLeft options
+    right: ->
+      pane.splitRight options
+    up: ->
+      pane.splitUp options
+    down: ->
+      pane.splitDown options
+  pane = directions[splitDir]().getActiveEditor()
   oldEditor.destroy()
+  pane
