@@ -1,6 +1,8 @@
+fs = require 'fs-plus'
 {repo, pathToRepoFile} = require '../fixtures'
 git = require '../../lib/git'
 GitDiff = require '../../lib/models/git-diff'
+GitDiffAll = require '../../lib/models/git-diff-all'
 
 textEditor =
   getPath: -> pathToRepoFile
@@ -65,3 +67,21 @@ describe "when git-plus.openInPane config is true", ->
   describe "when git-plus.splitPane config is not set", ->
     it "defaults to splitRight", ->
       expect(diffPane.splitRight).toHaveBeenCalled()
+
+describe "GitDiffAll", ->
+  beforeEach ->
+    atom.config.set 'git-plus.includeStagedDiff', true
+    spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
+    spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
+    spyOn(fs, 'writeFile').andCallFake -> fs.writeFile.mostRecentCall.args[3]()
+    spyOn(git, 'cmd').andCallFake ->
+      args = git.cmd.mostRecentCall.args[0]
+      if args[1] is '--stat'
+        Promise.resolve 'diff stats\n'
+      else
+        Promise.resolve 'diffs'
+    waitsForPromise ->
+      GitDiffAll repo
+
+  it "includes the diff stats in the diffs window", ->
+    expect(fs.writeFile.mostRecentCall.args[1].includes 'diff stats').toBe true

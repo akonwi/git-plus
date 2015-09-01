@@ -13,13 +13,12 @@ module.exports = (repo, {diffStat, file}={}) ->
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
     return notifier.addError "No open file. Select 'Diff All'."
-  diffStat ?= ''
   args = ['diff', '--color=never']
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-  args.push file if diffStat is ''
+  args.push file unless diffStat
   git.cmd(args, cwd: repo.getWorkingDirectory())
-  .then (data) -> prepFile data, diffFilePath
+  .then (data) -> prepFile (diffStat ? '') + data, diffFilePath
   .then -> showFile diffFilePath
   .then (textEditor) -> disposables.add textEditor.onDidDestroy ->
     fs.unlink diffFilePath
