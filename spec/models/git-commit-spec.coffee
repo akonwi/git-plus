@@ -133,24 +133,24 @@ describe "GitCommit", ->
         argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
         expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe commentchar_config
 
-    describe "when commit.template config is not set", ->
-      it "commit file starts with a blank line", ->
-        setupMocks()
-        waitsForPromise ->
-          GitCommit(repo).then ->
-            argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-            expect(argsTo_fsWriteFile[1].charAt(0)).toEqual "\n"
-
-    describe "when commit.template config is set", ->
-      it "commit file starts with content of that file", ->
-        templateFile = 'template'
-        setupMocks()
-        GitCommit(repo)
-        waitsFor ->
-          fs.writeFileSync.callCount > 0
-        runs ->
+  describe "when commit.template config is not set", ->
+    it "commit file starts with a blank line", ->
+      setupMocks()
+      waitsForPromise ->
+        GitCommit(repo).then ->
           argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-          expect(argsTo_fsWriteFile[1].indexOf(commitTemplate)).toBe 0
+          expect(argsTo_fsWriteFile[1].charAt(0)).toEqual "\n"
+
+  describe "when commit.template config is set", ->
+    it "commit file starts with content of that file", ->
+      templateFile = 'template'
+      setupMocks()
+      GitCommit(repo)
+      waitsFor ->
+        fs.writeFileSync.callCount > 0
+      runs ->
+        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+        expect(argsTo_fsWriteFile[1].indexOf(commitTemplate)).toBe 0
 
   describe "when 'stageChanges' option is true", ->
     it "calls git.add with update option set to true", ->
