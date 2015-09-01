@@ -23,12 +23,11 @@ module.exports = (repo, {diffStat, file}={}) ->
   .then -> showFile diffFilePath
   .then (textEditor) -> disposables.add textEditor.onDidDestroy ->
     fs.unlink diffFilePath
-  .catch (message) -> notifer.addInfo message
 
 prepFile = (text, filePath) ->
   new Promise (resolve, reject) ->
     if text?.length is 0
-      reject 'Nothing to show.'
+      notifier.addInfo 'Nothing to show.'
     else
       fs.writeFile filePath, text, flag: 'w+', (err) ->
         if err
@@ -37,7 +36,7 @@ prepFile = (text, filePath) ->
           resolve true
 
 showFile = (filePath) ->
-  atom.workspace.open(filePath, searchAllPanes: true).done (textEditor) ->
+  atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
     if atom.config.get('git-plus.openInPane')
       splitPane(atom.config.get('git-plus.splitPane'), textEditor)
     else
