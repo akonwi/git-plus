@@ -9,7 +9,7 @@ notifier = require '../notifier'
 disposables = new CompositeDisposable
 diffFilePath = null
 
-gitDiff = (repo, {diffStat, file}={}) ->
+module.exports = (repo, {diffStat, file}={}) ->
   diffFilePath = Path.join(repo.getPath(), "atom_git_plus.diff")
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
@@ -19,11 +19,8 @@ gitDiff = (repo, {diffStat, file}={}) ->
   args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push file if diffStat is ''
-  git.cmd
-    args: args
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) -> diffStat += data
-    exit: (code) -> prepFile diffStat if code is 0
+  git.cmd(args, cwd: repo.getWorkingDirectory())
+  .then (data) -> prepFile data
 
 prepFile = (text) ->
   if text?.length > 0
@@ -65,5 +62,3 @@ splitPane = (splitDir, oldEditor) ->
       hookEvents(pane.getActiveEditor())
   directions[splitDir]()
   oldEditor.destroy()
-
-module.exports = gitDiff
