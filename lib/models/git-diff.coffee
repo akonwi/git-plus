@@ -29,10 +29,7 @@ prepFile = (text, filePath) ->
       notifier.addInfo 'Nothing to show.'
     else
       fs.writeFile filePath, text, flag: 'w+', (err) ->
-        if err
-          reject err
-        else
-          resolve true
+        if err then reject err else resolve true
 
 showFile = (filePath) ->
   atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
