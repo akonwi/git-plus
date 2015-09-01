@@ -24,10 +24,11 @@ module.exports = (repo, {diffStat, file}={}) ->
 
 prepFile = (text) ->
   if text?.length > 0
-    fs.writeFileSync diffFilePath, text, flag: 'w+'
-    showFile()
-  else
-    notifier.addInfo 'Nothing to show.'
+    fs.writeFile diffFilePath, text, flag: 'w+', (err) ->
+      if err
+        notifier.addInfo 'Nothing to show.'
+      else
+        showFile()
 
 showFile = ->
   atom.workspace
