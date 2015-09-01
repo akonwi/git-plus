@@ -1,7 +1,7 @@
 fs = require 'fs-plus'
 Path = require 'flavored-path'
 
-{repo, workspace, pathToRepoFile} = require '../fixtures'
+{repo, workspace, pathToRepoFile, currentPane} = require '../fixtures'
 git = require '../../lib/git'
 GitCommit = require '../../lib/models/git-commit-beta'
 
@@ -12,12 +12,6 @@ status =
 textEditor =
   onDidSave: (@save) -> dispose: ->
   onDidDestroy: (@destroy) -> dispose: ->
-currentPane =
-  alive: true
-  activate: -> undefined
-  getItems: -> [
-    getURI: -> pathToRepoFile
-  ]
 commitPane =
   alive: true
   destroy: -> textEditor.destroy()

@@ -11,6 +11,13 @@ module.exports = mocks =
     repo:
       submoduleForPath: (path) -> undefined
 
+  currentPane:
+    alive: true
+    activate: -> undefined
+    getItems: -> [
+      getURI: -> mocks.pathToRepoFile
+    ]
+
   workspace:
     getActivePane: ->
       {
