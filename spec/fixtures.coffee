@@ -15,6 +15,7 @@ module.exports = mocks =
   currentPane:
     alive: true
     activate: -> undefined
+    destroy: -> undefined
     getItems: -> [
       getURI: -> pathToRepoFile
     ]
@@ -25,13 +26,4 @@ module.exports = mocks =
     onDidDestroy: (@destroy) ->
       dispose: ->
     onDidSave: (@save) ->
-      dispose: ->
-
-  workspace:
-    getActivePane: ->
-      {
-        alive: true
-        activate: -> undefined
-      }
-    getPanes: -> []
-    open: -> { done: -> undefined }
+      dispose: -> undefined
