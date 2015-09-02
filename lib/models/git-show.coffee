@@ -3,7 +3,7 @@ Path = require 'path'
 fs = require 'fs-plus'
 
 {CompositeDisposable} = require 'atom'
-{$, TextEditorView, View} = require 'atom-space-pen-views'
+{TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
 
@@ -19,23 +19,21 @@ showObject = (repo, objectHash, file) ->
     args.push '--'
     args.push file
 
-  git.cmd
-    args: args
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) -> prepFile(data, objectHash) if data.length > 0
+  git.cmd(args, cwd: repo.getWorkingDirectory())
+  .then (data) -> prepFile(data, objectHash) if data.length > 0
 
 prepFile = (text, objectHash) ->
-  fs.writeFileSync showCommitFilePath(objectHash), text, flag: 'w+'
-  showFile(objectHash)
+  fs.writeFile showCommitFilePath(objectHash), text, flag: 'w+', (err) ->
+    if err then notifier.addError err else showFile objectHash
 
 showFile = (objectHash) ->
   disposables = new CompositeDisposable
   split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
   atom.workspace
     .open(showCommitFilePath(objectHash), split: split, activatePane: true)
-    .done (textBuffer) =>
+    .done (textBuffer) ->
       if textBuffer?
-        disposables.add textBuffer.onDidDestroy =>
+        disposables.add textBuffer.onDidDestroy ->
           disposables.dispose()
           try fs.unlinkSync showCommitFilePath(objectHash)
 
