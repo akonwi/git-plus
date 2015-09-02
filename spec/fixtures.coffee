@@ -22,7 +22,10 @@ module.exports = mocks =
   textEditor:
     getPath: -> pathToRepoFile
     getURI: -> pathToRepoFile
-    onDidDestroy: (@destroy) -> undefined
+    onDidDestroy: (@destroy) ->
+      dispose: ->
+    onDidSave: (@save) ->
+      dispose: ->
 
   workspace:
     getActivePane: ->

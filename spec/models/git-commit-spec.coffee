@@ -1,7 +1,13 @@
 fs = require 'fs-plus'
 Path = require 'flavored-path'
 
-{repo, workspace, pathToRepoFile, currentPane} = require '../fixtures'
+{
+  repo,
+  workspace,
+  pathToRepoFile,
+  currentPane,
+  textEditor
+} = require '../fixtures'
 git = require '../../lib/git'
 GitCommit = require '../../lib/models/git-commit-beta'
 
@@ -9,9 +15,6 @@ commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 status =
   replace: -> status
   trim: -> status
-textEditor =
-  onDidSave: (@save) -> dispose: ->
-  onDidDestroy: (@destroy) -> dispose: ->
 commitPane =
   alive: true
   destroy: -> textEditor.destroy()
