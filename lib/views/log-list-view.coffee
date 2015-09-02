@@ -28,8 +28,6 @@ class LogListView extends ScrollView
     @scroll =>
       @getLog() if @scrollTop() + @height() is @prop('scrollHeight')
 
-  setRepo: (@repo) ->
-    
   parseData: (data) ->
     if data.length > 0
       separator = ';|'
@@ -75,7 +73,7 @@ class LogListView extends ScrollView
   showCommitLog: (hash) ->
     GitShow(@repo, hash, @currentFile if @onlyCurrentFile)
 
-  branchLog: ->
+  branchLog: (@repo) ->
     @skipCommits = 0
     @commitsListView.empty()
     @onlyCurrentFile = false
@@ -83,7 +81,8 @@ class LogListView extends ScrollView
     @renderHeader()
     @getLog()
 
-  currentFileLog: (@onlyCurrentFile, @currentFile) ->
+  currentFileLog: (@repo, @currentFile) ->
+    @onlyCurrentFile = true
     @skipCommits = 0
     @commitsListView.empty()
     @renderHeader()
@@ -92,8 +91,5 @@ class LogListView extends ScrollView
   getLog: ->
     args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
     args.push @currentFile if @onlyCurrentFile and @currentFile?
-    git.cmd
-      args: args
-      cwd: @repo.getWorkingDirectory()
-      stdout: (data) =>
-        @parseData data
+    git.cmd(args, cwd: @repo.getWorkingDirectory())
+    .then (data) => @parseData data
