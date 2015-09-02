@@ -1,13 +1,9 @@
 fs = require 'fs-plus'
-{repo, pathToRepoFile} = require '../fixtures'
+{repo, pathToRepoFile, textEditor} = require '../fixtures'
 git = require '../../lib/git'
 GitDiff = require '../../lib/models/git-diff'
 GitDiffAll = require '../../lib/models/git-diff-all'
 
-textEditor =
-  getPath: -> pathToRepoFile
-  getURI: -> pathToRepoFile
-  onDidDestroy: (@destroy) -> undefined
 diffPane =
   splitRight: -> undefined
   getActiveEditor: -> textEditor
