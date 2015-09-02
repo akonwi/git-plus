@@ -31,7 +31,7 @@ showFile = (objectHash) ->
   split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
   atom.workspace
     .open(showCommitFilePath(objectHash), split: split, activatePane: true)
-    .done (textBuffer) ->
+    .then (textBuffer) ->
       if textBuffer?
         disposables.add textBuffer.onDidDestroy ->
           disposables.dispose()
