@@ -1,5 +1,5 @@
 {$$, SelectListView} = require 'atom-space-pen-views'
-fs = require 'fs'
+fs = require 'fs-plus'
 Path = require 'path'
 git = require '../git'
 GitDiff = require '../models/git-diff'
