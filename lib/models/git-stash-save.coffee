@@ -10,3 +10,5 @@ module.exports = (repo) ->
   .then (data) ->
     notification.dismiss()
     notifier.addSuccess(data)
+  .catch (msg) ->
+    notifier.addError msg
