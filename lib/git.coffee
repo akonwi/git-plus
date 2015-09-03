@@ -9,9 +9,12 @@ gitUntrackedFiles = (repo, dataUnstaged=[]) ->
 
 _prettify = (data) ->
   return [] if data is ''
-  data = data.split(/\n/)
-  data.map (file) ->
-    {mode: file[0], path: file.substring(1).trim()}
+  data = data.split(/\0/)[...-1]
+  [] = for mode, i in data by 2
+    {mode, path: data[i+1] }
+  # data = data.split(/\n/)
+  # data.map (file) ->
+  #   {mode: file[0], path: file.substring(1).trim()}
 
 _prettifyUntracked = (data) ->
   return [] if data is ''
