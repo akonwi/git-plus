@@ -52,8 +52,5 @@ class SelectStageFilesView extends SelectListMultipleView
     files = (item.path for item in items)
     @cancel()
 
-    git.cmd
-      args: ['reset', 'HEAD', '--'].concat(files)
-      cwd: @repo.getWorkingDirectory()
-      stdout: (data) =>
-        notifier.addSuccess(data)
+    git.cmd(['reset', 'HEAD', '--'].concat(files), cwd: @repo.getWorkingDirectory())
+    .then (data) -> notifier.addSuccess(data)
