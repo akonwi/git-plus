@@ -7,3 +7,8 @@ describe "GitStageHunk", ->
     spyOn(git, 'unstagedFiles').andReturn Promise.resolve 'unstagedFile.txt'
     GitStageHunk repo
     expect(git.unstagedFiles).toHaveBeenCalled()
+
+  it "opens the view for selecting files to choose from", ->
+    spyOn(git, 'unstagedFiles').andReturn Promise.resolve 'unstagedFile.txt'
+    GitStageHunk(repo).then (view) ->
+      expect(view).toBeDefined()

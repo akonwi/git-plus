@@ -16,8 +16,7 @@ class SelectStageHunks extends SelectListMultipleView
     @setItems @_generateObjects(data[1..])
     @focusFilterEditor()
 
-  getFilterKey: ->
-    'pos'
+  getFilterKey: -> 'pos'
 
   addButtons: ->
     viewButton = $$ ->
@@ -53,17 +52,19 @@ class SelectStageHunks extends SelectListMultipleView
     return if items.length < 1
 
     patch_full = @patch_header
-    patch_full += patch for {patch} in items
+    items.forEach (item) ->
+      patch_full += (item?.patch)
 
     patchPath = @repo.getWorkingDirectory() + '/GITPLUS_PATCH'
-    fs.writeFileSync patchPath, patch_full, flag: 'w+'
-    git.cmd
-      args: ['apply', '--cached', '--', patchPath]
-      cwd: @repo.getWorkingDirectory()
-      stdout: (data) =>
-        data = if data? and data isnt '' then data else 'Hunk has been staged!'
-        notifier.addSuccess(data)
-        try fs.unlink patchPath
+    fs.writeFile patchPath, patch_full, flag: 'w+', (err) =>
+      unless err
+        git.cmd(['apply', '--cached', '--', patchPath], cwd: @repo.getWorkingDirectory())
+        .then (data) =>
+          data = if data? and data isnt '' then data else 'Hunk has been staged!'
+          notifier.addSuccess(data)
+          try fs.unlink patchPath
+      else
+        notifier.addError err
 
   _generateObjects: (data) ->
     for hunk in data when hunk isnt ''
