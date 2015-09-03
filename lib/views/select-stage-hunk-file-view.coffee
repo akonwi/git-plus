@@ -33,6 +33,5 @@ class SelectStageHunkFile extends SelectListView
 
   confirmed: ({path}) ->
     @cancel()
-    git.diff(@repo, path,
-      (data) => new SelectStageHunks(@repo, data)
-    )
+    git.diff(@repo, path)
+    .then (data) => new SelectStageHunks(@repo, data)
