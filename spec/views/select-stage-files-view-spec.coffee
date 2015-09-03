@@ -1,5 +1,4 @@
 git = require '../../lib/git'
-notifier = require '../../lib/notifier'
 {repo, pathToRepoFile} = require '../fixtures'
 SelectStageFiles = require '../../lib/views/select-stage-files-view'
 SelectUnStageFiles = require '../../lib/views/select-unstage-files-view'
