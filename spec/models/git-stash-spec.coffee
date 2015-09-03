@@ -3,6 +3,7 @@ git = require '../../lib/git'
 GitStashApply = require '../../lib/models/git-stash-apply'
 GitStashSave = require '../../lib/models/git-stash-save'
 GitStashPop = require '../../lib/models/git-stash-pop'
+GitStashDrop = require '../../lib/models/git-stash-drop'
 
 options =
   cwd: repo.getWorkingDirectory()
@@ -26,3 +27,9 @@ describe "Git Stash commands", ->
       spyOn(git, 'cmd').andReturn Promise.resolve true
       GitStashPop(repo)
       expect(git.cmd).toHaveBeenCalledWith ['stash', 'pop'], options
+
+  describe "Drop", ->
+    it "calls git.cmd with 'stash' and 'drop'", ->
+      spyOn(git, 'cmd').andReturn Promise.resolve true
+      GitStashDrop(repo)
+      expect(git.cmd).toHaveBeenCalledWith ['stash', 'drop'], options
