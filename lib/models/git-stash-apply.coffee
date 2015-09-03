@@ -1,16 +1,12 @@
 git = require '../git'
 notifier = require '../notifier'
 
-gitStashApply = (repo) ->
-  git.cmd
-    args: ['stash', 'apply']
+module.exports = (repo) ->
+  options =
     cwd: repo.getWorkingDirectory()
-    options: {
-      env: process.env.NODE_ENV
-    }
-    stdout: (data) ->
-      notifier.addSuccess(data) if data.toString().length > 0
-    stderr: (data) ->
-      notifier.addError(data.toString())
-
-module.exports = gitStashApply
+    env: process.env.NODE_ENV
+  git.cmd(['stash', 'apply'], options)
+  .then (data) ->
+    notifier.addSuccess(data) if data.length > 0
+  .catch (data) ->
+      notifier.addError(data)
