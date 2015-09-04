@@ -45,13 +45,9 @@ class TagView extends SelectListView
     switch cmd
       when 'Show'
         GitShow(@repo, tag)
-        return
       when 'Push'
-        git.cmd
-          args: ['remote']
-          cwd: @repo.getWorkingDirectory()
-          stdout: (data) => new RemoteListView(@repo, data, mode: 'push', tag: @tag)
-        return
+        git.cmd(['remote'], cwd: @repo.getWorkingDirectory())
+        .then (data) => new RemoteListView(@repo, data, mode: 'push', tag: @tag)
       when 'Checkout'
         args = ['checkout', tag]
       when 'Verify'
@@ -59,7 +55,6 @@ class TagView extends SelectListView
       when 'Delete'
         args = ['tag', '--delete', tag]
 
-    git.cmd
-      args: args
-      cwd: @repo.getWorkingDirectory()
-      stdout: (data) -> notifier.addSuccess(data.toString())
+    git.cmd(args, cwd: @repo.getWorkingDirectory())
+    .then (data) -> notifier.addSuccess data
+    .catch (msg) -> notifier.addWarning msg
