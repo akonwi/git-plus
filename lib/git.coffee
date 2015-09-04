@@ -62,7 +62,9 @@ module.exports = git = {
           stdout: (data) -> output += data.toString()
           stderr: (data) -> reject data.toString()
           exit: (code) ->
-            if code is 0 then resolve output else resolve false
+            if code is 0
+              resolve(if output is '' then true else output)
+            else resolve false
       catch
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"

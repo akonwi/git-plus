@@ -32,13 +32,11 @@ class TagCreateView extends View
 
   createTag: ->
     tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
-    git.cmd
-      args: ['tag', '-a', tag.name, '-m', tag.message]
-      cwd: @repo.getWorkingDirectory()
-      stderr: (data) ->
-        notifier.addError(data.toString())
-      exit: (code) ->
-        notifier.addSuccess("Tag '#{tag.name}' has been created successfully!") if code is 0
+    git.cmd(['tag', '-a', tag.name, '-m', tag.message], cwd: @repo.getWorkingDirectory())
+    .then (success) ->
+      notifier.addSuccess("Tag '#{tag.name}' has been created successfully!") if success
+    .catch (msg) ->
+      notifier.addError msg
     @destroy()
 
   destroy: ->
