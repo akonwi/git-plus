@@ -26,12 +26,15 @@ class InputView extends View
       @panel?.destroy()
       args = @commandEditor.getText().split(' ')
       if args[0] is 1 then args.shift()
-      git.cmd
-        args: args
-        cwd: @repo.getWorkingDirectory()
-        stdout: (data) =>
-          notifier.addSuccess(data.toString()) if data.toString().length > 0
-          git.refresh()
-          @currentPane.activate()
+      git.cmd(args, cwd: @repo.getWorkingDirectory())
+      .then (data) =>
+        msg = if data?.length > 0 then data else "git #{args.join(' ')} was successful"
+        notifier.addSuccess(msg)
+        git.refresh()
+        @currentPane.activate()
+      .catch (msg) =>
+        notifier.addError(msg) if msg?.length > 0
+        git.refresh()
+        @currentPane.activate()
 
 module.exports = (repo) -> new InputView(repo)
