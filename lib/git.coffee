@@ -9,12 +9,12 @@ gitUntrackedFiles = (repo, dataUnstaged=[]) ->
 
 _prettify = (data) ->
   return [] if data is ''
-  data = data.split(/\0/)[...-1]
-  [] = for mode, i in data by 2
-    {mode, path: data[i+1] }
-  # data = data.split(/\n/)
-  # data.map (file) ->
-  #   {mode: file[0], path: file.substring(1).trim()}
+  # data = data.split(/\0/)[...-1]
+  # [] = for mode, i in data by 2
+  #   {mode, path: data[i+1] }
+  data = data.split(/\n/)
+  data.filter((file) -> file isnt '').map (file) ->
+    {mode: file[0], path: file.substring(1).trim()}
 
 _prettifyUntracked = (data) ->
   return [] if data is ''
@@ -63,7 +63,8 @@ module.exports = git = {
           stderr: (data) -> reject data.toString()
           exit: (code) ->
             if code is 0
-              resolve(if output is '' then true else output)
+              resolve output
+              # resolve(if output is '' then true else output)
             else resolve false
       catch
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
