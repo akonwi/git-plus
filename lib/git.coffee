@@ -40,19 +40,9 @@ getRepoForCurrentFile = ->
     else
       reject "no current file"
 
-module.exports = git = {
-  # Public: Execute a git command.
-  #
-  # args    - An {Array} containing the arguments for the command.
-  # options - An {Object} with the following keys:
-  #   :cwd  - Current working directory as {String}.
-  #   :options - The {Object} with options used by child_process
-  #
-  # Returns a {Promise}.
-  cmd: (args, {cwd, options}={}) ->
+module.exports = git =
+  cmd: (args, options={}) ->
     new Promise (resolve, reject) ->
-      options ?= {}
-      options.cwd ?= cwd
       output = ''
       try
         new BufferedProcess
@@ -83,8 +73,6 @@ module.exports = git = {
         repo.refreshStatus()
         git.cmd ['add', '--refresh', '--', '.'], cwd: repo.getWorkingDirectory()
 
-  # returns filepath relativized for either a submodule or repository
-  #   otherwise just a full path
   relativize: (path) ->
     git.getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
 
@@ -124,8 +112,6 @@ module.exports = git = {
         notifier.addSuccess "Added #{file ? 'all files'}"
         true
 
-  # Public: Get the repository of the current file or project if no current file
-  # Returns a {Promise} that resolves to a repository like object
   getRepo: ->
     new Promise (resolve, reject) ->
       getRepoForCurrentFile().then (repo) -> resolve(repo)
@@ -138,22 +124,15 @@ module.exports = git = {
         else
           resolve(repos[0])
 
-  # returns submodule for given file or undefined
   getSubmodule: (path) ->
     path ?= atom.workspace.getActiveTextEditor()?.getPath()
     atom.project.getRepositories().filter((r) ->
       r?.repo.submoduleForPath path
     )[0]?.repo?.submoduleForPath path
 
-  # Returns the working directory for a git repo.
-  # Will search for submodule first if currently
-  #   in one or the project root
-  #
-  # @param andSubmodules boolean determining whether to account for submodules
   dir: (andSubmodules=true) ->
     new Promise (resolve, reject) =>
       if andSubmodules and submodule = git.getSubmodule()
         resolve(submodule.getWorkingDirectory())
       else
         git.getRepo().then (repo) -> resolve(repo.getWorkingDirectory())
-}
