@@ -39,16 +39,9 @@ class CherryPickSelectBranch extends SelectListView
       "#{@currentHead}...#{item}"
     ]
 
-    repo = @repo
-    git.cmd
-      args: args
-      cwd: repo.getWorkingDirectory()
-      stdout: (data) ->
-        @save ?= ''
-        @save += data
-      exit: (exit) ->
-        if exit is 0 and @save?
-          new CherryPickSelectCommits(repo, @save.split('\0')[...-1])
-          @save = null
-        else
-          notifier.addInfo "No commits available to cherry-pick."
+    git.cmd(args, cwd: @repo.getWorkingDirectory())
+    .then (save) =>
+      if save.length > 0
+        new CherryPickSelectCommits(@repo, save.split('\0')[...-1])
+      else
+        notifier.addInfo "No commits available to cherry-pick."
