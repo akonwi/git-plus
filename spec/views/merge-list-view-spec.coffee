@@ -5,8 +5,7 @@ MergeListView = require '../../lib/views/merge-list-view'
 describe "MergeListView", ->
   beforeEach ->
     @view = new MergeListView(repo, "branch1\nbranch2")
-    spyOn(git, 'cmd').andCallFake ->
-      Promise.reject 'blah'
+    spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
 
   it "displays a list of branches", ->
     expect(@view.items.length).toBe 2
