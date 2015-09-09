@@ -1,6 +1,8 @@
 Path = require 'flavored-path'
 
 pathToRepoFile = Path.get "~/some/repository/directory/file"
+
+head = jasmine.createSpyObj('head', ['replace'])
 module.exports = mocks =
   pathToRepoFile: pathToRepoFile
 
@@ -9,6 +11,9 @@ module.exports = mocks =
     getWorkingDirectory: -> Path.get "~/some/repository"
     refreshStatus: -> undefined
     relativize: (path) -> "directory/file" if path is pathToRepoFile
+    getReferences: ->
+      heads: [head]
+    getShortHead: -> 'short head'
     repo:
       submoduleForPath: (path) -> undefined
 
