@@ -22,6 +22,3 @@ describe "CherryPickSelectBranch view", ->
       "currentHead...head1"
     ]
     expect(git.cmd).toHaveBeenCalledWith expectedArgs, cwd: repo.getWorkingDirectory()
-    # @view.checkout 'branch1'
-    # waitsFor -> git.cmd.callCount > 0
-    # expect(git.cmd).toHaveBeenCalledWith ['checkout', 'branch1'], cwd: repo.getWorkingDirectory()
