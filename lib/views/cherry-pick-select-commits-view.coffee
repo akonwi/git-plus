@@ -18,8 +18,7 @@ class CherryPickSelectCommits extends SelectListMultipleView
     )
     @focusFilterEditor()
 
-  getFilterKey: ->
-    'hash'
+  getFilterKey: -> 'hash'
 
   addButtons: ->
     viewButton = $$ ->
@@ -40,11 +39,9 @@ class CherryPickSelectCommits extends SelectListMultipleView
 
     @storeFocusedElement()
 
-  cancelled: ->
-    @hide()
+  cancelled: -> @hide()
 
-  hide: ->
-    @panel?.destroy()
+  hide: -> @panel?.destroy()
 
   viewForItem: (item, matchedStr) ->
     $$ ->
@@ -57,8 +54,5 @@ class CherryPickSelectCommits extends SelectListMultipleView
   completed: (items) ->
     @cancel()
     commits = (item.hash for item in items)
-    git.cmd
-      args: ['cherry-pick'].concat(commits)
-      cwd: @repo.getWorkingDirectory()
-      stdout: (data) =>
-        notifier.addSuccess data
+    git.cmd(['cherry-pick'].concat(commits), cwd: @repo.getWorkingDirectory())
+    .then (msg) => notifier.addSuccess msg
