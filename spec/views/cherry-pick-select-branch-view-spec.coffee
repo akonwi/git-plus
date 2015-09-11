@@ -5,8 +5,6 @@ CherryPickSelectBranch = require '../../lib/views/cherry-pick-select-branch-view
 describe "CherryPickSelectBranch view", ->
   beforeEach ->
     @view = new CherryPickSelectBranch(repo, ['head1', 'head2'], 'currentHead')
-    # spyOn(git, 'cmd').andCallFake ->
-      # Promise.reject 'blah'
 
   it "displays a list of branches", ->
     expect(@view.items.length).toBe 2
