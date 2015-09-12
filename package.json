@@ -16,6 +16,7 @@
       "git-plus:add-and-commit",
       "git-plus:diff-all",
       "git-plus:diff",
+      "git-plus:difftool",
       "git-plus:log",
       "git-plus:log-current-file",
       "git-plus:status",
