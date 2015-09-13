@@ -81,12 +81,18 @@ showFile = (filePath) ->
     else
       textEditor
 
+# backupStatus = (status, repo) ->
+#   backupFilepath = Path.join repo.getPath(), 'atom_git_plus.last_status'
+#   fs.writeFile backupFilepath, status
+#
 module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   startCommit = ->
     getStagedFiles(repo)
-    .then (status) -> prepFile status, filePath
+    .then (status) ->
+      # backupStatus status, repo
+      prepFile status, filePath
     .then -> showFile filePath
     .then (textEditor) ->
       disposables.add textEditor.onDidSave ->

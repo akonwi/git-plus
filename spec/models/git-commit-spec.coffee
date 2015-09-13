@@ -45,6 +45,7 @@ setupMocks = ->
     else
       ''
   spyOn(fs, 'writeFileSync')
+  spyOn(fs, 'writeFile')
   spyOn(fs, 'unlinkSync')
 
   atom.config.set 'git-plus.openInPane', false
@@ -109,6 +110,10 @@ describe "GitCommit", ->
       textEditor.save()
       waitsFor -> commitPane.destroy.callCount > 0
       runs -> expect(commitPane.destroy).toHaveBeenCalled()
+
+    # it "saves the status for the commit", ->
+    #   backupFilepath = Path.join(repo.getPath(), 'atom_git_plus.last_status')
+    #   expect(fs.writeFile).toHaveBeenCalledWith backupFilepath, status
 
     it "cancels the commit on textEditor destroy", ->
       textEditor.destroy()
