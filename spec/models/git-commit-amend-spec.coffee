@@ -5,7 +5,7 @@ git = require '../../lib/git'
 GitCommitAmend = require '../../lib/models/git-commit-amend'
 {
   repo,
-  pathToRepoFile,
+  pathToRepoFile
 } = require '../fixtures'
 lastCommitMessage = "commit message"
 lastCommitStatus = "M   some-file.txt"
@@ -19,7 +19,6 @@ currentStatus = "deleted:   some-file.txt"
 describe "GitCommitAmend", ->
   beforeEach ->
     spyOn(fs, 'readFileSync').andReturn ''
-
     spyOn(git, 'stagedFiles').andCallFake ->
       args = git.stagedFiles.mostRecentCall.args
       if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
