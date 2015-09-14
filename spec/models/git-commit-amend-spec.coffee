@@ -7,10 +7,14 @@ GitCommitAmend = require '../../lib/models/git-commit-amend'
   repo,
   pathToRepoFile,
 } = require '../fixtures'
+lastCommitMessage = "commit message"
+lastCommitStatus = "M   some-file.txt"
 lastCommit =
-  """commit message
+  """#{lastCommitMessage}
 
-  M   some-file.txt"""
+  #{lastCommitStatus}
+  """
+currentStatus = "deleted:   some-file.txt"
 
 describe "GitCommitAmend", ->
   beforeEach ->
@@ -26,7 +30,7 @@ describe "GitCommitAmend", ->
       switch args[0]
         when 'whatchanged' then Promise.resolve lastCommit
         when 'config' then Promise.resolve ''
-        when 'status' then Promise.resolve "D    some-file.txt"
+        when 'status' then Promise.resolve currentStatus
         else Promise.resolve ''
 
   it "gets the previous commit message and changed files", ->
@@ -38,14 +42,14 @@ describe "GitCommitAmend", ->
     spyOn(fs, 'writeFileSync')
     commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
     expectedOutput =
-      """commit message
+      """#{lastCommitMessage}
       # This is the status of the previous commit
       #
-      # M   some-file.txt
+      # modified:   some-file.txt
       #
       # This is the current status to be committed
       #
-      # D   some-file.txt"""
+      # #{currentStatus}"""
     waitsForPromise ->
       GitCommitAmend repo
     runs ->

@@ -22,9 +22,22 @@ prepFile = (prevCommit, status, filePath) ->
   message = []
   files = []
   lines.forEach (line) ->
-    unless /^([ MADRCU?!])\s{1}(.*)/.test line
+    unless /(([ MADRCU?!])\s(.*))/.test line
       message.push line
     else
+      switch line[0]
+        when 'M'
+          line = "modified:#{line.substring(1)}"
+        when 'A'
+          line = "added:#{line.substring(1)}"
+        when 'D'
+          line = "deleted:#{line.substring(1)}"
+        when 'R'
+          line = "renamed:#{line.substring(1)}"
+        when 'C'
+          line = "copied:#{line.substring(1)}"
+        when 'U'
+          line = "updated:#{line.substring(1)}"
       files.push line
   message = message.join('\n')
   files = files.join('\n')
