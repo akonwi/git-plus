@@ -14,7 +14,7 @@ gitDifftool = (repo, {file}={}) ->
       diffIndex = data.split('\0')
       includeStagedDiff = atom.config.get 'git-plus.includeStagedDiff'
       for line, i in diffIndex by 2
-        staged = diffIndex[i].split(' ')[3] isnt "0000000000000000000000000000000000000000"
+        staged = not /^0{40}$/.test(diffIndex[i].split(' ')[3]);
         path = diffIndex[i+1]
         if path is file and (!staged or includeStagedDiff)
           args = ['difftool']
