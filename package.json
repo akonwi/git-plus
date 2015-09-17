@@ -12,6 +12,7 @@
       "git-plus:add",
       "git-plus:add-all",
       "git-plus:add-all-and-commit",
+      "git-plus:add-all-commit-and-push",
       "git-plus:add-and-commit",
       "git-plus:diff-all",
       "git-plus:diff",
