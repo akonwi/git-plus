@@ -14,7 +14,9 @@ lastCommit =
 
   #{lastCommitStatus}
   """
-currentStatus = "deleted:   some-file.txt"
+currentStatus =
+  """deleted:   some-file.txt
+  modified: another-file.txt"""
 
 describe "GitCommitAmend", ->
   beforeEach ->
@@ -42,11 +44,8 @@ describe "GitCommitAmend", ->
     commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
     expectedOutput =
       """#{lastCommitMessage}
-      # This is the status of the previous commit
-      #
-      # modified:   some-file.txt
-      #
-      # This is the current status to be committed
+      # Please enter the commit message for your changes. Lines starting
+      # with '#' will be ignored, and an empty message aborts the commit.
       #
       # #{currentStatus}"""
     waitsForPromise ->

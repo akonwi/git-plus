@@ -111,10 +111,6 @@ describe "GitCommit", ->
       waitsFor -> commitPane.destroy.callCount > 0
       runs -> expect(commitPane.destroy).toHaveBeenCalled()
 
-    # it "saves the status for the commit", ->
-    #   backupFilepath = Path.join(repo.getPath(), 'atom_git_plus.last_status')
-    #   expect(fs.writeFile).toHaveBeenCalledWith backupFilepath, status
-
     it "cancels the commit on textEditor destroy", ->
       textEditor.destroy()
       expect(currentPane.activate).toHaveBeenCalled()
@@ -159,6 +155,19 @@ describe "GitCommit", ->
       setupMocks()
       GitCommit(repo, stageChanges: true).then ->
         expect(git.add).toHaveBeenCalledWith repo, update: true
+
+  describe "when 'amend' option is true", ->
+    beforeEach ->
+      atom.config.set "git-plus.openInPane", false
+      setupMocks()
+      waitsForPromise ->
+        GitCommit(repo, amend: true)
+
+    it "calls git.cmd with arguments for amending", ->
+      textEditor.save()
+      expectedGitArgs = ['commit', '--amend', '--cleanup=strip', "--file=#{commitFilePath}"]
+      cwd = repo.getWorkingDirectory()
+      expect(git.cmd).toHaveBeenCalledWith expectedGitArgs, {cwd}
 
   ## atom.config.get('git-plus.openInPane') is always false inside the module
   # describe "when the `git-plus.openInPane` setting is true", ->
