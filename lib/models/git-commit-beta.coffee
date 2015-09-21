@@ -95,7 +95,6 @@ module.exports = (repo, {stageChanges, amend, andPush}={}) ->
       disposables.add textEditor.onDidSave ->
         commit(dir(repo), filePath, isAmending).then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
-    .catch (message) -> notifier.addInfo message
 
   if isAmending
     startCommit()
@@ -103,3 +102,4 @@ module.exports = (repo, {stageChanges, amend, andPush}={}) ->
     git.add(repo, update: stageChanges).then -> init().then -> startCommit()
   else
     init().then -> startCommit()
+    .catch (message) -> notifier.addInfo message
