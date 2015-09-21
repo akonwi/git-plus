@@ -60,23 +60,33 @@ parse = (prevCommit) ->
       prevChangedFiles.push line.replace(/[ MADRCU?!](\s)(\s)*/, line[0])
   [message.join('\n'), prevChangedFiles]
 
+cleanupUnstagedText = (status) ->
+  unstagedFiles = status.indexOf "Changes not staged for commit:"
+  if unstagedFiles >= 0
+    text = status.substring unstagedFiles
+    status = "#{status.substring(0, unstagedFiles - 1)}\n#{text.replace /\s*\(.*\)\n/g, ""}"
+  else
+    status
+
 prepFile = (message, prevChangedFiles, status, filePath) ->
   git.cmd(['config', '--get', 'core.commentchar']).then (commentchar) ->
     commentchar = if commentchar.length > 0 then commentchar.trim() else '#'
-    status = status
-    .replace(/\s*\(.*\)\n/g, "\n")
+    status = cleanupUnstagedText status
+    status = status.replace(/\s*\(.*\)\n/g, "\n")
     .replace(/\n/g, "\n#{commentchar} ")
     .replace "committed:\n#{commentchar}", """committed:
     #{
       prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
     }"""
-    getTemplate().then (template) ->
-      fs.writeFileSync filePath,
-        """#{message}
-        #{commentchar} Please enter the commit message for your changes. Lines starting
-        #{commentchar} with '#{commentchar}' will be ignored, and an empty message aborts the commit.
-        #{commentchar}
-        #{commentchar} #{status}"""
+    fs.writeFileSync filePath,
+      """#{message}
+      #{commentchar} Please enter the commit message for your changes. Lines starting
+      #{commentchar} with '#{commentchar}' will be ignored, and an empty message aborts the commit.
+      #{commentchar}
+      #{commentchar} #{status}"""
+
+showFile = (filePath) ->
+
 
 module.exports = (repo) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
@@ -90,7 +100,7 @@ module.exports = (repo) ->
     .then (prevChangedFiles) ->
       getGitStatus(repo).then (status) ->
         prepFile message, prevChangedFiles, status, filePath
-    # .then showFile filePath
+    .then showFile filePath
   .catch (msg) -> notifier.addInfo msg
   # .then (amend) ->getStagedFiles(repo)
   # .then (files) ->
