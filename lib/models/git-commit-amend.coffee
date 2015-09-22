@@ -127,7 +127,6 @@ commit = (directory, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
   git.cmd(args, cwd: directory)
   .then (data) ->
-    debugger
     notifier.addSuccess data
     destroyCommitEditor()
     git.refresh()

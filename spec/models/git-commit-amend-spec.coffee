@@ -15,13 +15,16 @@ commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 
 describe "GitCommitAmend", ->
   beforeEach ->
+    spyOn(atom.workspace, 'getActivePane').andReturn currentPane
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
     spyOn(atom.workspace, 'paneForURI').andReturn commitPane
     spyOn(git, 'refresh')
 
     spyOn(commitPane, 'destroy').andCallThrough()
+    spyOn(currentPane, 'activate')
 
+    spyOn(fs, 'unlinkSync')
     spyOn(fs, 'readFileSync').andReturn ''
     spyOn(git, 'stagedFiles').andCallFake ->
       args = git.stagedFiles.mostRecentCall.args
@@ -67,3 +70,9 @@ describe "GitCommitAmend", ->
     textEditor.save()
     waitsFor -> commitPane.destroy.callCount > 0
     runs -> expect(commitPane.destroy).toHaveBeenCalled()
+
+  it "cancels the commit on textEditor destroy", ->
+    GitCommitAmend repo
+    textEditor.destroy()
+    expect(currentPane.activate).toHaveBeenCalled()
+    expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
