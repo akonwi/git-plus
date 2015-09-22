@@ -156,19 +156,6 @@ describe "GitCommit", ->
       GitCommit(repo, stageChanges: true).then ->
         expect(git.add).toHaveBeenCalledWith repo, update: true
 
-  describe "when 'amend' option is true", ->
-    beforeEach ->
-      atom.config.set "git-plus.openInPane", false
-      setupMocks()
-      waitsForPromise ->
-        GitCommit(repo, amend: true)
-
-    it "calls git.cmd with arguments for amending", ->
-      textEditor.save()
-      expectedGitArgs = ['commit', '--amend', '--cleanup=strip', "--file=#{commitFilePath}"]
-      cwd = repo.getWorkingDirectory()
-      expect(git.cmd).toHaveBeenCalledWith expectedGitArgs, {cwd}
-
   ## atom.config.get('git-plus.openInPane') is always false inside the module
   # describe "when the `git-plus.openInPane` setting is true", ->
   #   it "defaults to opening to the right", ->

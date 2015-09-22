@@ -45,10 +45,8 @@ destroyCommitEditor = ->
           paneItem.destroy()
         return true
 
-commit = (directory, filePath, isAmending) ->
-  args = ['commit']
-  args.push '--amend' if isAmending
-  args = args.concat ['--cleanup=strip', "--file=#{filePath}"]
+commit = (directory, filePath) ->
+  args = ['commit', '--cleanup=strip', "--file=#{filePath}"]
   git.cmd(args, cwd: directory)
   .then (data) ->
     notifier.addSuccess data
@@ -83,8 +81,7 @@ showFile = (filePath) ->
     else
       textEditor
 
-module.exports = (repo, {stageChanges, amend, andPush}={}) ->
-  isAmending = amend
+module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   init = ->
@@ -93,11 +90,9 @@ module.exports = (repo, {stageChanges, amend, andPush}={}) ->
     showFile filePath
     .then (textEditor) ->
       disposables.add textEditor.onDidSave ->
-        commit(dir(repo), filePath, isAmending).then -> GitPush(repo) if andPush
+        commit(dir(repo), filePath).then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
 
-  if isAmending
-    startCommit()
   if stageChanges
     git.add(repo, update: stageChanges).then -> init().then -> startCommit()
   else
