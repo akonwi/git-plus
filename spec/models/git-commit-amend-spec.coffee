@@ -5,21 +5,13 @@ git = require '../../lib/git'
 GitCommitAmend = require '../../lib/models/git-commit-amend'
 {
   repo,
-  pathToRepoFile
+  pathToRepoFile,
+  textEditor
 } = require '../fixtures'
-lastCommitMessage = "commit message"
-lastCommitStatus = "M   some-file.txt"
-lastCommit =
-  """#{lastCommitMessage}
-
-  #{lastCommitStatus}
-  """
-currentStatus =
-  """deleted:   some-file.txt
-  modified: another-file.txt"""
 
 describe "GitCommitAmend", ->
   beforeEach ->
+    spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(fs, 'readFileSync').andReturn ''
     spyOn(git, 'stagedFiles').andCallFake ->
       args = git.stagedFiles.mostRecentCall.args
@@ -29,9 +21,9 @@ describe "GitCommitAmend", ->
     spyOn(git, 'cmd').andCallFake ->
       args = git.cmd.mostRecentCall.args[0]
       switch args[0]
-        when 'whatchanged' then Promise.resolve lastCommit
-        when 'config' then Promise.resolve ''
-        when 'status' then Promise.resolve currentStatus
+        when 'whatchanged' then Promise.resolve 'last commit'
+        when 'config' then Promise.resolve 'config'
+        when 'status' then Promise.resolve 'current status'
         else Promise.resolve ''
 
   it "gets the previous commit message and changed files", ->
@@ -46,4 +38,9 @@ describe "GitCommitAmend", ->
     waitsFor ->
       fs.writeFileSync.callCount > 0
     runs ->
-      expect(fs.writeFileSync).toHaveBeenCalled()
+      actualPath = fs.writeFileSync.mostRecentCall.args[0]
+      expect(actualPath).toEqual commitFilePath
+
+  it "shows the file", ->
+    GitCommitAmend repo
+    expect(atom.workspace.open).toHaveBeenCalled()

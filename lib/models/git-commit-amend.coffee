@@ -86,7 +86,7 @@ prepFile = (message, prevChangedFiles, status, filePath) ->
       #{commentchar} #{status}"""
 
 showFile = (filePath) ->
-
+  atom.workspace.open(filePath, searchAllPanes: true)#.then (textEditor) ->
 
 module.exports = (repo) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
@@ -100,12 +100,5 @@ module.exports = (repo) ->
     .then (prevChangedFiles) ->
       getGitStatus(repo).then (status) ->
         prepFile message, prevChangedFiles, status, filePath
-    .then showFile filePath
+  .then showFile filePath
   .catch (msg) -> notifier.addInfo msg
-  # .then (amend) ->getStagedFiles(repo)
-  # .then (files) ->
-  #   prepFile amend, files, filePath
-  # .then (data) ->
-  #   GitCommit repo, amend: true
-  # .catch (msg) ->
-  #   notifier.addError "There was an issue retrieving the last commit"
