@@ -3,6 +3,7 @@ Path = require 'flavored-path'
 pathToRepoFile = Path.get "~/some/repository/directory/file"
 
 head = jasmine.createSpyObj('head', ['replace'])
+
 module.exports = mocks =
   pathToRepoFile: pathToRepoFile
 
@@ -23,6 +24,14 @@ module.exports = mocks =
     destroy: -> undefined
     getItems: -> [
       getURI: -> pathToRepoFile
+    ]
+
+  commitPane:
+    alive: true
+    destroy: -> mocks.textEditor.destroy()
+    splitRight: -> undefined
+    getItems: -> [
+      getURI: -> Path.join mocks.repo.getPath(), 'COMMIT_EDITMSG'
     ]
 
   textEditor:

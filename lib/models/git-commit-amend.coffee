@@ -1,8 +1,11 @@
+{CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
 Path = require 'flavored-path'
 git = require '../git'
 GitCommit = require './git-commit-beta'
 notifier = require '../notifier'
+
+disposables = new CompositeDisposable
 
 prettifyStagedFiles = (data) ->
   return [] if data is ''
@@ -78,7 +81,6 @@ prepFile = (message, prevChangedFiles, status, filePath) ->
     #{
       prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
     }"""
-    console.debug 'about to write to file'
     fs.writeFileSync filePath,
       """#{message}
       #{commentchar} Please enter the commit message for your changes. Lines starting
@@ -103,14 +105,40 @@ splitPane = (splitDir, oldEditor) ->
   pane
 
 showFile = (filePath) ->
-  console.debug 'about to show file'
   atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
     if atom.config.get('git-plus.openInPane')
       splitPane(atom.config.get('git-plus.splitPane'), textEditor)
     else
       textEditor
 
+destroyCommitEditor = ->
+  atom.workspace?.getPanes().some (pane) ->
+    pane.getItems().some (paneItem) ->
+      if paneItem?.getURI?()?.includes 'COMMIT_EDITMSG'
+        if pane.getItems().length is 1
+          pane.destroy()
+        else
+          paneItem.destroy()
+        return true
+
+dir = (repo) -> (git.getSubmodule() or repo).getWorkingDirectory()
+
+commit = (directory, filePath) ->
+  args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
+  git.cmd(args, cwd: directory)
+  .then (data) ->
+    debugger
+    notifier.addSuccess data
+    destroyCommitEditor()
+    git.refresh()
+
+cleanup = (currentPane, filePath) ->
+  currentPane.activate() if currentPane.alive
+  disposables.dispose()
+  try fs.unlinkSync filePath
+
 module.exports = (repo) ->
+  currentPane = atom.workspace.getActivePane()
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   cwd = repo.getWorkingDirectory()
   git.cmd(['whatchanged', '-1', '--name-status', '--format=%B'], {cwd})
@@ -122,4 +150,7 @@ module.exports = (repo) ->
     getGitStatus(repo)
     .then (status) -> prepFile message, prevChangedFiles, status, filePath
     .then -> showFile filePath
+  .then (textEditor) ->
+    disposables.add textEditor.onDidSave -> commit(dir(repo), filePath)
+    disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
   .catch (msg) -> notifier.addInfo msg

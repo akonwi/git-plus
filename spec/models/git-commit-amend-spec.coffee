@@ -6,12 +6,22 @@ GitCommitAmend = require '../../lib/models/git-commit-amend'
 {
   repo,
   pathToRepoFile,
-  textEditor
+  textEditor,
+  commitPane,
+  currentPane
 } = require '../fixtures'
+
+commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 
 describe "GitCommitAmend", ->
   beforeEach ->
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
+    spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
+    spyOn(atom.workspace, 'paneForURI').andReturn commitPane
+    spyOn(git, 'refresh')
+
+    spyOn(commitPane, 'destroy').andCallThrough()
+
     spyOn(fs, 'readFileSync').andReturn ''
     spyOn(git, 'stagedFiles').andCallFake ->
       args = git.stagedFiles.mostRecentCall.args
@@ -33,7 +43,6 @@ describe "GitCommitAmend", ->
 
   it "writes to the new commit file", ->
     spyOn(fs, 'writeFileSync')
-    commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
     GitCommitAmend repo
     waitsFor ->
       fs.writeFileSync.callCount > 0
@@ -47,3 +56,14 @@ describe "GitCommitAmend", ->
       atom.workspace.open.callCount > 0
     runs ->
       expect(atom.workspace.open).toHaveBeenCalled()
+
+  it "calls git.cmd with ['commit'...] on textEditor save", ->
+    GitCommitAmend repo
+    textEditor.save()
+    expect(git.cmd).toHaveBeenCalledWith ['commit', '--amend', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+
+  it "closes the commit pane when commit is successful", ->
+    GitCommitAmend repo
+    textEditor.save()
+    waitsFor -> commitPane.destroy.callCount > 0
+    runs -> expect(commitPane.destroy).toHaveBeenCalled()

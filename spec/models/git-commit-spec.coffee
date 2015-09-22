@@ -6,7 +6,8 @@ Path = require 'flavored-path'
   workspace,
   pathToRepoFile,
   currentPane,
-  textEditor
+  textEditor,
+  commitPane
 } = require '../fixtures'
 git = require '../../lib/git'
 GitCommit = require '../../lib/models/git-commit-beta'
@@ -15,13 +16,13 @@ commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 status =
   replace: -> status
   trim: -> status
-commitPane =
-  alive: true
-  destroy: -> textEditor.destroy()
-  splitRight: -> undefined
-  getItems: -> [
-    getURI: -> commitFilePath
-  ]
+# commitPane =
+#   alive: true
+#   destroy: -> textEditor.destroy()
+#   splitRight: -> undefined
+#   getItems: -> [
+#     getURI: -> commitFilePath
+#   ]
 commentchar_config = ''
 templateFile = ''
 commitTemplate = 'foobar'
