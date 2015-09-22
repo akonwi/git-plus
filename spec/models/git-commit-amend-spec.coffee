@@ -43,4 +43,7 @@ describe "GitCommitAmend", ->
 
   it "shows the file", ->
     GitCommitAmend repo
-    expect(atom.workspace.open).toHaveBeenCalled()
+    waitsFor ->
+      atom.workspace.open.callCount > 0
+    runs ->
+      expect(atom.workspace.open).toHaveBeenCalled()

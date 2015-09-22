@@ -78,6 +78,7 @@ prepFile = (message, prevChangedFiles, status, filePath) ->
     #{
       prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
     }"""
+    console.debug 'about to write to file'
     fs.writeFileSync filePath,
       """#{message}
       #{commentchar} Please enter the commit message for your changes. Lines starting
@@ -85,8 +86,29 @@ prepFile = (message, prevChangedFiles, status, filePath) ->
       #{commentchar}
       #{commentchar} #{status}"""
 
+splitPane = (splitDir, oldEditor) ->
+  pane = atom.workspace.paneForURI(oldEditor.getURI())
+  options = { copyActiveItem: true }
+  directions =
+    left: =>
+      pane.splitLeft options
+    right: ->
+      pane.splitRight options
+    up: ->
+      pane.splitUp options
+    down: ->
+      pane.splitDown options
+  pane = directions[splitDir]().getActiveEditor()
+  oldEditor.destroy()
+  pane
+
 showFile = (filePath) ->
-  atom.workspace.open(filePath, searchAllPanes: true)#.then (textEditor) ->
+  console.debug 'about to show file'
+  atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
+    if atom.config.get('git-plus.openInPane')
+      splitPane(atom.config.get('git-plus.splitPane'), textEditor)
+    else
+      textEditor
 
 module.exports = (repo) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
@@ -94,11 +116,10 @@ module.exports = (repo) ->
   git.cmd(['whatchanged', '-1', '--name-status', '--format=%B'], {cwd})
   .then (amend) -> parse amend
   .then ([message, prevChangedFiles]) ->
-    getStagedFiles(repo)
-    .then (files) -> diffFiles prevChangedFiles, files
-    .then (prevChangedFiles) -> prettifyFileStatuses(prevChangedFiles)
-    .then (prevChangedFiles) ->
-      getGitStatus(repo).then (status) ->
-        prepFile message, prevChangedFiles, status, filePath
-  .then showFile filePath
+    getStagedFiles(repo).then (files) ->
+      [message, prettifyFileStatuses(diffFiles prevChangedFiles, files)]
+  .then ([message, prevChangedFiles]) ->
+    getGitStatus(repo)
+    .then (status) -> prepFile message, prevChangedFiles, status, filePath
+    .then -> showFile filePath
   .catch (msg) -> notifier.addInfo msg
