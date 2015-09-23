@@ -2,11 +2,9 @@ git = require '../git'
 notifier = require '../notifier'
 
 module.exports = (repo) ->
-  options =
-    cwd: repo.getWorkingDirectory()
-    env: process.env.NODE_ENV
-  git.cmd(['stash', 'drop'], options)
+  cwd = repo.getWorkingDirectory()
+  git.cmd(['stash', 'drop'], {cwd})
   .then (data) ->
     notifier.addSuccess(data) if data.length > 0
   .catch (msg) ->
-    notifier.addError(msg)
+    notifier.addInfo msg
