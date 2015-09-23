@@ -2,13 +2,9 @@ git = require '../git'
 notifier = require '../notifier'
 
 module.exports = (repo) ->
-  notification = notifier.addInfo('Saving...', dismissable: true)
-  options =
-    cwd: repo.getWorkingDirectory()
-    env: process.env.NODE_ENV
-  git.cmd(['stash', 'save'], options)
+  cwd = repo.getWorkingDirectory()
+  git.cmd(['stash', 'save'], {cwd})
   .then (data) ->
-    notification.dismiss()
-    notifier.addSuccess(data)
+    notifier.addSuccess data
   .catch (msg) ->
-    notifier.addError msg
+    notifier.addInfo msg

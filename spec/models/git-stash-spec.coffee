@@ -7,7 +7,6 @@ GitStashDrop = require '../../lib/models/git-stash-drop'
 
 options =
   cwd: repo.getWorkingDirectory()
-  env: process.env.NODE_ENV
 
 describe "Git Stash commands", ->
   describe "Apply", ->
