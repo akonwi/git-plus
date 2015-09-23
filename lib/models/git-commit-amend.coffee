@@ -2,7 +2,6 @@
 fs = require 'fs-plus'
 Path = require 'flavored-path'
 git = require '../git'
-GitCommit = require './git-commit-beta'
 notifier = require '../notifier'
 
 disposables = new CompositeDisposable
