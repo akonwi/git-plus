@@ -126,7 +126,7 @@ module.exports = git =
   getSubmodule: (path) ->
     path ?= atom.workspace.getActiveTextEditor()?.getPath()
     atom.project.getRepositories().filter((r) ->
-      r?.repo.submoduleForPath path
+      r?.repo?.submoduleForPath path
     )[0]?.repo?.submoduleForPath path
 
   dir: (andSubmodules=true) ->
