@@ -9,9 +9,9 @@ gitAddAllCommitPullAndPush = (repo) ->
     exit: ->
       new GitCommit(repo, andPush: false)
       exit: ->
-        new GitPull(repo)
+        GitPull(repo)
         exit: ->
-          new GitPush(repo)
+          GitPush(repo)
 
 
 module.exports = gitAddAllCommitPullAndPush
