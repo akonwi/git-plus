@@ -6,6 +6,7 @@ os = require 'os'
 git = require '../git'
 notifier = require '../notifier'
 GitPush = require './git-push'
+GitPull = require './git-pull'
 
 module.exports =
 class GitCommit
@@ -24,7 +25,7 @@ class GitCommit
   # Returns: The full path to our COMMIT_EDITMSG file as {String}
   filePath: -> Path.join(@repo.getPath(), 'COMMIT_EDITMSG')
 
-  constructor: (@repo, {@amend, @andPush, @stageChanges}={}) ->
+  constructor: (@repo, {@amend, @andPush, @stageChanges}={}, @andPull) ->
     @currentPane = atom.workspace.getActivePane()
     @disposables = new CompositeDisposable
 
@@ -130,6 +131,8 @@ class GitCommit
         cwd: @dir()
       stdout: (data) =>
         notifier.addSuccess data
+        if @andPull
+          new GitPull(@repo)
         if @andPush
           new GitPush(@repo)
         @isAmending = false
