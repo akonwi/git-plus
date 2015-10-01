@@ -35,9 +35,6 @@ fuzzyFilter = require('../models/fuzzy').filter
 module.exports =
 class SelectListMultipleView extends SelectListView
 
-  selectedItems = []
-
-  #
   # This method can be overridden by subclasses but `super` should always
   # be called.
   initialize: ->
