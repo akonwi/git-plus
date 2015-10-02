@@ -4,6 +4,7 @@ Path = require 'flavored-path'
 
 git = require '../git'
 notifier = require '../notifier'
+splitPane = require '../splitPane'
 GitPush = require './git-push'
 
 disposables = new CompositeDisposable
@@ -57,22 +58,6 @@ cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.alive
   disposables.dispose()
   try fs.unlinkSync filePath
-
-splitPane = (splitDir, oldEditor) ->
-  pane = atom.workspace.paneForURI(oldEditor.getURI())
-  options = { copyActiveItem: true }
-  directions =
-    left: =>
-      pane.splitLeft options
-    right: ->
-      pane.splitRight options
-    up: ->
-      pane.splitUp options
-    down: ->
-      pane.splitDown options
-  pane = directions[splitDir]().getActiveEditor()
-  oldEditor.destroy()
-  pane
 
 showFile = (filePath) ->
   atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->

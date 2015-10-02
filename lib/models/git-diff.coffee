@@ -5,6 +5,7 @@ fs = require 'fs-plus'
 
 git = require '../git'
 notifier = require '../notifier'
+splitPane = require '../splitPane'
 
 disposables = new CompositeDisposable
 
@@ -37,19 +38,3 @@ showFile = (filePath) ->
       splitPane(atom.config.get('git-plus.splitPane'), textEditor)
     else
       textEditor
-
-splitPane = (splitDir, oldEditor) ->
-  pane = atom.workspace.paneForURI(oldEditor.getURI())
-  options = { copyActiveItem: true }
-  directions =
-    left: ->
-      pane.splitLeft options
-    right: ->
-      pane.splitRight options
-    up: ->
-      pane.splitUp options
-    down: ->
-      pane.splitDown options
-  pane = directions[splitDir]().getActiveEditor()
-  oldEditor.destroy()
-  pane
