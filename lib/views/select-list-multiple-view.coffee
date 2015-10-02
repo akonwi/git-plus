@@ -39,7 +39,7 @@ class SelectListMultipleView extends SelectListView
   # be called.
   initialize: ->
     super
-    selectedItems = []
+    @selectedItems = []
     @list.addClass('mark-active')
 
     @on 'mousedown', ({target}) =>
@@ -92,16 +92,16 @@ class SelectListMultipleView extends SelectListView
       @cancel()
 
   confirmed: (item, viewItem) ->
-    if item in selectedItems
-      selectedItems = selectedItems.filter (i) -> i isnt item
+    if item in @selectedItems
+      @selectedItems = @selectedItems.filter (i) -> i isnt item
       viewItem.removeClass('active')
     else
-      selectedItems.push item
+      @selectedItems.push item
       viewItem.addClass('active')
 
   complete: ->
-    if selectedItems.length > 0
-      @completed(selectedItems)
+    if @selectedItems.length > 0
+      @completed(@selectedItems)
     else
       @cancel()
 
@@ -129,7 +129,7 @@ class SelectListMultipleView extends SelectListView
         item = filteredItems[i].original ? filteredItems[i]
         itemView = $(@viewForItem(item, filteredItems[i].string ? null))
         itemView.data('select-list-item', item)
-        itemView.addClass 'active' if item in selectedItems
+        itemView.addClass 'active' if item in @selectedItems
         @list.append(itemView)
 
       @selectItemView(@list.find('li:first'))
