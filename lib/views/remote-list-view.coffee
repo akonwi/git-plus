@@ -2,6 +2,7 @@
 {$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
+notifier = require '../notifier'
 OutputView = require './output-view'
 PullBranchListView = require './pull-branch-list-view'
 
@@ -60,6 +61,7 @@ class ListView extends SelectListView
       args.push extraArgs
     args = args.concat([remote, @tag])
     command = atom.config.get('git-plus.gitPath') ? 'git'
+    startMessage = notifier.addInfo "Starting #{@mode}", dismissable: true
     new BufferedProcess
       command: command
       args: args
@@ -77,6 +79,9 @@ class ListView extends SelectListView
               cwd: @repo.getWorkingDirectory()
             stdout: (data) -> view.addLine(data.toString())
             stderr: (data) -> view.addLine(data.toString())
-            exit: (code) -> view.finish()
+            exit: (code) ->
+              view.finish()
+              startMessage.dismiss()
         else
           view.finish()
+          startMessage.dismiss()
