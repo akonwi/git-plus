@@ -68,9 +68,10 @@ module.exports =
       default: 5
       description: 'How long should success/error messages be shown?'
 
-  subscriptions: new CompositeDisposable
+  subscriptions: null
 
   activate: (state) ->
+    @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
@@ -116,4 +117,17 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:run', -> git.getRepo().then((repo) -> new GitRun(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:merge', -> git.getRepo().then((repo) -> GitMerge(repo))
 
-  deactivate: -> @subscriptions.dispose()
+  deactivate: ->
+    @subscriptions.dispose()
+    @statusBarTile?.destroy()
+    delete @statusBarTile
+
+  consumeStatusBar: (statusBar) ->
+    div = document.createElement 'div'
+    div.classList.add 'inline-block'
+    icon = document.createElement 'span'
+    icon.classList.add 'icon', 'icon-gist'
+    link = document.createElement 'a'
+    link.appendChild icon
+    div.appendChild link
+    @statusBarTile = statusBar.addRightTile item: div, priority: 0

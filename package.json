@@ -49,6 +49,13 @@
       "git-plus:merge"
     ]
   },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  },
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
