@@ -127,9 +127,10 @@ module.exports =
     div = document.createElement 'div'
     div.classList.add 'inline-block'
     icon = document.createElement 'span'
-    icon.classList.add 'icon', 'icon-gist'
+    icon.classList.add 'icon', 'icon-pin'
     link = document.createElement 'a'
     link.appendChild icon
     link.onclick = (e) -> OutputViewManager.getView().toggle()
+    link.title = "Toggle Output Console"
     div.appendChild link
     @statusBarTile = statusBar.addRightTile item: div, priority: 0
