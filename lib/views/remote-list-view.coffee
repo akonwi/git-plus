@@ -3,7 +3,7 @@
 
 git = require '../git'
 notifier = require '../notifier'
-OutputView = require './output-view'
+OutputViewManager = require '../output-view-manager'
 PullBranchListView = require './pull-branch-list-view'
 
 module.exports =
@@ -55,13 +55,14 @@ class ListView extends SelectListView
     @cancel()
 
   execute: (remote, extraArgs='') ->
-    view = new OutputView()
+    view = OutputViewManager.new()
     args = [@mode]
     if extraArgs.length > 0
       args.push extraArgs
     args = args.concat([remote, @tag])
     command = atom.config.get('git-plus.gitPath') ? 'git'
-    startMessage = notifier.addInfo "Starting #{@mode}...", dismissable: true
+    message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
+    startMessage = notifier.addInfo message, dismissable: true
     new BufferedProcess
       command: command
       args: args

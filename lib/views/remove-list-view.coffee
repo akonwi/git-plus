@@ -1,7 +1,6 @@
 {$, $$, EditorView} = require 'atom-space-pen-views'
 
 git = require '../git'
-OutputView = require './output-view'
 notifier = require '../notifier'
 SelectListMultipleView = require './select-list-multiple-view'
 

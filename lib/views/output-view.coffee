@@ -19,7 +19,7 @@ module.exports =
 
     finish: ->
       @find(".output").text(@message)
-      @panel = atom.workspace.addBottomPanel(item: this)
+      @show()
       setTimeout =>
         @hide()
       , atom.config.get('git-plus.messageTimeout') * 1000
