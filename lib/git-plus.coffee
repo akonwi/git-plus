@@ -1,5 +1,6 @@
 {CompositeDisposable} = require 'atom'
 git = require './git'
+OutputViewManager = require './output-view-manager'
 GitPaletteView = require './views/git-palette-view'
 GitAdd                 = require './models/git-add'
 GitBranch              = require './models/git-branch'
@@ -129,5 +130,6 @@ module.exports =
     icon.classList.add 'icon', 'icon-gist'
     link = document.createElement 'a'
     link.appendChild icon
+    link.onclick = (e) -> OutputViewManager.getView().toggle()
     div.appendChild link
     @statusBarTile = statusBar.addRightTile item: div, priority: 0

@@ -9,7 +9,8 @@ module.exports =
       @div class: 'git-plus info-view', =>
         @pre class: 'output', defaultMessage
 
-    initialize: -> super
+    initialize: ->
+      super
 
     addLine: (line) ->
       @message = '' if @message is defaultMessage
@@ -20,6 +21,10 @@ module.exports =
     finish: ->
       @find(".output").text(@message)
       @show()
-      setTimeout =>
+      @timeout = setTimeout =>
         @hide()
       , atom.config.get('git-plus.messageTimeout') * 1000
+
+    toggle: ->
+      clearTimeout @timeout if @timeout
+      $.fn.toggle.call(this)
