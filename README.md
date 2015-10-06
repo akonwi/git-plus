@@ -15,6 +15,12 @@ vim-fugitive like package for atom. make commits and other git things without th
 >- `Ctrl-Shift-H` on Windows + Linux
 >- `Git Plus: Menu` on the atom command palette.
 
+### Push/Pull/Fetch notifications
+Notifications will appear in a console output above the status bar.
+This view can be toggled by clicking the pin icon in the bottom right of the status bar.
+
+![screenshot](https://raw.githubusercontent.com/akonwi/git-plus/5.5.0/pin.png)
+
 ### Commands
 _Commands are accessible for keybindings by dasherizing the command title._
 > Git Add ==  `git-plus:add`
