@@ -1,5 +1,12 @@
 ## Changelog
 
+### 5.5.0
+- Mostly internal changes to the codebase that will hopefully improve performance
+- Add toggle on the right of status-bar to show the output console
+- Show notification when Push/Pull/Fetch starts
+- Amending no longer resets HEAD so you can safely cancel an amend
+- `Add All Commit And Push` is now an activation command
+
 ### 5.4.7
 - #269
 
