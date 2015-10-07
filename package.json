@@ -66,6 +66,7 @@
     "fuzzaldrin": "^1.2.0",
     "underscore-plus": "1.x",
     "atom-space-pen-views": "^2.0.3",
-    "flavored-path": "0.0.8"
+    "flavored-path": "0.0.8",
+    "atom-notify": "^1.0.1"
   }
 }
