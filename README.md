@@ -1,4 +1,4 @@
-# Git-Plus package
+# Git-Plus package ![Build Status](https://travis-ci.org/akonwi/git-plus.svg?branch=5.5.0)
 
 [![endorse](https://api.coderwall.com/akonwi/endorsecount.png)](https://coderwall.com/akonwi)
 
@@ -28,7 +28,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 > Git Add All Commit And Push == `git-plus:add-all-commit-and-push`
 
   __Note: This list is not exclusive__
-  
+
 1. `Git add [all]`
 
   Git add will add the current file and 'add all' will add all changed files
