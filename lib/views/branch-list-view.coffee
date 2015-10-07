@@ -50,9 +50,12 @@ class ListView extends SelectListView
 
   checkout: (branch) ->
     git.cmd(@args.concat(branch), cwd: @repo.getWorkingDirectory())
-    # using `stderr` for success here
+    # command terminates with an error-ish exit code
     .catch (data) =>
-      notifier.addSuccess data
+      if data.includes 'error'
+        notifier.addError data
+      else
+        notifier.addSuccess data
       atom.workspace.observeTextEditors (editor) =>
         if filepath = editor.getPath()?.toString()
           fs.exists filepath, (exists) =>
