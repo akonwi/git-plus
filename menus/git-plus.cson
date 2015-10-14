@@ -26,6 +26,7 @@
         { 'label': 'Log', 'command': 'git-plus:log' }
         { 'label': 'Merge', 'command': 'git-plus:merge'},
         { 'label': 'Pull Using Rebase', 'command': 'git-plus:pull-using-rebase'}
+        { 'label': 'Rebase', 'command': 'git-plus:rebase'}
       ]
     ]
   }

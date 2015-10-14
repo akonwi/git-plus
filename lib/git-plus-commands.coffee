@@ -32,6 +32,7 @@ getCommands = ->
   GitUnstageFiles        = require './models/git-unstage-files'
   GitRun                 = require './models/git-run'
   GitMerge               = require './models/git-merge'
+  GitRebase              = require './models/git-rebase'
 
   git.getRepo()
     .then (repo) ->
@@ -79,6 +80,7 @@ getCommands = ->
       commands.push ['git-plus:tags', 'Tags', -> GitTags(repo)]
       commands.push ['git-plus:run', 'Run', -> new GitRun(repo)]
       commands.push ['git-plus:merge', 'Merge', -> GitMerge(repo)]
+      commands.push ['git-plus:rebase', 'Rebase', -> GitRebase(repo)]
 
       return commands
 

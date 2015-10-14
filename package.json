@@ -47,7 +47,8 @@
       "git-plus:unstage-files",
       "git-plus:init",
       "git-plus:run",
-      "git-plus:merge"
+      "git-plus:merge",
+      "git-plus:rebase"
     ]
   },
   "consumedServices": {
