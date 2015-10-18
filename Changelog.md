@@ -6,8 +6,9 @@
   - Add toggle on the right of status-bar for toggling the output console
   - Output from `Git Run` will be displayed in the output console
   - Show notification when Push/Pull/Fetch starts in the output console
+- Clicking on the branch name in the status-bar will trigger the `Git Checkout` menu (@kandros)
 - Amending no longer resets HEAD so you can safely cancel an amend
-- `Add All Commit And Push` is now an activation command
+- `Add All Commit And Push` is now an activation command (@dbenson24)
 
 ### 5.4.7
 - #269

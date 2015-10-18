@@ -1,4 +1,5 @@
 {CompositeDisposable} = require 'atom'
+{$} = require 'atom-space-pen-views'
 git = require './git'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
@@ -124,6 +125,10 @@ module.exports =
     delete @statusBarTile
 
   consumeStatusBar: (statusBar) ->
+    @setupBranchesMenuToggle statusBar
+    @setupOutputViewToggle statusBar
+
+  setupOutputViewToggle: (statusBar) ->
     div = document.createElement 'div'
     div.classList.add 'inline-block'
     icon = document.createElement 'span'
@@ -134,3 +139,10 @@ module.exports =
     link.title = "Toggle Output Console"
     div.appendChild link
     @statusBarTile = statusBar.addRightTile item: div, priority: 0
+
+  setupBranchesMenuToggle: (statusBar) ->
+    statusBar.getRightTiles().some ({item}) =>
+      if item.classList.contains 'git-view'
+        @subscriptions.add $(item).find('.git-branch').on 'click', (e) ->
+          atom.commands.dispatch(document.querySelector('atom-text-editor'), 'git-plus:checkout')
+        return true
