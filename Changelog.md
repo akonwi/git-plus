@@ -1,9 +1,11 @@
 ## Changelog
 
 ### 5.5.0
-- Mostly internal changes to the codebase that will hopefully improve performance
-- Add toggle on the right of status-bar to show the output console
-- Show notification when Push/Pull/Fetch starts
+- A lot of refactoring into promises
+- __Output console__
+  - Add toggle on the right of status-bar for toggling the output console
+  - Output from `Git Run` will be displayed in the output console
+  - Show notification when Push/Pull/Fetch starts in the output console
 - Amending no longer resets HEAD so you can safely cancel an amend
 - `Add All Commit And Push` is now an activation command
 

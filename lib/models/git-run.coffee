@@ -3,6 +3,7 @@
 
 git = require '../git'
 notifier = require '../notifier'
+OutputViewManager = require '../output-view-manager'
 
 class InputView extends View
   @content: ->
@@ -24,16 +25,26 @@ class InputView extends View
     @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm', (e) =>
       @disposables.dispose()
       @panel?.destroy()
+      view = OutputViewManager.new()
       args = @commandEditor.getText().split(' ')
       if args[0] is 1 then args.shift()
       git.cmd(args, cwd: @repo.getWorkingDirectory())
       .then (data) =>
-        msg = if data?.length > 0 then data else "git #{args.join(' ')} was successful"
+        msg = "git #{args.join(' ')} was successful"
         notifier.addSuccess(msg)
+        if data?.length > 0
+          view.addLine data
+        else
+          view.reset()
+        view.finish()
         git.refresh()
         @currentPane.activate()
       .catch (msg) =>
-        notifier.addError(msg) if msg?.length > 0
+        if msg?.length > 0
+          view.addLine msg
+        else
+          view.reset()
+        view.finish()
         git.refresh()
         @currentPane.activate()
 
