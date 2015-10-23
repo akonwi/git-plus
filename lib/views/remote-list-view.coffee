@@ -17,9 +17,7 @@ class ListView extends SelectListView
 
   parseData: ->
     items = @data.split("\n")
-    remotes = []
-    for item in items
-      remotes.push {name: item} unless item is ''
+    remotes = items.filter((item) -> item isnt '').map (item) -> { name: item }
     if remotes.length is 1
       @confirmed remotes[0]
     else
