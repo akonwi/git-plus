@@ -55,7 +55,7 @@ class ListView extends SelectListView
       cwd: @repo.getWorkingDirectory()
       args: @args.concat(branch)
       # using `stderr` for success here
-      stderr: (data) =>f
+      stderr: (data) =>
         notifier.addSuccess data.toString()
         atom.workspace.observeTextEditors (editor) =>
           if filepath = editor.getPath()?.toString()
