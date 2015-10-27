@@ -44,7 +44,8 @@
       "git-plus:unstage-files",
       "git-plus:init",
       "git-plus:run",
-      "git-plus:merge"
+      "git-plus:merge",
+      "git-plus:rebase"
     ]
   },
   "repository": "https://github.com/akonwi/git-plus",
