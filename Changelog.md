@@ -8,7 +8,9 @@
   - Show notification when Push/Pull/Fetch starts in the output console
 - Clicking on the branch name in the status-bar will trigger the `Git Checkout` menu (@kandros)
 - Amending no longer resets HEAD so you can safely cancel an amend
-- `Add All Commit And Push` is now an activation command (@dbenson24)
+- __`Add All Commit And Push`__
+  - is now an activation command (@dbenson24)
+  - it tries to `pull` before pushing (@mhuggins7278)
 
 ### 5.4.7
 - #269

@@ -14,6 +14,7 @@ class ListView extends SelectListView
     @extraArgs ?= []
     @show()
     @parseData()
+    @result = new Promise (@resolve, @reject) =>
 
   parseData: ->
     items = @data.split("\n")
@@ -44,7 +45,7 @@ class ListView extends SelectListView
   confirmed: ({name}) ->
     if @mode is 'pull'
       git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
-      .then (data) => new PullBranchListView(@repo, data, name, @extraArgs)
+      .then (data) => new PullBranchListView(@repo, data, name, @extraArgs, @resolve)
     else if @mode is 'fetch-prune'
       @mode = 'fetch'
       @execute name, '--prune'

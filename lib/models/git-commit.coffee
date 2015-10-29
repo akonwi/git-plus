@@ -6,6 +6,7 @@ git = require '../git'
 notifier = require '../notifier'
 splitPane = require '../splitPane'
 GitPush = require './git-push'
+GitPull = require './git-pull'
 
 disposables = new CompositeDisposable
 
@@ -75,7 +76,8 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
     showFile filePath
     .then (textEditor) ->
       disposables.add textEditor.onDidSave ->
-        commit(dir(repo), filePath).then -> GitPush(repo) if andPush
+        commit(dir(repo), filePath)
+        .then -> (GitPull(repo).then -> GitPush(repo)) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
 
   if stageChanges
