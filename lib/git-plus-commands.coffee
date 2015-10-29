@@ -51,7 +51,7 @@ getCommands = ->
       commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend(repo)]
       commands.push ['git-plus:add-and-commit', 'Add And Commit', -> GitAddAndCommit(repo)]
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> GitAddAllAndCommit(repo)]
-      commands.push ['git-plus:add-all-commit-and-push', 'Add All Commit And Push', -> GitAddAllCommitAndPush(repo)]
+      commands.push ['git-plus:add-all-commit-and-push', 'Add All, Commit And Push', -> GitAddAllCommitAndPush(repo)]
       commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches(repo)]
       commands.push ['git-plus:checkout-remote', 'Checkout Remote', -> GitBranch.gitRemoteBranches(repo)]
       commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitBranch.newBranch(repo)]
