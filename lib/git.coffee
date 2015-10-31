@@ -1,4 +1,6 @@
 {BufferedProcess} = require 'atom'
+Path = require 'flavored-path'
+
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
@@ -59,6 +61,14 @@ module.exports = git =
       catch
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
+
+  config:
+    get: (setting) ->
+      git.getRepo()
+      .then (repo) ->
+        git.cmd ['config', '--get', setting], cwd: repo.getWorkingDirectory()
+      .catch (e) ->
+        git.cmd ['config', '--get', setting], cwd: Path.get('~')
 
   reset: (repo) ->
     git.cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'

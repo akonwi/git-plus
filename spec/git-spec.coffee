@@ -1,9 +1,13 @@
 fs = require 'fs-plus'
 Path = require 'flavored-path'
 git = require '../lib/git'
-mock = require './mock'
-
-pathToRepoFile = Path.get "~/some/repository/directory/file"
+{
+  repo,
+  pathToRepoFile,
+  textEditor,
+  commitPane,
+  currentPane
+} = require './fixtures'
 pathToSubmoduleFile = Path.get "~/some/submodule/file"
 
 mockRepo =
@@ -24,6 +28,19 @@ mockRepoWithSubmodule.repo = {
 }
 
 describe "Git-Plus git module", ->
+  describe "git.config", ->
+    describe "::get", ->
+      describe "when there is a repo file open", ->
+        it "spawns a command querying git for the given setting in the repo", ->
+          spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
+          spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
+          spyOn(atom.project, 'getDirectories').andReturn [{ contains: -> true }]
+          spyOn(atom.project, 'repositoryForDirectory').andReturn Promise.resolve repo
+          waitsForPromise ->
+            git.config.get('user.name').then ->
+              expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'user.name'], cwd: repo.getWorkingDirectory()
+
+
   describe "git.getRepo", ->
     it "returns a promise resolving to repository", ->
       waitsForPromise ->
