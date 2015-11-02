@@ -40,8 +40,8 @@ setupMocks = ->
   spyOn(fs, 'writeFile')
   spyOn(fs, 'unlinkSync')
   spyOn(git, 'refresh')
-  spyOn(git.config, 'get').andCallFake ->
-    arg = git.config.get.mostRecentCall.args[0]
+  spyOn(git, 'getConfig').andCallFake ->
+    arg = git.getConfig.mostRecentCall.args[0]
     if arg is 'commit.template'
       Promise.resolve templateFile
     else if arg is 'core.commentchar'
@@ -73,7 +73,7 @@ describe "GitCommit", ->
       expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
     it "gets the commentchar from configs", ->
-      expect(git.config.get).toHaveBeenCalledWith 'core.commentchar'
+      expect(git.getConfig).toHaveBeenCalledWith 'core.commentchar'
 
     it "gets staged files", ->
       expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
@@ -82,7 +82,7 @@ describe "GitCommit", ->
       expect(status.replace).toHaveBeenCalled()
 
     it "gets the commit template from git configs", ->
-      expect(git.config.get).toHaveBeenCalledWith 'commit.template'
+      expect(git.getConfig).toHaveBeenCalledWith 'commit.template'
 
     it "writes to a file", ->
       argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
