@@ -30,16 +30,28 @@ mockRepoWithSubmodule.repo = {
 describe "Git-Plus git module", ->
   describe "git.config", ->
     describe "::get", ->
+      args = ['config', '--get', 'user.name']
+
+      beforeEach ->
+        spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
+        spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
+
       describe "when there is a repo file open", ->
         it "spawns a command querying git for the given setting in the repo", ->
-          spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
-          spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
           spyOn(atom.project, 'getDirectories').andReturn [{ contains: -> true }]
           spyOn(atom.project, 'repositoryForDirectory').andReturn Promise.resolve repo
+          waitsForPromise =>
+            git.config.get('user.name').then ->
+              expect(git.cmd).toHaveBeenCalledWith args, cwd: repo.getWorkingDirectory()
+
+      describe "when current file is not in a repo", ->
+        it "spawns a command querying git for the given global setting", ->
+          spyOn(atom.project, 'getDirectories').andReturn [{ contains: -> false }]
+          spyOn(atom.project, 'repositoryForDirectory').andReturn Promise.resolve null
+          spyOn(atom.project, 'getRepositories').andReturn []
           waitsForPromise ->
             git.config.get('user.name').then ->
-              expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'user.name'], cwd: repo.getWorkingDirectory()
-
+              expect(git.cmd).toHaveBeenCalledWith args, cwd: Path.get('~')
 
   describe "git.getRepo", ->
     it "returns a promise resolving to repository", ->

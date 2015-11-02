@@ -21,18 +21,17 @@ templateFile = ''
 commitTemplate = 'foobar'
 
 setupMocks = ->
+  atom.config.set 'git-plus.openInPane', false
   spyOn(currentPane, 'activate')
   spyOn(commitPane, 'destroy').andCallThrough()
   spyOn(commitPane, 'splitRight')
-
   spyOn(atom.workspace, 'getActivePane').andReturn currentPane
   spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
   spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
   spyOn(atom.workspace, 'paneForURI').andReturn commitPane
-
+  spyOn(git.config, 'get').andReturn Promise.resolve templateFile
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
-
   spyOn(fs, 'readFileSync').andCallFake ->
     if fs.readFileSync.mostRecentCall.args[0] is 'template'
       commitTemplate
@@ -41,26 +40,19 @@ setupMocks = ->
   spyOn(fs, 'writeFileSync')
   spyOn(fs, 'writeFile')
   spyOn(fs, 'unlinkSync')
-
-  atom.config.set 'git-plus.openInPane', false
-
   spyOn(git, 'refresh')
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
-    if args[0] is 'config' and args[2] is 'commit.template'
-      Promise.resolve templateFile
-    else if args[0] is 'config' and args[2] is 'core.commentchar'
+    if args[0] is 'config' and args[2] is 'core.commentchar'
       Promise.resolve commentchar_config
     else if args[0] is 'status'
       Promise.resolve status
     else if args[0] is 'commit'
       Promise.resolve 'commit success'
-
   spyOn(git, 'stagedFiles').andCallFake ->
     args = git.stagedFiles.mostRecentCall.args
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
       Promise.resolve [pathToRepoFile]
-
   spyOn(git, 'add').andCallFake ->
     args = git.add.mostRecentCall.args
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory() and args[1].update
@@ -87,7 +79,7 @@ describe "GitCommit", ->
       expect(status.replace).toHaveBeenCalled()
 
     it "gets the commit template from git configs", ->
-      expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'commit.template']
+      expect(git.config.get).toHaveBeenCalledWith 'commit.template'
 
     it "writes to a file", ->
       argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
