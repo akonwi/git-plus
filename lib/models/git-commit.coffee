@@ -20,11 +20,11 @@ getStagedFiles = (repo) ->
       Promise.reject "Nothing to commit."
 
 getTemplate = ->
-  git.cmd(['config', '--get', 'commit.template']).then (filePath) ->
+  git.config.get('commit.template').then (filePath) ->
     if filePath then fs.readFileSync(Path.get(filePath.trim())).toString().trim() else ''
 
 prepFile = (status, filePath) ->
-  git.cmd(['config', '--get', 'core.commentchar']).then (commentchar) ->
+  git.config.get('core.commentchar').then (commentchar) ->
     commentchar = if commentchar then commentchar.trim() else '#'
     status = status.replace(/\s*\(.*\)\n/g, "\n")
     status = status.trim().replace(/\n/g, "\n#{commentchar} ")

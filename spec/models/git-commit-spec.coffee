@@ -29,7 +29,6 @@ setupMocks = ->
   spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
   spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
   spyOn(atom.workspace, 'paneForURI').andReturn commitPane
-  spyOn(git.config, 'get').andReturn Promise.resolve templateFile
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
   spyOn(fs, 'readFileSync').andCallFake ->
@@ -41,11 +40,15 @@ setupMocks = ->
   spyOn(fs, 'writeFile')
   spyOn(fs, 'unlinkSync')
   spyOn(git, 'refresh')
+  spyOn(git.config, 'get').andCallFake ->
+    arg = git.config.get.mostRecentCall.args[0]
+    if arg is 'commit.template'
+      Promise.resolve templateFile
+    else if arg is 'core.commentchar'
+      Promise.resolve commentchar_config
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
-    if args[0] is 'config' and args[2] is 'core.commentchar'
-      Promise.resolve commentchar_config
-    else if args[0] is 'status'
+    if args[0] is 'status'
       Promise.resolve status
     else if args[0] is 'commit'
       Promise.resolve 'commit success'
@@ -70,7 +73,7 @@ describe "GitCommit", ->
       expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
     it "gets the commentchar from configs", ->
-      expect(git.cmd).toHaveBeenCalledWith ['config', '--get', 'core.commentchar']
+      expect(git.config.get).toHaveBeenCalledWith 'core.commentchar'
 
     it "gets staged files", ->
       expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()

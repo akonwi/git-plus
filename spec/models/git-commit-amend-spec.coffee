@@ -35,7 +35,6 @@ describe "GitCommitAmend", ->
       args = git.cmd.mostRecentCall.args[0]
       switch args[0]
         when 'whatchanged' then Promise.resolve 'last commit'
-        when 'config' then Promise.resolve 'config'
         when 'status' then Promise.resolve 'current status'
         else Promise.resolve ''
 
