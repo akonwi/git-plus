@@ -11,6 +11,7 @@
 - __`Add All Commit And Push`__
   - is now an activation command (@dbenson24)
   - it tries to `pull` before pushing (@mhuggins7278)
+- Add `Git Difftool` to open up a difftool (@outsmirkable)
 
 ### 5.4.7
 - #269

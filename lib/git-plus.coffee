@@ -42,7 +42,6 @@ module.exports =
   config:
     includeStagedDiff:
       title: 'Include staged diffs?'
-      description: 'description'
       type: 'boolean'
       default: true
     openInPane:
