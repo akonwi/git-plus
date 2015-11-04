@@ -15,6 +15,7 @@ module.exports =
     addLine: (line) ->
       @message = '' if @message is defaultMessage
       @message += line
+      this
 
     reset: -> @message = defaultMessage
 
