@@ -7,7 +7,7 @@ describe "GitDiffTool", ->
   beforeEach ->
     atom.config.set 'git-plus.includeStagedDiff', true
     spyOn(git, 'cmd').andReturn Promise.resolve('diffs')
-    spyOn(git, 'getConfig').andReturn Promise.resolve('')
+    spyOn(git, 'getConfig').andReturn Promise.resolve('some-tool')
     waitsForPromise ->
       GitDiffTool repo, file: pathToRepoFile
 
