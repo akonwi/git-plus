@@ -55,6 +55,7 @@ class TagView extends SelectListView
       when 'Delete'
         args = ['tag', '--delete', tag]
 
-    git.cmd(args, cwd: @repo.getWorkingDirectory())
-    .then (data) -> notifier.addSuccess data
-    .catch (msg) -> notifier.addWarning msg
+    if args?
+      git.cmd(args, cwd: @repo.getWorkingDirectory())
+      .then (data) -> notifier.addSuccess data
+      .catch (msg) -> notifier.addWarning msg
