@@ -13,6 +13,7 @@
   - is now an activation command (@dbenson24)
   - it tries to `pull` before pushing (@mhuggins7278)
 - Add `Git Difftool` to open up a difftool (@outsmirkable)
+- Add `Git Rebase` (@afontaine)
 
 ### 5.4.7
 - #269
