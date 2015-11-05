@@ -2,6 +2,7 @@ fs = require 'fs-plus'
 {$$, SelectListView} = require 'atom-space-pen-views'
 git = require '../git'
 notifier = require '../notifier'
+OutputViewManager = require '../output-view-manager'
 
 module.exports =
   class ListView extends SelectListView
@@ -47,14 +48,12 @@ module.exports =
       @cancel()
 
     rebase: (branch) ->
-      git.cmd
-        args: ['rebase', branch]
-        cwd: @repo.getWorkingDirectory()
-        stdout: (data) =>
-          notifier.addSuccess data.toString()
-          atom.workspace.getTextEditors().forEach (editor) ->
-            fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
-          git.refresh()
-        stderr: (data) =>
-          notifier.addError data.toString()
-          git.refresh()
+      git.cmd(['rebase', branch], cwd: @repo.getWorkingDirectory())
+      .then (msg) ->
+        OutputViewManager.new().addLine(msg).finish()
+        atom.workspace.getTextEditors().forEach (editor) ->
+          fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
+        git.refresh()
+      .catch (msg) =>
+        notifier.addError msg
+        git.refresh()

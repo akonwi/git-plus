@@ -2,8 +2,5 @@ git = require '../git'
 RebaseListView = require '../views/rebase-list-view'
 
 module.exports = (repo) ->
-  git.cmd
-    args: ['branch']
-    cwd: repo.getWorkingDirectory()
-    stdout: (data) ->
-      new RebaseListView(repo, data)
+  git.cmd(['branch'], cwd: repo.getWorkingDirectory())
+  .then (data) -> new RebaseListView(repo, data)
