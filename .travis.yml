@@ -12,4 +12,4 @@ git:
 
 branches:
   only:
-    - 5.5.0
+    - master
