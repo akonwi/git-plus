@@ -80,8 +80,9 @@ describe "Git-Plus git module", ->
 
   describe "git.cmd", ->
     it "returns a promise", ->
-      waitsForPromise ->
-        git.cmd().then -> expect(true).toBeTruthy()
+      promise = git.cmd()
+      expect(promise.catch).toBeDefined()
+      expect(promise.then).toBeDefined()
 
   describe "git.add", ->
     it "calls git.cmd with ['add', '--all', {fileName}]", ->
