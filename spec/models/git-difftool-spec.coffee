@@ -1,4 +1,5 @@
 fs = require 'fs-plus'
+Path = require 'flavored-path'
 {repo, pathToRepoFile} = require '../fixtures'
 git = require '../../lib/git'
 GitDiffTool = require '../../lib/models/git-difftool'
@@ -16,4 +17,4 @@ describe "GitDiffTool", ->
       expect(git.cmd).toHaveBeenCalledWith ['diff-index', 'HEAD', '-z'], cwd: repo.getWorkingDirectory()
 
     it "calls `git.getConfig` to check if a a difftool is set", ->
-      expect(git.getConfig).toHaveBeenCalledWith 'diff.tool'
+      expect(git.getConfig).toHaveBeenCalledWith 'diff.tool', Path.dirname(pathToRepoFile)

@@ -20,16 +20,17 @@ getStagedFiles = (repo) ->
     else
       Promise.reject "Nothing to commit."
 
-getTemplate = ->
-  git.getConfig('commit.template').then (filePath) ->
+getTemplate = (cwd) ->
+  git.getConfig('commit.template', cwd).then (filePath) ->
     if filePath then fs.readFileSync(Path.get(filePath.trim())).toString().trim() else ''
 
 prepFile = (status, filePath) ->
-  git.getConfig('core.commentchar').then (commentchar) ->
+  cwd = Path.dirname(filePath)
+  git.getConfig('core.commentchar', cwd).then (commentchar) ->
     commentchar = if commentchar then commentchar.trim() else '#'
     status = status.replace(/\s*\(.*\)\n/g, "\n")
     status = status.trim().replace(/\n/g, "\n#{commentchar} ")
-    getTemplate().then (template) ->
+    getTemplate(cwd).then (template) ->
       fs.writeFileSync filePath,
         """#{template}
         #{commentchar} Please enter the commit message for your changes. Lines starting
@@ -71,7 +72,8 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   init = ->
-    getStagedFiles(repo).then (status) -> prepFile status, filePath
+    getStagedFiles(repo)
+    .then (status) -> prepFile status, filePath
   startCommit = ->
     showFile filePath
     .then (textEditor) ->

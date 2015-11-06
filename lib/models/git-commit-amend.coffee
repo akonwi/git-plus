@@ -41,12 +41,6 @@ getStagedFiles = (repo) ->
 getGitStatus = (repo) ->
   git.cmd ['status'], cwd: repo.getWorkingDirectory()
 
-getTemplate = ->
-  git.getConfig('commit.template').then (filePath) ->
-    if filePath
-      fs.readFileSync(Path.get(filePath.trim())).toString().trim()
-    else filePath
-
 diffFiles = (previousFiles, currentFiles) ->
   previousFiles = previousFiles.map (p) -> prettyifyPreviousFile p
   currentPaths = currentFiles.map ({path}) -> path
@@ -71,8 +65,8 @@ cleanupUnstagedText = (status) ->
   else
     status
 
-prepFile = (message, prevChangedFiles, status, filePath) ->
-  git.getConfig('core.commentchar').then (commentchar) ->
+prepFile = ({message, prevChangedFiles, status, filePath}) ->
+  git.getConfig('core.commentchar', Path.dirname(filePath)).then (commentchar) ->
     commentchar = if commentchar.length > 0 then commentchar.trim() else '#'
     status = cleanupUnstagedText status
     status = status.replace(/\s*\(.*\)\n/g, "\n")
@@ -131,7 +125,7 @@ module.exports = (repo) ->
       [message, prettifyFileStatuses(diffFiles prevChangedFiles, files)]
   .then ([message, prevChangedFiles]) ->
     getGitStatus(repo)
-    .then (status) -> prepFile message, prevChangedFiles, status, filePath
+    .then (status) -> prepFile {message, prevChangedFiles, status, filePath}
     .then -> showFile filePath
   .then (textEditor) ->
     disposables.add textEditor.onDidSave -> commit(dir(repo), filePath)

@@ -73,7 +73,7 @@ describe "GitCommit", ->
       expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
     it "gets the commentchar from configs", ->
-      expect(git.getConfig).toHaveBeenCalledWith 'core.commentchar'
+      expect(git.getConfig).toHaveBeenCalledWith 'core.commentchar', Path.dirname(commitFilePath)
 
     it "gets staged files", ->
       expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
@@ -82,7 +82,7 @@ describe "GitCommit", ->
       expect(status.replace).toHaveBeenCalled()
 
     it "gets the commit template from git configs", ->
-      expect(git.getConfig).toHaveBeenCalledWith 'commit.template'
+      expect(git.getConfig).toHaveBeenCalledWith 'commit.template', Path.dirname(commitFilePath)
 
     it "writes to a file", ->
       argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args

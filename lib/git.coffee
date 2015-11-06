@@ -58,11 +58,10 @@ module.exports = git =
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
 
-  getConfig: (setting) ->
-    git.getRepo()
-    .then (repo) ->
-      git.cmd ['config', '--get', setting], cwd: repo.getWorkingDirectory()
-    .catch (e) ->
+  getConfig: (setting, workingDirectory=null) ->
+    if workingDirectory?
+      git.cmd ['config', '--get', setting], cwd: workingDirectory
+    else
       git.cmd ['config', '--get', setting], cwd: Path.get('~')
 
   reset: (repo) ->

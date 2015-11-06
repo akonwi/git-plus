@@ -33,24 +33,20 @@ describe "Git-Plus git module", ->
 
     beforeEach ->
       spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
-      spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
 
-    describe "when there is a repo file open", ->
-      it "spawns a command querying git for the given setting in the repo", ->
-        spyOn(atom.project, 'getDirectories').andReturn [{ contains: -> true }]
-        spyOn(atom.project, 'repositoryForDirectory').andReturn Promise.resolve repo
-        waitsForPromise =>
-          git.getConfig('user.name').then ->
-            expect(git.cmd).toHaveBeenCalledWith args, cwd: repo.getWorkingDirectory()
-
-    describe "when current file is not in a repo", ->
+    describe "when a repo file path isn't specified", ->
       it "spawns a command querying git for the given global setting", ->
-        spyOn(atom.project, 'getDirectories').andReturn [{ contains: -> false }]
-        spyOn(atom.project, 'repositoryForDirectory').andReturn Promise.resolve null
-        spyOn(atom.project, 'getRepositories').andReturn []
         waitsForPromise ->
-          git.getConfig('user.name').then ->
-            expect(git.cmd).toHaveBeenCalledWith args, cwd: Path.get('~')
+          git.getConfig('user.name')
+        runs ->
+          expect(git.cmd).toHaveBeenCalledWith args, cwd: Path.get('~')
+
+    describe "when a repo file path is specified", ->
+      it "checks for settings in that repo", ->
+        waitsForPromise ->
+          git.getConfig('user.name', repo.getWorkingDirectory())
+        runs ->
+          expect(git.cmd).toHaveBeenCalledWith args, cwd: repo.getWorkingDirectory()
 
   describe "git.getRepo", ->
     it "returns a promise resolving to repository", ->
