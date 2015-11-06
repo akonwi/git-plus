@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.5.3
+- Fix #311
+
 ### 5.5.2
 - Refactoring
 - Catch unstage files errors
