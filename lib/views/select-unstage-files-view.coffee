@@ -52,4 +52,5 @@ class SelectStageFilesView extends SelectListMultipleView
     @cancel()
 
     git.cmd(['reset', 'HEAD', '--'].concat(files), cwd: @repo.getWorkingDirectory())
-    .then (data) -> notifier.addSuccess(data)
+    .then (msg) -> notifier.addSuccess msg
+    .catch (msg) -> notifier.addError msg

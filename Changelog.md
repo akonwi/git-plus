@@ -1,7 +1,8 @@
 ## Changelog
 
-### 5.5.1
+### 5.5.2
 - Refactoring
+- Catch unstage files errors
 
 ### 5.5.0
 - A lot of refactoring into promises
