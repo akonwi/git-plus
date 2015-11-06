@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.5.1
+- Refactoring
+
 ### 5.5.0
 - A lot of refactoring into promises
 - __Output console__
