@@ -74,6 +74,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   init = ->
     getStagedFiles(repo)
     .then (status) -> prepFile status, filePath
+    .catch (msg) -> notifier.addError msg
   startCommit = ->
     showFile filePath
     .then (textEditor) ->
