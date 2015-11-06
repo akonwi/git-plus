@@ -71,10 +71,7 @@ showFile = (filePath) ->
 module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
-  init = ->
-    getStagedFiles(repo)
-    .then (status) -> prepFile status, filePath
-    .catch (msg) -> notifier.addError msg
+  init = -> getStagedFiles(repo).then (status) -> prepFile status, filePath
   startCommit = ->
     showFile filePath
     .then (textEditor) ->
@@ -82,9 +79,14 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
         commit(dir(repo), filePath)
         .then -> (GitPull(repo).then -> GitPush(repo)) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
+    .catch (msg) -> notifier.addError msg
 
   if stageChanges
     git.add(repo, update: stageChanges).then -> init().then -> startCommit()
   else
     init().then -> startCommit()
-    .catch (message) -> notifier.addInfo message
+    .catch (message) ->
+      if message.includes 'CRLF'
+        startCommit()
+      else
+        notifier.addInfo message

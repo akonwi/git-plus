@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.5.4
+- Refactor
+- Try to ignore CRLF errors when commiting
+
 ### 5.5.3
 - Fix #311
 
