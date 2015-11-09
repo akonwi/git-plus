@@ -6,7 +6,7 @@ init = (path) ->
   git.cmd(['init'], cwd: path)
   .then (data) ->
     notifier.addSuccess data
-    atom.project.setPaths([path])
+    atom.project.setPaths(atom.project.getPaths())
 
 module.exports = ->
   currentFile = atom.workspace.getActiveTextEditor()?.getPath()

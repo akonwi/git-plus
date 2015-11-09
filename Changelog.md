@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.5.6
+- Fix #315
+
 ### 5.5.5
 - Complete fix for #310
 
