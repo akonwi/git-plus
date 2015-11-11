@@ -77,7 +77,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
     .then (textEditor) ->
       disposables.add textEditor.onDidSave ->
         commit(dir(repo), filePath)
-        .then -> (GitPull(repo).then -> GitPush(repo)) if andPush
+        .then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
     .catch (msg) -> notifier.addError msg
 
