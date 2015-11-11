@@ -17,12 +17,15 @@ class ListView extends SelectListView
     @result = new Promise (@resolve, @reject) =>
 
   parseData: ->
+    @currentBranchString = '== Current Branch =='
+    currentBranch =
+      name: @currentBranchString
     items = @data.split("\n")
     remotes = items.filter((item) -> item isnt '').map (item) -> { name: item }
     if remotes.length is 1
       @confirmed remotes[0]
     else
-      @setItems remotes
+      @setItems [currentBranch].concat remotes
       @focusFilterEditor()
 
   getFilterKey: -> 'name'
@@ -44,8 +47,11 @@ class ListView extends SelectListView
 
   confirmed: ({name}) ->
     if @mode is 'pull'
-      git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
-      .then (data) => new PullBranchListView(@repo, data, name, @extraArgs, @resolve)
+      if name is @currentBranchString
+        @execute()
+      else
+        git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
+        .then (data) => new PullBranchListView(@repo, data, name, @extraArgs, @resolve)
     else if @mode is 'fetch-prune'
       @mode = 'fetch'
       @execute name, '--prune'
@@ -53,12 +59,13 @@ class ListView extends SelectListView
       @execute name
     @cancel()
 
-  execute: (remote, extraArgs='') ->
+  execute: (remote='', extraArgs='') ->
+    remote = '' if remote is @currentBranchString
     view = OutputViewManager.new()
     args = [@mode]
     if extraArgs.length > 0
       args.push extraArgs
-    args = args.concat([remote, @tag])
+    args = args.concat([remote, @tag]).filter((arg) -> arg isnt '')
     command = atom.config.get('git-plus.gitPath') ? 'git'
     message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
     startMessage = notifier.addInfo message, dismissable: true
