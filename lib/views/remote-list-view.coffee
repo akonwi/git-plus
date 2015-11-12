@@ -17,15 +17,12 @@ class ListView extends SelectListView
     @result = new Promise (@resolve, @reject) =>
 
   parseData: ->
-    @currentBranchString = '== Current Branch =='
-    currentBranch =
-      name: @currentBranchString
     items = @data.split("\n")
     remotes = items.filter((item) -> item isnt '').map (item) -> { name: item }
     if remotes.length is 1
       @confirmed remotes[0]
     else
-      @setItems [currentBranch].concat remotes
+      @setItems remotes
       @focusFilterEditor()
 
   getFilterKey: -> 'name'
@@ -60,7 +57,6 @@ class ListView extends SelectListView
     @cancel()
 
   execute: (remote='', extraArgs='') ->
-    remote = '' if remote is @currentBranchString
     view = OutputViewManager.new()
     args = [@mode]
     if extraArgs.length > 0

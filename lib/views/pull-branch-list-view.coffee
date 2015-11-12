@@ -9,8 +9,24 @@ module.exports =
   class PullBranchListView extends BranchListView
     initialize: (@repo, @data, @remote, @extraArgs, @resolve) -> super
 
+    parseData: ->
+      @currentBranchString = '== Current =='
+      currentBranch =
+        name: @currentBranchString
+      items = @data.split("\n")
+      branches = items.filter((item) -> item isnt '').map (item) ->
+        name: item.replace(/\s/g, '')
+      if branches.length is 1
+        @pull branches[0]
+      else
+        @setItems [currentBranch].concat branches
+      @focusFilterEditor()
+
     confirmed: ({name}) ->
-      @pull name.substring(name.indexOf('/') + 1)
+      if name is @currentBranchString
+        @pull()
+      else
+        @pull name.substring(name.indexOf('/') + 1)
       @cancel()
 
     pull: (remoteBranch='') ->
@@ -18,7 +34,7 @@ module.exports =
       startMessage = notifier.addInfo "Pulling...", dismissable: true
       new BufferedProcess
         command: atom.config.get('git-plus.gitPath') ? 'git'
-        args: ['pull'].concat(@extraArgs, @remote, remoteBranch)
+        args: ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
         options:
           cwd: @repo.getWorkingDirectory()
         stdout: (data) -> view.addLine(data.toString())
