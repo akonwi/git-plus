@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.0
+- Fix #270. When pulling, you now have the default option to pull from the origin of the current branch
+
 ### 5.5.7
 - Fix #317 and #319
 
