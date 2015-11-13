@@ -50,15 +50,17 @@ describe "Git-Plus git module", ->
 
   describe "git.getRepo", ->
     it "returns a promise resolving to repository", ->
+      spyOn(atom.project, 'getRepositories').andReturn [repo]
       waitsForPromise ->
-        git.getRepo().then (repo) ->
-          expect(repo.getWorkingDirectory()).toContain 'git-plus'
+        git.getRepo().then (actual) ->
+          expect(actual.getWorkingDirectory()).toEqual repo.getWorkingDirectory()
 
   describe "git.dir", ->
     it "returns a promise resolving to absolute path of repo", ->
-      waitsForPromise ->
-        git.dir().then (dir) ->
-          expect(dir).toContain 'git-plus'
+      spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
+      spyOn(atom.project, 'getRepositories').andReturn [repo]
+      git.dir().then (dir) ->
+        expect(dir).toEqual repo.getWorkingDirectory()
 
   describe "git.getSubmodule", ->
     it "returns undefined when there is no submodule", ->

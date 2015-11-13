@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.1
+- Display untracked files in list of files to stage as separate items
+
 ### 5.6.0
 - Fix #270. When pulling, you now have the default option to pull from the origin of the current branch
 

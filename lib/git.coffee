@@ -5,9 +5,10 @@ RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
 gitUntrackedFiles = (repo, dataUnstaged=[]) ->
-  args = ['ls-files', '-o', '--exclude-standard','-z']
+  args = ['ls-files', '-o', '--exclude-standard']
   git.cmd(args, cwd: repo.getWorkingDirectory())
-  .then (data) -> dataUnstaged.concat(_prettifyUntracked(data))
+  .then (data) ->
+    dataUnstaged.concat(_prettifyUntracked(data))
 
 _prettify = (data) ->
   return [] if data is ''
@@ -20,7 +21,7 @@ _prettify = (data) ->
 
 _prettifyUntracked = (data) ->
   return [] if data is ''
-  data = data.split(/\n/)
+  data = data.split(/\n/).filter (d) -> d isnt ''
   data.map (file) -> {mode: '?', path: file}
 
 _prettifyDiff = (data) ->
