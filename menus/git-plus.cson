@@ -2,7 +2,7 @@
 'context-menu':
   'atom-text-editor:not(.mini)': [
     {
-      'label': 'Git add file',
+      'label': 'Git add file'
       'command': 'git-plus:add'
     }
   ]
@@ -13,20 +13,62 @@
     'submenu': [
       'label': 'Git Plus'
       'submenu': [
-        { 'label': 'Add', 'command': 'git-plus:add' }
-        { 'label': 'Add All', 'command': 'git-plus:add-all' }
-        { 'label': 'Commit', 'command': 'git-plus:commit' }
-        { 'label': 'Diff', 'command': 'git-plus:diff' }
-        { 'label': 'Difftool', 'command': 'git-plus:difftool' }
-        { 'label': 'Diff All', 'command': 'git-plus:diff-all' }
-        { 'label': 'Add & Commit', 'command': 'git-plus:add-and-commit'}
-        { 'label': 'Add All & Commit', 'command': 'git-plus:add-all-and-commit'}
-        { 'label': 'Add All & Commit & Push', 'command': 'git-plus:add-all-commit-and-push'}
-        { 'label': 'Push', 'command': 'git-plus:push' }
-        { 'label': 'Log', 'command': 'git-plus:log' }
-        { 'label': 'Merge', 'command': 'git-plus:merge'},
-        { 'label': 'Pull Using Rebase', 'command': 'git-plus:pull-using-rebase'}
-        { 'label': 'Rebase', 'command': 'git-plus:rebase'}
+        {
+          'label': 'Add'
+          'command': 'git-plus:add'
+        }
+        {
+          'label': 'Add All'
+          'command': 'git-plus:add-all'
+        }
+        {
+          'label': 'Commit'
+          'command': 'git-plus:commit'
+        }
+        {
+          'label': 'Diff'
+          'command': 'git-plus:diff'
+        }
+        {
+          'label': 'Difftool'
+          'command': 'git-plus:difftool'
+        }
+        {
+          'label': 'Diff All'
+          'command': 'git-plus:diff-all'
+        }
+        {
+          'label': 'Add & Commit'
+          'command': 'git-plus:add-and-commit'
+        }
+        {
+          'label': 'Add All & Commit'
+          'command': 'git-plus:add-all-and-commit'
+        }
+        {
+          'label': 'Add All & Commit & Push'
+          'command': 'git-plus:add-all-commit-and-push'
+        }
+        {
+          'label': 'Push'
+          'command': 'git-plus:push'
+        }
+        {
+          'label': 'Log'
+          'command': 'git-plus:log'
+        }
+        {
+          'label': 'Merge'
+          'command': 'git-plus:merge'
+        }
+        {
+          'label': 'Pull Using Rebase'
+          'command': 'git-plus:pull-using-rebase'
+        }
+        {
+          'label': 'Rebase'
+          'command': 'git-plus:rebase'
+        }
       ]
     ]
   }
