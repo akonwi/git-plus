@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.4
+- Update splitPaneDirection config to be an enum
+
 ### 5.6.3
 - Fix #318
 
