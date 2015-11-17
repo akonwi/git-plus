@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.2
+- Disable color for 'Git show' (@modosc)
+
 ### 5.6.1
 - Display untracked files in list of files to stage as separate items
 
