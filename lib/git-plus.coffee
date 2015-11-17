@@ -148,5 +148,5 @@ module.exports =
     statusBar.getRightTiles().some ({item}) =>
       if item?.classList?.contains? 'git-view'
         @subscriptions.add $(item).find('.git-branch').on 'click', (e) ->
-          atom.commands.dispatch(document.querySelector('atom-text-editor'), 'git-plus:checkout')
+          atom.commands.dispatch(document.querySelector('atom-workspace'), 'git-plus:checkout')
         return true

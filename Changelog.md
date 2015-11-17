@@ -1,6 +1,7 @@
 ## Changelog
 
-### 5.6.4
+### 5.6.5
+- Trigger checkout from clicking on branch name in status bar on atom-workspace
 - Update splitPaneDirection config to be an enum
 
 ### 5.6.3
