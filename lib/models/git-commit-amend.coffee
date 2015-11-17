@@ -36,7 +36,7 @@ getStagedFiles = (repo) ->
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (data) -> prettifyStagedFiles data
     else
-      Promise.reject "Nothing to commit."
+      Promise.resolve []
 
 getGitStatus = (repo) ->
   git.cmd ['status'], cwd: repo.getWorkingDirectory()
@@ -121,7 +121,8 @@ module.exports = (repo) ->
   git.cmd(['whatchanged', '-1', '--name-status', '--format=%B'], {cwd})
   .then (amend) -> parse amend
   .then ([message, prevChangedFiles]) ->
-    getStagedFiles(repo).then (files) ->
+    getStagedFiles(repo)
+    .then (files) ->
       [message, prettifyFileStatuses(diffFiles prevChangedFiles, files)]
   .then ([message, prevChangedFiles]) ->
     getGitStatus(repo)

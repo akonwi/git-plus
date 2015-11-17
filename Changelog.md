@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.3
+- Fix #318
+
 ### 5.6.2
 - Disable color for 'Git show' (@modosc)
 
