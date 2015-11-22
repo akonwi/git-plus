@@ -2,15 +2,18 @@ notify = require('atom-notify')('Git-Plus')
 {addSuccess, addInfo, addError, addWarning} = notify
 
 notify.addSuccess = ->
-  addSuccess.call notify, arguments..., dismissable: true
+  note = addSuccess.call notify, arguments..., dismissable: true
+  setTimeout((=> note.dismiss()), 5000)
 
 notify.addInfo = ->
-  addInfo.call notify, arguments..., dismissable: true
+  note = addInfo.call notify, arguments..., dismissable: true
+  setTimeout((=> note.dismiss()), 5000)
 
 notify.addError = ->
-  addError.call notify, arguments..., dismissable: true
+  note = addError.call notify, arguments..., dismissable: true
 
 notify.addWarning = ->
-  addWarning.call notify, arguments..., dismissable: true
+  note = addWarning.call notify, arguments..., dismissable: true
+  setTimeout((=> note.dismiss()), 5000)
 
 module.exports = notify
