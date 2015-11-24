@@ -44,7 +44,7 @@ getRepoForCurrentFile = ->
       reject "no current file"
 
 module.exports = git =
-  cmd: (args, options={}) ->
+  cmd: (args, options={ env: process.env }) ->
     new Promise (resolve, reject) ->
       output = ''
       try
