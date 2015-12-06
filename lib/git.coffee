@@ -53,17 +53,23 @@ module.exports = git =
           args: args
           options: options
           stdout: (data) -> output += data.toString()
-          stderr: (data) -> reject data.toString()
-          exit: (code) -> resolve output
+          stderr: (data) -> 
+            output += data.toString()
+          exit: (code) -> 
+            if code is 0
+              resolve output 
+            else 
+              reject output 
       catch
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
 
   getConfig: (setting, workingDirectory=null) ->
-    if workingDirectory?
-      git.cmd ['config', '--get', setting], cwd: workingDirectory
-    else
-      git.cmd ['config', '--get', setting], cwd: Path.get('~')
+    workingDirectory ?= Path.get('~')
+    git.cmd(['config', '--get', setting], cwd: workingDirectory).catch (error) ->
+      if error? and error isnt ''
+        throw error
+      ''
 
   reset: (repo) ->
     git.cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'
