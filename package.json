@@ -65,7 +65,6 @@
   },
   "dependencies": {
     "fs-plus": "^2.2.0",
-    "fs-extra": "^0.26.2",
     "fuzzaldrin": "^1.2.0",
     "underscore-plus": "1.x",
     "atom-space-pen-views": "^2.0.3",

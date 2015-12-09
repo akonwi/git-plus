@@ -1,4 +1,4 @@
-fs = require 'fs-extra'
+fs = require 'fs-plus'
 Path = require 'flavored-path'
 git = require '../lib/git'
 {
@@ -99,9 +99,9 @@ describe "Git-Plus git module", ->
         promise = git.cmd()
         expect(promise.catch).toBeDefined()
         expect(promise.then).toBeDefined()
-        return promise.catch (output) ->
+        promise.catch (output) ->
           expect(output).toContain('usage')
-      
+
     it "returns a promise that is fulfilled with stdout on success", ->
       waitsForPromise ->
         git.cmd(['--version']).then (output) ->
@@ -116,8 +116,9 @@ describe "Git-Plus git module", ->
       initDir = 'git-plus-test-dir' + Math.random()
       cloneDir = initDir + '-clone'
       waitsForPromise ->
+        # TODO: Use something that doesn't require permissions and can run within atom
         git.cmd(['init', initDir]).then () ->
-          git.cmd(['clone', '--progress', initDir, cloneDir])  
+          git.cmd(['clone', '--progress', initDir, cloneDir])
         .then (output) ->
           fs.removeSync(initDir)
           fs.removeSync(cloneDir)
