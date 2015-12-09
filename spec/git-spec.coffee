@@ -31,11 +31,9 @@ describe "Git-Plus git module", ->
   describe "git.getConfig", ->
     args = ['config', '--get', 'user.name']
 
-    beforeEach ->
-      spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
-
     describe "when a repo file path isn't specified", ->
       it "spawns a command querying git for the given global setting", ->
+        spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
         waitsForPromise ->
           git.getConfig('user.name')
         runs ->
@@ -43,10 +41,29 @@ describe "Git-Plus git module", ->
 
     describe "when a repo file path is specified", ->
       it "checks for settings in that repo", ->
+        spyOn(git, 'cmd').andReturn Promise.resolve 'akonwi'
         waitsForPromise ->
           git.getConfig('user.name', repo.getWorkingDirectory())
         runs ->
           expect(git.cmd).toHaveBeenCalledWith args, cwd: repo.getWorkingDirectory()
+
+    describe "when the command fails without an error message", ->
+      it "resolves to ''", ->
+        spyOn(git, 'cmd').andReturn Promise.reject ''
+        waitsForPromise ->
+          git.getConfig('user.name', repo.getWorkingDirectory()).then (result) ->
+            expect(result).toEqual('')
+        runs ->
+          expect(git.cmd).toHaveBeenCalledWith args, cwd: repo.getWorkingDirectory()
+
+    describe "when the command fails with an error message", ->
+      it "rejects with the error message", ->
+        spyOn(git, 'cmd').andReturn Promise.reject 'getConfig error'
+        waitsForPromise ->
+          git.getConfig('user.name', 'bad working dir').then (result) ->
+            fail "should have been rejected"
+          .catch (error) ->
+            expect(error).toEqual('getConfig error')
 
   describe "git.getRepo", ->
     it "returns a promise resolving to repository", ->
@@ -78,9 +95,34 @@ describe "Git-Plus git module", ->
 
   describe "git.cmd", ->
     it "returns a promise", ->
-      promise = git.cmd()
-      expect(promise.catch).toBeDefined()
-      expect(promise.then).toBeDefined()
+      waitsForPromise ->
+        promise = git.cmd()
+        expect(promise.catch).toBeDefined()
+        expect(promise.then).toBeDefined()
+        promise.catch (output) ->
+          expect(output).toContain('usage')
+
+    it "returns a promise that is fulfilled with stdout on success", ->
+      waitsForPromise ->
+        git.cmd(['--version']).then (output) ->
+          expect(output).toContain('git version')
+
+    it "returns a promise that is rejected with stderr on failure", ->
+      waitsForPromise ->
+        git.cmd(['help', '--bogus-option']).catch (output) ->
+          expect(output).toContain('unknown option')
+
+    it "returns a promise that is fulfilled with stderr on success", ->
+      initDir = 'git-plus-test-dir' + Math.random()
+      cloneDir = initDir + '-clone'
+      waitsForPromise ->
+        # TODO: Use something that doesn't require permissions and can run within atom
+        git.cmd(['init', initDir]).then () ->
+          git.cmd(['clone', '--progress', initDir, cloneDir])
+        .then (output) ->
+          fs.removeSync(initDir)
+          fs.removeSync(cloneDir)
+          expect(output).toContain('Cloning')
 
   describe "git.add", ->
     it "calls git.cmd with ['add', '--all', {fileName}]", ->

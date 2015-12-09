@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.9
+- Fix #340 (@brettle)
+
 ### 5.6.8
 - Fix #322 (@teefax)
 - Change format of list of commands in README (@capncodewash)
