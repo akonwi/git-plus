@@ -1,7 +1,8 @@
 ## Changelog
 
-### 5.6.7
+### 5.6.8
 - Fix #322 (@teefax)
+- Change format of list of commands in README (@capncodewash)
 
 ### 5.6.6
 - Fix #322 (@mightydok)
