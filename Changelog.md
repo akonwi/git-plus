@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.6.7
+- Fix #322 (@teefax)
+
 ### 5.6.6
 - Fix #322 (@mightydok)
 - Make all notifications dismissable (@jamen)
