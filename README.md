@@ -30,12 +30,13 @@ _Commands are accessible for keybindings by dasherizing the command title._
 
 > Git Add All Commit And Push == `git-plus:add-all-commit-and-push`
 
-  __Note: This list is not exhaustive.__
+  __Note: This list is not exhaustive. And if what you want isn't a feature, You can use `Git Run` and enter the command__
 
 | Command | Effect | Default key binding |
 |----------|--------|------------------
-| `Git status ` | Show current status. | `Cmd-Shift-A S` |
-| `Git add ` | Add the current file. | `Cmd-Shift-A` |
+| `Git Run ` | Execute a custom command. ex. `fetch --all` | |
+| `Git Status ` | Show current status. | `Cmd-Shift-A S` |
+| `Git Add ` | Add the current file. | `Cmd-Shift-A` |
 | `Git Add All` | Adds all changed files. | |
 | `Git add all commit and push` | Commit every changed file and push to a remote repo. | `Cmd-Shift-A P` |
 | `Git commit` | Commit the staged changes. Git-Plus shows a commit message editor. To make the commit, save the file. To cancel the commit, close the tab. | `Cmd-Shift-C`(*`Ctrl-Shift-X`* on Windows and Linux) |
