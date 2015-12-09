@@ -17,7 +17,7 @@ module.exports =
       branches = items.filter((item) -> item isnt '').map (item) ->
         name: item.replace(/\s/g, '')
       if branches.length is 1
-        @pull branches[0]
+        @confirmed branches[0]
       else
         @setItems [currentBranch].concat branches
       @focusFilterEditor()
