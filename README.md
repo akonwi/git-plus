@@ -34,6 +34,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 
 | Command | Effect | Default key binding |
 |----------|--------|------------------
+| `Git status ` | Show current status. | `Cmd-Shift-A S` |
 | `Git add ` | Add the current file. | `Cmd-Shift-A` |
 | `Git Add All` | Adds all changed files. | |
 | `Git add all commit and push` | Commit every changed file and push to a remote repo. | `Cmd-Shift-A P` |
