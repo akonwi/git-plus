@@ -1,6 +1,7 @@
 fs = require 'fs-plus'
 Path = require 'flavored-path'
 git = require '../lib/git'
+notifier = require '../lib/notifier'
 {
   repo,
   pathToRepoFile,
@@ -59,11 +60,12 @@ describe "Git-Plus git module", ->
     describe "when the command fails with an error message", ->
       it "rejects with the error message", ->
         spyOn(git, 'cmd').andReturn Promise.reject 'getConfig error'
+        spyOn(notifier, 'addError')
         waitsForPromise ->
           git.getConfig('user.name', 'bad working dir').then (result) ->
             fail "should have been rejected"
           .catch (error) ->
-            expect(error).toEqual('getConfig error')
+            expect(notifier.addError).toHaveBeenCalledWith 'getConfig error'
 
   describe "git.getRepo", ->
     it "returns a promise resolving to repository", ->

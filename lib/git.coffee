@@ -67,9 +67,7 @@ module.exports = git =
   getConfig: (setting, workingDirectory=null) ->
     workingDirectory ?= Path.get('~')
     git.cmd(['config', '--get', setting], cwd: workingDirectory).catch (error) ->
-      if error? and error isnt ''
-        throw error
-      ''
+      if error? and error isnt '' then notifier.addError error else ''
 
   reset: (repo) ->
     git.cmd(['reset', 'HEAD'], cwd: repo.getWorkingDirectory()).then () -> notifier.addSuccess 'All changes unstaged'
