@@ -55,6 +55,8 @@ commit = (directory, filePath) ->
     notifier.addSuccess data
     destroyCommitEditor()
     git.refresh()
+  .catch (data) ->
+    notifier.addError data
 
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.alive
