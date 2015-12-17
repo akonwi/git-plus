@@ -18,9 +18,7 @@ module.exports =
       @cancel()
 
     delete: (branch, remote) ->
-      unless remote
-        git.cmd(['branch', '-D', branch], cwd: @repo.getWorkingDirectory())
-        .then (data) -> notifier.addSuccess(data)
-      else
-        git.cmd(['push', remote, '--delete', branch], cwd: @repo.getWorkingDirectory())
-        .catch (data) -> notifier.addSuccess(data)
+      args = if remote then ['push', remote, '--delete'] else ['branch', '-D']
+      git.cmd(args.concat(branch), cwd: @repo.getWorkingDirectory())
+      .then (message) -> notifier.addSuccess message
+      .catch (error) -> notifier.addError error
