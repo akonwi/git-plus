@@ -11,8 +11,9 @@ describe "BranchListView", ->
   it "displays a list of branches", ->
     expect(@view.items.length).toBe 2
 
-  # it "checkouts the selected branch", ->
-    # @view.confirmSelection()
-    # @view.checkout 'branch1'
-    # waitsFor -> git.cmd.callCount > 0
-    # expect(git.cmd).toHaveBeenCalledWith ['checkout', 'branch1'], cwd: repo.getWorkingDirectory()
+  it "checkouts the selected branch", ->
+    @view.confirmSelection()
+    @view.checkout 'branch1'
+    waitsFor -> git.cmd.callCount > 0
+    runs ->
+      expect(git.cmd).toHaveBeenCalledWith ['checkout', 'branch1'], cwd: repo.getWorkingDirectory()
