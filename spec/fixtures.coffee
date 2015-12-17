@@ -8,7 +8,7 @@ module.exports = mocks =
   pathToRepoFile: pathToRepoFile
 
   repo:
-    getPath: -> Path.join this.getWorkingDirectory, ".git"
+    getPath: -> Path.join this.getWorkingDirectory(), ".git"
     getWorkingDirectory: -> Path.get "~/some/repository"
     refreshStatus: -> undefined
     relativize: (path) -> "directory/file" if path is pathToRepoFile

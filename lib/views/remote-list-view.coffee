@@ -44,11 +44,8 @@ class ListView extends SelectListView
 
   confirmed: ({name}) ->
     if @mode is 'pull'
-      if name is @currentBranchString
-        @execute()
-      else
-        git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
-        .then (data) => new PullBranchListView(@repo, data, name, @extraArgs, @resolve)
+      git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
+      .then (data) => new PullBranchListView(@repo, data, name, @extraArgs, @resolve)
     else if @mode is 'fetch-prune'
       @mode = 'fetch'
       @execute name, '--prune'
@@ -65,26 +62,13 @@ class ListView extends SelectListView
     command = atom.config.get('git-plus.gitPath') ? 'git'
     message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
     startMessage = notifier.addInfo message, dismissable: true
-    new BufferedProcess
-      command: command
-      args: args
-      options:
-        cwd: @repo.getWorkingDirectory()
-      stdout: (data) -> view.addLine(data.toString())
-      stderr: (data) -> view.addLine(data.toString())
-      exit: (code) =>
-        if code is 128
-          view.reset()
-          new BufferedProcess
-            command: command
-            args: [@mode, '-u', remote, 'HEAD']
-            options:
-              cwd: @repo.getWorkingDirectory()
-            stdout: (data) -> view.addLine(data.toString())
-            stderr: (data) -> view.addLine(data.toString())
-            exit: (code) ->
-              view.finish()
-              startMessage.dismiss()
-        else
-          view.finish()
-          startMessage.dismiss()
+    git.cmd(args, cwd: @repo.getWorkingDirectory())
+    .then (data) ->
+      if data isnt ''
+        view.addLine(data).finish()
+      startMessage.dismiss()
+    .catch (data) =>
+      git.cmd([@mode, '-u', remote, 'HEAD'], cwd: @repo.getWorkingDirectory())
+      .then (message) ->
+        view.addLine(message).finish()
+        startMessage.dismiss()
