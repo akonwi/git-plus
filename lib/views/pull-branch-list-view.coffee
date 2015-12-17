@@ -1,4 +1,4 @@
-{BufferedProcess} = require 'atom'
+git = require '../git'
 OutputViewManager = require '../output-view-manager'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
@@ -32,14 +32,9 @@ module.exports =
     pull: (remoteBranch='') ->
       view = OutputViewManager.new()
       startMessage = notifier.addInfo "Pulling...", dismissable: true
-      new BufferedProcess
-        command: atom.config.get('git-plus.gitPath') ? 'git'
-        args: ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
-        options:
-          cwd: @repo.getWorkingDirectory()
-        stdout: (data) -> view.addLine(data.toString())
-        stderr: (data) -> view.addLine(data.toString())
-        exit: (code) =>
-          @resolve()
-          view.finish()
-          startMessage.dismiss()
+      args = ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
+      git.cmd(args, cwd: @repo.getWorkingDirectory())
+      .then (data) =>
+        @resolve()
+        view.addLine(data).finish()
+        startMessage.dismiss()

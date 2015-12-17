@@ -1,4 +1,3 @@
-{BufferedProcess} = require 'atom'
 {$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
