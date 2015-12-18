@@ -3,6 +3,7 @@ RemoteListView = require '../../lib/views/remote-list-view'
 {repo} = require '../fixtures'
 options = {cwd: repo.getWorkingDirectory()}
 remotes = "remote1\nremote2"
+pullBeforePush = 'git-plus:pullBeforePush'
 
 describe "RemoteListView", ->
   it "displays a list of remotes", ->
@@ -44,17 +45,18 @@ describe "RemoteListView", ->
 
   describe "when mode is push", ->
     it "calls git.cmd with ['push']", ->
-      spyOn(git, 'cmd').andCallFake -> Promise.resolve 'pushing text'
+      spyOn(git, 'cmd').andReturn Promise.resolve 'pushing text'
 
       view = new RemoteListView(repo, remotes, mode: 'push')
       view.confirmSelection()
 
-      waitsFor -> git.cmd.callCount > 0
+      waitsFor -> git.cmd.callCount > 1
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options
 
   describe "when mode is push and there is no upstream set", ->
     it "calls git.cmd with ['push', '-u'] and remote name", ->
+      atom.config.set(pullBeforePush, 'no')
       spyOn(git, 'cmd').andCallFake ->
         if git.cmd.callCount is 1
           Promise.reject 'no upstream'
@@ -67,3 +69,29 @@ describe "RemoteListView", ->
       waitsFor -> git.cmd.callCount > 1
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['push', '-u', 'remote1', 'HEAD'], options
+
+    describe "when the the config for pull before push is set to true", ->
+      it "calls git.cmd with ['pull'], remote name, and branch name and then with ['push']", ->
+        spyOn(git, 'cmd').andReturn Promise.resolve 'branch1'
+        atom.config.set(pullBeforePush, 'pull')
+
+        view = new RemoteListView(repo, remotes, mode: 'push')
+        view.confirmSelection()
+
+        waitsFor -> git.cmd.callCount > 2
+        runs ->
+          expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote1', 'branch1'], options
+          expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options
+
+    describe "when the the config for pull before push is set to 'Pull --rebase'", ->
+      it "calls git.cmd with ['pull', '--rebase'], remote name, and branch name and then with ['push']", ->
+        spyOn(git, 'cmd').andReturn Promise.resolve 'branch1'
+        atom.config.set(pullBeforePush, 'pull --rebase')
+
+        view = new RemoteListView(repo, remotes, mode: 'push')
+        view.confirmSelection()
+
+        waitsFor -> git.cmd.callCount > 2
+        runs ->
+          expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote1', 'branch1'], options
+          expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options

@@ -71,6 +71,11 @@ module.exports =
       type: 'integer'
       default: 5
       description: 'How long should success/error messages be shown?'
+    pullBeforePush:
+      title: 'Pull from remote before pushing'
+      type: 'string'
+      default: 'no'
+      enum: ['no', 'pull', 'pull --rebase']
 
   subscriptions: null
 

@@ -5,12 +5,17 @@ options = cwd: repo.getWorkingDirectory()
 
 describe "PullBranchListView", ->
   beforeEach ->
-    @view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '', () ->)
+    @view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '')
     spyOn(git, 'cmd').andReturn Promise.resolve 'pulled'
 
   it "displays a list of branches and the first option is a special one for the current branch", ->
     expect(@view.items.length).toBe 3
     expect(@view.items[0].name).toEqual '== Current =='
+
+  it "has a property called result which is a promise", ->
+    expect(@view.result).toBeDefined()
+    expect(@view.result.then).toBeDefined()
+    expect(@view.result.catch).toBeDefined()
 
   describe "when the special option is selected", ->
     it "calls git.cmd with ['pull'] and remote name", ->
@@ -31,21 +36,9 @@ describe "PullBranchListView", ->
 
   describe "when '--rebase' is passed as extraArgs", ->
     it "calls git.cmd with ['pull', '--rebase'], the remote name", ->
-      view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '--rebase', () ->)
+      view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '--rebase')
       view.confirmSelection()
 
       waitsFor -> git.cmd.callCount > 0
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote'], options
-
-  describe "when pull is complete", ->
-    it "executes the callback passed to it", ->
-      spyCalled = false
-      callback = -> spyCalled = true
-
-      view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '--rebase', callback)
-      view.confirmSelection()
-
-      waitsFor -> spyCalled is true
-      runs ->
-        expect(true).toBe true

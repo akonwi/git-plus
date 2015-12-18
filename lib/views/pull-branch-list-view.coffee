@@ -7,7 +7,11 @@ module.exports =
   # Extension of BranchListView
   # Takes the name of the remote to pull from
   class PullBranchListView extends BranchListView
-    initialize: (@repo, @data, @remote, @extraArgs, @resolve) -> super
+    initialize: (@repo, @data, @remote, @extraArgs) ->
+      super
+      @result = new Promise (resolve, reject) =>
+        @resolve = resolve
+        @reject = reject
 
     parseData: ->
       @currentBranchString = '== Current =='
@@ -37,4 +41,9 @@ module.exports =
       .then (data) =>
         @resolve()
         view.addLine(data).finish()
+        startMessage.dismiss()
+      .catch (error) =>
+        ## Should @result be rejected for those depending on this view?
+        # @reject()
+        view.addLine(error).finish()
         startMessage.dismiss()

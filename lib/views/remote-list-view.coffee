@@ -41,13 +41,26 @@ class ListView extends SelectListView
     $$ ->
       @li name
 
+  pull: (remoteName) ->
+    git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
+    .then (data) =>
+      new PullBranchListView(@repo, data, remoteName, @extraArgs).result
+
   confirmed: ({name}) ->
     if @mode is 'pull'
-      git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
-      .then (data) => new PullBranchListView(@repo, data, name, @extraArgs, @resolve)
+      @pull name
     else if @mode is 'fetch-prune'
       @mode = 'fetch'
       @execute name, '--prune'
+    else if @mode is 'push'
+      pullOption = atom.config.get 'git-plus:pullBeforePush'
+      @extraArgs = if pullOption?.includes '--rebase' then '--rebase' else ''
+      unless pullOption? and pullOption is 'no'
+        @pull(name)
+        .then => @execute name
+        .catch ->
+      else
+        @execute name
     else
       @execute name
     @cancel()
