@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.7.1
+- Fix #349 (@joshbaldock)
+
 ### 5.7.0
 - Added config options for pulling before pushing
 

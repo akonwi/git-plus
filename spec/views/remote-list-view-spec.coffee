@@ -3,7 +3,7 @@ RemoteListView = require '../../lib/views/remote-list-view'
 {repo} = require '../fixtures'
 options = {cwd: repo.getWorkingDirectory()}
 remotes = "remote1\nremote2"
-pullBeforePush = 'git-plus:pullBeforePush'
+pullBeforePush = 'git-plus.pullBeforePush'
 
 describe "RemoteListView", ->
   it "displays a list of remotes", ->
