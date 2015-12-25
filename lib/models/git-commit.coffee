@@ -76,14 +76,14 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   init = -> getStagedFiles(repo).then (status) ->
-    if atom.config.get 'git-plus.verboseCommit'
-      args = ['diff', '--color=never', 'HEAD']
-      args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-      git.cmd(args, cwd: repo.getWorkingDirectory())
-      .then (diff) ->
-        prepFile status, filePath, diff
-    else
-      prepFile status, filePath, ''
+    # if atom.config.get 'git-plus.verboseCommit'
+    #   args = ['diff', '--color=never', 'HEAD']
+    #   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
+    #   git.cmd(args, cwd: repo.getWorkingDirectory())
+    #   .then (diff) ->
+    #     prepFile status, filePath, diff
+    # else
+    prepFile status, filePath, ''
   startCommit = ->
     showFile filePath
     .then (textEditor) ->

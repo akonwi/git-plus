@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.8.1
+- Remove verbose commit feature because it isn't fully implemented
+
 ### 5.8.0
 - Add setting for verbose commit panes
 
