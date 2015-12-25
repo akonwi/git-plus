@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.8.0
+- Add setting for verbose commit panes
+
 ### 5.7.1
 - Fix #349 (@joshbaldock)
 
