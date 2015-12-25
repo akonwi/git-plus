@@ -24,7 +24,7 @@ getTemplate = (cwd) ->
   git.getConfig('commit.template', cwd).then (filePath) ->
     if filePath then fs.readFileSync(Path.get(filePath.trim())).toString().trim() else ''
 
-prepFile = (status, filePath) ->
+prepFile = (status, filePath, diff) ->
   cwd = Path.dirname(filePath)
   git.getConfig('core.commentchar', cwd).then (commentchar) ->
     commentchar = if commentchar then commentchar.trim() else '#'
@@ -36,7 +36,9 @@ prepFile = (status, filePath) ->
         #{commentchar} Please enter the commit message for your changes. Lines starting
         #{commentchar} with '#{commentchar}' will be ignored, and an empty message aborts the commit.
         #{commentchar}
-        #{commentchar} #{status}"""
+        #{commentchar} #{status}
+
+        #{diff}"""
 
 destroyCommitEditor = ->
   atom.workspace?.getPanes().some (pane) ->
@@ -73,7 +75,15 @@ showFile = (filePath) ->
 module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
-  init = -> getStagedFiles(repo).then (status) -> prepFile status, filePath
+  init = -> getStagedFiles(repo).then (status) ->
+    if atom.config.get 'git-plus.verboseCommit'
+      args = ['diff', '--color=never', 'HEAD']
+      args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
+      git.cmd(args, cwd: repo.getWorkingDirectory())
+      .then (diff) ->
+        prepFile status, filePath, diff
+    else
+      prepFile status, filePath, ''
   startCommit = ->
     showFile filePath
     .then (textEditor) ->

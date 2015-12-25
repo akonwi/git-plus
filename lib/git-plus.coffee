@@ -72,10 +72,14 @@ module.exports =
       default: 5
       description: 'How long should success/error messages be shown?'
     pullBeforePush:
-      title: 'Pull from remote before pushing'
+      description: 'Pull from remote before pushing'
       type: 'string'
       default: 'no'
       enum: ['no', 'pull', 'pull --rebase']
+    verboseCommit:
+      description: 'Show diffs in the commit pane?'
+      type: 'boolean'
+      default: false
 
   subscriptions: null
 

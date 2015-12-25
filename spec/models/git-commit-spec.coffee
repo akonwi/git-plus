@@ -54,6 +54,8 @@ setupMocks = ->
       Promise.resolve status
     else if args[0] is 'commit'
       commitResolution
+    else if args[0] is 'diff'
+      Promise.resolve 'diff'
   spyOn(git, 'stagedFiles').andCallFake ->
     args = git.stagedFiles.mostRecentCall.args
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
@@ -62,7 +64,7 @@ setupMocks = ->
     args = git.add.mostRecentCall.args
     if args[0].getWorkingDirectory() is repo.getWorkingDirectory() and args[1].update
       Promise.resolve true
-      
+
   spyOn(notifier, 'addError')
   spyOn(notifier, 'addInfo')
   spyOn(notifier, 'addSuccess')
@@ -111,7 +113,7 @@ describe "GitCommit", ->
       textEditor.save()
       waitsFor -> notifier.addSuccess.callCount > 0
       runs -> expect(notifier.addSuccess).toHaveBeenCalledWith 'commit success'
-      
+
     it "cancels the commit on textEditor destroy", ->
       textEditor.destroy()
       expect(currentPane.activate).toHaveBeenCalled()
@@ -164,14 +166,25 @@ describe "GitCommit", ->
       setupMocks()
       waitsForPromise ->
         GitCommit(repo)
-    
+
     it "notifies of error and doesn't close commit pane", ->
       textEditor.save()
       waitsFor -> notifier.addError.callCount > 0
-      runs -> 
+      runs ->
         expect(notifier.addError).toHaveBeenCalledWith 'commit error'
         expect(commitPane.destroy).not.toHaveBeenCalled()
 
+  describe "when the verbose commit setting is true", ->
+    beforeEach ->
+      atom.config.set "git-plus.openInPane", false
+      atom.config.set "git-plus.verboseCommit", true
+      setupMocks()
+
+    it "calls git.cmd with the --verbose flag", ->
+      waitsForPromise ->
+        GitCommit(repo)
+      runs ->
+        expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', 'HEAD'], cwd: repo.getWorkingDirectory()
   ## atom.config.get('git-plus.openInPane') is always false inside the module
   # describe "when the `git-plus.openInPane` setting is true", ->
   #   it "defaults to opening to the right", ->
