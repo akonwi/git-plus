@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.8.2
+- Fix for no notifications when changing branches
+
 ### 5.8.1
 - Remove verbose commit feature because it isn't fully implemented
 

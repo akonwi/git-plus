@@ -31,10 +31,11 @@ class InputView extends View
     name = @branchEditor.getModel().getText()
     if name.length > 0
       git.cmd(['checkout', '-b', name], cwd: @repo.getWorkingDirectory())
-        # using `stderr` for success
-      .catch (data) =>
-          notifier.addSuccess data
-          git.refresh()
+      .then (message) ->
+        notifier.addSuccess message
+        git.refresh()
+      .catch (err) =>
+        notifier.addError err
 
 module.exports.newBranch = (repo) ->
   new InputView(repo)
