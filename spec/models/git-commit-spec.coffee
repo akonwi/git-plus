@@ -20,6 +20,10 @@ status =
 commentchar_config = ''
 templateFile = ''
 commitTemplate = 'foobar'
+commitFileContent =
+   toString: -> commitFileContent
+   indexOf: -> 5
+   substring: -> 'commit message'
 commitResolution = Promise.resolve 'commit success'
 
 setupMocks = ->
@@ -33,11 +37,12 @@ setupMocks = ->
   spyOn(atom.workspace, 'paneForURI').andReturn commitPane
   spyOn(status, 'replace').andCallFake -> status
   spyOn(status, 'trim').andCallThrough()
+  spyOn(commitFileContent, 'substring').andCallThrough()
   spyOn(fs, 'readFileSync').andCallFake ->
     if fs.readFileSync.mostRecentCall.args[0] is 'template'
       commitTemplate
     else
-      ''
+      commitFileContent
   spyOn(fs, 'writeFileSync')
   spyOn(fs, 'writeFile')
   spyOn(fs, 'unlinkSync')
@@ -100,9 +105,17 @@ describe "GitCommit", ->
     it "shows the file", ->
       expect(atom.workspace.open).toHaveBeenCalled()
 
+    it "trims the commit file", ->
+      textEditor.save()
+      waitsFor -> commitFileContent.substring.callCount > 0
+      runs ->
+        expect(commitFileContent.substring).toHaveBeenCalledWith 0, commitFileContent.indexOf()
+
     it "calls git.cmd with ['commit'...] on textEditor save", ->
       textEditor.save()
-      expect(git.cmd).toHaveBeenCalledWith ['commit', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+      waitsFor -> fs.writeFileSync.callCount > 1
+      runs ->
+        expect(git.cmd).toHaveBeenCalledWith ['commit', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
 
     it "closes the commit pane when commit is successful", ->
       textEditor.save()
@@ -174,17 +187,21 @@ describe "GitCommit", ->
         expect(notifier.addError).toHaveBeenCalledWith 'commit error'
         expect(commitPane.destroy).not.toHaveBeenCalled()
 
-  # describe "when the verbose commit setting is true", ->
-  #   beforeEach ->
-  #     atom.config.set "git-plus.openInPane", false
-  #     atom.config.set "git-plus.verboseCommit", true
-  #     setupMocks()
-  #
-  #   it "calls git.cmd with the --verbose flag", ->
-  #     waitsForPromise ->
-  #       GitCommit(repo)
-  #     runs ->
-  #       expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', 'HEAD'], cwd: repo.getWorkingDirectory()
+  describe "when the verbose commit setting is true", ->
+    beforeEach ->
+      atom.config.set "git-plus.openInPane", false
+      atom.config.set "git-plus.verboseCommit", true
+      setupMocks()
+      waitsForPromise ->
+        GitCommit(repo)
+
+    it "gets the diffs", ->
+      expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', 'HEAD'], cwd: repo.getWorkingDirectory()
+
+    it "adds the scissors line to the commit pane", ->
+      argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
+      expect(argsTo_fsWriteFile[1]).toContain '>8'
+
   ## atom.config.get('git-plus.openInPane') is always false inside the module
   # describe "when the `git-plus.openInPane` setting is true", ->
   #   it "defaults to opening to the right", ->
