@@ -19,7 +19,7 @@ module.exports = mocks =
       submoduleForPath: (path) -> undefined
 
   currentPane:
-    alive: true
+    isAlive: -> true
     activate: -> undefined
     destroy: -> undefined
     getItems: -> [
@@ -27,7 +27,7 @@ module.exports = mocks =
     ]
 
   commitPane:
-    alive: true
+    isAlive: -> true
     destroy: -> mocks.textEditor.destroy()
     splitRight: -> undefined
     getItems: -> [

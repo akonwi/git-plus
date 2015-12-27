@@ -1,4 +1,4 @@
-module.exports = (splitDir, oldEditor) ->
+module.exports = (splitDirection, oldEditor) ->
   pane = atom.workspace.paneForURI(oldEditor.getURI())
   options = { copyActiveItem: true }
   directions =
@@ -10,6 +10,6 @@ module.exports = (splitDir, oldEditor) ->
       pane.splitUp options
     down: ->
       pane.splitDown options
-  pane = directions[splitDir]().getActiveEditor()
+  pane = directions[splitDirection]().getActiveEditor()
   oldEditor.destroy()
   pane

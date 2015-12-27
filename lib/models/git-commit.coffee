@@ -61,7 +61,7 @@ commit = (directory, filePath) ->
     notifier.addError data
 
 cleanup = (currentPane, filePath) ->
-  currentPane.activate() if currentPane.alive
+  currentPane.activate() if currentPane.isAlive()
   disposables.dispose()
   try fs.unlinkSync filePath
 
@@ -75,15 +75,7 @@ showFile = (filePath) ->
 module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
-  init = -> getStagedFiles(repo).then (status) ->
-    # if atom.config.get 'git-plus.verboseCommit'
-    #   args = ['diff', '--color=never', 'HEAD']
-    #   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-    #   git.cmd(args, cwd: repo.getWorkingDirectory())
-    #   .then (diff) ->
-    #     prepFile status, filePath, diff
-    # else
-    prepFile status, filePath, ''
+  init = -> getStagedFiles(repo).then (status) -> prepFile status, filePath, ''
   startCommit = ->
     showFile filePath
     .then (textEditor) ->
@@ -94,7 +86,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
     .catch (msg) -> notifier.addError msg
 
   if stageChanges
-    git.add(repo, update: stageChanges).then -> init().then -> startCommit()
+    git.add(repo, update: stageChanges).then(-> init()).then -> startCommit()
   else
     init().then -> startCommit()
     .catch (message) ->
