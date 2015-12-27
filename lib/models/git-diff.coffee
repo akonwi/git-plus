@@ -7,6 +7,8 @@ git = require '../git'
 notifier = require '../notifier'
 splitPane = require '../splitPane'
 
+nothingToShow = 'Nothing to show.'
+
 disposables = new CompositeDisposable
 
 showFile = (filePath) ->
@@ -19,7 +21,7 @@ showFile = (filePath) ->
 prepFile = (text, filePath) ->
   new Promise (resolve, reject) ->
     if text?.length is 0
-      notifier.addInfo 'Nothing to show.'
+      reject nothingToShow
     else
       fs.writeFile filePath, text, flag: 'w+', (err) ->
         if err then reject err else resolve true
@@ -39,4 +41,7 @@ module.exports = (repo, {diffStat, file}={}) ->
   .then (textEditor) ->
     disposables.add textEditor.onDidDestroy -> fs.unlink diffFilePath
   .catch (err) ->
-    notifier.addError err
+    if err is nothingToShow
+      notifier.addInfo err
+    else
+      notifier.addError err

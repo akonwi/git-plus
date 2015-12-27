@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.8.3
+- Show errors from `Diff` command
+
 ### 5.8.2
 - Fix for no notifications when changing branches
 
