@@ -63,7 +63,7 @@ commit = (directory, filePath) ->
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.isAlive()
   disposables.dispose()
-  try fs.unlinkSync filePath
+  fs.unlink filePath
 
 showFile = (filePath) ->
   atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->

@@ -24,7 +24,7 @@ describe "GitCommitAmend", ->
     spyOn(commitPane, 'destroy').andCallThrough()
     spyOn(currentPane, 'activate')
 
-    spyOn(fs, 'unlinkSync')
+    spyOn(fs, 'unlink')
     spyOn(fs, 'readFileSync').andReturn ''
     spyOn(git, 'stagedFiles').andCallFake ->
       args = git.stagedFiles.mostRecentCall.args
@@ -74,4 +74,4 @@ describe "GitCommitAmend", ->
     GitCommitAmend repo
     textEditor.destroy()
     expect(currentPane.activate).toHaveBeenCalled()
-    expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
+    expect(fs.unlink).toHaveBeenCalledWith commitFilePath

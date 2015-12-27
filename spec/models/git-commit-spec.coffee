@@ -40,7 +40,7 @@ setupMocks = ->
       ''
   spyOn(fs, 'writeFileSync')
   spyOn(fs, 'writeFile')
-  spyOn(fs, 'unlinkSync')
+  spyOn(fs, 'unlink')
   spyOn(git, 'refresh')
   spyOn(git, 'getConfig').andCallFake ->
     arg = git.getConfig.mostRecentCall.args[0]
@@ -117,7 +117,7 @@ describe "GitCommit", ->
     it "cancels the commit on textEditor destroy", ->
       textEditor.destroy()
       expect(currentPane.activate).toHaveBeenCalled()
-      expect(fs.unlinkSync).toHaveBeenCalledWith commitFilePath
+      expect(fs.unlink).toHaveBeenCalledWith commitFilePath
 
   describe "when core.commentchar config is not set", ->
     it "uses '#' in commit file", ->
