@@ -36,5 +36,7 @@ module.exports = (repo, {diffStat, file}={}) ->
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> prepFile((diffStat ? '') + data, diffFilePath)
   .then -> showFile diffFilePath
-  .then (textEditor) -> disposables.add textEditor.onDidDestroy ->
-    fs.unlink diffFilePath
+  .then (textEditor) ->
+    disposables.add textEditor.onDidDestroy -> fs.unlink diffFilePath
+  .catch (err) ->
+    notifier.addError err
