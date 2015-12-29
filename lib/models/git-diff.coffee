@@ -5,18 +5,16 @@ fs = require 'fs-plus'
 
 git = require '../git'
 notifier = require '../notifier'
-splitPane = require '../splitPane'
 
 nothingToShow = 'Nothing to show.'
 
 disposables = new CompositeDisposable
 
 showFile = (filePath) ->
-  atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
-    if atom.config.get('git-plus.openInPane')
-      splitPane(atom.config.get('git-plus.splitPane'), textEditor)
-    else
-      textEditor
+  if atom.config.get('git-plus.openInPane')
+    splitDirection = atom.config.get('git-plus.splitPane')
+    atom.workspace.getActivePane()["split#{splitDirection}"]()
+  atom.workspace.open(filePath)
 
 prepFile = (text, filePath) ->
   new Promise (resolve, reject) ->

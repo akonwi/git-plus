@@ -4,7 +4,6 @@ Path = require 'flavored-path'
 
 git = require '../git'
 notifier = require '../notifier'
-splitPane = require '../splitPane'
 GitPush = require './git-push'
 GitPull = require './git-pull'
 
@@ -66,11 +65,10 @@ cleanup = (currentPane, filePath) ->
   fs.unlink filePath
 
 showFile = (filePath) ->
-  atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
-    if atom.config.get('git-plus.openInPane')
-      splitPane(atom.config.get('git-plus.splitPane'), textEditor)
-    else
-      textEditor
+  if atom.config.get('git-plus.openInPane')
+    splitDirection = atom.config.get('git-plus.splitPane')
+    atom.workspace.getActivePane()["split#{splitDirection}"]()
+  atom.workspace.open filePath
 
 module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')

@@ -25,9 +25,11 @@ prepFile = (text, objectHash) ->
 
 showFile = (objectHash) ->
   disposables = new CompositeDisposable
-  split = if atom.config.get('git-plus.openInPane') then atom.config.get('git-plus.splitPane')
+  if atom.config.get('git-plus.openInPane')
+    splitDirection = atom.config.get('git-plus.splitPane')
+    atom.workspace.getActivePane()["split#{splitDirection}"]()
   atom.workspace
-    .open(showCommitFilePath(objectHash), split: split, activatePane: true)
+    .open(showCommitFilePath(objectHash), activatePane: true)
     .then (textBuffer) ->
       if textBuffer?
         disposables.add textBuffer.onDidDestroy ->

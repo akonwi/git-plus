@@ -3,7 +3,6 @@ fs = require 'fs-plus'
 Path = require 'flavored-path'
 git = require '../git'
 notifier = require '../notifier'
-splitPane = require '../splitPane'
 
 disposables = new CompositeDisposable
 
@@ -83,11 +82,10 @@ prepFile = ({message, prevChangedFiles, status, filePath}) ->
       #{commentchar} #{status}"""
 
 showFile = (filePath) ->
-  atom.workspace.open(filePath, searchAllPanes: true).then (textEditor) ->
-    if atom.config.get('git-plus.openInPane')
-      splitPane(atom.config.get('git-plus.splitPane'), textEditor)
-    else
-      textEditor
+  if atom.config.get('git-plus.openInPane')
+    splitDirection = atom.config.get('git-plus.splitPane')
+    atom.workspace.getActivePane()["split#{splitDirection}"]()
+  atom.workspace.open filePath
 
 destroyCommitEditor = ->
   atom.workspace?.getPanes().some (pane) ->
