@@ -24,7 +24,7 @@ prettifyFileStatuses = (files) ->
       when 'A'
         "new file:   #{path}"
       when 'D'
-        "removed:   #{path}"
+        "deleted:   #{path}"
       when 'R'
         "renamed:   #{path}"
 
@@ -47,14 +47,15 @@ diffFiles = (previousFiles, currentFiles) ->
 
 parse = (prevCommit) ->
   lines = prevCommit.split(/\n/).filter (line) -> line isnt ''
-  message = []
+  prevMessage = []
   prevChangedFiles = []
   lines.forEach (line) ->
     unless /(([ MADRCU?!])\s(.*))/.test line
-      message.push line
+      prevMessage.push line
     else
       prevChangedFiles.push line.replace(/[ MADRCU?!](\s)(\s)*/, line[0])
-  [message.join('\n'), prevChangedFiles]
+  message = prevMessage.join('\n')
+  {message, prevChangedFiles}
 
 cleanupUnstagedText = (status) ->
   unstagedFiles = status.indexOf "Changes not staged for commit:"
@@ -68,12 +69,21 @@ prepFile = ({message, prevChangedFiles, status, filePath}) ->
   git.getConfig('core.commentchar', Path.dirname(filePath)).then (commentchar) ->
     commentchar = if commentchar.length > 0 then commentchar.trim() else '#'
     status = cleanupUnstagedText status
-    status = status.replace(/\s*\(.*\)\n/g, "\n")
-    .replace(/\n/g, "\n#{commentchar} ")
-    .replace "committed:\n#{commentchar}", """committed:
-    #{
-      prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
-    }"""
+    status = status.replace(/\s*\(.*\)\n/g, "\n").replace(/\n/g, "\n#{commentchar} ")
+    if prevChangedFiles.length > 0
+      nothingToCommit = "nothing to commit, working directory clean"
+      currentChanges = "committed:\n#{commentchar}"
+      textToReplace = null
+      if status.indexOf(nothingToCommit) > -1
+        textToReplace = nothingToCommit
+      else if status.indexOf(currentChanges) > -1
+        textToReplace = currentChanges
+      replacementText =
+        """Changes to be committed:
+        #{
+          prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
+        }"""
+      status = status.replace textToReplace, replacementText
     fs.writeFileSync filePath,
       """#{message}
       #{commentchar} Please enter the commit message for your changes. Lines starting
@@ -118,11 +128,12 @@ module.exports = (repo) ->
   cwd = repo.getWorkingDirectory()
   git.cmd(['whatchanged', '-1', '--name-status', '--format=%B'], {cwd})
   .then (amend) -> parse amend
-  .then ([message, prevChangedFiles]) ->
+  .then ({message, prevChangedFiles}) ->
     getStagedFiles(repo)
     .then (files) ->
-      [message, prettifyFileStatuses(diffFiles prevChangedFiles, files)]
-  .then ([message, prevChangedFiles]) ->
+      prevChangedFiles = prettifyFileStatuses(diffFiles prevChangedFiles, files)
+      {message, prevChangedFiles}
+  .then ({message, prevChangedFiles}) ->
     getGitStatus(repo)
     .then (status) -> prepFile {message, prevChangedFiles, status, filePath}
     .then -> showFile filePath

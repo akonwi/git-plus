@@ -1,5 +1,11 @@
 ## Changelog
 
+### 5.8.4
+- Fix a bug where the commit amend file didn't show the status of the previous
+commit if there were no new changed files
+- Fix for a blank uncommented line inside the status of the amend file
+- Fix syntax error in the amend file. Changed 'removed' to 'deleted'
+
 ### 5.8.3
 - Show errors from `Diff` command
 
