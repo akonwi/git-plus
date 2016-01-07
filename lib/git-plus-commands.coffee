@@ -79,7 +79,8 @@ getCommands = ->
       commands.push ['git-plus:status', 'Status', -> GitStatus(repo)]
       commands.push ['git-plus:tags', 'Tags', -> GitTags(repo)]
       commands.push ['git-plus:run', 'Run', -> new GitRun(repo)]
-      commands.push ['git-plus:merge', 'Merge', -> GitMerge(repo)]
+      commands.push ['git-plus:merge', 'Merge', -> GitMerge.localBranches(repo)]
+      commands.push ['git-plus:merge-remote', 'Merge Remote', -> GitMerge.remoteBranches(repo)]
       commands.push ['git-plus:rebase', 'Rebase', -> GitRebase(repo)]
 
       return commands
