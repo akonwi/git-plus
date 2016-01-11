@@ -1,6 +1,6 @@
 ## Changelog
 
-### 5.8.4
+### 5.9.0
 - Fix a bug where the commit amend file didn't show the status of the previous
 commit if there were no new changed files
 - Fix for a blank uncommented line inside the status of the amend file
