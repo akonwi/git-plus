@@ -4,6 +4,7 @@
 - Fix [#355](https://github.com/akonwi/git-plus/issues/355)
 - Fix [#354](https://github.com/akonwi/git-plus/issues/354)
 - Fix [#358](https://github.com/akonwi/git-plus/issues/358)
+- Fix [#90](https://github.com/akonwi/git-plus/issues/90)
 
 ### 5.9.0
 - Fix a bug where the commit amend file didn't show the status of the previous
