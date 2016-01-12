@@ -3,15 +3,14 @@ git = require '../../lib/git'
 GitMerge = require '../../lib/models/git-merge'
 
 describe "GitMerge", ->
-
-  describe ".localBranches", ->
+  describe "when called with no options", ->
     it "calls git.cmd with 'branch'", ->
       spyOn(git, 'cmd').andReturn Promise.resolve ''
-      GitMerge.localBranches(repo)
+      GitMerge(repo)
       expect(git.cmd).toHaveBeenCalledWith ['branch'], cwd: repo.getWorkingDirectory()
 
-  describe ".remoteBranches", ->
+  describe "when called with { remote: true } option", ->
     it "calls git.cmd with 'remote branch'", ->
       spyOn(git, 'cmd').andReturn Promise.resolve ''
-      GitMerge.remoteBranches(repo)
+      GitMerge(repo, remote: true)
       expect(git.cmd).toHaveBeenCalledWith ['branch', '-r'], cwd: repo.getWorkingDirectory()

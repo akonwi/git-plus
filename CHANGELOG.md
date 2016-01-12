@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.12.0
+- Add `Merge Remote` command (@crshd)
+
 ### 5.11.0
 - Fix [#355](https://github.com/akonwi/git-plus/issues/355)
 - Fix [#354](https://github.com/akonwi/git-plus/issues/354)
