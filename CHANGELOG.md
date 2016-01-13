@@ -1,12 +1,10 @@
 ## Changelog
 
-### 5.12.1
+### 5.12.0
+- Add `Merge Remote` command (@crshd)
 - Fix [#370](https://github.com/akonwi/git-plus/issues/370)
 - Fix [#371](https://github.com/akonwi/git-plus/issues/371)
 - Remove code that 'fixed' [#90](https://github.com/akonwi/git-plus/issues/90) because there are still gaps to figure out
-
-### 5.12.0
-- Add `Merge Remote` command (@crshd)
 
 ### 5.11.0
 - Fix [#355](https://github.com/akonwi/git-plus/issues/355)
