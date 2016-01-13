@@ -76,10 +76,6 @@ module.exports =
       type: 'string'
       default: 'no'
       enum: ['no', 'pull', 'pull --rebase']
-    verboseCommit:
-      description: 'Show diffs in the commit pane?'
-      type: 'boolean'
-      default: false
 
   subscriptions: null
 
