@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.12.1
+- Fix [#370](https://github.com/akonwi/git-plus/issues/370)
+- Fix [#371](https://github.com/akonwi/git-plus/issues/371)
+- Remove code that 'fixed' [#90](https://github.com/akonwi/git-plus/issues/90) because there are still gaps to figure out
+
 ### 5.12.0
 - Add `Merge Remote` command (@crshd)
 
@@ -7,7 +12,6 @@
 - Fix [#355](https://github.com/akonwi/git-plus/issues/355)
 - Fix [#354](https://github.com/akonwi/git-plus/issues/354)
 - Fix [#358](https://github.com/akonwi/git-plus/issues/358)
-- Fix [#90](https://github.com/akonwi/git-plus/issues/90)
 
 ### 5.9.0
 - Fix a bug where the commit amend file didn't show the status of the previous
