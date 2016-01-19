@@ -14,6 +14,8 @@
       "git-plus:add-all-and-commit",
       "git-plus:add-all-commit-and-push",
       "git-plus:add-and-commit",
+      "git-plus:delete-local-branch",
+      "git-plus:delete-remote-branch",
       "git-plus:diff-all",
       "git-plus:diff",
       "git-plus:difftool",
