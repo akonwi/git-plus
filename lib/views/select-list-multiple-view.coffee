@@ -1,4 +1,4 @@
-fuzzyFilter = require('../models/fuzzy').filter
+fuzzyFilter = require('fuzzaldrin').filter
 {$, $$, View, SelectListView} = require 'atom-space-pen-views'
 
 # Public: Provides a view that renders a list of items with an editor that
@@ -115,10 +115,8 @@ class SelectListMultipleView extends SelectListView
     filterQuery = @getFilterQuery()
     if filterQuery.length
       options =
-        pre: '<span class="text-warning" style="font-weight:bold">'
-        post: "</span>"
-        extract: (el) => if @getFilterKey()? then el[@getFilterKey()] else el
-      filteredItems = fuzzyFilter(filterQuery, @items, options)
+        key: @getFilterKey()
+      filteredItems = fuzzyFilter(@items, filterQuery, options)
     else
       filteredItems = @items
 
