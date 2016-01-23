@@ -2,8 +2,7 @@ _ = require 'underscore-plus'
 {$, $$, SelectListView} = require 'atom-space-pen-views'
 GitPlusCommands = require '../git-plus-commands'
 GitInit = require '../models/git-init'
-fuzzy = require('../models/fuzzy').filter
-
+fuzzyFilter = require('fuzzaldrin').filter
 module.exports =
 class GitPaletteView extends SelectListView
 
@@ -53,10 +52,8 @@ class GitPaletteView extends SelectListView
     filterQuery = @getFilterQuery()
     if filterQuery.length
       options =
-        pre: '<span class="text-warning" style="font-weight:bold">'
-        post: "</span>"
-        extract: (el) => if @getFilterKey()? then el[@getFilterKey()] else el
-      filteredItems = fuzzy(filterQuery, @items, options)
+        key: @getFilterKey()
+      filteredItems = fuzzyFilter(@items, filterQuery, options)
     else
       filteredItems = @items
 
