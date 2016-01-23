@@ -86,7 +86,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   else
     init().then -> startCommit()
     .catch (message) ->
-      if message.includes 'CRLF'
+      if message.includes?('CRLF')
         startCommit()
       else
         notifier.addInfo message
