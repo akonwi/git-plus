@@ -1,6 +1,7 @@
 {Disposable} = require 'atom'
 {BufferedProcess} = require 'atom'
 {$, $$$, View} = require 'atom-space-pen-views'
+_ = require 'underscore-plus'
 git = require '../git'
 GitShow = require '../models/git-show'
 
@@ -22,8 +23,9 @@ class LogListView extends View
     @finished = false
     @on 'click', '.commit-row', ({currentTarget}) =>
       @showCommitLog currentTarget.getAttribute('hash')
-    @scroll =>
+    @scroll(_.debounce( =>
       @getLog() if @prop('scrollHeight') - @scrollTop() - @height() < 20
+    , 50))
 
   attached: ->
     @commandSubscription = atom.commands.add @element,
