@@ -52,7 +52,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Log [Current File]` | Show the commit history [for the current file] and show display the selected commit. | |
 | `Git Show` | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`. | |
 
-###Commit window
+### Commit window
 To change where the commit window appears go to settings and find
 ![screenshot](http://imgur.com/cdc7M5p.png)
 
