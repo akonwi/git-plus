@@ -13,15 +13,13 @@ class LogListView extends View
     @div class: 'git-plus-log native-key-bindings', tabindex: -1, =>
       @table id: 'git-plus-commits', outlet: 'commitsListView'
 
-  onDidChangeTitle: -> new Disposable
-  onDidChangeModified: -> new Disposable
-
   getURI: -> 'atom://git-plus:log'
 
   getTitle: -> 'git-plus: Log'
 
   initialize: ->
     @skipCommits = 0
+    @finished = false
     @on 'click', '.commit-row', ({currentTarget}) =>
       @showCommitLog currentTarget.getAttribute('hash')
     @scroll =>
@@ -47,24 +45,27 @@ class LogListView extends View
     @commandSubscription = null
 
   parseData: (data) ->
-    if data.length > 0
-      separator = ';|'
-      newline = '_.;._'
-      data = data.substring(0, data.length - newline.length - 1)
+    if data.length < 1
+      @finished = true
+      return
 
-      commits = data.split(newline).map (line) ->
-        if line.trim() isnt ''
-          tmpData = line.trim().split(separator)
-          return {
-            hashShort: tmpData[0]
-            hash: tmpData[1]
-            author: tmpData[2]
-            email: tmpData[3]
-            message: tmpData[4]
-            date: tmpData[5]
-          }
+    separator = ';|'
+    newline = '_.;._'
+    data = data.substring(0, data.length - newline.length - 1)
 
-      @renderLog commits
+    commits = data.split(newline).map (line) ->
+      if line.trim() isnt ''
+        tmpData = line.trim().split(separator)
+        return {
+          hashShort: tmpData[0]
+          hash: tmpData[1]
+          author: tmpData[2]
+          email: tmpData[3]
+          message: tmpData[4]
+          date: tmpData[5]
+        }
+
+    @renderLog commits
 
   renderHeader: ->
     headerRow = $$$ ->
@@ -107,6 +108,8 @@ class LogListView extends View
     @getLog()
 
   getLog: ->
+    return if @finished
+
     args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
     args.push @currentFile if @onlyCurrentFile and @currentFile?
     git.cmd(args, cwd: @repo.getWorkingDirectory())

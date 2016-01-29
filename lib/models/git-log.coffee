@@ -2,9 +2,6 @@ git = require '../git'
 LogListView = require '../views/log-list-view'
 LogViewURI = 'atom://git-plus:log'
 
-amountOfCommitsToShow = ->
-  atom.config.get('git-plus.amountOfCommitsToShow')
-
 module.exports = (repo, {onlyCurrentFile}={}) ->
   atom.workspace.addOpener (uri) ->
     return new LogListView if uri is LogViewURI
