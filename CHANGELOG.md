@@ -1,6 +1,6 @@
 ## Changelog
 
-### 5.12.2
+### 5.12.3
 - Fix [#387](https://github.com/akonwi/git-plus/issues/387)
 - Fix [#383](https://github.com/akonwi/git-plus/issues/383)
 - Fix [#369](https://github.com/akonwi/git-plus/issues/369)
