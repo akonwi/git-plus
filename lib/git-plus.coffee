@@ -153,6 +153,6 @@ module.exports =
   setupBranchesMenuToggle: (statusBar) ->
     statusBar.getRightTiles().some ({item}) =>
       if item?.classList?.contains? 'git-view'
-        @subscriptions.add $(item).find('.git-branch').on 'click', (e) ->
+        $(item).find('.git-branch').on 'click', (e) ->
           atom.commands.dispatch(document.querySelector('atom-workspace'), 'git-plus:checkout')
         return true
