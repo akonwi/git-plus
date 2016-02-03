@@ -17,4 +17,4 @@ describe "GitDiffTool", ->
       expect(git.cmd).toHaveBeenCalledWith ['diff-index', 'HEAD', '-z'], cwd: repo.getWorkingDirectory()
 
     it "calls `git.getConfig` to check if a a difftool is set", ->
-      expect(git.getConfig).toHaveBeenCalledWith 'diff.tool', Path.dirname(pathToRepoFile)
+      expect(git.getConfig).toHaveBeenCalledWith 'diff.tool', repo.getWorkingDirectory()

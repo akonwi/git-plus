@@ -15,6 +15,7 @@ module.exports = mocks =
     getReferences: ->
       heads: [head]
     getShortHead: -> 'short head'
+    isPathModified: -> false
     repo:
       submoduleForPath: (path) -> undefined
 

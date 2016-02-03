@@ -6,7 +6,7 @@ gitRemove = (repo, {showSelector}={}) ->
   cwd = repo.getWorkingDirectory()
   currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if currentFile? and not showSelector
-    if window.confirm 'Are you sure?'
+    if repo.isPathModified(currentFile) is false or window.confirm('Are you sure?')
       atom.workspace.getActivePaneItem().destroy()
       git.cmd(['rm', '-f', '--ignore-unmatch', currentFile], {cwd})
       .then (data) -> notifier.addSuccess("Removed #{prettify data}")
