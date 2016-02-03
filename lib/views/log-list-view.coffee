@@ -11,7 +11,7 @@ amountOfCommitsToShow = ->
 module.exports =
 class LogListView extends View
   @content: ->
-    @div class: 'git-plus-log native-key-bindings', tabindex: -1, =>
+    @div class: 'git-plus-log', tabindex: -1, =>
       @table id: 'git-plus-commits', outlet: 'commitsListView'
 
   getURI: -> 'atom://git-plus:log'
