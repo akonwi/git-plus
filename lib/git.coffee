@@ -1,3 +1,5 @@
+NodeGit = require 'nodegit'
+
 {BufferedProcess} = require 'atom'
 Path = require 'flavored-path'
 
@@ -53,13 +55,13 @@ module.exports = git =
           args: args
           options: options
           stdout: (data) -> output += data.toString()
-          stderr: (data) -> 
+          stderr: (data) ->
             output += data.toString()
-          exit: (code) -> 
+          exit: (code) ->
             if code is 0
-              resolve output 
-            else 
-              reject output 
+              resolve output
+            else
+              reject output
       catch
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
@@ -111,14 +113,25 @@ module.exports = git =
         _prettify(data)
 
   add: (repo, {file, update}={}) ->
-    args = ['add']
-    if update then args.push '--update' else args.push '--all'
-    args.push(if file then file else '.')
-    git.cmd(args, cwd: repo.getWorkingDirectory())
-    .then (output) ->
-      if output isnt false
-        notifier.addSuccess "Added #{file ? 'all files'}"
-        true
+    NodeGit.Repository.open(repo.getWorkingDirectory()).then (r) ->
+      git.unstagedFiles(repo, showUntracked: true)
+      .then (files) ->
+        r.index().then (index) ->
+          files.forEach ({path}) ->
+            if (file and file is path) or not file?
+              Promise.reject() if index.addByPath(path) is not 0
+          index
+        .then (index) -> Promise.reject() if index.write() is not 0
+      .done -> notifier.addSuccess "Added #{file ? 'all files'}"
+      .catch (reason) -> notifier.addError "There was an error staging files"
+    # args = ['add']
+    # if update then args.push '--update' else args.push '--all'
+    # args.push(if file then file else '.')
+    # git.cmd(args, cwd: repo.getWorkingDirectory())
+    # .then (output) ->
+    #   if output isnt false
+    #     notifier.addSuccess "Added #{file ? 'all files'}"
+    #     true
 
   getRepo: ->
     new Promise (resolve, reject) ->
