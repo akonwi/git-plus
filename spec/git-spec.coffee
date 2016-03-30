@@ -145,6 +145,16 @@ describe "Git-Plus git module", ->
         git.add(mockRepo, update: true).then (success) ->
           expect(git.cmd).toHaveBeenCalledWith(['add', '--update', '.'], cwd: mockRepo.getWorkingDirectory())
 
+    describe "when it fails", ->
+      it "notifies of failure", ->
+        spyOn(git, 'cmd').andReturn Promise.reject 'git.add error'
+        spyOn(notifier, 'addError')
+        waitsForPromise ->
+          git.add(mockRepo).then (result) ->
+            fail "should have been rejected"
+          .catch (error) ->
+            expect(notifier.addError).toHaveBeenCalledWith 'git.add error'
+
   describe "git.reset", ->
     it "resets and unstages all files", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve true

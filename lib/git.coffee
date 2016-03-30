@@ -113,25 +113,14 @@ module.exports = git =
         _prettify(data)
 
   add: (repo, {file, update}={}) ->
-    NodeGit.Repository.open(repo.getWorkingDirectory()).then (r) ->
-      git.unstagedFiles(repo, showUntracked: true)
-      .then (files) ->
-        r.index().then (index) ->
-          files.forEach ({path}) ->
-            if (file and file is path) or not file?
-              Promise.reject() if index.addByPath(path) is not 0
-          index
-        .then (index) -> Promise.reject() if index.write() is not 0
-      .done -> notifier.addSuccess "Added #{file ? 'all files'}"
-      .catch (reason) -> notifier.addError "There was an error staging files"
-    # args = ['add']
-    # if update then args.push '--update' else args.push '--all'
-    # args.push(if file then file else '.')
-    # git.cmd(args, cwd: repo.getWorkingDirectory())
-    # .then (output) ->
-    #   if output isnt false
-    #     notifier.addSuccess "Added #{file ? 'all files'}"
-    #     true
+    args = ['add']
+    if update then args.push '--update' else args.push '--all'
+    args.push(if file then file else '.')
+    git.cmd(args, cwd: repo.getWorkingDirectory())
+    .then (output) ->
+      if output isnt false
+        notifier.addSuccess "Added #{file ? 'all files'}"
+    .catch (msg) -> notifier.addError msg
 
   getRepo: ->
     new Promise (resolve, reject) ->
