@@ -11,7 +11,7 @@ vim-fugitive like package for atom. make commits and other git things without th
 # IMPORTANT:
 Make sure your gitconfig file is configured. You must configure at least the `user.email` and `user.name` variables.
 
-Also, the package currently favors an ssh setup that doesn't expect to be prompted for credentials in order to push/pull, .etc.
+Also, the package currently favors an ssh setup that doesn't expect to be prompted for credentials in order to push/pull, .etc. Github has a guide to help you set that up [here](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
 
 ### Showing the Git-Plus Palette
 >- `Cmd-Shift-H` on MacOS
