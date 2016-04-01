@@ -1,5 +1,3 @@
-NodeGit = require 'nodegit'
-
 {BufferedProcess} = require 'atom'
 Path = require 'flavored-path'
 

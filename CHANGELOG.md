@@ -1,6 +1,6 @@
 ## Changelog
 
-### 5.13.2
+### 5.13.3
 - Show errors when Add and Push commands fail
 
 ### 5.13.0
