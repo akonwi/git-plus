@@ -84,3 +84,6 @@ class ListView extends SelectListView
       .then (message) ->
         view.addLine(message).finish()
         startMessage.dismiss()
+      .catch (error) ->
+        view.addLine(error).finish()
+        startMessage.dismiss()
