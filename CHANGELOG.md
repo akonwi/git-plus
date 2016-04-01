@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.13.1
+- Show errors when Add and Push commands fail
+
 ### 5.13.0
 - Add keyboard support for git log view (@aki77)[PR#389](https://github.com/akonwi/git-plus/pull/389)
 
