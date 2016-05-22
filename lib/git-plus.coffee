@@ -52,7 +52,7 @@ module.exports =
     splitPane:
       title: 'Split pane direction'
       type: 'string'
-      default: 'Right'
+      default: 'Down'
       description: 'Where should new panes go? (Defaults to Right)'
       enum: ['Up', 'Right', 'Down', 'Left']
     wordDiff:
