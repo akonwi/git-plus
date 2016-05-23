@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.13.5
+- Fix [#412](https://github.com/akonwi/git-plus/issues/412)
+- Slight refactor to diff grammar
+
 ### 5.13.4
 - Fix [#423](https://github.com/akonwi/git-plus/issues/423)
 
