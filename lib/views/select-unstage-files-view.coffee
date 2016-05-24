@@ -18,10 +18,10 @@ class SelectStageFilesView extends SelectListMultipleView
 
   addButtons: ->
     viewButton = $$ ->
-      @div class: 'buttons', =>
-        @span class: 'pull-left', =>
+      @div class: 'select-list-buttons', =>
+        @div =>
           @button class: 'btn btn-error inline-block-tight btn-cancel-button', 'Cancel'
-        @span class: 'pull-right', =>
+        @div =>
           @button class: 'btn btn-success inline-block-tight btn-unstage-button', 'Unstage'
     viewButton.appendTo(this)
 
