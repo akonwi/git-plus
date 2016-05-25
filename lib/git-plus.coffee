@@ -60,7 +60,7 @@ module.exports =
       type: 'boolean'
       default: true
       description: 'Should word diffs be highlighted in diffs?'
-    amountOfCommitsToShow:
+    numberOfCommitsToShow:
       type: 'integer'
       default: 25
       minimum: 1
