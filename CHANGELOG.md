@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.14.0
+- Add a new stash command to save with a message -> [#396](https://github.com/akonwi/git-plus/issues/396)
+- Fix placeholder text for Run command not displaying
+
 ### 5.13.6
 - Fix [#445](https://github.com/akonwi/git-plus/issues/445)
 
