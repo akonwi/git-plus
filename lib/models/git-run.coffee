@@ -8,7 +8,7 @@ OutputViewManager = require '../output-view-manager'
 class InputView extends View
   @content: ->
     @div =>
-      @subview 'commandEditor', new TextEditorView(mini: true, placeHolderText: 'Git command and arguments')
+      @subview 'commandEditor', new TextEditorView(mini: true, placeholderText: 'Git command and arguments')
 
   initialize: (@repo) ->
     @disposables = new CompositeDisposable
