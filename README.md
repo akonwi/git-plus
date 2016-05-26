@@ -16,7 +16,7 @@ Also, the package currently favors a SSH setup that doesn't expect to be prompte
 #### Showing the Git-Plus Palette
 >- `Cmd-Shift-H` on Mac OS X
 >- `Ctrl-Shift-H` on Linux & Windows
->- `Git Plus: Menu` on the Atom's Command Palette.
+>- `Git Plus: Menu` on Atom's Command Palette.
 
 #### Push, Pull & Fetch Notifications
 Notifications will appear in the console output above the status bar.
