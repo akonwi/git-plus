@@ -12,6 +12,7 @@
   'cmd-shift-h': 'git-plus:menu'
   'cmd-shift-c': 'git-plus:commit'
   'cmd-shift-a s': 'git-plus:status'
+  'cmd-shift-a q': 'git-plus:add-and-commit-and-push'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
   'cmd-shift-a p': 'git-plus:add-all-commit-and-push'
 
@@ -19,6 +20,7 @@
   'ctrl-shift-h': 'git-plus:menu'
   'ctrl-shift-x': 'git-plus:commit'
   'ctrl-shift-a s': 'git-plus:status'
+  'ctrl-shift-a q': 'git-plus:add-and-commit-and-push'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
   'ctrl-shift-a p': 'git-plus:add-all-commit-and-push'
 
