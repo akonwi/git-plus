@@ -1,7 +1,7 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "5.13.0",
+  "version": "5.14.0",
   "description": "Do git things without the terminal",
   "keywords": [
     "git"
@@ -42,6 +42,7 @@
       "git-plus:stage-files",
       "git-plus:stage-hunk",
       "git-plus:stash-save",
+      "git-plus:stash-save-message",
       "git-plus:stash-pop",
       "git-plus:stash-keep",
       "git-plus:stash-drop",

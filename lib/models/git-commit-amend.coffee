@@ -14,7 +14,7 @@ prettifyStagedFiles = (data) ->
 
 prettyifyPreviousFile = (data) ->
   mode: data[0]
-  path: data.substring(1)
+  path: data.substring(1).trim()
 
 prettifyFileStatuses = (files) ->
   files.map ({mode, path}) ->
@@ -46,14 +46,15 @@ diffFiles = (previousFiles, currentFiles) ->
   previousFiles.filter (p) -> p.path in currentPaths is false
 
 parse = (prevCommit) ->
-  lines = prevCommit.split(/\n/).filter (line) -> line isnt ''
-  prevMessage = []
-  prevChangedFiles = []
-  lines.forEach (line) ->
-    unless /(([ MADRCU?!])\s(.*))/.test line
-      prevMessage.push line
-    else
-      prevChangedFiles.push line.replace(/[ MADRCU?!](\s)(\s)*/, line[0])
+  lines = prevCommit.split(/\n/).filter (line) -> line isnt '/n'
+  statusRegex = /(([ MADRCU?!])\s(.*))/
+  indexOfStatus = lines.findIndex (line) -> statusRegex.test line
+
+  prevMessage = lines.splice 0, indexOfStatus - 1
+  prevMessage.reverse()
+  prevMessage.shift() if prevMessage[0] is ''
+  prevMessage.reverse()
+  prevChangedFiles = lines.filter (line) -> line isnt ''
   message = prevMessage.join('\n')
   {message, prevChangedFiles}
 
@@ -79,7 +80,7 @@ prepFile = ({message, prevChangedFiles, status, filePath}) ->
       else if status.indexOf(currentChanges) > -1
         textToReplace = currentChanges
       replacementText =
-        """Changes to be committed:
+        """committed:
         #{
           prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
         }"""

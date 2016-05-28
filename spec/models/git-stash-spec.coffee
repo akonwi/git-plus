@@ -21,6 +21,13 @@ describe "Git Stash commands", ->
       GitStashSave(repo)
       expect(git.cmd).toHaveBeenCalledWith ['stash', 'save'], options
 
+  describe "Save with message", ->
+    it "calls git.cmd with 'stash', 'save', and provides message", ->
+      message = 'foobar'
+      spyOn(git, 'cmd').andReturn Promise.resolve true
+      GitStashSave(repo, {message})
+      expect(git.cmd).toHaveBeenCalledWith ['stash', 'save', message], options
+      
   describe "Pop", ->
     it "calls git.cmd with 'stash' and 'pop'", ->
       spyOn(git, 'cmd').andReturn Promise.resolve true

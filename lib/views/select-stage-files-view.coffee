@@ -17,10 +17,10 @@ class SelectStageFilesView extends SelectListMultipleView
 
   addButtons: ->
     viewButton = $$ ->
-      @div class: 'buttons', =>
-        @span class: 'pull-left', =>
+      @div class: 'select-list-buttons', =>
+        @div =>
           @button class: 'btn btn-error inline-block-tight btn-cancel-button', 'Cancel'
-        @span class: 'pull-right', =>
+        @div =>
           @button class: 'btn btn-success inline-block-tight btn-stage-button', 'Stage'
     viewButton.appendTo(this)
 
@@ -35,8 +35,7 @@ class SelectStageFilesView extends SelectListMultipleView
 
   cancelled: -> @hide()
 
-  hide: ->
-    @panel?.destroy()
+  hide: -> @panel?.destroy()
 
   viewForItem: (item, matchedStr) ->
     $$ ->

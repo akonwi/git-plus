@@ -11,7 +11,9 @@
         'name': 'punctuation.definition.from-file.diff'
       '7':
         'name': 'punctuation.definition.from-file.diff'
-    'match': '(^(((-{3}) .+)|((\\*{3}) .+))$\\n?|^(={4}) .+(?= - ))'
+    'begin': '--- a\/'
+    'end': '\..+'
+    # 'match': '(^(((-{3}) .+)|((\\*{3}) .+))$\\n?|^(={4}) .+(?= - ))'
     'name': 'meta.diff.header.from-file'
   }
   {
@@ -22,7 +24,9 @@
         'name': 'punctuation.definition.to-file.diff'
       '4':
         'name': 'punctuation.definition.to-file.diff'
-    'match': '(^(\\+{3}) .+$\\n?| (-) .* (={4})$\\n?)'
+    'begin': '\\+\\+\\+ b\/'
+    'end': '\..+'
+    # 'match': '(^(\\+{3}) .+$\\n?| (-) .* (={4})$\\n?)'
     'name': 'meta.diff.header.to-file'
   }
   {

@@ -53,13 +53,13 @@ module.exports = git =
           args: args
           options: options
           stdout: (data) -> output += data.toString()
-          stderr: (data) -> 
+          stderr: (data) ->
             output += data.toString()
-          exit: (code) -> 
+          exit: (code) ->
             if code is 0
-              resolve output 
-            else 
-              reject output 
+              resolve output
+            else
+              reject output
       catch
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
@@ -118,7 +118,7 @@ module.exports = git =
     .then (output) ->
       if output isnt false
         notifier.addSuccess "Added #{file ? 'all files'}"
-        true
+    .catch (msg) -> notifier.addError msg
 
   getRepo: ->
     new Promise (resolve, reject) ->

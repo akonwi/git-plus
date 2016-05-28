@@ -1,5 +1,22 @@
 ## Changelog
 
+### 5.14.0
+- Add a new stash command to save with a message -> [#396](https://github.com/akonwi/git-plus/issues/396)
+- Fix placeholder text for Run command not displaying
+
+### 5.13.6
+- Fix [#445](https://github.com/akonwi/git-plus/issues/445)
+
+### 5.13.5
+- Fix [#412](https://github.com/akonwi/git-plus/issues/412)
+- Slight refactor to diff grammar
+
+### 5.13.4
+- Fix [#423](https://github.com/akonwi/git-plus/issues/423)
+
+### 5.13.3
+- Show errors when Add and Push commands fail
+
 ### 5.13.0
 - Add keyboard support for git log view (@aki77)[PR#389](https://github.com/akonwi/git-plus/pull/389)
 

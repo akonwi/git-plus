@@ -5,8 +5,7 @@ _ = require 'underscore-plus'
 git = require '../git'
 GitShow = require '../models/git-show'
 
-amountOfCommitsToShow = ->
-  atom.config.get('git-plus.amountOfCommitsToShow')
+numberOfCommitsToShow = -> atom.config.get('git-plus.numberOfCommitsToShow')
 
 module.exports =
 class LogListView extends View
@@ -80,7 +79,7 @@ class LogListView extends View
 
   renderLog: (commits) ->
     commits.forEach (commit) => @renderCommit commit
-    @skipCommits += amountOfCommitsToShow()
+    @skipCommits += numberOfCommitsToShow()
 
   renderCommit: (commit) ->
     commitRow = $$$ ->
@@ -112,7 +111,7 @@ class LogListView extends View
   getLog: ->
     return if @finished
 
-    args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{amountOfCommitsToShow()}", '--skip=' + @skipCommits]
+    args = ['log', "--pretty=%h;|%H;|%aN;|%aE;|%s;|%ai_.;._", "-#{numberOfCommitsToShow()}", '--skip=' + @skipCommits]
     args.push @currentFile if @onlyCurrentFile and @currentFile?
     git.cmd(args, cwd: @repo.getWorkingDirectory())
     .then (data) => @parseData data
