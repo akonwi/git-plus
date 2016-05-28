@@ -42,6 +42,10 @@
           'command': 'git-plus:add-and-commit'
         }
         {
+          'label': 'Add & Commit & Push'
+          'command': 'git-plus:add-and-commit-and-push'
+        }
+        {
           'label': 'Add All & Commit'
           'command': 'git-plus:add-all-and-commit'
         }
