@@ -34,7 +34,7 @@ module.exports =
       @cancel()
 
     pull: (remoteBranch='') ->
-      view = OutputViewManager.new()
+      view = OutputViewManager.create()
       startMessage = notifier.addInfo "Pulling...", dismissable: true
       args = ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
       git.cmd(args, cwd: @repo.getWorkingDirectory())

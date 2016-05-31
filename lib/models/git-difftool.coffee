@@ -30,6 +30,6 @@ module.exports = (repo, {file}={}) ->
           args.push 'HEAD' if includeStagedDiff
           args.push file
           git.cmd(args, cwd: repo.getWorkingDirectory())
-          .catch (msg) -> OutputViewManager.new().addLine(msg).finish()
+          .catch (msg) -> OutputViewManager.create().addLine(msg).finish()
         else
           notifier.addInfo 'Nothing to show.'

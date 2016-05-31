@@ -66,7 +66,7 @@ class ListView extends SelectListView
     @cancel()
 
   execute: (remote='', extraArgs='') ->
-    view = OutputViewManager.new()
+    view = OutputViewManager.create()
     args = [@mode]
     if extraArgs.length > 0
       args.push extraArgs
