@@ -1,6 +1,6 @@
-# Git-Plus package ![Build Status](https://travis-ci.org/akonwi/git-plus.svg?branch=5.5.0)
+# Git-Plus package ![Build Status](https://travis-ci.org/akonwi/git-plus.svg?branch=master)
 
-[![endorse](https://api.coderwall.com/akonwi/endorsecount.png)](https://coderwall.com/akonwi)
+[![forthebadge](http://forthebadge.com/images/badges/uses-git.svg)](http://forthebadge.com)
 
 vim-fugitive like package for atom. make commits and other git things without the terminal
 
