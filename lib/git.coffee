@@ -47,7 +47,7 @@ module.exports = git =
   cmd: (args, options={ env: process.env }) ->
     new Promise (resolve, reject) ->
       output = ''
-      new BufferedProcess
+      process = new BufferedProcess
         command: atom.config.get('git-plus.gitPath') ? 'git'
         args: args
         options: options
@@ -59,7 +59,7 @@ module.exports = git =
             resolve output
           else
             reject output
-      .onWillThrowError (errorObject) ->
+      process.onWillThrowError (errorObject) ->
         notifier.addError 'Git Plus is unable to locate the git command. Please ensure process.env.PATH can access git.'
         reject "Couldn't find git"
 
