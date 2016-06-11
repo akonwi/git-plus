@@ -73,7 +73,7 @@ module.exports = git =
 
   status: (repo) ->
     git.cmd(['status', '--porcelain', '-z'], cwd: repo.getWorkingDirectory())
-    .then (data) -> if data.length > 2 then data.split('\0') else []
+    .then (data) -> if data.length > 2 then data.split('\0')[...-1] else []
 
   refresh: () ->
     atom.project.getRepositories().forEach (repo) ->

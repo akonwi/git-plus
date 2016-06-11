@@ -53,7 +53,8 @@
       "git-plus:run",
       "git-plus:merge",
       "git-plus:merge-remote",
-      "git-plus:rebase"
+      "git-plus:rebase",
+      "git-plus:open-changed-files"
     ]
   },
   "consumedServices": {
