@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.15.0
+- New command to 'Add and commit and push' (@john-d-murphy)[#452](https://github.com/akonwi/git-plus/issues/452)
+- New command 'Open all changed files' (@flexoid) [#463](https://github.com/akonwi/git-plus/issues/463)
+
 ### 5.14.0
 - Add a new stash command to save with a message -> [#396](https://github.com/akonwi/git-plus/issues/396)
 - Fix placeholder text for Run command not displaying
