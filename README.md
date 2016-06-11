@@ -52,6 +52,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git rm [current file]` | `git rm` the current file or open an selector to select the files to remove. You can select multiple files at once. | |
 | `Git Log [Current File]` | Show the commit history [for the current file] and show display the selected commit. | |
 | `Git Show` | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`. | |
+| `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
 
 ### Commit window
 To change where the commit window appears go to settings and find

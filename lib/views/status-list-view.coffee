@@ -10,7 +10,7 @@ class StatusListView extends SelectListView
   initialize: (@repo, @data) ->
     super
     @show()
-    @setItems @parseData @data[...-1]
+    @setItems @parseData @data
     @focusFilterEditor()
 
   parseData: (files) ->
