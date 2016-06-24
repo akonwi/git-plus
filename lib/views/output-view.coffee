@@ -7,7 +7,7 @@ module.exports =
 
     @content: ->
       @div class: 'git-plus info-view', =>
-        @pre class: 'output', defaultMessage
+        @div class: 'output', defaultMessage
 
     initialize: ->
       super
@@ -20,7 +20,7 @@ module.exports =
     reset: -> @message = defaultMessage
 
     finish: ->
-      @find(".output").text(@message)
+      @find(".output").html(@message)
       @show()
       @timeout = setTimeout =>
         @hide()

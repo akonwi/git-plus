@@ -1,5 +1,6 @@
 {BufferedProcess} = require 'atom'
 Path = require 'flavored-path'
+AnsiToHtml = require 'ansi-to-html'
 
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
@@ -44,9 +45,10 @@ getRepoForCurrentFile = ->
       reject "no current file"
 
 module.exports = git =
-  cmd: (args, options={ env: process.env }) ->
+  cmd: (args=[], options={ env: process.env }, enableColor=false) ->
     new Promise (resolve, reject) ->
       output = ''
+      args = ['-c', 'color.ui=always'].concat(args) if enableColor
       process = new BufferedProcess
         command: atom.config.get('git-plus.gitPath') ? 'git'
         args: args
@@ -55,6 +57,7 @@ module.exports = git =
         stderr: (data) ->
           output += data.toString()
         exit: (code) ->
+          output = new AnsiToHtml().toHtml(output) if enableColor
           if code is 0
             resolve output
           else
