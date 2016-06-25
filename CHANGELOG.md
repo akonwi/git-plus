@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.16.0
+- Add toggle for experimental features in package settings
+- Verbose commits is now an experimental feature([#90](https://github.com/akonwi/git-plus/issues/90))
 ### 5.15.0
 - New command to 'Add and commit and push' (@john-d-murphy)[#452](https://github.com/akonwi/git-plus/issues/452)
 - New command 'Open all changed files' (@flexoid) [#463](https://github.com/akonwi/git-plus/issues/463)
