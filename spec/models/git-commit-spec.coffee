@@ -190,13 +190,14 @@ describe "GitCommit", ->
   describe "when the verbose commit setting is true", ->
     beforeEach ->
       atom.config.set "git-plus.openInPane", false
-      atom.config.set "git-plus.verboseCommit", true
+      atom.config.set "git-plus.experimental", true
+      atom.config.set "git-plus.verboseCommits", true
       setupMocks()
 
     it "calls git.cmd with the --verbose flag", ->
       waitsForPromise -> GitCommit(repo)
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', 'HEAD'], cwd: repo.getWorkingDirectory()
+        expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', '--staged'], cwd: repo.getWorkingDirectory()
 
   ## atom.config.get('git-plus.openInPane') is always false inside the module
   # describe "when the `git-plus.openInPane` setting is true", ->

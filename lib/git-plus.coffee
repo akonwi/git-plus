@@ -78,8 +78,12 @@ module.exports =
       type: 'string'
       default: 'no'
       enum: ['no', 'pull', 'pull --rebase']
-    verboseCommit:
-      description: 'Show diffs in commit pane?'
+    experimental:
+      description: 'Enable beta features and behavior'
+      type: 'boolean'
+      default: false
+    verboseCommits:
+      description: '(Experimental) Show diffs in commit pane?'
       type: 'boolean'
       default: false
 
