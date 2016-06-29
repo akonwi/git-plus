@@ -24,6 +24,7 @@ commitFileContent =
   toString: -> commitFileContent
   indexOf: -> 5
   substring: -> 'commit message'
+  split: (splitPoint) -> if splitPoint is '\n' then ['commit message', '# comments to be deleted']
 commitResolution = Promise.resolve 'commit success'
 
 setupMocks = ->

@@ -60,7 +60,8 @@ trimFile = (filePath) ->
   git.getConfig('core.commentchar', cwd).then (commentchar) ->
     commentchar = if commentchar is '' then '#'
     content = fs.readFileSync(Path.get(filePath)).toString()
-    content = content.substring(0, content.indexOf(commentchar))
+    startOfComments = content.indexOf(content.split('\n').find (line) -> line.startsWith commentchar)
+    content = content.substring(0, startOfComments)
     fs.writeFileSync filePath, content
 
 commit = (directory, filePath) ->
