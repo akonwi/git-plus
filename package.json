@@ -75,6 +75,7 @@
     "underscore-plus": "1.x",
     "atom-space-pen-views": "^2.0.3",
     "flavored-path": "0.0.8",
-    "atom-notify": "^1.1.0"
+    "atom-notify": "^1.1.0",
+    "ansi-to-html": "^0.4.1"
   }
 }

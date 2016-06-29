@@ -28,7 +28,7 @@ class InputView extends View
       view = OutputViewManager.create()
       args = @commandEditor.getText().split(' ')
       if args[0] is 1 then args.shift()
-      git.cmd(args, cwd: @repo.getWorkingDirectory())
+      git.cmd(args, cwd: @repo.getWorkingDirectory(), true)
       .then (data) =>
         msg = "git #{args.join(' ')} was successful"
         notifier.addSuccess(msg)
