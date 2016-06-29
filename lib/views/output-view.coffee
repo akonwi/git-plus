@@ -4,6 +4,7 @@ defaultMessage = 'Nothing new to show'
 module.exports =
   class OutputView extends ScrollView
     message: ''
+    wasOpenedManually: false
 
     @content: ->
       @div class: 'git-plus info-view', =>
@@ -22,10 +23,12 @@ module.exports =
     finish: ->
       @find(".output").text(@message)
       @show()
-      @timeout = setTimeout =>
-        @hide()
-      , atom.config.get('git-plus.messageTimeout') * 1000
+      unless @wasOpenedManually
+        @timeout = setTimeout =>
+          @hide()
+        , atom.config.get('git-plus.messageTimeout') * 1000
 
     toggle: ->
       clearTimeout @timeout if @timeout
+      @wasOpenedManually = not @wasOpenedManually
       $.fn.toggle.call(this)
