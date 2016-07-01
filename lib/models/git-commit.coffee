@@ -23,7 +23,7 @@ getTemplate = (cwd) ->
   git.getConfig('commit.template', cwd).then (filePath) ->
     if filePath then fs.readFileSync(Path.get(filePath.trim())).toString().trim() else ''
 
-prepFile = (status, filePath, diff) ->
+prepFile = (status, filePath, diff='') ->
   cwd = Path.dirname(filePath)
   git.getConfig('core.commentchar', cwd).then (commentchar) ->
     commentchar = if commentchar then commentchar.trim() else '#'
@@ -96,7 +96,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (diff) -> prepFile status, filePath, diff
     else
-      prepFile status, filePath, ''
+      prepFile status, filePath
   startCommit = ->
     showFile filePath
     .then (textEditor) ->
