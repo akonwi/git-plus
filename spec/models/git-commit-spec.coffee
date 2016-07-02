@@ -106,17 +106,11 @@ describe "GitCommit", ->
     it "shows the file", ->
       expect(atom.workspace.open).toHaveBeenCalled()
 
-    it "trims the commit file", ->
-      textEditor.save()
-      waitsFor -> commitFileContent.substring.callCount > 0
-      runs ->
-        expect(commitFileContent.substring).toHaveBeenCalledWith 0, commitFileContent.indexOf()
-
     it "calls git.cmd with ['commit'...] on textEditor save", ->
       textEditor.save()
-      waitsFor -> fs.writeFileSync.callCount > 1
+      waitsFor -> git.cmd.callCount > 1
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['commit', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+        expect(git.cmd).toHaveBeenCalledWith ['commit', "--cleanup=strip", "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
 
     it "closes the commit pane when commit is successful", ->
       textEditor.save()
@@ -199,6 +193,12 @@ describe "GitCommit", ->
       waitsForPromise -> GitCommit(repo)
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', '--staged'], cwd: repo.getWorkingDirectory()
+
+    it "trims the commit file", ->
+      textEditor.save()
+      waitsFor -> commitFileContent.substring.callCount > 0
+      runs ->
+        expect(commitFileContent.substring).toHaveBeenCalledWith 0, commitFileContent.indexOf()
 
   ## atom.config.get('git-plus.openInPane') is always false inside the module
   # describe "when the `git-plus.openInPane` setting is true", ->

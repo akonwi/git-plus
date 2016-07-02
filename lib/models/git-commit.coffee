@@ -9,6 +9,8 @@ GitPull = require './git-pull'
 
 disposables = new CompositeDisposable
 
+verboseCommitsEnabled = -> atom.config.get('git-plus.experimental') and atom.config.get('git-plus.verboseCommits')
+
 dir = (repo) ->
   (git.getSubmodule() or repo).getWorkingDirectory()
 
@@ -65,10 +67,12 @@ trimFile = (filePath) ->
     fs.writeFileSync filePath, content
 
 commit = (directory, filePath) ->
-  trimFile(filePath)
-  .then ->
-    git.cmd(['commit', "--file=#{filePath}"], cwd: directory)
-  .then (data) ->
+  promise = null
+  if verboseCommitsEnabled()
+    promise = trimFile(filePath).then -> git.cmd(['commit', "--file=#{filePath}"], cwd: directory)
+  else
+    promise = git.cmd(['commit', "--cleanup=strip", "--file=#{filePath}"], cwd: directory)
+  promise.then (data) ->
     notifier.addSuccess data
     destroyCommitEditor()
     git.refresh()
@@ -90,7 +94,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   init = -> getStagedFiles(repo).then (status) ->
-    if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.verboseCommits')
+    if verboseCommitsEnabled()
       args = ['diff', '--color=never', '--staged']
       args.push '--word-diff' if atom.config.get('git-plus.wordDiff')
       git.cmd(args, cwd: repo.getWorkingDirectory())
