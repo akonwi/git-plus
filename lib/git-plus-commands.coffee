@@ -19,6 +19,7 @@ getCommands = ->
   GitLog                 = require './models/git-log'
   GitPull                = require './models/git-pull'
   GitPush                = require './models/git-push'
+  GitForcePush           = require './models/git-force-push'
   GitRemove              = require './models/git-remove'
   GitShow                = require './models/git-show'
   GitStageFiles          = require './models/git-stage-files'
@@ -69,6 +70,7 @@ getCommands = ->
       commands.push ['git-plus:pull', 'Pull', -> GitPull(repo)]
       commands.push ['git-plus:pull-using-rebase', 'Pull Using Rebase', -> GitPull(repo, rebase: true)]
       commands.push ['git-plus:push', 'Push', -> GitPush(repo)]
+      commands.push ['git-plus:force-push', 'Force Push', -> GitForcePush(repo)]
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
       commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]
       commands.push ['git-plus:show', 'Show', -> GitShow(repo)]
