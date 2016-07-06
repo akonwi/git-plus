@@ -13,11 +13,14 @@ showCommitFilePath = (objectHash) ->
 showObject = (repo, objectHash, file) ->
   args = ['show', '--color=never', '--format=full']
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-  args.push objectHash
+  args.push objectHash unless isEmpty objectHash
   args.push '--', file if file?
 
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> prepFile(data, objectHash) if data.length > 0
+
+isEmpty = (objectHash) ->
+  objectHash.length is 1 and objectHash[0].length is 0
 
 prepFile = (text, objectHash) ->
   fs.writeFile showCommitFilePath(objectHash), text, flag: 'w+', (err) ->
