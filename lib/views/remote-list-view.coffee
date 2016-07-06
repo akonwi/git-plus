@@ -61,6 +61,9 @@ class ListView extends SelectListView
         .catch ->
       else
         @execute name
+    else if @mode is 'force-push'
+      @mode = 'push'
+      @execute name, '--force'
     else
       @execute name
     @cancel()

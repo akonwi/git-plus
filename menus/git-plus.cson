@@ -58,6 +58,10 @@
           'command': 'git-plus:push'
         }
         {
+          'label': 'Force Push'
+          'command': 'git-plus:force-push'
+        }
+        {
           'label': 'Log'
           'command': 'git-plus:log'
         }

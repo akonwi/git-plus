@@ -21,6 +21,7 @@ GitInit                = require './models/git-init'
 GitLog                 = require './models/git-log'
 GitPull                = require './models/git-pull'
 GitPush                = require './models/git-push'
+GitForcePush           = require './models/git-force-push'
 GitRemove              = require './models/git-remove'
 GitShow                = require './models/git-show'
 GitStageFiles          = require './models/git-stage-files'
@@ -120,6 +121,7 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:pull', -> git.getRepo().then((repo) -> GitPull(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:pull-using-rebase', -> git.getRepo().then((repo) -> GitPull(repo, rebase: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:push', -> git.getRepo().then((repo) -> GitPush(repo))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:force-push', -> git.getRepo().then((repo) -> GitForcePush(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:remove', -> git.getRepo().then((repo) -> GitRemove(repo, showSelector: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:remove-current-file', -> git.getRepo().then((repo) -> GitRemove(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:reset', -> git.getRepo().then((repo) -> git.reset(repo))
