@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.16.2
+- Fix [#476](https://github.com/akonwi/git-plus/issues/476)
+
 ### 5.16.1
 - Fix [#472](https://github.com/akonwi/git-plus/issues/472)
 
