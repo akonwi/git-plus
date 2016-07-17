@@ -86,6 +86,9 @@ module.exports =
       description: '(Experimental) Show diffs in commit pane?'
       type: 'boolean'
       default: false
+    enableStatusBarIcon:
+      type: 'boolean'
+      default: true
 
   subscriptions: null
 
@@ -149,7 +152,8 @@ module.exports =
 
   consumeStatusBar: (statusBar) ->
     @setupBranchesMenuToggle statusBar
-    @setupOutputViewToggle statusBar
+    if atom.config.get 'git-plus.enableStatusBarIcon'
+      @setupOutputViewToggle statusBar
 
   setupOutputViewToggle: (statusBar) ->
     div = document.createElement 'div'
