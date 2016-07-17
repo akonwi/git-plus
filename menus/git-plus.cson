@@ -73,6 +73,10 @@
           'label': 'Rebase'
           'command': 'git-plus:rebase'
         }
+        {
+          'label': 'Edit Excludes'
+          'command': 'git-plus:edit-excludes'
+        }
       ]
     ]
   }

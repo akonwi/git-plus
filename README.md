@@ -53,6 +53,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Log [Current File]` | Show the commit history [for the current file] and show display the selected commit. | |
 | `Git Show` | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`. | |
 | `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
+| `Git Edit Excludes` | Open your _[excludes](https://help.github.com/articles/ignoring-files/#explicit-repository-excludes)_ in a new tab. | |
 
 ### Commit window
 To change where the commit window appears go to settings and find
