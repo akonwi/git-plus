@@ -9,6 +9,7 @@ class ListView extends SelectListView
 
   initialize: (@repo, @data) ->
     super
+    @addClass('git-branch')
     @show()
     @parseData()
     @currentPane = atom.workspace.getActivePane()
