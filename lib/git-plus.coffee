@@ -37,6 +37,7 @@ GitRun                 = require './models/git-run'
 GitMerge               = require './models/git-merge'
 GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
+GitEditGlobalConfig    = require './models/git-edit-global-config'
 GitEditExcludes        = require './models/git-edit-excludes'
 
 currentFile = (repo) ->
@@ -142,6 +143,7 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:merge-remote', -> git.getRepo().then((repo) -> GitMerge(repo, remote: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:rebase', -> git.getRepo().then((repo) -> GitRebase(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-global-config', -> GitEditGlobalConfig()
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-excludes', -> git.getRepo().then((repo) -> GitEditExcludes(repo))
 
   deactivate: ->

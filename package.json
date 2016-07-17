@@ -55,6 +55,7 @@
       "git-plus:merge-remote",
       "git-plus:rebase",
       "git-plus:open-changed-files",
+      "git-plus:edit-global-config",
       "git-plus:edit-excludes"
     ]
   },

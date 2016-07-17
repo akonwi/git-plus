@@ -74,6 +74,10 @@
           'command': 'git-plus:rebase'
         }
         {
+          'label': 'Edit Global Config'
+          'command': 'git-plus:edit-global-config'
+        }
+        {
           'label': 'Edit Excludes'
           'command': 'git-plus:edit-excludes'
         }

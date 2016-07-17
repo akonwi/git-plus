@@ -15,6 +15,7 @@
   'cmd-shift-a q': 'git-plus:add-and-commit-and-push'
   'cmd-shift-a a': 'git-plus:add-all-and-commit'
   'cmd-shift-a p': 'git-plus:add-all-commit-and-push'
+  'cmd-shift-e g': 'git-plus:edit-global-config'
   'cmd-shift-e x': 'git-plus:edit-excludes'
 
 '.platform-win32, .platform-linux':
@@ -24,6 +25,7 @@
   'ctrl-shift-a q': 'git-plus:add-and-commit-and-push'
   'ctrl-shift-a a': 'git-plus:add-all-and-commit'
   'ctrl-shift-a p': 'git-plus:add-all-commit-and-push'
+  'ctrl-shift-e g': 'git-plus:edit-global-config'
   'ctrl-shift-e x': 'git-plus:edit-excludes'
 
 '.platform-darwin atom-text-editor':

@@ -35,6 +35,7 @@ getCommands = ->
   GitMerge               = require './models/git-merge'
   GitRebase              = require './models/git-rebase'
   GitOpenChangedFiles    = require './models/git-open-changed-files'
+  GitEditGlobalConfig    = require './models/git-edit-global-config'
   GitEditExcludes        = require './models/git-edit-excludes'
 
   git.getRepo()
@@ -88,6 +89,7 @@ getCommands = ->
       commands.push ['git-plus:merge-remote', 'Merge Remote', -> GitMerge(repo, remote: true)]
       commands.push ['git-plus:rebase', 'Rebase', -> GitRebase(repo)]
       commands.push ['git-plus:git-open-changed-files', 'Open Changed Files', -> GitOpenChangedFiles(repo)]
+      commands.push ['git-plus:edit-global-config', 'Edit Global Config', -> GitEditGlobalConfig()]
       commands.push ['git-plus:edit-excludes', 'Edit Excludes', -> GitEditExcludes(repo)]
 
       return commands
