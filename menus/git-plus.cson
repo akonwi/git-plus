@@ -63,7 +63,20 @@
         }
         {
           'label': 'Merge'
-          'command': 'git-plus:merge'
+          'submenu': [
+            {
+              'label': 'Normal Merge'
+              'command': 'git-plus:merge'
+            }
+            {
+              'label': 'Merge Remote'
+              'command': 'git-plus:merge-remote'
+            }
+            {
+              'label': 'Merge without fast-forward'
+              'command': 'git-plus:merge-no-fast-forward'
+            }
+          ]
         }
         {
           'label': 'Pull Using Rebase'
