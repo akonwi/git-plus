@@ -43,6 +43,17 @@ describe "RemoteListView", ->
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['fetch', '--prune', 'remote1'], options
 
+  describe "when mode is push-force", ->
+    it "calls git.cmd with ['push', '--force']", ->
+      spyOn(git, 'cmd').andReturn Promise.resolve 'pushing text'
+
+      view = new RemoteListView(repo, remotes, mode: 'push-force')
+      view.confirmSelection()
+
+      waitsFor -> git.cmd.callCount > 0
+      runs ->
+        expect(git.cmd).toHaveBeenCalledWith ['push', '--force', 'remote1'], options
+
   describe "when mode is push", ->
     it "calls git.cmd with ['push']", ->
       spyOn(git, 'cmd').andReturn Promise.resolve 'pushing text'
