@@ -37,9 +37,7 @@ GitRun                 = require './models/git-run'
 GitMerge               = require './models/git-merge'
 GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
-diffGrammar            = require './grammars/diff.js'
-
-atom.grammars.addGrammar(diffGrammar);
+betaDiffGrammar        = require './grammars/diff.js'
 
 currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
@@ -93,6 +91,10 @@ module.exports =
   subscriptions: null
 
   activate: (state) ->
+    if atom.config.get('git-plus.experimental')
+      atom.grammars.removeGrammarForScopeName('source.diff')
+      atom.grammars.addGrammar(betaDiffGrammar)
+
     @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
