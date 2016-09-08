@@ -37,6 +37,9 @@ GitRun                 = require './models/git-run'
 GitMerge               = require './models/git-merge'
 GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
+diffGrammar            = require './grammars/diff.js'
+
+atom.grammars.addGrammar(diffGrammar);
 
 currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
