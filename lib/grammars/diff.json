@@ -121,7 +121,7 @@
 				"name": "unimportant"
 			}
 		},
-		"match": "(\\[-)(.+)(-\\])"
+		"match": "(\\[-)(.+?)(-\\])"
 	}, {
 		"captures": {
 			"1": {
@@ -134,7 +134,7 @@
 				"name": "unimportant"
 			}
 		},
-		"match": "(\\{\\+)(.*)(\\+\\})"
+		"match": "(\\{\\+)(.+?)(\\+\\})"
 	}],
 	"scopeName": "source.diff"
 }
