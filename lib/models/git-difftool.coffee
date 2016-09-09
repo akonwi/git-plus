@@ -7,21 +7,18 @@ fs = require 'fs-plus'
 module.exports = (repo, {file}={}) ->
 
   if atom.packages.isPackageLoaded('tree-view')
-    treeView = atom.packages.getLoadedPackage('tree-view');
-    treeView = require(treeView.mainModulePath);
-    packageObj = treeView.serialize();
+    treeView = atom.packages.getLoadedPackage('tree-view')
+    treeView = require(treeView.mainModulePath)
+    packageObj = treeView.serialize()
   else if atom.packages.isPackageLoaded('sublime-tabs')
-    sublimeTabs = atom.packages.getLoadedPackage('sublime-tabs');
-    sublimeTabs = require(sublimeTabs.mainModulePath);
-    packageObj = sublimeTabs.serialize();
+    sublimeTabs = atom.packages.getLoadedPackage('sublime-tabs')
+    sublimeTabs = require(sublimeTabs.mainModulePath)
+    packageObj = sublimeTabs.serialize()
   else
-    console.warn('git-plus: no tree-view or sublime-tabs package
-                  loaded, copy-filename isn\'t loaded');
-    return
-
+    console.warn("Git-plus: no tree-view or sublime-tabs package loaded, copy-filename isn't loaded")
 
   isFolder = false
-  if packageObj.selectedPath
+  if packageObj?.selectedPath
     isFolder = fs.isDirectorySync packageObj.selectedPath
     file = repo.relativize(packageObj.selectedPath)
 
