@@ -4,7 +4,7 @@ head = jasmine.createSpyObj('head', ['replace'])
 
 module.exports = mocks =
   pathToRepoFile: pathToRepoFile
-  pathToSampleDir: Path.get "~/some/repository"
+  pathToSampleDir: Path.get "~"
 
   repo:
     getPath: -> Path.join this.getWorkingDirectory(), ".git"
