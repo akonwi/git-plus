@@ -15,7 +15,7 @@ module.exports = (repo, {file}={}) ->
     sublimeTabs = require(sublimeTabs.mainModulePath)
     packageObj = sublimeTabs.serialize()
   else
-    console.warn("Git-plus: no tree-view or sublime-tabs package loaded, copy-filename isn't loaded")
+    console.warn("Git-plus: no tree-view or sublime-tabs package loaded")
 
   isFolder = false
   if packageObj?.selectedPath
