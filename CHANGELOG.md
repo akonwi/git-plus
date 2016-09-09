@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.17.0
+- Add syntax highlighting to diffs [#507](https://github.com/akonwi/git-plus/issues/507)
+- Improves diff grammar and styling [#507](https://github.com/akonwi/git-plus/issues/507)
+
 ### 5.16.2
 - Fix [#476](https://github.com/akonwi/git-plus/issues/476)
 

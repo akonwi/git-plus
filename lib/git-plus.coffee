@@ -37,6 +37,9 @@ GitRun                 = require './models/git-run'
 GitMerge               = require './models/git-merge'
 GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
+diffGrammar            = require './grammars/diff.js'
+
+atom.grammars.addGrammar(diffGrammar);
 
 currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
@@ -159,7 +162,7 @@ module.exports =
     link = document.createElement 'a'
     link.appendChild icon
     link.onclick = (e) -> OutputViewManager.getView().toggle()
-    link.title = "Toggle Output Console"
+    atom.tooltips.add div, { title: "Toggle Git-Plus Output Console"}
     div.appendChild link
     @statusBarTile = statusBar.addRightTile item: div, priority: 0
 
