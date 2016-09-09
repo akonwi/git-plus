@@ -18,9 +18,12 @@ module.exports = (repo, {file}={}) ->
     console.warn("Git-plus: no tree-view or sublime-tabs package loaded")
 
   isFolder = false
-  if packageObj?.selectedPath
-    isFolder = fs.isDirectorySync packageObj.selectedPath
-    file ?= repo.relativize(packageObj.selectedPath)
+  if not file
+    if packageObj?.selectedPath
+      isFolder = fs.isDirectorySync packageObj.selectedPath
+      file ?= repo.relativize(packageObj.selectedPath)
+  else
+    isFolder = fs.isDirectorySync file
 
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
