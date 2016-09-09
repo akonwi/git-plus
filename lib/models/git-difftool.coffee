@@ -20,7 +20,7 @@ module.exports = (repo, {file}={}) ->
   isFolder = false
   if packageObj?.selectedPath
     isFolder = fs.isDirectorySync packageObj.selectedPath
-    file = repo.relativize(packageObj.selectedPath)
+    file ?= repo.relativize(packageObj.selectedPath)
 
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
   if not file
