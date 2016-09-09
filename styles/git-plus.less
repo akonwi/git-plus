@@ -3,81 +3,94 @@
 // See https://github.com/atom/atom-dark-ui/blob/master/stylesheets/ui-variables.less
 // for a full listing of what's available.
 @import "ui-variables";
+@import "syntax-variables";
 
 .git-plus {
-  .error {
-    color: @text-color-warning;
-  }
+	.error {
+		color: @text-color-warning;
+	}
 
-  .success {
-    color: @text-color-success;
-  }
+	.success {
+		color: @text-color-success;
+	}
 
-  .atom-panel.modal.from-bottom {
-    width: 600px;
-  }
+	.atom-panel.modal.from-bottom {
+		width: 600px;
+	}
 
-  &.info-view {
-    overflow: auto;
-    max-height: 30vh;
-  }
+	&.info-view {
+		overflow  : auto;
+		max-height: 30vh;
+	}
 }
 
 .select-list-buttons {
-  margin-top: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+	margin-top     : 5px;
+	display        : flex;
+	flex-direction : row;
+	justify-content: space-between;
 }
 
 atom-text-editor,
 atom-text-editor::shadow {
-  .meta.diff.range.unified {
-    color: @text-color-info;
-  }
+	.source.diff {
+		.unimportant {
+			color: mix(@syntax-text-color, @syntax-background-color, 25%);
+		}
 
-  .meta.diff.header {
-    color: @text-color-info;
-  }
+		.info {
+			color: @syntax-color-modified;
+		}
 
-  .markup.deleted.diff {
-    color: @text-color-error;
-  }
+		.deletion {
+			color: @syntax-color-removed;
+		}
 
-  .markup.inserted.diff {
-    color: @text-color-success;
-  }
+		.insertion {
+			color: @syntax-color-added;
+		}
+
+		.markup.removed.diff,
+		.meta.diff.header.from-file {
+			border-bottom: 2px solid @syntax-color-removed;
+		}
+
+		.markup.added.diff,
+		.meta.diff.header.to-file {
+			border-bottom: 2px solid @syntax-color-added;
+		}
+	}
 }
 
 .git-plus-log {
-    background-color: @base-background-color;
-    overflow-y: auto;
+	background-color: @base-background-color;
+	overflow-y      : auto;
 
-    #git-plus-commits {
-        color: @text-color;
-        cursor: pointer;
+	#git-plus-commits {
+		color : @text-color;
+		cursor: pointer;
 
-        td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #000;
-            vertical-align: top;
-        }
+		td {
+			padding       : 8px 10px;
+			border-bottom : 1px solid #000;
+			vertical-align: top;
+		}
 
-        .author {
-            width: 30%;
-        }
+		.author {
+			width: 30%;
+		}
 
-        .date {
-            width: 25%;
-        }
+		.date {
+			width: 25%;
+		}
 
-        .message {
-            width: 50%;
-        }
+		.message {
+			width: 50%;
+		}
 
-        .hashShort {
-            width: 10%;
-            text-align: right;
-        }
-    }
+		.hashShort {
+			width     : 10%;
+			text-align: right;
+		}
+	}
 }
