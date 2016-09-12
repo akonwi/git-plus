@@ -39,7 +39,7 @@ GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
 diffGrammar            = require './grammars/diff.js'
 
-atom.grammars.addGrammar(diffGrammar);
+baseGrammar = __dirname + '/grammars/diff.json'
 
 currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
@@ -64,6 +64,10 @@ module.exports =
       type: 'boolean'
       default: true
       description: 'Should word diffs be highlighted in diffs?'
+    syntaxHighlighting:
+      title: 'Enable syntax highlighting in diffs?'
+      type: 'boolean'
+      default: true
     numberOfCommitsToShow:
       type: 'integer'
       default: 25
@@ -93,6 +97,11 @@ module.exports =
   subscriptions: null
 
   activate: (state) ->
+    enableSyntaxHighlighting = atom.config.get('git-plus').syntaxHighlighting;
+    if enableSyntaxHighlighting
+      atom.grammars.addGrammar(diffGrammar)
+    else
+      atom.grammars.loadGrammarSync(baseGrammar);
     @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
@@ -144,6 +153,13 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:merge-remote', -> git.getRepo().then((repo) -> GitMerge(repo, remote: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:rebase', -> git.getRepo().then((repo) -> GitRebase(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
+    @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting',
+      (value) ->
+        atom.grammars.removeGrammarForScopeName('diff')
+        if value
+          atom.grammars.addGrammar(diffGrammar)
+        else
+          atom.grammars.loadGrammarSync(baseGrammar)
 
   deactivate: ->
     @subscriptions.dispose()
