@@ -110,31 +110,33 @@
 		},
 		"match": "^(((>)( .*))|((\\+)(.*)))$"
 	}, {
-		"captures": {
+		"begin": "(\\[-)",
+		"beginCaptures": {
 			"1": {
-				"name": "unimportant"
-			},
-			"2": {
-				"name": "markup.removed.diff"
-			},
-			"3": {
 				"name": "unimportant"
 			}
 		},
-		"match": "(\\[-)(.+)(-\\])"
+		"end": "(-\\])",
+		"endCaptures": {
+			"1": {
+				"name": "unimportant"
+			}
+		},
+		"contentName": "markup.removed.diff"
 	}, {
-		"captures": {
+		"begin": "(\\{\\+)",
+		"beginCaptures": {
 			"1": {
-				"name": "unimportant"
-			},
-			"2": {
-				"name": "markup.added.diff"
-			},
-			"3": {
 				"name": "unimportant"
 			}
 		},
-		"match": "(\\{\\+)(.*)(\\+\\})"
+		"end": "(\\+\\})",
+		"endCaptures": {
+			"1": {
+				"name": "unimportant"
+			}
+		},
+		"contentName": "markup.added.diff"
 	}],
-	"scopeName": "source.diff"
+	"scopeName": "diff"
 }
