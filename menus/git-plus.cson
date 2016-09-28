@@ -38,6 +38,10 @@
           'command': 'git-plus:diff-all'
         }
         {
+          'label': 'Add Modified'
+          'command': 'git-plus:add-modified'
+        }
+        {
           'label': 'Add + Commit'
           'command': 'git-plus:add-and-commit'
         }
