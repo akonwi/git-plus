@@ -10,6 +10,7 @@
     "atom-workspace": [
       "git-plus:menu",
       "git-plus:add",
+      "git-plus:add-modified",
       "git-plus:add-all",
       "git-plus:add-all-and-commit",
       "git-plus:add-all-commit-and-push",
