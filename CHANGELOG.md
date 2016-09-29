@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.18.0
+- Enable activating the difftool on files and folders in the tree-view [pr #508](https://github.com/akonwi/git-plus/issues/508)
+- Allow the package to initialize immediately when atom loads
+
 ### 5.17.1
 - Fix bugs with new diff highlighting [#511](https://github.com/akonwi/git-plus/issues/511)
 
