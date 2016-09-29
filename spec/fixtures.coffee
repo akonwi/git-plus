@@ -1,11 +1,10 @@
 Path = require 'flavored-path'
-
 pathToRepoFile = Path.get "~/some/repository/directory/file"
-
 head = jasmine.createSpyObj('head', ['replace'])
 
 module.exports = mocks =
   pathToRepoFile: pathToRepoFile
+  pathToSampleDir: Path.get "~"
 
   repo:
     getPath: -> Path.join this.getWorkingDirectory(), ".git"
