@@ -80,6 +80,11 @@ module.exports =
       type: 'integer'
       default: 5
       description: 'How long should success/error messages be shown?'
+    showFormat:
+      description: 'Which format to use for git show? (none will use your git config default)'
+      type: 'string'
+      default: 'full'
+      enum: ['oneline', 'short', 'medium', 'full', 'fuller', 'email', 'raw', 'none']
     pullBeforePush:
       description: 'Pull from remote before pushing'
       type: 'string'
