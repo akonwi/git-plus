@@ -1,7 +1,8 @@
 ## Changelog
 
-### 5.19.1
+### 5.20.0
 - Fix #510 [pr #514](https://github.com/akonwi/git-plus/issues/514)
+- Add new command (Add Modified) [pr #519](https://github.com/akonwi/git-plus/issues/519)
 
 ### 5.19.0
 - Add new command (Merge without fast-forward) [pr #492](https://github.com/akonwi/git-plus/issues/492)

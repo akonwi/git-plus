@@ -42,6 +42,7 @@ getCommands = ->
       git.refresh()
       commands = []
       commands.push ['git-plus:add', 'Add', -> GitAdd(repo)]
+      commands.push ['git-plus:add-modified', 'Add Modified', -> git.add(repo, update: true)]
       commands.push ['git-plus:add-all', 'Add All', -> GitAdd(repo, addAll: true)]
       commands.push ['git-plus:log', 'Log', -> GitLog(repo)]
       commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(repo, onlyCurrentFile: true)]
