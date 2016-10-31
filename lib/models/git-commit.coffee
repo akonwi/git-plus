@@ -1,7 +1,7 @@
+Path = require 'path'
 {CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
-Path = require 'flavored-path'
-
+getFile = require('flavored-path').get # TODO: find an alternative to this
 git = require '../git'
 notifier = require '../notifier'
 GitPush = require './git-push'
@@ -23,7 +23,7 @@ getStagedFiles = (repo) ->
 
 getTemplate = (cwd) ->
   git.getConfig('commit.template', cwd).then (filePath) ->
-    if filePath then fs.readFileSync(Path.get(filePath.trim())).toString().trim() else ''
+    if filePath then fs.readFileSync(getFile(filePath.trim())).toString().trim() else ''
 
 prepFile = (status, filePath, diff='') ->
   cwd = Path.dirname(filePath)
@@ -61,7 +61,7 @@ trimFile = (filePath) ->
   cwd = Path.dirname(filePath)
   git.getConfig('core.commentchar', cwd).then (commentchar) ->
     commentchar = if commentchar is '' then '#'
-    content = fs.readFileSync(Path.get(filePath)).toString()
+    content = fs.readFileSync(getFile(filePath)).toString()
     startOfComments = content.indexOf(content.split('\n').find (line) -> line.startsWith commentchar)
     content = content.substring(0, startOfComments)
     fs.writeFileSync filePath, content

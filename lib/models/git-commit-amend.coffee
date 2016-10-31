@@ -1,6 +1,6 @@
+Path = require 'path'
 {CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
-Path = require 'flavored-path'
 git = require '../git'
 notifier = require '../notifier'
 

@@ -1,5 +1,4 @@
 fs = require 'fs-plus'
-Path = require 'flavored-path'
 {repo, pathToSampleDir, pathToRepoFile} = require '../fixtures'
 git = require '../../lib/git'
 GitDiffTool = require '../../lib/models/git-difftool'

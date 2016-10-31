@@ -1,5 +1,5 @@
+Path = require 'path'
 fs = require 'fs-plus'
-Path = require 'flavored-path'
 
 git = require '../../lib/git'
 GitCommitAmend = require '../../lib/models/git-commit-amend'

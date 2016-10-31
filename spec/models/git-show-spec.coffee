@@ -1,5 +1,5 @@
+Path = require 'path'
 fs = require 'fs-plus'
-Path = require 'flavored-path'
 Os = require 'os'
 git = require '../../lib/git'
 {repo, pathToRepoFile} = require '../fixtures'

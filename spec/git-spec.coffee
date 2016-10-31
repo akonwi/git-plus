@@ -1,5 +1,6 @@
+Path = require 'path'
+Os = require 'os'
 fs = require 'fs-plus'
-Path = require 'flavored-path'
 git = require '../lib/git'
 notifier = require '../lib/notifier'
 {
@@ -9,20 +10,13 @@ notifier = require '../lib/notifier'
   commitPane,
   currentPane
 } = require './fixtures'
-pathToSubmoduleFile = Path.get "~/some/submodule/file"
-
-mockRepo =
-  getWorkingDirectory: -> Path.get "~/some/repository"
-  refreshStatus: -> undefined
-  relativize: (path) -> "directory/file" if path is pathToRepoFile
-  repo:
-    submoduleForPath: (path) -> undefined
+pathToSubmoduleFile = Path.join Os.homedir(), "some/submodule/file"
 
 mockSubmodule =
-  getWorkingDirectory: -> Path.get "~/some/submodule"
+  getWorkingDirectory: -> Path.join Os.homedir(), "some/submodule"
   relativize: (path) -> "file" if path is pathToSubmoduleFile
 
-mockRepoWithSubmodule = Object.create(mockRepo)
+mockRepoWithSubmodule = Object.create(repo)
 mockRepoWithSubmodule.repo = {
   submoduleForPath: (path) ->
     mockSubmodule if path is pathToSubmoduleFile
@@ -38,7 +32,7 @@ describe "Git-Plus git module", ->
         waitsForPromise ->
           git.getConfig('user.name')
         runs ->
-          expect(git.cmd).toHaveBeenCalledWith args, cwd: Path.get('~')
+          expect(git.cmd).toHaveBeenCalledWith args, cwd: Os.homedir()
 
     describe "when a repo file path is specified", ->
       it "checks for settings in that repo", ->
@@ -87,11 +81,11 @@ describe "Git-Plus git module", ->
 
     it "returns a submodule when given file is in a submodule of a project repo", ->
       spyOn(atom.project, 'getRepositories').andCallFake -> [mockRepoWithSubmodule]
-      expect(git.getSubmodule(pathToSubmoduleFile).getWorkingDirectory()).toEqual Path.get "~/some/submodule"
+      expect(git.getSubmodule(pathToSubmoduleFile).getWorkingDirectory()).toEqual mockSubmodule.getWorkingDirectory()
 
   describe "git.relativize", ->
     it "returns relativized filepath for files in repo", ->
-      spyOn(atom.project, 'getRepositories').andCallFake -> [mockRepo, mockRepoWithSubmodule]
+      spyOn(atom.project, 'getRepositories').andCallFake -> [repo, mockRepoWithSubmodule]
       expect(git.relativize pathToRepoFile).toBe 'directory/file'
       expect(git.relativize pathToSubmoduleFile).toBe "file"
 
@@ -130,27 +124,27 @@ describe "Git-Plus git module", ->
     it "calls git.cmd with ['add', '--all', {fileName}]", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve true
       waitsForPromise ->
-        git.add(mockRepo, file: pathToSubmoduleFile).then (success) ->
-          expect(git.cmd).toHaveBeenCalledWith(['add', '--all', pathToSubmoduleFile], cwd: mockRepo.getWorkingDirectory())
+        git.add(repo, file: pathToSubmoduleFile).then (success) ->
+          expect(git.cmd).toHaveBeenCalledWith(['add', '--all', pathToSubmoduleFile], cwd: repo.getWorkingDirectory())
 
     it "calls git.cmd with ['add', '--all', '.'] when no file is specified", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve true
       waitsForPromise ->
-        git.add(mockRepo).then (success) ->
-          expect(git.cmd).toHaveBeenCalledWith(['add', '--all', '.'], cwd: mockRepo.getWorkingDirectory())
+        git.add(repo).then (success) ->
+          expect(git.cmd).toHaveBeenCalledWith(['add', '--all', '.'], cwd: repo.getWorkingDirectory())
 
     it "calls git.cmd with ['add', '--update'...] when update option is true", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve true
       waitsForPromise ->
-        git.add(mockRepo, update: true).then (success) ->
-          expect(git.cmd).toHaveBeenCalledWith(['add', '--update', '.'], cwd: mockRepo.getWorkingDirectory())
+        git.add(repo, update: true).then (success) ->
+          expect(git.cmd).toHaveBeenCalledWith(['add', '--update', '.'], cwd: repo.getWorkingDirectory())
 
     describe "when it fails", ->
       it "notifies of failure", ->
         spyOn(git, 'cmd').andReturn Promise.reject 'git.add error'
         spyOn(notifier, 'addError')
         waitsForPromise ->
-          git.add(mockRepo).then (result) ->
+          git.add(repo).then (result) ->
             fail "should have been rejected"
           .catch (error) ->
             expect(notifier.addError).toHaveBeenCalledWith 'git.add error'
@@ -159,21 +153,21 @@ describe "Git-Plus git module", ->
     it "resets and unstages all files", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve true
       waitsForPromise ->
-        git.reset(mockRepo).then ->
-          expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD'], cwd: mockRepo.getWorkingDirectory()
+        git.reset(repo).then ->
+          expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD'], cwd: repo.getWorkingDirectory()
 
   describe "git.stagedFiles", ->
     it "returns an empty array when there are no staged files", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
       waitsForPromise ->
-        git.stagedFiles(mockRepo)
+        git.stagedFiles(repo)
         .then (files) ->
           expect(files.length).toEqual 0
 
     # it "returns an array with size 1 when there is a staged file", ->
     #   spyOn(git, 'cmd').andCallFake -> Promise.resolve("M\tsomefile.txt")
     #   waitsForPromise ->
-    #     git.stagedFiles(mockRepo)
+    #     git.stagedFiles(repo)
     #     .then (files) ->
     #       expect(files.length).toEqual 1
     #
@@ -181,7 +175,7 @@ describe "Git-Plus git module", ->
     #   spyOn(git, 'cmd').andCallFake ->
     #     Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
     #   waitsForPromise ->
-    #     git.stagedFiles(mockRepo)
+    #     git.stagedFiles(repo)
     #     .then (files) ->
     #       expect(files.length).toEqual 4
 
@@ -189,7 +183,7 @@ describe "Git-Plus git module", ->
     it "returns an empty array when there are no unstaged files", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
       waitsForPromise ->
-        git.unstagedFiles(mockRepo)
+        git.unstagedFiles(repo)
         .then (files) ->
           expect(files.length).toEqual 0
 
@@ -197,7 +191,7 @@ describe "Git-Plus git module", ->
     # it "returns an array with size 1 when there is an unstaged file", ->
     #   spyOn(git, 'cmd').andCallFake -> Promise.resolve "M\tsomefile.txt"
     #   waitsForPromise ->
-    #     git.unstagedFiles(mockRepo)
+    #     git.unstagedFiles(repo)
     #     .then (files) ->
     #       expect(files.length).toEqual 1
     #       expect(files[0].mode).toEqual 'M'
@@ -206,7 +200,7 @@ describe "Git-Plus git module", ->
     #   spyOn(git, 'cmd').andCallFake ->
     #     Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
     #   waitsForPromise ->
-    #     git.unstagedFiles(mockRepo)
+    #     git.unstagedFiles(repo)
     #     .then (files) ->
     #       expect(files.length).toEqual 4
     #       expect(files[1].mode).toEqual 'A'
@@ -220,7 +214,7 @@ describe "Git-Plus git module", ->
   #       else
   #         Promise.resolve ''
   #         waitsForPromise ->
-  #           git.unstagedFiles(mockRepo, showUntracked: true)
+  #           git.unstagedFiles(repo, showUntracked: true)
   #           .then (files) ->
   #             expect(files.length).toEqual 1
   #             expect(files[0].mode).toEqual '?'
@@ -232,7 +226,7 @@ describe "Git-Plus git module", ->
   #       else
   #         Promise.resolve 'M\tunstaged.file'
   #     waitsForPromise ->
-  #       git.unstagedFiles(mockRepo, showUntracked: true)
+  #       git.unstagedFiles(repo, showUntracked: true)
   #       .then (files) ->
   #         expect(files.length).toEqual 2
   #         expect(files[0].mode).toEqual 'M'
@@ -244,7 +238,7 @@ describe "Git-Plus git module", ->
         args = git.cmd.mostRecentCall.args
         if args[0][0] is 'status'
           Promise.resolve true
-      git.status(mockRepo).then -> expect(true).toBeTruthy()
+      git.status(repo).then -> expect(true).toBeTruthy()
 
   describe "git.refresh", ->
     it "calls git.cmd with 'add' and '--refresh' arguments for each repo in project", ->
@@ -252,19 +246,19 @@ describe "Git-Plus git module", ->
         args = git.cmd.mostRecentCall.args[0]
         expect(args[0]).toBe 'add'
         expect(args[1]).toBe '--refresh'
-      spyOn(mockRepo, 'getWorkingDirectory').andCallFake ->
-        expect(mockRepo.getWorkingDirectory.callCount).toBe 1
+      spyOn(repo, 'getWorkingDirectory').andCallFake ->
+        expect(repo.getWorkingDirectory.callCount).toBe 1
       git.refresh()
 
     it "calls repo.refreshStatus for each repo in project", ->
-      spyOn(atom.project, 'getRepositories').andCallFake -> [ mockRepo ]
-      spyOn(mockRepo, 'refreshStatus')
+      spyOn(atom.project, 'getRepositories').andCallFake -> [ repo ]
+      spyOn(repo, 'refreshStatus')
       spyOn(git, 'cmd').andCallFake -> undefined
       git.refresh()
-      expect(mockRepo.refreshStatus.callCount).toBe 1
+      expect(repo.refreshStatus.callCount).toBe 1
 
   describe "git.diff", ->
     it "calls git.cmd with ['diff', '-p', '-U1'] and the file path", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve "string"
-      git.diff(mockRepo, pathToRepoFile)
-      expect(git.cmd).toHaveBeenCalledWith ['diff', '-p', '-U1', pathToRepoFile], cwd: mockRepo.getWorkingDirectory()
+      git.diff(repo, pathToRepoFile)
+      expect(git.cmd).toHaveBeenCalledWith ['diff', '-p', '-U1', pathToRepoFile], cwd: repo.getWorkingDirectory()

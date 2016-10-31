@@ -1,5 +1,5 @@
 fs = require 'fs-plus'
-Path = require 'flavored-path'
+Path = require 'path'
 
 {
   repo,

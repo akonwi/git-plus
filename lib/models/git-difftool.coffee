@@ -1,4 +1,3 @@
-Path = require 'flavored-path'
 git = require '../git'
 notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'

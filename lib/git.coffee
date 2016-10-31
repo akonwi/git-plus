@@ -1,5 +1,5 @@
+Os = require 'os'
 {BufferedProcess} = require 'atom'
-Path = require 'flavored-path'
 
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
@@ -64,7 +64,7 @@ module.exports = git =
         reject "Couldn't find git"
 
   getConfig: (setting, workingDirectory=null) ->
-    workingDirectory ?= Path.get('~')
+    workingDirectory ?= Os.homedir()
     git.cmd(['config', '--get', setting], cwd: workingDirectory).catch (error) ->
       if error? and error isnt '' then notifier.addError error else ''
 
