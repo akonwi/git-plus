@@ -10,17 +10,17 @@ git = require '../git'
 showCommitFilePath = (objectHash) ->
   Path.join Os.tmpDir(), "#{objectHash}.diff"
 
+isEmpty = (string) -> string is ''
+
 showObject = (repo, objectHash, file) ->
+  objectHash = if isEmpty objectHash then 'HEAD' else objectHash
   args = ['show', '--color=never', '--format=full']
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-  args.push objectHash unless isEmpty objectHash
+  args.push objectHash
   args.push '--', file if file?
 
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> prepFile(data, objectHash) if data.length > 0
-
-isEmpty = (objectHash) ->
-  objectHash.length is 1 and objectHash[0].length is 0
 
 prepFile = (text, objectHash) ->
   fs.writeFile showCommitFilePath(objectHash), text, flag: 'w+', (err) ->
@@ -42,7 +42,7 @@ showFile = (objectHash) ->
 class InputView extends View
   @content: ->
     @div =>
-      @subview 'objectHash', new TextEditorView(mini: true, placeholderText: 'Commit hash to show')
+      @subview 'objectHash', new TextEditorView(mini: true, placeholderText: 'Commit hash to show. (Defaults to HEAD)')
 
   initialize: (@repo) ->
     @disposables = new CompositeDisposable
@@ -52,8 +52,7 @@ class InputView extends View
     @objectHash.focus()
     @disposables.add atom.commands.add 'atom-text-editor', 'core:cancel': => @destroy()
     @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm': =>
-      text = @objectHash.getModel().getText().split(' ')
-      name = if text.length is 2 then text[1] else text[0]
+      text = @objectHash.getModel().getText().split(' ')[0]
       showObject(@repo, text)
       @destroy()
 
