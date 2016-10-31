@@ -10,7 +10,7 @@ describe "GitMerge", ->
       expect(git.cmd).toHaveBeenCalledWith ['branch'], cwd: repo.getWorkingDirectory()
 
   describe "when called with { remote: true } option", ->
-    it "calls git.cmd with 'remote branch'", ->
+    it "calls git.cmd with 'branch -r'", ->
       spyOn(git, 'cmd').andReturn Promise.resolve ''
       GitMerge(repo, remote: true)
       expect(git.cmd).toHaveBeenCalledWith ['branch', '-r'], cwd: repo.getWorkingDirectory()
