@@ -15,6 +15,12 @@ describe "GitShow", ->
     expect('show' in args).toBe true
     expect(pathToRepoFile in args).toBe true
 
+  it "uses the format option from package settings", ->
+    atom.config.set('git-plus.showFormat', 'fuller')
+    GitShow repo, 'foobar-hash', pathToRepoFile
+    args = git.cmd.mostRecentCall.args[0]
+    expect('--format=fuller' in args).toBe true
+
   it "writes the output to a file", ->
     spyOn(fs, 'writeFile').andCallFake ->
       fs.writeFile.mostRecentCall.args[3]()
