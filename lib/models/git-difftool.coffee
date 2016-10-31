@@ -4,27 +4,9 @@ OutputViewManager = require '../output-view-manager'
 fs = require 'fs-plus'
 
 module.exports = (repo, {file}={}) ->
-
-  if atom.packages.isPackageLoaded('tree-view')
-    treeView = atom.packages.getLoadedPackage('tree-view')
-    treeView = require(treeView.mainModulePath)
-    packageObj = treeView.serialize()
-  else if atom.packages.isPackageLoaded('sublime-tabs')
-    sublimeTabs = atom.packages.getLoadedPackage('sublime-tabs')
-    sublimeTabs = require(sublimeTabs.mainModulePath)
-    packageObj = sublimeTabs.serialize()
-  else
-    console.warn("Git-plus: no tree-view or sublime-tabs package loaded")
-
-  isFolder = false
-  if not file
-    if packageObj?.selectedPath
-      isFolder = fs.isDirectorySync packageObj.selectedPath
-      file ?= repo.relativize(packageObj.selectedPath)
-  else
-    isFolder = fs.isDirectorySync file
-
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+  isFolder = fs.isDirectorySync file
+
   if not file
     return notifier.addInfo "No open file. Select 'Diff All'."
 

@@ -7,7 +7,6 @@ describe "GitDiffTool", ->
   describe "Using includeStagedDiff", ->
     beforeEach ->
       atom.config.set 'git-plus.includeStagedDiff', true
-      # git.cmd ['config', 'diff.tool', 'meld']
       spyOn(git, 'cmd').andReturn Promise.resolve('diffs')
       spyOn(git, 'getConfig').andReturn Promise.resolve('some-tool')
       waitsForPromise ->

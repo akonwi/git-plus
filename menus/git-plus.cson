@@ -8,7 +8,7 @@
   ]
   '.tree-view.full-menu .file, .tree-view.full-menu .directory':[
     label: 'Git difftool',
-    'command': 'git-plus:difftool'
+    'command': 'git-plus:difftool-context'
   ]
 
 
