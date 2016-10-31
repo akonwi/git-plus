@@ -14,7 +14,9 @@ isEmpty = (string) -> string is ''
 
 showObject = (repo, objectHash, file) ->
   objectHash = if isEmpty objectHash then 'HEAD' else objectHash
-  args = ['show', '--color=never', '--format=full']
+  args = ['show', '--color=never']
+  showFormatOption = atom.config.get 'git-plus.showFormat'
+  args.push "--format=#{showFormatOption}" if showFormatOption != 'none'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
   args.push objectHash
   args.push '--', file if file?
