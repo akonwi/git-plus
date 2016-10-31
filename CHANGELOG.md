@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.19.0
+- Add new command (Merge without fast-forward) [pr #492](https://github.com/akonwi/git-plus/issues/492)
+
 ### 5.18.3
 - Merge [pr #489](https://github.com/akonwi/git-plus/issues/489)
 
