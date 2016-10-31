@@ -119,14 +119,6 @@ module.exports = git =
         notifier.addSuccess "Added #{file ? 'all files'}"
     .catch (msg) -> notifier.addError msg
 
-  addModified: (repo) ->
-    args = ['add', '-u']
-    git.cmd(args, cwd: repo.getWorkingDirectory())
-    .then (output) ->
-      if output isnt false
-        notifier.addSuccess "Added #{file ? 'all files'}"
-    .catch (msg) -> notifier.addError msg
-
   getRepo: ->
     new Promise (resolve, reject) ->
       getRepoForCurrentFile().then (repo) -> resolve(repo)
