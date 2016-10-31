@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.18.3
+- Merge [pr #489](https://github.com/akonwi/git-plus/issues/489)
+
 ### 5.18.2
 - Git show defaults to HEAD if input is left empty. [pr #481](https://github.com/akonwi/git-plus/issues/481)
 - Pin icon in status bar can now be disabled. [pr #488](https://github.com/akonwi/git-plus/issues/488)
