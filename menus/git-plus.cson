@@ -23,6 +23,10 @@
           'command': 'git-plus:add'
         }
         {
+          'label': 'Add Modified'
+          'command': 'git-plus:add-modified'
+        }
+        {
           'label': 'Add All'
           'command': 'git-plus:add-all'
         }
