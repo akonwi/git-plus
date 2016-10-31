@@ -9,6 +9,7 @@ class ListView extends SelectListView
 
   initialize: (@repo, @data) ->
     super
+    @addClass('git-branch')
     @show()
     @parseData()
     @currentPane = atom.workspace.getActivePane()
@@ -42,7 +43,7 @@ class ListView extends SelectListView
     $$ ->
       @li name, =>
         @div class: 'pull-right', =>
-          @span('Current') if current
+          @span('HEAD') if current
 
   confirmed: ({name}) ->
     @checkout name.match(/\*?(.*)/)[1]
