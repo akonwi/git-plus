@@ -1,5 +1,12 @@
 ## Changelog
 
+### 5.22.0
+- Adds a new command to do `git push -u`.
+  - The old push command automatically retried after a failure with the `-u` flag and that can completely ignore some pre-push hooks. Fixes [#422](https://github.com/akonwi/git-plus/issues/422)
+- Files can now be staged from the Tree-view with a Git add command in the context menu from right clicking files and folders.
+  - More commands can be added there with pull requests. See [#422](https://github.com/akonwi/git-plus/issues/422)
+  - This work also fixes an unreported bug where trying to open a difftool for a file from the tree-view that was different than the currently active file would not work.
+
 ### 5.21.0
 - Includes a format option for the Git Show command in package settings. [pr #527](https://github.com/akonwi/git-plus/issues/527)
 
