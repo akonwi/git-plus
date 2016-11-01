@@ -54,19 +54,13 @@ describe "RemoteListView", ->
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options
 
-  describe "when mode is push and there is no upstream set", ->
+  describe "when mode is 'push -u'", ->
     it "calls git.cmd with ['push', '-u'] and remote name", ->
-      atom.config.set(pullBeforePush, 'no')
-      spyOn(git, 'cmd').andCallFake ->
-        if git.cmd.callCount is 1
-          Promise.reject 'no upstream'
-        else
-          Promise.resolve 'pushing text'
-
-      view = new RemoteListView(repo, remotes, mode: 'push')
+      spyOn(git, 'cmd').andReturn Promise.resolve('pushing text')
+      view = new RemoteListView(repo, remotes, mode: 'push -u')
       view.confirmSelection()
 
-      waitsFor -> git.cmd.callCount > 1
+      waitsFor -> git.cmd.callCount > 0
       runs ->
         expect(git.cmd).toHaveBeenCalledWith ['push', '-u', 'remote1', 'HEAD'], options
 

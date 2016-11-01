@@ -56,11 +56,11 @@ class ListView extends SelectListView
       pullOption = atom.config.get 'git-plus.pullBeforePush'
       @extraArgs = if pullOption?.includes '--rebase' then '--rebase' else ''
       unless pullOption? and pullOption is 'no'
-        @pull(name)
-        .then => @execute name
-        .catch ->
+        @pull(name).then => @execute name
       else
         @execute name
+    else if @mode is 'push -u'
+      @pushAndSetUpstream name
     else
       @execute name
     @cancel()
@@ -71,7 +71,6 @@ class ListView extends SelectListView
     if extraArgs.length > 0
       args.push extraArgs
     args = args.concat([remote, @tag]).filter((arg) -> arg isnt '')
-    command = atom.config.get('git-plus.gitPath') ? 'git'
     message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
     startMessage = notifier.addInfo message, dismissable: true
     git.cmd(args, cwd: @repo.getWorkingDirectory())
@@ -80,10 +79,21 @@ class ListView extends SelectListView
         view.addLine(data).finish()
       startMessage.dismiss()
     .catch (data) =>
-      git.cmd([@mode, '-u', remote, 'HEAD'], cwd: @repo.getWorkingDirectory())
-      .then (message) ->
-        view.addLine(message).finish()
-        startMessage.dismiss()
-      .catch (error) ->
-        view.addLine(error).finish()
-        startMessage.dismiss()
+      if data isnt ''
+        view.addLine(data).finish()
+      startMessage.dismiss()
+
+  pushAndSetUpstream: (remote='') ->
+    view = OutputViewManager.create()
+    args = ['push', '-u', remote, 'HEAD'].filter((arg) -> arg isnt '')
+    message = "Pushing..."
+    startMessage = notifier.addInfo message, dismissable: true
+    git.cmd(args, cwd: @repo.getWorkingDirectory())
+    .then (data) ->
+      if data isnt ''
+        view.addLine(data).finish()
+      startMessage.dismiss()
+    .catch (data) =>
+      if data isnt ''
+        view.addLine(data).finish()
+      startMessage.dismiss()
