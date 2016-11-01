@@ -6,9 +6,15 @@
       'command': 'git-plus:add'
     }
   ]
-  '.tree-view.full-menu .file, .tree-view.full-menu .directory':[
-    label: 'Git difftool',
-    'command': 'git-plus:difftool-context'
+  '.tree-view.full-menu .file, .tree-view.full-menu .directory': [
+    {
+      label: 'Git add',
+      'command': 'git-plus-context:add'
+    },
+    {
+      label: 'Git difftool',
+      'command': 'git-plus:difftool-context'
+    }
   ]
 
 

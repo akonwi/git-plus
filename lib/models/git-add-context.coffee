@@ -1,9 +1,10 @@
 contextPackageFinder = require '../context-package-finder'
 notifier = require '../notifier'
-GitDiffTool = require './git-difftool'
 
 module.exports = (repo, contextCommandMap) ->
   if path = contextPackageFinder.get()?.selectedPath
-    contextCommandMap 'difftool', repo: repo, file: repo.relativize(path)
+    file = repo.relativize(path)
+    file = undefined if file is ''
+    contextCommandMap 'add', {repo: repo, file}
   else
-    notifier.addInfo "No file selected to diff"
+    notifier.addInfo "No file selected to add"

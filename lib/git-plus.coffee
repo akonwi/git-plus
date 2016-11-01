@@ -4,6 +4,7 @@ git = require './git'
 contextCommandMap = require './context-command-map'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
+GitAddContext          = require './models/git-add-context'
 GitBranch              = require './models/git-branch'
 GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
 GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
@@ -117,6 +118,7 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', -> GitInit()
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add', -> git.getRepo().then((repo) -> git.add(repo, file: currentFile(repo)))
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then((repo) -> GitAddContext(repo, contextCommandMap))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add-modified', -> git.getRepo().then((repo) -> git.add(repo, update: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add-all', -> git.getRepo().then((repo) -> git.add(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit', -> git.getRepo().then((repo) -> GitCommit(repo))
