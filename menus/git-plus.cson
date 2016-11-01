@@ -13,7 +13,7 @@
     },
     {
       label: 'Git difftool',
-      'command': 'git-plus:difftool-context'
+      'command': 'git-plus-context:difftool'
     }
   ]
 

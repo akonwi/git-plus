@@ -138,7 +138,7 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:cherry-pick', -> git.getRepo().then((repo) -> GitCherryPick(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:diff', -> git.getRepo().then((repo) -> GitDiff(repo, file: currentFile(repo)))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:difftool', -> git.getRepo().then((repo) -> GitDifftool(repo, file: currentFile(repo)))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus:difftool-context', -> git.getRepo().then((repo) -> GitDifftoolContext(repo, contextCommandMap))
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then((repo) -> GitDifftoolContext(repo, contextCommandMap))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:diff-all', -> git.getRepo().then((repo) -> GitDiffAll(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch', -> git.getRepo().then((repo) -> GitFetch(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch-prune', -> git.getRepo().then((repo) -> GitFetchPrune(repo))
