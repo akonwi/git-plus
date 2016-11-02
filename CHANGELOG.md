@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.22.1
+- Fix #448 [pr #514](https://github.com/akonwi/git-plus/issues/448)
+- Fix #517 [pr #514](https://github.com/akonwi/git-plus/issues/517)
+
 ### 5.22.0
 - Adds a new command to do `git push -u`.
   - The old push command automatically retried after a failure with the `-u` flag and that can completely ignore some pre-push hooks. Fixes [#422](https://github.com/akonwi/git-plus/issues/422)
