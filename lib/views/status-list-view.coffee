@@ -20,6 +20,8 @@ class StatusListView extends SelectListView
 
   getFilterKey: -> 'path'
 
+  getEmptyMessage: -> "Nothing to commit, working directory clean."
+
   show: ->
     @panel ?= atom.workspace.addModalPanel(item: this)
     @panel.show()
