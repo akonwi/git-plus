@@ -16,7 +16,7 @@ describe "GitBranch", ->
       waitsForPromise -> gitBranches(repo)
 
     it "displays a list of the repo's branches", ->
-      expect(git.cmd).toHaveBeenCalledWith ['branch'], cwd: repo.getWorkingDirectory()
+      expect(git.cmd).toHaveBeenCalledWith ['branch', '--no-color'], cwd: repo.getWorkingDirectory()
       expect(atom.workspace.addModalPanel).toHaveBeenCalled()
 
   describe ".gitRemoteBranches", ->
@@ -25,7 +25,7 @@ describe "GitBranch", ->
       waitsForPromise -> gitRemoteBranches(repo)
 
     it "displays a list of the repo's remote branches", ->
-      expect(git.cmd).toHaveBeenCalledWith ['branch', '-r'], cwd: repo.getWorkingDirectory()
+      expect(git.cmd).toHaveBeenCalledWith ['branch', '-r', '--no-color'], cwd: repo.getWorkingDirectory()
       expect(atom.workspace.addModalPanel).toHaveBeenCalled()
 
   describe ".newBranch", ->
