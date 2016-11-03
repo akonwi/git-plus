@@ -1,9 +1,12 @@
+AnsiToHtml = require 'ansi-to-html'
+ansiToHtml = new AnsiToHtml()
 {$, ScrollView} = require 'atom-space-pen-views'
 
 defaultMessage = 'Nothing new to show'
 module.exports =
   class OutputView extends ScrollView
     message: ''
+    html: undefined
 
     @content: ->
       @div class: 'git-plus info-view', =>
@@ -12,15 +15,23 @@ module.exports =
     initialize: ->
       super
 
+    reset: ->
+      @message = defaultMessage
+      @html = undefined
+
     addLine: (line) ->
       @message = '' if @message is defaultMessage
       @message += line
       this
 
-    reset: -> @message = defaultMessage
+    setColorEncodedContent: (content) -> @html = ansiToHtml.toHtml content
 
     finish: ->
-      @find(".output").text(@message)
+      output =  @find(".output")
+      if @html
+        output.html(@html)
+      else
+        output.text(@message)
       @show()
       @timeout = setTimeout =>
         @hide()

@@ -1,3 +1,5 @@
+AnsiToHtml = require 'ansi-to-html'
+ansiToHtml = new AnsiToHtml()
 OutputView = require '../../lib/views/output-view'
 
 text = "new line"
@@ -17,7 +19,14 @@ describe "OutputView", ->
     @view.finish()
     expect(@view.find('.output').text()).toBe text
 
-  it "resets to the default message when ::reset is called", ->
+  it "resets message and html properties when ::reset is called", ->
     @view.addLine text
     @view.reset()
     expect(@view.find('.output').text()).toContain 'Nothing'
+    expect(@view.html).toBeUndefined()
+
+  describe "::setColorEncodedContent", ->
+    it "displays html rather than just text when ::finish is called", ->
+      @view.setColorEncodedContent "foo[m * [32mmaster[m"
+      @view.finish()
+      expect(@view.find('.output').html()).toBe 'foo * <span style="color:#0A0">master</span>'
