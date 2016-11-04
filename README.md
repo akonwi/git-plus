@@ -49,10 +49,11 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git` *`[push⎮pull]`* | Push to or pull from a remote repo. If you have multiple remote repos, you can choose which to push to or pull from. | |
 | `Git Add and Commit` | Add all changed files and show the commit message file. Similar to `Git add all` and `Git commit` run in succession. | `Cmd-Shift-A c` |
 | `Git Add All and Commit` | Add all changed files and show the commit message file. Similar to `Git add all` and `Git commit` in succession. | `Cmd-Shift-A a` |
-| `Git rm [current file]` | `git rm` the current file or open an selector to select the files to remove. You can select multiple files at once. | |
+| `Git Remove [current file]` | `git rm` the current file or open an selector to select the files to remove. You can select multiple files at once. | |
 | `Git Log [Current File]` | Show the commit history [for the current file] and show display the selected commit. | |
 | `Git Show` | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`. | |
 | `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
+| `Git Tags` | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete. | |
 
 ### Commit window
 To change where the commit window appears go to settings and find
