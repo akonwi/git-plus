@@ -175,12 +175,12 @@ describe "GitCommit", ->
       waitsForPromise ->
         GitCommit(repo)
 
-    it "notifies of error and doesn't close commit pane", ->
+    it "notifies of error and closes commit pane", ->
       textEditor.save()
       waitsFor -> notifier.addError.callCount > 0
       runs ->
         expect(notifier.addError).toHaveBeenCalledWith 'commit error'
-        expect(commitPane.destroy).not.toHaveBeenCalled()
+        expect(commitPane.destroy).toHaveBeenCalled()
 
   describe "when the verbose commit setting is true", ->
     beforeEach ->
