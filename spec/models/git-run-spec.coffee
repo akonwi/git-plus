@@ -9,4 +9,4 @@ describe "GitRun", ->
     editor = view.find('atom-text-editor')[0]
     view.commandEditor.setText 'do some stuff'
     atom.commands.dispatch(editor, 'core:confirm')
-    expect(git.cmd).toHaveBeenCalledWith ['-c', 'color.ui=always', 'do', 'some', 'stuff'], cwd: repo.getWorkingDirectory()
+    expect(git.cmd).toHaveBeenCalledWith ['do', 'some', 'stuff'], cwd: repo.getWorkingDirectory(), {color: true}

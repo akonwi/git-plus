@@ -1,7 +1,8 @@
 git = require '../../lib/git'
 PullBranchListView = require '../../lib/views/pull-branch-list-view'
 {repo} = require '../fixtures'
-options = cwd: repo.getWorkingDirectory()
+options = {cwd: repo.getWorkingDirectory()}
+colorOptions = {color: true}
 
 describe "PullBranchListView", ->
   beforeEach ->
@@ -23,7 +24,7 @@ describe "PullBranchListView", ->
 
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote'], options
+        expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote'], options, colorOptions
 
   describe "when a branch option is selected", ->
     it "calls git.cmd with ['pull'], the remote name, and branch name", ->
@@ -32,7 +33,7 @@ describe "PullBranchListView", ->
 
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote', 'branch1'], options
+        expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote', 'branch1'], options, colorOptions
 
   describe "when '--rebase' is passed as extraArgs", ->
     it "calls git.cmd with ['pull', '--rebase'], the remote name", ->
@@ -41,4 +42,4 @@ describe "PullBranchListView", ->
 
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote'], options
+        expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote'], options, colorOptions

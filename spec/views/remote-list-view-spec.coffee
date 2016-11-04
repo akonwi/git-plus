@@ -2,6 +2,7 @@ git = require '../../lib/git'
 RemoteListView = require '../../lib/views/remote-list-view'
 {repo} = require '../fixtures'
 options = {cwd: repo.getWorkingDirectory()}
+colorOptions = {color: true}
 remotes = "remote1\nremote2"
 pullBeforePush = 'git-plus.pullBeforePush'
 
@@ -30,7 +31,7 @@ describe "RemoteListView", ->
       view.confirmSelection()
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['fetch', 'remote1'], options
+        expect(git.cmd).toHaveBeenCalledWith ['fetch', 'remote1'], options, colorOptions
 
   describe "when mode is fetch-prune", ->
     it "it calls git.cmd to with ['fetch', '--prune'] and the remote name", ->
@@ -41,7 +42,7 @@ describe "RemoteListView", ->
       view.confirmSelection()
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['fetch', '--prune', 'remote1'], options
+        expect(git.cmd).toHaveBeenCalledWith ['fetch', '--prune', 'remote1'], options, colorOptions
 
   describe "when mode is push", ->
     it "calls git.cmd with ['push']", ->
@@ -52,7 +53,7 @@ describe "RemoteListView", ->
 
       waitsFor -> git.cmd.callCount > 1
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options
+        expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options, colorOptions
 
   describe "when mode is 'push -u'", ->
     it "calls git.cmd with ['push', '-u'] and remote name", ->
@@ -62,7 +63,7 @@ describe "RemoteListView", ->
 
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['push', '-u', 'remote1', 'HEAD'], options
+        expect(git.cmd).toHaveBeenCalledWith ['push', '-u', 'remote1', 'HEAD'], options, colorOptions
 
     describe "when the the config for pull before push is set to true", ->
       it "calls git.cmd with ['pull'], remote name, and branch name and then with ['push']", ->
@@ -74,8 +75,8 @@ describe "RemoteListView", ->
 
         waitsFor -> git.cmd.callCount > 2
         runs ->
-          expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote1', 'branch1'], options
-          expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options
+          expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote1', 'branch1'], options, colorOptions
+          expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options, colorOptions
 
     describe "when the the config for pull before push is set to 'Pull --rebase'", ->
       it "calls git.cmd with ['pull', '--rebase'], remote name, and branch name and then with ['push']", ->
@@ -87,5 +88,5 @@ describe "RemoteListView", ->
 
         waitsFor -> git.cmd.callCount > 2
         runs ->
-          expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote1', 'branch1'], options
-          expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options
+          expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote1', 'branch1'], options, colorOptions
+          expect(git.cmd).toHaveBeenCalledWith ['push', 'remote1'], options, colorOptions

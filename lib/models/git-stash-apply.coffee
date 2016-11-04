@@ -4,7 +4,7 @@ OutputViewManager = require '../output-view-manager'
 
 module.exports = (repo) ->
   cwd = repo.getWorkingDirectory()
-  git.cmd(['stash', 'apply'], {cwd})
+  git.cmd(['stash', 'apply'], {cwd}, color: true)
   .then (msg) ->
     OutputViewManager.create().setContent(msg).finish() if msg isnt ''
   .catch (msg) ->

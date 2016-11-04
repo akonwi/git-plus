@@ -37,7 +37,7 @@ module.exports =
       view = OutputViewManager.create()
       startMessage = notifier.addInfo "Pulling...", dismissable: true
       args = ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
-      git.cmd(args, cwd: @repo.getWorkingDirectory())
+      git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
         @resolve()
         view.setContent(data).finish()
