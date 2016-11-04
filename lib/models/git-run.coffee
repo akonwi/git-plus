@@ -34,7 +34,7 @@ class InputView extends View
         msg = "git #{args.join(' ')} was successful"
         notifier.addSuccess(msg)
         if data?.length > 0
-          view.setColorEncodedContent data
+          view.setContent data
         else
           view.reset()
         view.finish()
@@ -42,7 +42,7 @@ class InputView extends View
         @currentPane.activate()
       .catch (msg) =>
         if msg?.length > 0
-          view.addLine msg
+          view.setContent msg
         else
           view.reset()
         view.finish()

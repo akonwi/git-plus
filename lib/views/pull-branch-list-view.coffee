@@ -40,10 +40,10 @@ module.exports =
       git.cmd(args, cwd: @repo.getWorkingDirectory())
       .then (data) =>
         @resolve()
-        view.addLine(data).finish()
+        view.setContent(data).finish()
         startMessage.dismiss()
       .catch (error) =>
         ## Should @result be rejected for those depending on this view?
         # @reject()
-        view.addLine(error).finish()
+        view.setContent(error).finish()
         startMessage.dismiss()

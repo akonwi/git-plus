@@ -51,7 +51,7 @@ class ListView extends SelectListView
     mergeArg = ['merge'].concat(@args).concat [branch]
     git.cmd(mergeArg, cwd: @repo.getWorkingDirectory())
     .then (data) ->
-      OutputViewManager.create().addLine(data).finish()
+      OutputViewManager.create().setContent(data).finish()
       atom.workspace.getTextEditors().forEach (editor) ->
         fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
       git.refresh()

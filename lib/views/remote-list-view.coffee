@@ -76,11 +76,11 @@ class ListView extends SelectListView
     git.cmd(args, cwd: @repo.getWorkingDirectory())
     .then (data) ->
       if data isnt ''
-        view.addLine(data).finish()
+        view.setContent(data).finish()
       startMessage.dismiss()
     .catch (data) =>
       if data isnt ''
-        view.addLine(data).finish()
+        view.setContent(data).finish()
       startMessage.dismiss()
 
   pushAndSetUpstream: (remote='') ->
@@ -91,9 +91,9 @@ class ListView extends SelectListView
     git.cmd(args, cwd: @repo.getWorkingDirectory())
     .then (data) ->
       if data isnt ''
-        view.addLine(data).finish()
+        view.setContent(data).finish()
       startMessage.dismiss()
     .catch (data) =>
       if data isnt ''
-        view.addLine(data).finish()
+        view.setContent(data).finish()
       startMessage.dismiss()

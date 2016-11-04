@@ -3,40 +3,31 @@ ansiToHtml = new AnsiToHtml()
 {$, ScrollView} = require 'atom-space-pen-views'
 
 defaultMessage = 'Nothing new to show'
-module.exports =
-  class OutputView extends ScrollView
-    message: ''
-    html: undefined
 
-    @content: ->
-      @div class: 'git-plus info-view', =>
-        @pre class: 'output', defaultMessage
+class OutputView extends ScrollView
+  @content: ->
+    @div class: 'git-plus info-view', =>
+      @pre class: 'output', defaultMessage
 
-    initialize: ->
-      super
+  html: defaultMessage
 
-    reset: ->
-      @message = defaultMessage
-      @html = undefined
+  initialize: -> super
 
-    addLine: (line) ->
-      @message = '' if @message is defaultMessage
-      @message += line
-      this
+  reset: -> @html = defaultMessage
 
-    setColorEncodedContent: (content) -> @html = ansiToHtml.toHtml content
+  setContent: (content) ->
+    @html = ansiToHtml.toHtml content
+    this
 
-    finish: ->
-      output =  @find(".output")
-      if @html
-        output.html(@html)
-      else
-        output.text(@message)
-      @show()
-      @timeout = setTimeout =>
-        @hide()
-      , atom.config.get('git-plus.messageTimeout') * 1000
+  finish: ->
+    @find(".output").html(@html)
+    @show()
+    @timeout = setTimeout =>
+      @hide()
+    , atom.config.get('git-plus.messageTimeout') * 1000
 
-    toggle: ->
-      clearTimeout @timeout if @timeout
-      $.fn.toggle.call(this)
+  toggle: ->
+    clearTimeout @timeout if @timeout
+    $.fn.toggle.call(this)
+
+module.exports = OutputView
