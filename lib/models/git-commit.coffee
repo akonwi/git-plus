@@ -77,6 +77,7 @@ commit = (directory, filePath) ->
     git.refresh()
   .catch (data) ->
     notifier.addError data
+    destroyCommitEditor()
 
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.isAlive()
