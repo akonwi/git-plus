@@ -1,6 +1,6 @@
 ## Changelog
 
-### 5.23.1
+### 5.23.2
 - Fix #459 [pr #459](https://github.com/akonwi/git-plus/issues/459)
   - Output from commands executed by Git Run will be colored if git provides coloring
 
