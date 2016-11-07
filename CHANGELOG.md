@@ -1,5 +1,12 @@
 ## Changelog
 
+### 5.23.3
+- Add new command, `Commit All and Push`
+- Fix [#509](https://github.com/akonwi/git-plus/issues/509) where multiple selected commits weren't being cherry picked.
+- Update README
+  - Table of commands contains info about using Tags.
+  - Add note for Windows users to check out [#224](https://github.com/akonwi/git-plus/issues/224) for troubleshooting pull/push problems
+
 ### 5.23.2
 - Fix #459 [pr #459](https://github.com/akonwi/git-plus/issues/459)
   - Output from commands executed by Git Run will be colored if git provides coloring
