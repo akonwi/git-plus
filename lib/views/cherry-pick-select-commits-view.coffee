@@ -52,7 +52,7 @@ class CherryPickSelectCommits extends SelectListMultipleView
 
   completed: (items) ->
     @cancel()
-    commits = item.hash for item in items
+    commits = items.map (item) -> item.hash
     git.cmd(['cherry-pick'].concat(commits), cwd: @repo.getWorkingDirectory())
     .then (msg) -> notifier.addSuccess msg
     .catch (msg) -> notifier.addError msg
