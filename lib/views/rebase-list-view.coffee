@@ -49,11 +49,11 @@ module.exports =
 
     rebase: (branch) ->
       git.cmd(['rebase', branch], cwd: @repo.getWorkingDirectory())
-      .then (msg) ->
+      .then (msg) =>
         OutputViewManager.create().setContent(msg).finish()
         atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
-        git.refresh()
+        git.refresh @repo
       .catch (msg) =>
         notifier.addError msg
-        git.refresh()
+        git.refresh @repo

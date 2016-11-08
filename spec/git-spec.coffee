@@ -241,21 +241,18 @@ describe "Git-Plus git module", ->
       git.status(repo).then -> expect(true).toBeTruthy()
 
   describe "git.refresh", ->
-    it "calls git.cmd with 'add' and '--refresh' arguments for each repo in project", ->
-      spyOn(git, 'cmd').andCallFake ->
-        args = git.cmd.mostRecentCall.args[0]
-        expect(args[0]).toBe 'add'
-        expect(args[1]).toBe '--refresh'
-      spyOn(repo, 'getWorkingDirectory').andCallFake ->
-        expect(repo.getWorkingDirectory.callCount).toBe 1
-      git.refresh()
+    describe "when no arguments are passed", ->
+      it "calls repo.refreshStatus for each repo in project", ->
+        spyOn(atom.project, 'getRepositories').andCallFake -> [ repo ]
+        spyOn(repo, 'refreshStatus')
+        git.refresh()
+        expect(repo.refreshStatus).toHaveBeenCalled()
 
-    it "calls repo.refreshStatus for each repo in project", ->
-      spyOn(atom.project, 'getRepositories').andCallFake -> [ repo ]
-      spyOn(repo, 'refreshStatus')
-      spyOn(git, 'cmd').andCallFake -> undefined
-      git.refresh()
-      expect(repo.refreshStatus.callCount).toBe 1
+    describe "when a GitRepository object is passed", ->
+      it "calls repo.refreshStatus for each repo in project", ->
+        spyOn(repo, 'refreshStatus')
+        git.refresh repo
+        expect(repo.refreshStatus).toHaveBeenCalled()
 
   describe "git.diff", ->
     it "calls git.cmd with ['diff', '-p', '-U1'] and the file path", ->

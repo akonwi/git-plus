@@ -6,4 +6,4 @@ module.exports = (repo) ->
   git.cmd(['checkout', '--', currentFile], cwd: repo.getWorkingDirectory())
   .then (data) ->
     notifier.addSuccess 'File changes checked out successfully'
-    git.refresh()
+    git.refresh repo

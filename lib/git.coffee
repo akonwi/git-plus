@@ -76,11 +76,11 @@ module.exports = git =
     git.cmd(['status', '--porcelain', '-z'], cwd: repo.getWorkingDirectory())
     .then (data) -> if data.length > 2 then data.split('\0')[...-1] else []
 
-  refresh: () ->
-    atom.project.getRepositories().forEach (repo) ->
-      if repo?
-        repo.refreshStatus()
-        git.cmd ['add', '--refresh', '--', '.'], cwd: repo.getWorkingDirectory()
+  refresh: (repo) ->
+    if repo
+      repo.refreshStatus()
+    else
+      atom.project.getRepositories().forEach (repo) -> repo.refreshStatus() if repo?
 
   relativize: (path) ->
     git.getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path

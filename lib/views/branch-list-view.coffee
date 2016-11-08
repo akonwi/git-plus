@@ -63,7 +63,7 @@ class ListView extends SelectListView
         catch error
           notifier.addWarning "There was an error closing windows for non-existing files after the checkout. Please check the dev console."
           console.info "Git-plus: please take a screenshot of what has been printed in the console and add it to the issue on github at https://github.com/akonwi/git-plus/issues/139"
-      git.refresh()
+      git.refresh @repo
       @currentPane.activate()
     .catch (err) ->
       notifier.addError err

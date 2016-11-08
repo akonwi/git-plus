@@ -31,9 +31,9 @@ class InputView extends View
     name = @branchEditor.getModel().getText()
     if name.length > 0
       git.cmd(['checkout', '-b', name], cwd: @repo.getWorkingDirectory())
-      .then (message) ->
+      .then (message) =>
         notifier.addSuccess message
-        git.refresh()
+        git.refresh @repo
       .catch (err) =>
         notifier.addError err
 

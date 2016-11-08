@@ -37,7 +37,7 @@ class InputView extends View
         else
           view.reset()
         view.finish()
-        git.refresh()
+        git.refresh @repo
         @currentPane.activate()
       .catch (msg) =>
         if msg?.length > 0
@@ -45,7 +45,7 @@ class InputView extends View
         else
           view.reset()
         view.finish()
-        git.refresh()
+        git.refresh @repo
         @currentPane.activate()
 
 module.exports = (repo) -> new InputView(repo)

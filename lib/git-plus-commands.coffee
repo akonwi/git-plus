@@ -38,7 +38,7 @@ getCommands = ->
   git.getRepo()
     .then (repo) ->
       currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
-      git.refresh()
+      git.refresh repo
       commands = []
       commands.push ['git-plus:add', 'Add', -> git.add(repo, file: currentFile)]
       commands.push ['git-plus:add-modified', 'Add Modified', -> git.add(repo, update: true)]
