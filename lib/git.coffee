@@ -78,7 +78,8 @@ module.exports = git =
 
   refresh: (repo) ->
     if repo
-      repo.refreshStatus()
+      repo.refreshStatus?()
+      repo.refreshIndex?()
     else
       atom.project.getRepositories().forEach (repo) -> repo.refreshStatus() if repo?
 
