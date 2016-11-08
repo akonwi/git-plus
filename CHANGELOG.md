@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.24.0
+- This enables basic support for submodules. You should be able to add, commit, and diff files that belong to submodules. 
+- Small performance improvements for initial loading of the package's command palette.
+
 ### 5.23.3
 - Add new command, `Commit All and Push`
 - Fix [#509](https://github.com/akonwi/git-plus/issues/509) where multiple selected commits weren't being cherry picked.
