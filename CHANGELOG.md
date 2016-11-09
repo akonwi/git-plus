@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.24.2
+- Fix [#436](https://github.com/akonwi/git-plus/issues/436)
+- Fix [#529](https://github.com/akonwi/git-plus/issues/529)
+
 ### 5.24.1
 - Fix [#515](https://github.com/akonwi/git-plus/issues/515)
 - Fix [#533](https://github.com/akonwi/git-plus/issues/533)
