@@ -3,6 +3,8 @@ OutputViewManager = require '../output-view-manager'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 
+branchFilter = (item) -> item isnt '' and item.indexOf('origin/HEAD') < 0
+
 module.exports =
   # Extension of BranchListView
   # Takes the name of the remote to pull from
@@ -18,8 +20,7 @@ module.exports =
       currentBranch =
         name: @currentBranchString
       items = @data.split("\n")
-      branches = items.filter((item) -> item isnt '').map (item) ->
-        name: item.replace(/\s/g, '')
+      branches = items.filter(branchFilter).map (item) -> {name: item.replace(/\s/g, '')}
       if branches.length is 1
         @confirmed branches[0]
       else
