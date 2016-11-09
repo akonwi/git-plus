@@ -7,14 +7,19 @@
     }
   ]
   '.tree-view.full-menu .file, .tree-view.full-menu .directory': [
-    {
-      label: 'Git add',
-      'command': 'git-plus-context:add'
-    },
-    {
-      label: 'Git difftool',
-      'command': 'git-plus-context:difftool'
-    }
+    { type: 'separator'},
+    'label': 'Git',
+    'submenu': [
+      {
+        label: 'Git add',
+        'command': 'git-plus-context:add'
+      },
+      {
+        label: 'Git difftool',
+        'command': 'git-plus-context:difftool'
+      },
+    ],
+    { type: 'separator'}
   ]
 
 
