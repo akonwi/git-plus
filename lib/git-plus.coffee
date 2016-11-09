@@ -3,49 +3,73 @@
 git = require './git'
 contextCommandMap = require './context-command-map'
 configurations = require './config'
-OutputViewManager      = require './output-view-manager'
-GitPaletteView         = require './views/git-palette-view'
-GitAddContext          = require './models/git-add-context'
-GitBranch              = require './models/git-branch'
-GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
-GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
-GitCheckoutAllFiles    = require './models/git-checkout-all-files'
+OutputViewManager = require './output-view-manager'
+GitPaletteView = require './views/git-palette-view'
+GitAddContext = require './models/git-add-context'
+GitBranch = require './models/git-branch'
+GitDeleteLocalBranch = require './models/git-delete-local-branch.coffee'
+GitDeleteRemoteBranch = require './models/git-delete-remote-branch.coffee'
+GitCheckoutAllFiles = require './models/git-checkout-all-files'
 GitCheckoutCurrentFile = require './models/git-checkout-current-file'
-GitCherryPick          = require './models/git-cherry-pick'
-GitCommit              = require './models/git-commit'
-GitCommitAmend         = require './models/git-commit-amend'
-GitDiff                = require './models/git-diff'
-GitDifftool            = require './models/git-difftool'
-GitDifftoolContext     = require './models/git-difftool-context'
-GitDiffAll             = require './models/git-diff-all'
-GitFetch               = require './models/git-fetch'
-GitFetchPrune          = require './models/git-fetch-prune.coffee'
-GitInit                = require './models/git-init'
-GitLog                 = require './models/git-log'
-GitPull                = require './models/git-pull'
-GitPush                = require './models/git-push'
-GitRemove              = require './models/git-remove'
-GitShow                = require './models/git-show'
-GitStageFiles          = require './models/git-stage-files'
-GitStageHunk           = require './models/git-stage-hunk'
-GitStashApply          = require './models/git-stash-apply'
-GitStashDrop           = require './models/git-stash-drop'
-GitStashPop            = require './models/git-stash-pop'
-GitStashSave           = require './models/git-stash-save'
-GitStashSaveMessage    = require './models/git-stash-save-message'
-GitStatus              = require './models/git-status'
-GitTags                = require './models/git-tags'
-GitUnstageFiles        = require './models/git-unstage-files'
-GitRun                 = require './models/git-run'
-GitMerge               = require './models/git-merge'
-GitRebase              = require './models/git-rebase'
-GitOpenChangedFiles    = require './models/git-open-changed-files'
-diffGrammar            = require './grammars/diff.js'
+GitCherryPick = require './models/git-cherry-pick'
+GitCommit = require './models/git-commit'
+GitCommitAmend = require './models/git-commit-amend'
+GitDiff = require './models/git-diff'
+GitDifftool = require './models/git-difftool'
+GitDifftoolContext = require './models/git-difftool-context'
+GitDiffAll = require './models/git-diff-all'
+GitFetch = require './models/git-fetch'
+GitFetchPrune = require './models/git-fetch-prune.coffee'
+GitInit = require './models/git-init'
+GitLog = require './models/git-log'
+GitPull = require './models/git-pull'
+GitPush = require './models/git-push'
+GitRemove = require './models/git-remove'
+GitShow = require './models/git-show'
+GitStageFiles = require './models/git-stage-files'
+GitStageHunk = require './models/git-stage-hunk'
+GitStashApply = require './models/git-stash-apply'
+GitStashDrop = require './models/git-stash-drop'
+GitStashPop = require './models/git-stash-pop'
+GitStashSave = require './models/git-stash-save'
+GitStashSaveMessage = require './models/git-stash-save-message'
+GitStatus = require './models/git-status'
+GitTags = require './models/git-tags'
+GitUnstageFiles = require './models/git-unstage-files'
+GitRun = require './models/git-run'
+GitMerge = require './models/git-merge'
+GitRebase = require './models/git-rebase'
+GitOpenChangedFiles = require './models/git-open-changed-files'
+diffGrammars = require './grammars/diff.js'
 
-baseGrammar = __dirname + '/grammars/diff.json'
+baseWordGrammar = __dirname + '/grammars/word-diff.json'
+baseLineGrammar = __dirname + '/grammars/line-diff.json'
 
 currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+
+setDiffGrammar = ->
+  while atom.grammars.grammarForScopeName 'source.diff'
+    atom.grammars.removeGrammarForScopeName 'source.diff'
+
+  enableSyntaxHighlighting = atom.config.get('git-plus').syntaxHighlighting
+  wordDiff = atom.config.get('git-plus').wordDiff
+  diffGrammar = null
+  baseGrammar = null
+
+  if wordDiff
+    diffGrammar = diffGrammars.wordGrammar
+    baseGrammar = baseWordGrammar
+  else
+    diffGrammar = diffGrammars.lineGrammar
+    baseGrammar = baseLineGrammar
+
+  if enableSyntaxHighlighting
+    atom.grammars.addGrammar diffGrammar
+  else
+    grammar = atom.grammars.readGrammarSync baseGrammar
+    grammar.packageName = 'git-plus'
+    atom.grammars.addGrammar grammar
 
 module.exports =
   config: configurations
@@ -53,11 +77,7 @@ module.exports =
   subscriptions: null
 
   activate: (state) ->
-    enableSyntaxHighlighting = atom.config.get('git-plus').syntaxHighlighting;
-    if enableSyntaxHighlighting
-      atom.grammars.addGrammar(diffGrammar)
-    else
-      atom.grammars.loadGrammarSync(baseGrammar);
+    setDiffGrammar()
     @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
@@ -115,13 +135,8 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then((repo) -> GitAddContext(repo, contextCommandMap))
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then((repo) -> GitDifftoolContext(repo, contextCommandMap))
-    @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting',
-      (value) ->
-        atom.grammars.removeGrammarForScopeName('diff')
-        if value
-          atom.grammars.addGrammar(diffGrammar)
-        else
-          atom.grammars.loadGrammarSync(baseGrammar)
+    @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
+    @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
 
   deactivate: ->
     @subscriptions.dispose()
