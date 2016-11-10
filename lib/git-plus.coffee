@@ -1,8 +1,8 @@
-{CompositeDisposable} = require 'atom'
-{$} = require 'atom-space-pen-views'
-git = require './git'
-contextCommandMap = require './context-command-map'
-configurations = require './config'
+{CompositeDisposable}  = require 'atom'
+{$}                    = require 'atom-space-pen-views'
+git                    = require './git'
+contextCommandMap      = require './context-command-map'
+configurations         = require './config'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
 GitAddContext          = require './models/git-add-context'
@@ -40,12 +40,36 @@ GitRun                 = require './models/git-run'
 GitMerge               = require './models/git-merge'
 GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
-diffGrammar            = require './grammars/diff.js'
+diffGrammars           = require './grammars/diff.js'
 
-baseGrammar = __dirname + '/grammars/diff.json'
+baseWordGrammar = __dirname + '/grammars/word-diff.json'
+baseLineGrammar = __dirname + '/grammars/line-diff.json'
 
 currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
+
+setDiffGrammar = ->
+  while atom.grammars.grammarForScopeName 'source.diff'
+    atom.grammars.removeGrammarForScopeName 'source.diff'
+
+  enableSyntaxHighlighting = atom.config.get('git-plus').syntaxHighlighting
+  wordDiff = atom.config.get('git-plus').wordDiff
+  diffGrammar = null
+  baseGrammar = null
+
+  if wordDiff
+    diffGrammar = diffGrammars.wordGrammar
+    baseGrammar = baseWordGrammar
+  else
+    diffGrammar = diffGrammars.lineGrammar
+    baseGrammar = baseLineGrammar
+
+  if enableSyntaxHighlighting
+    atom.grammars.addGrammar diffGrammar
+  else
+    grammar = atom.grammars.readGrammarSync baseGrammar
+    grammar.packageName = 'git-plus'
+    atom.grammars.addGrammar grammar
 
 module.exports =
   config: configurations
@@ -53,11 +77,7 @@ module.exports =
   subscriptions: null
 
   activate: (state) ->
-    enableSyntaxHighlighting = atom.config.get('git-plus').syntaxHighlighting;
-    if enableSyntaxHighlighting
-      atom.grammars.addGrammar(diffGrammar)
-    else
-      atom.grammars.loadGrammarSync(baseGrammar);
+    setDiffGrammar()
     @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
@@ -115,13 +135,8 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then((repo) -> GitAddContext(repo, contextCommandMap))
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then((repo) -> GitDifftoolContext(repo, contextCommandMap))
-    @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting',
-      (value) ->
-        atom.grammars.removeGrammarForScopeName('diff')
-        if value
-          atom.grammars.addGrammar(diffGrammar)
-        else
-          atom.grammars.loadGrammarSync(baseGrammar)
+    @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
+    @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
 
   deactivate: ->
     @subscriptions.dispose()

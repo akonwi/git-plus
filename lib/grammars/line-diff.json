@@ -2,7 +2,7 @@
 	"fileTypes": [
 		"diff"
 	],
-	"name": "Diff",
+	"name": "Line Diff",
 	"patterns": [{
 		"captures": {
 			"1": {
@@ -109,34 +109,6 @@
 			}
 		},
 		"match": "^(((>)( .*))|((\\+)(.*)))$"
-	}, {
-		"begin": "(\\[-)",
-		"beginCaptures": {
-			"1": {
-				"name": "unimportant"
-			}
-		},
-		"end": "(-\\])",
-		"endCaptures": {
-			"1": {
-				"name": "unimportant"
-			}
-		},
-		"contentName": "markup.removed.diff"
-	}, {
-		"begin": "(\\{\\+)",
-		"beginCaptures": {
-			"1": {
-				"name": "unimportant"
-			}
-		},
-		"end": "(\\+\\})",
-		"endCaptures": {
-			"1": {
-				"name": "unimportant"
-			}
-		},
-		"contentName": "markup.added.diff"
 	}],
-	"scopeName": "diff"
+	"scopeName": "source.diff"
 }

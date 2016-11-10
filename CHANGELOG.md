@@ -1,7 +1,15 @@
 ## Changelog
 
+### 5.24.2
+- Fix [#436](https://github.com/akonwi/git-plus/issues/436)
+- Fix [#529](https://github.com/akonwi/git-plus/issues/529)
+
+### 5.24.1
+- Fix [#515](https://github.com/akonwi/git-plus/issues/515)
+- Fix [#533](https://github.com/akonwi/git-plus/issues/533)
+
 ### 5.24.0
-- This enables basic support for submodules. You should be able to add, commit, and diff files that belong to submodules. 
+- This enables basic support for submodules. You should be able to add, commit, and diff files that belong to submodules.
 - Small performance improvements for initial loading of the package's command palette.
 
 ### 5.23.3

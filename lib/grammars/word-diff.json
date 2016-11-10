@@ -1,0 +1,110 @@
+{
+  "fileTypes": [
+   "diff"
+  ],
+  "name": "Word Diff",
+  "patterns": [{
+   "captures": {
+     "1": {
+      "name": "unimportant"
+     },
+     "2": {
+      "name": "info"
+     },
+     "3": {
+      "name": "insertion"
+     },
+     "4": {
+      "name": "deletion"
+     }
+   },
+   "match": "(\\|)\\s*(\\d+)\\s*(\\+*)(-*)$"
+  }, {
+   "captures": {
+     "1": {
+      "name": "info"
+     },
+     "2": {
+      "name": "info"
+     },
+     "3": {
+      "name": "insertion"
+     },
+     "4": {
+      "name": "info"
+     },
+     "5": {
+      "name": "deletion"
+     }
+   },
+   "match": "(?i)(\\d+) files changed, (\\d+) insertions\\((\\+)\\), (\\d+) deletions\\((-)\\)"
+  }, {
+   "begin": "(?i)^diff --git a/",
+   "end": "(?i)index .+$",
+   "name": "unimportant"
+  }, {
+   "begin": "^(---) (a?/)",
+   "beginCaptures": {
+     "1": {
+      "name": "deletion"
+     },
+     "2": {
+      "name": "unimportant"
+     }
+   },
+   "end": "$",
+   "contentName": "meta.diff.info.header.from-file"
+  }, {
+   "begin": "^(\\+\\+\\+) (b?/)",
+   "beginCaptures": {
+     "1": {
+      "name": "insertion"
+     },
+     "2": {
+      "name": "unimportant"
+     }
+   },
+   "end": "$",
+   "contentName": "meta.diff.info.header.to-file"
+  }, {
+   "captures": {
+     "1": {
+      "name": "unimportant"
+     },
+     "2": {
+      "name": "unimportant"
+     }
+   },
+   "match": "^(@@)\\s*.*\\s*(@@)",
+   "name": "info"
+  }, {
+   "begin": "(\\[-)",
+   "beginCaptures": {
+     "1": {
+      "name": "unimportant"
+     }
+   },
+   "end": "(-\\])",
+   "endCaptures": {
+     "1": {
+      "name": "unimportant"
+     }
+   },
+   "contentName": "markup.removed.diff"
+  }, {
+   "begin": "(\\{\\+)",
+   "beginCaptures": {
+     "1": {
+      "name": "unimportant"
+     }
+   },
+   "end": "(\\+\\})",
+   "endCaptures": {
+     "1": {
+      "name": "unimportant"
+     }
+   },
+   "contentName": "markup.added.diff"
+  }],
+  "scopeName": "source.diff"
+}

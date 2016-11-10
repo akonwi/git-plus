@@ -18,6 +18,10 @@ describe "PullBranchListView", ->
     expect(@view.result.then).toBeDefined()
     expect(@view.result.catch).toBeDefined()
 
+  it "removes the 'origin/HEAD' option in the list of branches", ->
+    view = new PullBranchListView(repo, "branch1\nbranch2\norigin/HEAD", "remote", '')
+    expect(@view.items.length).toBe 3
+
   describe "when the special option is selected", ->
     it "calls git.cmd with ['pull'] and remote name", ->
       @view.confirmSelection()
