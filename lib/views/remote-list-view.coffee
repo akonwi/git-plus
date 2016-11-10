@@ -1,9 +1,19 @@
 {$$, SelectListView} = require 'atom-space-pen-views'
 
 git = require '../git'
+_pull = require '../models/_pull'
 notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'
 PullBranchListView = require './pull-branch-list-view'
+
+experimentalFeaturesEnabled = () ->
+  gitPlus = atom.config.get('git-plus')
+  gitPlus.alwaysPullFromUpstream and gitPlus.experimental
+
+getUpstreamBranch = (repo) ->
+  upstream = repo.getUpstreamBranch()
+  [remote, branch] = upstream.substring('refs/remotes/'.length).split('/')
+  { remote, branch }
 
 module.exports =
 class ListView extends SelectListView
@@ -42,9 +52,13 @@ class ListView extends SelectListView
       @li name
 
   pull: (remoteName) ->
-    git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
-    .then (data) =>
-      new PullBranchListView(@repo, data, remoteName, @extraArgs).result
+    if experimentalFeaturesEnabled()
+      {remote, branch} = getUpstreamBranch @repo
+      _pull @repo, {remote, branch, extraArgs: [@extraArgs]}
+    else
+      git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
+      .then (data) =>
+        new PullBranchListView(@repo, data, remoteName, @extraArgs).result
 
   confirmed: ({name}) ->
     if @mode is 'pull'
