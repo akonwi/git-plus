@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.25.1
+- Use experimental toggle: 'Always Pull From Upstream', when pulling before pushing is enabled
+
 ### 5.25.0
 - Adds new experimental toggle: 'Always Pull From Upstream', which will pull from your current branch upstream automatically without prompting you for a branch to pull from.
 - Fix [#538](https://github.com/akonwi/git-plus/issues/538)
