@@ -10,6 +10,8 @@ describe "Git Pull", ->
   beforeEach -> spyOn(git, 'cmd').andReturn Promise.resolve true
 
   it "calls git.cmd with ['remote'] to get remote repositories", ->
+    atom.config.set('git-plus.experimental', false)
+    atom.config.set('git-plus.alwaysPullFromCurrentBranch', false)
     GitPull(repo)
     expect(git.cmd).toHaveBeenCalledWith ['remote'], options
 
