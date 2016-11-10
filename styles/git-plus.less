@@ -31,6 +31,7 @@
 	justify-content: space-between;
 }
 
+// ::shadow and ::host pseudo-selectors will soon be deprecated by atom
 atom-text-editor,
 atom-text-editor::shadow {
 	.diff {
@@ -57,6 +58,38 @@ atom-text-editor::shadow {
 
 		.markup.added.diff,
 		.meta.diff.header.to-file {
+			border-bottom: 2px solid @syntax-color-added;
+		}
+	}
+}
+
+// These are the future selectors to use
+atom-text-editor,
+atom-text-editor.editor {
+	.syntax--diff {
+		.syntax--unimportant {
+			color: mix(@syntax-text-color, @syntax-background-color, 25%);
+		}
+
+		.syntax--info {
+			color: @syntax-color-modified;
+		}
+
+		.syntax--deletion {
+			color: @syntax-color-removed;
+		}
+
+		.syntax--insertion {
+			color: @syntax-color-added;
+		}
+
+		.syntax--markup.syntax--removed.syntax--diff,
+		.syntax--meta.syntax--diff.syntax--header.syntax--from-file {
+			border-bottom: 2px solid @syntax-color-removed;
+		}
+
+		.syntax--markup.syntax--added.syntax--diff,
+		.syntax--meta.syntax--diff.syntax--header.syntax--to-file {
 			border-bottom: 2px solid @syntax-color-added;
 		}
 	}
