@@ -11,14 +11,14 @@ describe "Git Pull", ->
 
   it "calls git.cmd with ['remote'] to get remote repositories", ->
     atom.config.set('git-plus.experimental', false)
-    atom.config.set('git-plus.alwaysPullFromCurrentBranch', false)
+    atom.config.set('git-plus.alwaysPullFromUpstream', false)
     GitPull(repo)
     expect(git.cmd).toHaveBeenCalledWith ['remote'], options
 
   describe "when 'alwaysPullFromCurrentBranch' is enabled", ->
     it "pulls immediately from the upstream branch", ->
       atom.config.set('git-plus.experimental', true)
-      atom.config.set('git-plus.alwaysPullFromCurrentBranch', true)
+      atom.config.set('git-plus.alwaysPullFromUpstream', true)
       GitPull(repo)
       expect(git.cmd).not.toHaveBeenCalledWith ['remote'], options
 

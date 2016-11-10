@@ -4,7 +4,7 @@ RemoteListView = require '../views/remote-list-view'
 
 experimentalFeaturesEnabled = () ->
   gitPlus = atom.config.get('git-plus')
-  gitPlus.alwaysPullFromCurrentBranch and gitPlus.experimental
+  gitPlus.alwaysPullFromUpstream and gitPlus.experimental
 
 getUpstreamBranch = (repo) ->
   upstream = repo.getUpstreamBranch()
