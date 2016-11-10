@@ -51,6 +51,10 @@ module.exports =
     description: '(Experimental) Show diffs in commit pane?'
     type: 'boolean'
     default: false
+  alwaysPullFromUpstream:
+    description: '(Experimental) Always pull from current branch upstream?'
+    type: 'boolean'
+    default: false
   enableStatusBarIcon:
     type: 'boolean'
     default: true
