@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.25.0
+- Adds new experimental toggle: 'Always Pull From Upstream', which will pull from your current branch upstream automatically without prompting you for a branch to pull from.
+- Fix [#538](https://github.com/akonwi/git-plus/issues/538)
+  - [#537](https://github.com/akonwi/git-plus/issues/537) has been left open as the original.
+
 ### 5.24.2
 - Fix [#436](https://github.com/akonwi/git-plus/issues/436)
 - Fix [#529](https://github.com/akonwi/git-plus/issues/529)
