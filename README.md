@@ -13,7 +13,7 @@ Make sure your gitconfig file is configured. You must configure at least the `us
 
 Also, the package currently favors an ssh setup that doesn't expect to be prompted for credentials in order to push/pull, .etc. Github has a guide to help you set that up [here](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/)
 
-If you are on a Windows machine, I recommend checking out [this thread](https://github.com/akonwi/git-plus/issues/224) if you have issues pushing/pulling from a remote repository with this package.
+If you are on a Windows machine, I recommend checking out [this thread](https://github.com/akonwi/git-plus/issues/224) if you have issues pushing/pulling from a remote repository with this package. I also don't have the means to do my own user testing in a windows environment so I won't be immediately able to help troubleshoot windows problems.
 
 ### Showing the Git-Plus Palette
 >- `Cmd-Shift-H` on MacOS
