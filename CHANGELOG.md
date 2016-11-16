@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.25.3
+- Fix [#548](https://github.com/akonwi/git-plus/issues/548)
+
 ### 5.25.2
 - Fix [#545](https://github.com/akonwi/git-plus/issues/545)
 
