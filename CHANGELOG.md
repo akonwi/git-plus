@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.25.2
+- Fix [#545](https://github.com/akonwi/git-plus/issues/545)
+
 ### 5.25.1
 - Use experimental toggle: 'Always Pull From Upstream', when pulling before pushing is enabled
 
