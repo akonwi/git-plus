@@ -10,9 +10,6 @@ disposables = new CompositeDisposable
 
 verboseCommitsEnabled = -> atom.config.get('git-plus.experimental') and atom.config.get('git-plus.verboseCommits')
 
-dir = (repo) ->
-  (git.getSubmodule() or repo).getWorkingDirectory()
-
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
     if files.length >= 1
@@ -105,7 +102,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
     showFile filePath
     .then (textEditor) ->
       disposables.add textEditor.onDidSave ->
-        commit(dir(repo), filePath)
+        commit(repo.getWorkingDirectory(), filePath)
         .then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
     .catch (msg) -> notifier.addError msg

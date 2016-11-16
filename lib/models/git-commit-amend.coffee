@@ -108,8 +108,6 @@ destroyCommitEditor = ->
           paneItem.destroy()
         return true
 
-dir = (repo) -> (git.getSubmodule() or repo).getWorkingDirectory()
-
 commit = (directory, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
   git.cmd(args, cwd: directory)
@@ -139,6 +137,6 @@ module.exports = (repo) ->
     .then (status) -> prepFile {message, prevChangedFiles, status, filePath}
     .then -> showFile filePath
   .then (textEditor) ->
-    disposables.add textEditor.onDidSave -> commit(dir(repo), filePath)
+    disposables.add textEditor.onDidSave -> commit(repo.getWorkingDirectory(), filePath)
     disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
   .catch (msg) -> notifier.addInfo msg
