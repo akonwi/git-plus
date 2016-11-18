@@ -10,11 +10,6 @@ experimentalFeaturesEnabled = () ->
   gitPlus = atom.config.get('git-plus')
   gitPlus.alwaysPullFromUpstream and gitPlus.experimental
 
-getUpstreamBranch = (repo) ->
-  upstream = repo.getUpstreamBranch()
-  [remote, branch] = upstream.substring('refs/remotes/'.length).split('/')
-  { remote, branch }
-
 module.exports =
 class ListView extends SelectListView
   initialize: (@repo, @data, {@mode, @tag, @extraArgs}={}) ->
@@ -53,8 +48,7 @@ class ListView extends SelectListView
 
   pull: (remoteName) ->
     if experimentalFeaturesEnabled()
-      {remote, branch} = getUpstreamBranch @repo
-      _pull @repo, {remote, branch, extraArgs: [@extraArgs]}
+      _pull @repo, extraArgs: [@extraArgs]
     else
       git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
       .then (data) =>

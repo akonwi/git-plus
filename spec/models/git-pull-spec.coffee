@@ -24,9 +24,9 @@ describe "Git Pull", ->
 
   describe "The pull function", ->
     it "calls git.cmd", ->
-      _pull repo, remote: 'origin', branch: 'foo'
+      _pull repo
       expect(git.cmd).toHaveBeenCalledWith ['pull', 'origin', 'foo'], options, {color: true}
 
     it "calls git.cmd with extra arguments if passed", ->
-      _pull repo, remote: 'origin', branch: 'foo', extraArgs: ['--rebase']
+      _pull repo, extraArgs: ['--rebase']
       expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'origin', 'foo'], options, {color: true}

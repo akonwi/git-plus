@@ -2,11 +2,16 @@ git = require '../git'
 notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'
 
-module.exports = (repo, {remote, branch, extraArgs}) ->
+getUpstream = (repo) ->
+  repo.getUpstreamBranch()
+  .substring('refs/remotes/'.length).split('/')
+
+module.exports = (repo, {extraArgs}={}) ->
+  extraArgs ?= []
   new Promise (resolve, reject) ->
     view = OutputViewManager.create()
     startMessage = notifier.addInfo "Pulling...", dismissable: true
-    args = ['pull'].concat(extraArgs).concat([remote, branch]).filter (c) -> c isnt '' and c isnt undefined
+    args = ['pull'].concat(extraArgs).concat(getUpstream(repo)).filter (c) -> c isnt '' and c isnt undefined
     git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
     .then (data) =>
       resolve()
