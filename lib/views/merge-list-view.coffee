@@ -6,7 +6,7 @@ notifier = require '../notifier'
 
 module.exports =
 class ListView extends SelectListView
-  initialize: (@repo, @data, @args=[]) ->
+  initialize: (@repo, @data, @extraArgs=[]) ->
     super
     @show()
     @parseData()
@@ -48,7 +48,7 @@ class ListView extends SelectListView
     @cancel()
 
   merge: (branch) ->
-    mergeArg = ['merge'].concat(@args).concat [branch]
+    mergeArg = ['merge'].concat(@extraArgs).concat [branch]
     git.cmd(mergeArg, cwd: @repo.getWorkingDirectory(), {color: true})
     .then (data) =>
       OutputViewManager.create().setContent(data).finish()
