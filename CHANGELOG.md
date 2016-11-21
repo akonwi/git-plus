@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.25.4
+- Show error when attempting to push to pull from non-existent upstream branch.
+
 ### 5.25.3
 - Fix [#548](https://github.com/akonwi/git-plus/issues/548)
 
