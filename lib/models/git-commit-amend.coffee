@@ -66,14 +66,12 @@ cleanupUnstagedText = (status) ->
   else
     status
 
-prepFile = ({message, prevChangedFiles, status, filePath}) ->
-  git.getConfig('core.commentchar', Path.dirname(filePath)).then (commentchar) ->
-    commentchar = if commentchar.length > 0 then commentchar.trim() else '#'
+prepFile = ({commentChar, message, prevChangedFiles, status, filePath}) ->
     status = cleanupUnstagedText status
-    status = status.replace(/\s*\(.*\)\n/g, "\n").replace(/\n/g, "\n#{commentchar} ")
+    status = status.replace(/\s*\(.*\)\n/g, "\n").replace(/\n/g, "\n#{commentChar} ")
     if prevChangedFiles.length > 0
       nothingToCommit = "nothing to commit, working directory clean"
-      currentChanges = "committed:\n#{commentchar}"
+      currentChanges = "committed:\n#{commentChar}"
       textToReplace = null
       if status.indexOf(nothingToCommit) > -1
         textToReplace = nothingToCommit
@@ -82,15 +80,15 @@ prepFile = ({message, prevChangedFiles, status, filePath}) ->
       replacementText =
         """committed:
         #{
-          prevChangedFiles.map((f) -> "#{commentchar}   #{f}").join("\n")
+          prevChangedFiles.map((f) -> "#{commentChar}   #{f}").join("\n")
         }"""
       status = status.replace textToReplace, replacementText
     fs.writeFileSync filePath,
       """#{message}
-      #{commentchar} Please enter the commit message for your changes. Lines starting
-      #{commentchar} with '#{commentchar}' will be ignored, and an empty message aborts the commit.
-      #{commentchar}
-      #{commentchar} #{status}"""
+      #{commentChar} Please enter the commit message for your changes. Lines starting
+      #{commentChar} with '#{commentChar}' will be ignored, and an empty message aborts the commit.
+      #{commentChar}
+      #{commentChar} #{status}"""
 
 showFile = (filePath) ->
   if atom.config.get('git-plus.openInPane')
@@ -125,6 +123,7 @@ module.exports = (repo) ->
   currentPane = atom.workspace.getActivePane()
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   cwd = repo.getWorkingDirectory()
+  commentChar = git.getConfig(repo, 'core.commentchar') ? '#'
   git.cmd(['whatchanged', '-1', '--name-status', '--format=%B'], {cwd})
   .then (amend) -> parse amend
   .then ({message, prevChangedFiles}) ->
@@ -134,7 +133,7 @@ module.exports = (repo) ->
       {message, prevChangedFiles}
   .then ({message, prevChangedFiles}) ->
     getGitStatus(repo)
-    .then (status) -> prepFile {message, prevChangedFiles, status, filePath}
+    .then (status) -> prepFile {commentChar, message, prevChangedFiles, status, filePath}
     .then -> showFile filePath
   .then (textEditor) ->
     disposables.add textEditor.onDidSave -> commit(repo.getWorkingDirectory(), filePath)

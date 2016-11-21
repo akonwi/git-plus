@@ -17,8 +17,7 @@ commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 status =
   replace: -> status
   trim: -> status
-commentchar_config = ''
-templateFile = ''
+templateFilePath = '~/template'
 commitTemplate = 'foobar'
 commitFileContent =
   toString: -> commitFileContent
@@ -27,7 +26,9 @@ commitFileContent =
   split: (splitPoint) -> if splitPoint is '\n' then ['commit message', '# comments to be deleted']
 commitResolution = Promise.resolve 'commit success'
 
-setupMocks = ->
+setupMocks = ({commentChar, template}={}) ->
+  commentChar ?= null
+  template ?= ''
   atom.config.set 'git-plus.openInPane', false
   spyOn(currentPane, 'activate')
   spyOn(commitPane, 'destroy').andCallThrough()
@@ -40,8 +41,8 @@ setupMocks = ->
   spyOn(status, 'trim').andCallThrough()
   spyOn(commitFileContent, 'substring').andCallThrough()
   spyOn(fs, 'readFileSync').andCallFake ->
-    if fs.readFileSync.mostRecentCall.args[0] is 'template'
-      commitTemplate
+    if fs.readFileSync.mostRecentCall.args[0] is fs.absolute(templateFilePath)
+      template
     else
       commitFileContent
   spyOn(fs, 'writeFileSync')
@@ -49,11 +50,11 @@ setupMocks = ->
   spyOn(fs, 'unlink')
   spyOn(git, 'refresh')
   spyOn(git, 'getConfig').andCallFake ->
-    arg = git.getConfig.mostRecentCall.args[0]
+    arg = git.getConfig.mostRecentCall.args[1]
     if arg is 'commit.template'
-      Promise.resolve templateFile
+      templateFilePath
     else if arg is 'core.commentchar'
-      Promise.resolve commentchar_config
+      commentChar
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
     if args[0] is 'status'
@@ -88,7 +89,7 @@ describe "GitCommit", ->
       expect(atom.workspace.getActivePane).toHaveBeenCalled()
 
     it "gets the commentchar from configs", ->
-      expect(git.getConfig).toHaveBeenCalledWith 'core.commentchar', Path.dirname(commitFilePath)
+      expect(git.getConfig).toHaveBeenCalledWith repo, 'core.commentchar'
 
     it "gets staged files", ->
       expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
@@ -97,7 +98,7 @@ describe "GitCommit", ->
       expect(status.replace).toHaveBeenCalled()
 
     it "gets the commit template from git configs", ->
-      expect(git.getConfig).toHaveBeenCalledWith 'commit.template', Path.dirname(commitFilePath)
+      expect(git.getConfig).toHaveBeenCalledWith repo, 'commit.template'
 
     it "writes to a file", ->
       argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
@@ -131,16 +132,16 @@ describe "GitCommit", ->
     it "uses '#' in commit file", ->
       setupMocks()
       GitCommit(repo).then ->
-        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-        expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe '#'
+        args = fs.writeFileSync.mostRecentCall.args
+        expect(args[1].trim().charAt(0)).toBe '#'
 
   describe "when core.commentchar config is set to '$'", ->
     it "uses '$' as the commentchar", ->
-      commentchar_config = '$'
-      setupMocks()
-      GitCommit(repo).then ->
-        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-        expect(argsTo_fsWriteFile[1].trim().charAt(0)).toBe commentchar_config
+      setupMocks(commentChar: '$')
+      waitsForPromise -> GitCommit(repo)
+      runs ->
+        args = fs.writeFileSync.mostRecentCall.args
+        expect(args[1].trim().charAt(0)).toBe '$'
 
   describe "when commit.template config is not set", ->
     it "commit file starts with a blank line", ->
@@ -152,14 +153,14 @@ describe "GitCommit", ->
 
   describe "when commit.template config is set", ->
     it "commit file starts with content of that file", ->
-      templateFile = 'template'
-      setupMocks()
+      template = 'template'
+      setupMocks({template})
       GitCommit(repo)
       waitsFor ->
         fs.writeFileSync.callCount > 0
       runs ->
-        argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-        expect(argsTo_fsWriteFile[1].indexOf(commitTemplate)).toBe 0
+        args = fs.writeFileSync.mostRecentCall.args
+        expect(args[1].indexOf(template)).toBe 0
 
   describe "when 'stageChanges' option is true", ->
     it "calls git.add with update option set to true", ->
