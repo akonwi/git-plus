@@ -90,6 +90,11 @@ module.exports = git =
     git.cmd(['diff', '-p', '-U1', path], cwd: repo.getWorkingDirectory())
     .then (data) -> _prettifyDiff(data)
 
+  blame: (repo, path) ->
+    git.cmd(['blame', path], cwd: repo.getWorkingDirectory())
+    .then (data) ->
+      _prettify data
+
   stagedFiles: (repo, stdout) ->
     args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     git.cmd(args, cwd: repo.getWorkingDirectory())
