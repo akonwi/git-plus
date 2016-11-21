@@ -18,6 +18,10 @@
         label: 'Git difftool',
         'command': 'git-plus-context:difftool'
       },
+      {
+        label: 'Git blame',
+        'command': 'git-plus-context:blame'
+      }
     ],
     { type: 'separator'}
   ]
@@ -40,6 +44,10 @@
         {
           'label': 'Add All'
           'command': 'git-plus:add-all'
+        }
+        {
+          label: 'Blame',
+          'command': 'git-plus:blame'
         }
         {
           'label': 'Commit'
