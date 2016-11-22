@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 5.25.5
-- Fix [#533](https://github.com/akonwi/git-plus/issues/533)
+- Fix [#553](https://github.com/akonwi/git-plus/issues/553)
 - Refactoring
 
 ### 5.25.4
