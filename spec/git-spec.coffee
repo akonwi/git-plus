@@ -233,3 +233,9 @@ describe "Git-Plus git module", ->
       spyOn(git, 'cmd').andCallFake -> Promise.resolve "string"
       git.diff(repo, pathToRepoFile)
       expect(git.cmd).toHaveBeenCalledWith ['diff', '-p', '-U1', pathToRepoFile], cwd: repo.getWorkingDirectory()
+
+  describe "git.blame", ->
+    it "calls git.cmd with ['blame'] and the file path", ->
+      spyOn(git, 'cmd').andCallFake -> Promise.resolve "string"
+      git.blame(repo, pathToRepoFile)
+      expect(git.cmd).toHaveBeenCalledWith ['blame', pathToRepoFile], cwd: repo.getWorkingDirectory()

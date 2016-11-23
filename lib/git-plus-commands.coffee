@@ -2,6 +2,7 @@ git = require './git'
 
 getCommands = ->
   GitBranch              = require './models/git-branch'
+  GitBlame               = require './models/git-blame'
   GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
   GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
   GitCheckoutAllFiles    = require './models/git-checkout-all-files'
@@ -90,6 +91,7 @@ getCommands = ->
       commands.push ['git-plus:merge-no-fast-forward', 'Merge without fast-forward', -> GitMerge(repo, noFastForward: true)]
       commands.push ['git-plus:rebase', 'Rebase', -> GitRebase(repo)]
       commands.push ['git-plus:git-open-changed-files', 'Open Changed Files', -> GitOpenChangedFiles(repo)]
+      commands.push ['git-plus:git-blame', 'Blame File', -> GitBlame(repo, file: currentFile)]
 
       return commands
 
