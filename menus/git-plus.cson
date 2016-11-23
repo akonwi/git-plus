@@ -15,6 +15,10 @@
         'command': 'git-plus-context:add'
       },
       {
+        label: 'Git add + commit',
+        'command': 'git-plus-context:add-and-commit'
+      },
+      {
         label: 'Git difftool',
         'command': 'git-plus-context:difftool'
       },

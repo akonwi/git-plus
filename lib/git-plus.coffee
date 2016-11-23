@@ -6,6 +6,7 @@ configurations         = require './config'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
 GitAddContext          = require './models/git-add-context'
+GitAddAndCommitContext = require './models/git-add-and-commit-context'
 GitBranch              = require './models/git-branch'
 GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
 GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
@@ -134,6 +135,7 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:rebase', -> git.getRepo().then((repo) -> GitRebase(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then((repo) -> GitAddContext(repo, contextCommandMap))
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> git.getRepo().then((repo) -> GitAddAndCommitContext(repo, contextCommandMap))
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then((repo) -> GitDifftoolContext(repo, contextCommandMap))
     @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
     @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar

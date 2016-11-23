@@ -1,6 +1,7 @@
 notifier = require '../../lib/notifier'
 contextPackageFinder = require '../../lib/context-package-finder'
 GitAddContext = require '../../lib/models/git-add-context'
+GitAddAndCommitContext = require '../../lib/models/git-add-and-commit-context'
 
 {repo} = require '../fixtures'
 mockSelectedPath = 'selected/path'
@@ -14,7 +15,20 @@ describe "GitAddContext", ->
       expect(contextCommandMap).toHaveBeenCalledWith 'add', repo: repo, file: mockSelectedPath
 
   describe "when an object is not selected", ->
-    it "notifies the userof the issue", ->
+    it "notifies the user of the issue", ->
       spyOn(notifier, 'addInfo')
       GitAddContext repo, contextCommandMap
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add"
+
+describe "GitAddAndCommitContext", ->
+  describe "when an object in the tree is selected", ->
+    it "calls contextCommandMap::map with 'add-and-commit' and the filepath for the tree object", ->
+      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
+      GitAddAndCommitContext repo, contextCommandMap
+      expect(contextCommandMap).toHaveBeenCalledWith 'add-and-commit', repo: repo, file: mockSelectedPath
+
+  describe "when an object is not selected", ->
+    it "notifies the user of the issue", ->
+      spyOn(notifier, 'addInfo')
+      GitAddAndCommitContext repo, contextCommandMap
+      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add and commit"

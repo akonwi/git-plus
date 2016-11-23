@@ -5,6 +5,6 @@ module.exports = (repo, contextCommandMap) ->
   if path = contextPackageFinder.get()?.selectedPath
     file = repo.relativize(path)
     file = undefined if file is ''
-    contextCommandMap 'add', {repo, file}
+    contextCommandMap 'add-and-commit', {repo: repo, file}
   else
-    notifier.addInfo "No file selected to add"
+    notifier.addInfo "No file selected to add and commit"
