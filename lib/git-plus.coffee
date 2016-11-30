@@ -38,6 +38,7 @@ GitStashSaveMessage    = require './models/git-stash-save-message'
 GitStatus              = require './models/git-status'
 GitTags                = require './models/git-tags'
 GitUnstageFiles        = require './models/git-unstage-files'
+GitUnstageFileContext  = require './models/context/git-unstage-file-context'
 GitRun                 = require './models/git-run'
 GitMerge               = require './models/git-merge'
 GitRebase              = require './models/git-rebase'
@@ -140,6 +141,7 @@ module.exports =
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> git.getRepo().then(GitCheckoutFileContext)
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> git.getRepo().then(GitDiffContext)
     @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then(GitDifftoolContext)
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> git.getRepo().then(GitUnstageFileContext)
     @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
     @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
 

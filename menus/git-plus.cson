@@ -29,7 +29,11 @@
       {
         label: 'Git difftool',
         'command': 'git-plus-context:difftool'
-      }
+      },
+      {
+        label: 'Git unstage',
+        'command': 'git-plus-context:unstage-file'
+      },
     ],
     { type: 'separator'}
   ]

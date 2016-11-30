@@ -6,6 +6,7 @@ GitAddAndCommitContext = require '../../lib/models/context/git-add-and-commit-co
 GitCheckoutFileContext = require '../../lib/models/context/git-checkout-file-context'
 GitDiffContext = require '../../lib/models/context/git-diff-context'
 GitDifftoolContext = require '../../lib/models/context/git-difftool-context'
+GitUnstageFileContext = require '../../lib/models/context/git-unstage-file-context'
 
 {repo} = require '../fixtures'
 mockSelectedPath = 'selected/path'
@@ -78,3 +79,17 @@ describe "GitCheckoutFileContext", ->
       spyOn(notifier, 'addInfo')
       GitCheckoutFileContext repo
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to checkout"
+
+describe "GitUnstageFileContext", ->
+  describe "when an object in the tree is selected", ->
+    it "calls git::cmd to unstage files", ->
+      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
+      spyOn(git, 'cmd').andReturn Promise.resolve()
+      GitUnstageFileContext repo
+      expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD', '--', mockSelectedPath], cwd: repo.getWorkingDirectory()
+
+  describe "when an object is not selected", ->
+    it "notifies the user of the issue", ->
+      spyOn(notifier, 'addInfo')
+      GitUnstageFileContext repo
+      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to unstage"
