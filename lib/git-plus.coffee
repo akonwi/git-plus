@@ -12,7 +12,7 @@ GitBranch              = require './models/git-branch'
 GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
 GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
 GitCheckoutAllFiles    = require './models/git-checkout-all-files'
-GitCheckoutCurrentFile = require './models/git-checkout-current-file'
+GitCheckoutFile        = require './models/git-checkout-file'
 GitCherryPick          = require './models/git-cherry-pick'
 GitCommit              = require './models/git-commit'
 GitCommitAmend         = require './models/git-commit-amend'
@@ -98,7 +98,7 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:commit-all-and-push', -> git.getRepo().then((repo) -> GitCommit(repo, stageChanges: true, andPush: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout', -> git.getRepo().then((repo) -> GitBranch.gitBranches(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout-remote', -> git.getRepo().then((repo) -> GitBranch.gitRemoteBranches(repo))
-    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout-current-file', -> git.getRepo().then((repo) -> GitCheckoutCurrentFile(repo))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout-current-file', -> git.getRepo().then((repo) -> GitCheckoutFile(repo, file: currentFile(repo)))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout-all-files', -> git.getRepo().then((repo) -> GitCheckoutAllFiles(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:new-branch', -> git.getRepo().then((repo) -> GitBranch.newBranch(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:delete-local-branch', -> git.getRepo().then((repo) -> GitDeleteLocalBranch(repo))
