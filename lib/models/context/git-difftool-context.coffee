@@ -1,6 +1,6 @@
-contextPackageFinder = require '../context-package-finder'
-notifier = require '../notifier'
-GitDiffTool = require './git-difftool'
+contextPackageFinder = require '../../context-package-finder'
+notifier = require '../../notifier'
+GitDiffTool = require '../git-difftool'
 
 module.exports = (repo, contextCommandMap) ->
   if path = contextPackageFinder.get()?.selectedPath

@@ -1,9 +1,10 @@
 notifier = require '../../lib/notifier'
 contextPackageFinder = require '../../lib/context-package-finder'
-GitAddContext = require '../../lib/models/git-add-context'
-GitAddAndCommitContext = require '../../lib/models/git-add-and-commit-context'
-GitCheckoutFileContext = require '../../lib/models/git-checkout-file-context'
-GitDiffContext = require '../../lib/models/git-diff-context'
+GitAddContext = require '../../lib/models/context/git-add-context'
+GitAddAndCommitContext = require '../../lib/models/context/git-add-and-commit-context'
+GitCheckoutFileContext = require '../../lib/models/context/git-checkout-file-context'
+GitDiffContext = require '../../lib/models/context/git-diff-context'
+GitDifftoolContext = require '../../lib/models/context/git-difftool-context'
 
 {repo} = require '../fixtures'
 mockSelectedPath = 'selected/path'
@@ -46,6 +47,19 @@ describe "GitDiffContext", ->
     it "notifies the user of the issue", ->
       spyOn(notifier, 'addInfo')
       GitDiffContext repo, contextCommandMap
+      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
+
+describe "GitDifftoolContext", ->
+  describe "when an object in the tree is selected", ->
+    it "calls contextCommandMap::map with 'DiffTool' and the filepath for the tree object", ->
+      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
+      GitDifftoolContext repo, contextCommandMap
+      expect(contextCommandMap).toHaveBeenCalledWith 'difftool', repo: repo, file: mockSelectedPath
+
+  describe "when an object is not selected", ->
+    it "notifies the userof the issue", ->
+      spyOn(notifier, 'addInfo')
+      GitDifftoolContext repo, contextCommandMap
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
 
 describe "GitCheckoutFileContext", ->
