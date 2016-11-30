@@ -1,7 +1,6 @@
 {CompositeDisposable}  = require 'atom'
 {$}                    = require 'atom-space-pen-views'
 git                    = require './git'
-contextCommandMap      = require './context-command-map'
 configurations         = require './config'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
@@ -136,11 +135,11 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:merge-no-fast-forward', -> git.getRepo().then((repo) -> GitMerge(repo, noFastForward: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:rebase', -> git.getRepo().then((repo) -> GitRebase(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then((repo) -> GitAddContext(repo, contextCommandMap))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> git.getRepo().then((repo) -> GitAddAndCommitContext(repo, contextCommandMap))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> git.getRepo().then((repo) -> GitCheckoutFileContext(repo, contextCommandMap))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> git.getRepo().then((repo) -> GitDiffContext(repo, contextCommandMap))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then((repo) -> GitDifftoolContext(repo, contextCommandMap))
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then(GitAddContext)
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> git.getRepo().then(GitAddAndCommitContext)
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> git.getRepo().then(GitCheckoutFileContext)
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> git.getRepo().then(GitDiffContext)
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then(GitDifftoolContext)
     @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
     @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
 

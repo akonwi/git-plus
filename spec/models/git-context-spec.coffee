@@ -1,3 +1,4 @@
+git = require '../../lib/git'
 notifier = require '../../lib/notifier'
 contextPackageFinder = require '../../lib/context-package-finder'
 GitAddContext = require '../../lib/models/context/git-add-context'
@@ -8,69 +9,72 @@ GitDifftoolContext = require '../../lib/models/context/git-difftool-context'
 
 {repo} = require '../fixtures'
 mockSelectedPath = 'selected/path'
-contextCommandMap = jasmine.createSpy('contextCommandMap')
 
 describe "GitAddContext", ->
   describe "when an object in the tree is selected", ->
-    it "calls contextCommandMap::map with 'add' and the filepath for the tree object", ->
+    it "calls git::add", ->
       spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
-      GitAddContext repo, contextCommandMap
-      expect(contextCommandMap).toHaveBeenCalledWith 'add', repo: repo, file: mockSelectedPath
+      spyOn(git, 'add')
+      GitAddContext repo
+      expect(git.add).toHaveBeenCalledWith repo, file: mockSelectedPath
 
   describe "when an object is not selected", ->
     it "notifies the user of the issue", ->
       spyOn(notifier, 'addInfo')
-      GitAddContext repo, contextCommandMap
+      GitAddContext repo
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add"
 
 describe "GitAddAndCommitContext", ->
   describe "when an object in the tree is selected", ->
-    it "calls contextCommandMap::map with 'add-and-commit' and the filepath for the tree object", ->
+    it "calls git::add and GitCommit", ->
       spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
-      GitAddAndCommitContext repo, contextCommandMap
-      expect(contextCommandMap).toHaveBeenCalledWith 'add-and-commit', repo: repo, file: mockSelectedPath
+      spyOn(git, 'add').andReturn Promise.resolve()
+      GitAddAndCommitContext repo
+      expect(git.add).toHaveBeenCalledWith repo, file: mockSelectedPath
+      # TODO: figure out how to validate GitCommit was called
+      # expect(GitCommit).toHaveBeenCalledWith repo
 
   describe "when an object is not selected", ->
     it "notifies the user of the issue", ->
       spyOn(notifier, 'addInfo')
-      GitAddAndCommitContext repo, contextCommandMap
+      GitAddAndCommitContext repo
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add and commit"
 
 describe "GitDiffContext", ->
-  describe "when an object in the tree is selected", ->
-    it "calls contextCommandMap::map with 'diff' and the filepath for the tree object", ->
+  xdescribe "when an object in the tree is selected", ->
+    it "calls GitDiff", ->
       spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
-      GitDiffContext repo, contextCommandMap
-      expect(contextCommandMap).toHaveBeenCalledWith 'diff', repo: repo, file: mockSelectedPath
+      GitDiffContext repo
+      # TODO: expect(GitDiff).toHaveBeenCalledWith repo, file: mockSelectedPath
 
   describe "when an object is not selected", ->
     it "notifies the user of the issue", ->
       spyOn(notifier, 'addInfo')
-      GitDiffContext repo, contextCommandMap
+      GitDiffContext repo
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
 
 describe "GitDifftoolContext", ->
-  describe "when an object in the tree is selected", ->
-    it "calls contextCommandMap::map with 'DiffTool' and the filepath for the tree object", ->
+  xdescribe "when an object in the tree is selected", ->
+    it "calls GitDiffTool", ->
       spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
-      GitDifftoolContext repo, contextCommandMap
-      expect(contextCommandMap).toHaveBeenCalledWith 'difftool', repo: repo, file: mockSelectedPath
-
-  describe "when an object is not selected", ->
-    it "notifies the userof the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitDifftoolContext repo, contextCommandMap
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
-
-describe "GitCheckoutFileContext", ->
-  describe "when an object in the tree is selected", ->
-    it "calls contextCommandMap::map with 'checkout' and the filepath for the tree object", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
-      GitCheckoutFileContext repo, contextCommandMap
-      expect(contextCommandMap).toHaveBeenCalledWith 'checkout-file', repo: repo, file: mockSelectedPath
+      GitDifftoolContext repo
+      # expect(GitDiffTool).toHaveBeenCalledWith repo, file: mockSelectedPath
 
   describe "when an object is not selected", ->
     it "notifies the user of the issue", ->
       spyOn(notifier, 'addInfo')
-      GitCheckoutFileContext repo, contextCommandMap
+      GitDifftoolContext repo
+      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
+
+describe "GitCheckoutFileContext", ->
+  xdescribe "when an object in the tree is selected", ->
+    it "calls CheckoutFile", ->
+      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: mockSelectedPath}
+      GitCheckoutFileContext repo
+      # expect(GitCheckoutFile).toHaveBeenCalledWith repo, file: mockSelectedPath
+
+  describe "when an object is not selected", ->
+    it "notifies the user of the issue", ->
+      spyOn(notifier, 'addInfo')
+      GitCheckoutFileContext repo
       expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to checkout"
