@@ -19,6 +19,10 @@
         'command': 'git-plus-context:add-and-commit'
       },
       {
+        label: 'Git checkout',
+        'command': 'git-plus-context:checkout-file'
+      },
+      {
         label: 'Git diff',
         'command': 'git-plus-context:diff'
       },
