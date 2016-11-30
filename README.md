@@ -40,7 +40,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Status ` | Show current status. | `Cmd-Shift-A S` |
 | `Git Add ` | Add the current file. | `Cmd-Shift-A` |
 | `Git Add All` | Adds all changed files. | |
-| `Git add and commit and push` | Commit currently open file and push to a remote repo. | `Cmd-Shift-A P` |
+| `Git add and commit and push` | Commit currently open file and push to a remote repo. | `Cmd-Shift-A Q` |
 | `Git add all commit and push` | Commit every changed file and push to a remote repo. | `Cmd-Shift-A P` |
 | `Git commit` | Commit the staged changes. Git-Plus shows a commit message editor. To make the commit, save the file. To cancel the commit, close the tab. | `Cmd-Shift-C`(*`Ctrl-Shift-X`* on Windows and Linux) |
 | `Git commit amend` | Amend the changes to previous commit. |  |
