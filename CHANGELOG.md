@@ -1,9 +1,9 @@
 ## Changelog
 
-### 5.26.0
+### 5.27.0
 - Added more commands to the tree-view context-menu
   - `Add`, `Add + commit`, `Diff`, `Unstage`, `Checkout`
-  
+
 ### 5.25.5
 - Fix [#553](https://github.com/akonwi/git-plus/issues/553)
 - Refactoring
