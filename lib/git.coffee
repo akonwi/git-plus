@@ -15,9 +15,6 @@ _prettify = (data) ->
   data = data.split(/\0/)[...-1]
   [] = for mode, i in data by 2
     {mode, path: data[i+1] }
-  # data = data.split(/\n/)
-  # data.filter((file) -> file isnt '').map (file) ->
-  #   {mode: file[0], path: file.substring(1).trim()}
 
 _prettifyUntracked = (data) ->
   return [] if data is ''
