@@ -50,7 +50,7 @@ class ListView extends SelectListView
     if experimentalFeaturesEnabled()
       _pull @repo, extraArgs: [@extraArgs]
     else
-      git.cmd(['branch', '-r'], cwd: @repo.getWorkingDirectory())
+      git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
       .then (data) =>
         new PullBranchListView(@repo, data, remoteName, @extraArgs).result
 
