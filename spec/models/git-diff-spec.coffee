@@ -72,7 +72,7 @@ describe "GitDiffAll", ->
     spyOn(fs, 'writeFile').andCallFake -> fs.writeFile.mostRecentCall.args[3]()
     spyOn(git, 'cmd').andCallFake ->
       args = git.cmd.mostRecentCall.args[0]
-      if args[1] is '--stat'
+      if args[2] is '--stat'
         Promise.resolve 'diff stats\n'
       else
         Promise.resolve 'diffs'
