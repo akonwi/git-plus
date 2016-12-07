@@ -13,7 +13,7 @@ verboseCommitsEnabled = -> atom.config.get('git-plus.experimental') and atom.con
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
     if files.length >= 1
-      git.cmd(['status'], cwd: repo.getWorkingDirectory())
+      git.cmd(['-c', 'color.ui=false', 'status'], cwd: repo.getWorkingDirectory())
     else
       Promise.reject "Nothing to commit."
 
