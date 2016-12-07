@@ -1,5 +1,8 @@
 ## Changelog
 
+### 5.28.0
+- Display keyboard shortcuts for the commands in the Git Plus menu (@metatalker-[pr-566](https://github.com/akonwi/git-plus/pull/566))
+
 ### 5.27.0
 - Added more commands to the tree-view context-menu
   - `Add`, `Add + commit`, `Diff`, `Unstage`, `Checkout`
