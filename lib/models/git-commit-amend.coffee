@@ -31,14 +31,14 @@ prettifyFileStatuses = (files) ->
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
     if files.length >= 1
-      args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
+      args = ['diff-index', '--no-color', '--cached', 'HEAD', '--name-status', '-z']
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (data) -> prettifyStagedFiles data
     else
       Promise.resolve []
 
 getGitStatus = (repo) ->
-  git.cmd ['status'], cwd: repo.getWorkingDirectory()
+  git.cmd ['-c', 'color.ui=false', 'status'], cwd: repo.getWorkingDirectory()
 
 diffFiles = (previousFiles, currentFiles) ->
   previousFiles = previousFiles.map (p) -> prettyifyPreviousFile p

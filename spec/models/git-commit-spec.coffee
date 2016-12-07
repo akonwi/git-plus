@@ -57,7 +57,7 @@ setupMocks = ({commentChar, template}={}) ->
       commentChar
   spyOn(git, 'cmd').andCallFake ->
     args = git.cmd.mostRecentCall.args[0]
-    if args[0] is 'status'
+    if args[2] is 'status'
       Promise.resolve status
     else if args[0] is 'commit'
       commitResolution
@@ -92,7 +92,7 @@ describe "GitCommit", ->
       expect(git.getConfig).toHaveBeenCalledWith repo, 'core.commentchar'
 
     it "gets staged files", ->
-      expect(git.cmd).toHaveBeenCalledWith ['status'], cwd: repo.getWorkingDirectory()
+      expect(git.cmd).toHaveBeenCalledWith ['-c', 'color.ui=false', 'status'], cwd: repo.getWorkingDirectory()
 
     it "removes lines with '(...)' from status", ->
       expect(status.replace).toHaveBeenCalled()
