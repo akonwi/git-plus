@@ -3,7 +3,6 @@ notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 
 module.exports =
-  # Extension of BranchListView
   class DeleteBranchListView extends BranchListView
     initialize: (@repo, @data, {@isRemote}={}) -> super
 
