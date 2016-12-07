@@ -48,80 +48,88 @@
         {
           'label': 'Add'
           'command': 'git-plus:add'
-        }
+        },
         {
           'label': 'Add Modified'
           'command': 'git-plus:add-modified'
-        }
+        },
         {
           'label': 'Add All'
           'command': 'git-plus:add-all'
-        }
+        },
+        {
+          'label': 'Checkout Current File'
+          'command': 'git-plus:checkout-current-file'
+        },
         {
           'label': 'Commit'
           'command': 'git-plus:commit'
-        }
+        },
         {
           'label': 'Diff'
           'command': 'git-plus:diff'
-        }
+        },
         {
           'label': 'Difftool'
           'command': 'git-plus:difftool'
-        }
+        },
         {
           'label': 'Diff All'
           'command': 'git-plus:diff-all'
-        }
+        },
         {
           'label': 'Add + Commit'
           'command': 'git-plus:add-and-commit'
-        }
+        },
         {
           'label': 'Add + Commit + Push'
           'command': 'git-plus:add-and-commit-and-push'
-        }
+        },
         {
           'label': 'Add All + Commit'
           'command': 'git-plus:add-all-and-commit'
-        }
+        },
         {
           'label': 'Add All + Commit + Push'
           'command': 'git-plus:add-all-commit-and-push'
-        }
+        },
         {
           'label': 'Push'
           'command': 'git-plus:push'
-        }
+        },
         {
           'label': 'Log'
           'command': 'git-plus:log'
-        }
+        },
         {
           'label': 'Merge'
           'submenu': [
             {
               'label': 'Normal Merge'
               'command': 'git-plus:merge'
-            }
+            },
             {
               'label': 'Merge Remote'
               'command': 'git-plus:merge-remote'
-            }
+            },
             {
               'label': 'Merge without fast-forward'
               'command': 'git-plus:merge-no-fast-forward'
             }
           ]
-        }
+        },
         {
           'label': 'Pull Using Rebase'
           'command': 'git-plus:pull-using-rebase'
-        }
+        },
         {
           'label': 'Rebase'
           'command': 'git-plus:rebase'
-        }
+        },
+        {
+          'label': 'Run'
+          'command': 'git-plus:run'
+        },
       ]
     ]
   }
