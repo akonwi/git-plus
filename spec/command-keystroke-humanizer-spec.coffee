@@ -49,18 +49,15 @@ setupKeyBindings = (keymaps, selector)->
 
 describe "Git-Plus command keystroke humanizer", ->
   describe "On any platform", ->
-    humanizer = CommandKeystrokeFinder()
-    beforeEach -> humanizer.clearCache()
-
     describe "when an empty command list is provided", ->
       it "returns empty map", ->
         keymaps = [{command: 'cmd-shift-a', selector: selector.Darwin}]
         spyOn(atom.keymaps, "findKeyBindings").andCallFake mockFindKeyBindings(keymaps)
-        expect(humanizer.get([])).toEqual {}
+        expect(CommandKeystrokeFinder().get([])).toEqual {}
 
   describe "when platform is Darwin", ->
-    humanizer = CommandKeystrokeFinder("darwin")
-    beforeEach -> humanizer.clearCache()
+    humanizer = null
+    beforeEach -> humanizer = CommandKeystrokeFinder("darwin")
 
     describe "when selector is #{selector.Darwin}" , ->
       it "it must return all keystrokes in humanized form", ->
@@ -87,8 +84,8 @@ describe "Git-Plus command keystroke humanizer", ->
         expect(humanizer.get(getCommandsFromKeymap(Win32LinuxEditorKeyMap))).toEqual {}
 
   describe "when platform is #{selector.Win32} or #{selector.Linux}", ->
-    humanizer = CommandKeystrokeFinder("win32")
-    beforeEach -> humanizer.clearCache()
+    humanizer = null
+    beforeEach -> humanizer = CommandKeystrokeFinder("win32")
 
     describe "when selector is #{selector.Win32Linux}" , ->
       it "it must return all keystrokes in humanized form", ->
