@@ -11,7 +11,7 @@ If you want to read about using Atom or developing packages in Atom, the [Atom F
 * Most commands are defined as separate modules in `lib/models`.
   * Each module usually exports a single function that takes a [git repository](https://atom.io/docs/api/v1.11.2/GitRepository) as the first argument.
   * Fundamentally, all the commands execute in a shell process. `lib/git.coffee` exports an object which is sort of the core of most of the functionality of the package. The most used function from that object is `::cmd`, which wraps Node's ChildProcess and returns a promise.
-  * `::cmd` usually only needs two arguments. The first is the array of command line arguments to be used with git e.g. `['status', '--porcelain']` and an options object with a `cwd` key and value of the path to the repository. Here is a good [example](https://github.com/akonwi/git-plus/blob/master/lib/git.coffee#L116L120).
+  * `::cmd` usually only needs two arguments. The first is the array of command line arguments to be used with git e.g. `['status', '--porcelain']` and an options object with a `cwd` key and value of the path to the repository. Here is a good [example](https://github.com/akonwi/git-plus/blob/master/lib/git.coffee#L112L116).
 * Views are kept in `lib/views` and they are things like the inputs for some commands and selectable lists. All these views extend [atom's space-pen-views](https://github.com/atom/atom-space-pen-views).
 
 ### Pull Requests
