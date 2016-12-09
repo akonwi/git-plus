@@ -1,5 +1,10 @@
 ## Changelog
 
+### 5.29.0
+- Fixes [#531](https://github.com/akonwi/git-plus/issues/531)
+- Fixes [#292](https://github.com/akonwi/git-plus/issues/292)
+- Remove the experimental tag from the 'Always pull from upstream' feature
+
 ### 5.28.0
 - Display keyboard shortcuts for the commands in the Git Plus menu (@metatalker-[pr-566](https://github.com/akonwi/git-plus/pull/566))
 
