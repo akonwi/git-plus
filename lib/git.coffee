@@ -10,11 +10,11 @@ gitUntrackedFiles = (repo, dataUnstaged=[]) ->
   .then (data) ->
     dataUnstaged.concat(_prettifyUntracked(data))
 
-_prettify = (data) ->
+_prettify = (data, {staged}={}) ->
   return [] if data is ''
   data = data.split(/\0/)[...-1]
   [] = for mode, i in data by 2
-    {mode, path: data[i+1] }
+    {mode, staged, path: data[i+1]}
 
 _prettifyUntracked = (data) ->
   return [] if data is ''
@@ -88,7 +88,7 @@ module.exports = git =
     args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
-      _prettify data
+      _prettify data, staged: true
     .catch (error) ->
       if error.includes "ambiguous argument 'HEAD'"
         Promise.resolve [1]
@@ -101,9 +101,9 @@ module.exports = git =
     git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
       if showUntracked
-        gitUntrackedFiles(repo, _prettify(data))
+        gitUntrackedFiles(repo, _prettify(data, staged: false))
       else
-        _prettify(data)
+        _prettify(data, staged: false)
 
   add: (repo, {file, update}={}) ->
     args = ['add']

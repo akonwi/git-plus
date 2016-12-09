@@ -1,6 +1,7 @@
 Path = require 'path'
 Os = require 'os'
 fs = require 'fs-plus'
+{GitRepository} = require 'atom'
 git = require '../lib/git'
 notifier = require '../lib/notifier'
 {
@@ -131,54 +132,47 @@ describe "Git-Plus git module", ->
           expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD'], cwd: repo.getWorkingDirectory()
 
   describe "git.stagedFiles", ->
-    it "returns an empty array when there are no staged files", ->
-      spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
-      waitsForPromise ->
-        git.stagedFiles(repo)
-        .then (files) ->
-          expect(files.length).toEqual 0
+    fakeRepoDir = Path.join(__dirname, 'fixture-repo')
+    repository = null
+    beforeEach ->
+      repository = GitRepository.open(fakeRepoDir)
+      waitsForPromise -> git.cmd(['reset'], cwd: fakeRepoDir)
 
-    # it "returns an array with size 1 when there is a staged file", ->
-    #   spyOn(git, 'cmd').andCallFake -> Promise.resolve("M\tsomefile.txt")
-    #   waitsForPromise ->
-    #     git.stagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 1
-    #
-    # it "returns an array with size 4 when there are 4 staged files", ->
-    #   spyOn(git, 'cmd').andCallFake ->
-    #     Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
-    #   waitsForPromise ->
-    #     git.stagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 4
+    it "returns an empty array when there are no staged files", ->
+      git.stagedFiles(repository)
+      .then (files) -> expect(files.length).toEqual 0
+
+    it "returns a non-empty array when there are staged files", ->
+      fs.writeFileSync Path.join(fakeRepoDir, 'fake.file'), 'some stuff'
+      waitsForPromise -> git.cmd(['add', 'fake.file'], cwd: fakeRepoDir)
+      waitsForPromise ->
+        git.stagedFiles(repository)
+        .then (files) ->
+          expect(files.length).toEqual 1
+          expect(files[0].mode).toEqual 'M'
+          expect(files[0].path).toEqual 'fake.file'
+          expect(files[0].staged).toBe true
 
   describe "git.unstagedFiles", ->
-    it "returns an empty array when there are no unstaged files", ->
-      spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
-      waitsForPromise ->
-        git.unstagedFiles(repo)
-        .then (files) ->
-          expect(files.length).toEqual 0
+    fakeRepoDir = Path.join(__dirname, 'fixture-repo')
+    repository = null
+    beforeEach ->
+      repository = GitRepository.open(fakeRepoDir)
+      waitsForPromise -> git.cmd(['reset'], cwd: fakeRepoDir)
+      waitsForPromise -> git.cmd(['add', 'fake.file'], cwd: fakeRepoDir)
 
-    ## Need a way to mock the terminal's first char identifier (\0)
-    # it "returns an array with size 1 when there is an unstaged file", ->
-    #   spyOn(git, 'cmd').andCallFake -> Promise.resolve "M\tsomefile.txt"
-    #   waitsForPromise ->
-    #     git.unstagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 1
-    #       expect(files[0].mode).toEqual 'M'
-    #
-    # it "returns an array with size 4 when there are 4 unstaged files", ->
-    #   spyOn(git, 'cmd').andCallFake ->
-    #     Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
-    #   waitsForPromise ->
-    #     git.unstagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 4
-    #       expect(files[1].mode).toEqual 'A'
-    #       expect(files[3].mode).toEqual 'M'
+    it "returns an empty array when there are no unstaged files", ->
+      git.unstagedFiles(repository)
+      .then (files) -> expect(files.length).toEqual 0
+
+    it "returns a non-empty array when there are unstaged files", ->
+      waitsForPromise -> git.cmd(['reset'], cwd: fakeRepoDir)
+      waitsForPromise ->
+        git.unstagedFiles(repository)
+        .then (files) ->
+          expect(files.length).toEqual 1
+          expect(files[0].mode).toEqual 'M'
+          expect(files[0].staged).toBe false
 
   # describe "git.unstagedFiles and showUntracked: true", ->
   #   it "returns an array with size 1 when there is only an untracked file", ->
