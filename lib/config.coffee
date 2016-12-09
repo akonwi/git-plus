@@ -52,7 +52,7 @@ module.exports =
     type: 'boolean'
     default: false
   alwaysPullFromUpstream:
-    description: '(Experimental) Always pull from current branch upstream?'
+    description: 'Always pull from current branch upstream?'
     type: 'boolean'
     default: false
   enableStatusBarIcon:

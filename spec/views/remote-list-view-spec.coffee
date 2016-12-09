@@ -14,7 +14,6 @@ describe "RemoteListView", ->
   describe "when mode is pull", ->
     it "it calls git.cmd to get the remote branches", ->
       atom.config.set('git-plus.alwaysPullFromUpstream', false)
-      atom.config.set('git-plus.experimental', false)
       view = new RemoteListView(repo, remotes, mode: 'pull')
       spyOn(git, 'cmd').andCallFake ->
         Promise.resolve 'branch1\nbranch2'
@@ -49,7 +48,6 @@ describe "RemoteListView", ->
   describe "when mode is push", ->
     it "calls git.cmd with ['push']", ->
       atom.config.set('git-plus.alwaysPullFromUpstream', false)
-      atom.config.set('git-plus.experimental', false)
       spyOn(git, 'cmd').andReturn Promise.resolve 'pushing text'
 
       view = new RemoteListView(repo, remotes, mode: 'push')
@@ -74,7 +72,6 @@ describe "RemoteListView", ->
         spyOn(git, 'cmd').andReturn Promise.resolve 'branch1'
         atom.config.set(pullBeforePush, 'pull')
         atom.config.set('git-plus.alwaysPullFromUpstream', false)
-        atom.config.set('git-plus.experimental', false)
 
         view = new RemoteListView(repo, remotes, mode: 'push')
         view.confirmSelection()
