@@ -32,6 +32,7 @@ GitPushContext         = require './models/context/git-push-context'
 GitRemove              = require './models/git-remove'
 GitShow                = require './models/git-show'
 GitStageFiles          = require './models/git-stage-files'
+GitStageFilesBeta      = require './models/git-stage-files-beta'
 GitStageHunk           = require './models/git-stage-hunk'
 GitStashApply          = require './models/git-stash-apply'
 GitStashDrop           = require './models/git-stash-drop'
@@ -125,7 +126,10 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:show', -> git.getRepo().then((repo) -> GitShow(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:log', -> git.getRepo().then((repo) -> GitLog(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:log-current-file', -> git.getRepo().then((repo) -> GitLog(repo, onlyCurrentFile: true))
-      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then((repo) -> GitStageFiles(repo))
+      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.singleStageFiles')
+        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFilesBeta)
+      else
+        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then((repo) -> GitStageFiles(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:unstage-files', -> git.getRepo().then((repo) -> GitUnstageFiles(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-hunk', -> git.getRepo().then((repo) -> GitStageHunk(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stash-save', -> git.getRepo().then((repo) -> GitStashSave(repo))

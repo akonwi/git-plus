@@ -84,7 +84,7 @@ module.exports = git =
     git.cmd(['diff', '-p', '-U1', path], cwd: repo.getWorkingDirectory())
     .then (data) -> _prettifyDiff(data)
 
-  stagedFiles: (repo, stdout) ->
+  stagedFiles: (repo) ->
     args = ['diff-index', '--cached', 'HEAD', '--name-status', '-z']
     git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
