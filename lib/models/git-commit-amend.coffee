@@ -96,22 +96,20 @@ showFile = (filePath) ->
     atom.workspace.getActivePane()["split#{splitDirection}"]()
   atom.workspace.open filePath
 
-destroyCommitEditor = ->
-  atom.workspace?.getPanes().some (pane) ->
-    pane.getItems().some (paneItem) ->
-      if paneItem?.getURI?()?.includes 'COMMIT_EDITMSG'
-        if pane.getItems().length is 1
-          pane.destroy()
-        else
-          paneItem.destroy()
-        return true
+destroyCommitEditor = (filePath) ->
+  if atom.config.get('git-plus.openInPane')
+    atom.workspace?.getPanes().forEach (pane) ->
+      pane.destroy() if pane.itemForURI(filePath)
+  else
+    atom.workspace.getPaneItems().forEach (paneItem) ->
+      paneItem.destroy() if paneItem.getPath() is filePath
 
 commit = (directory, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
   git.cmd(args, cwd: directory)
   .then (data) ->
     notifier.addSuccess data
-    destroyCommitEditor()
+    destroyCommitEditor(filePath)
     git.refresh()
 
 cleanup = (currentPane, filePath) ->

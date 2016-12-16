@@ -42,15 +42,13 @@ prepFile = ({status, filePath, diff, commentChar, template}) ->
       #{diff}"""
   fs.writeFileSync filePath, content
 
-destroyCommitEditor = ->
-  atom.workspace?.getPanes().some (pane) ->
-    pane.getItems().some (paneItem) ->
-      if paneItem?.getURI?()?.includes 'COMMIT_EDITMSG'
-        if pane.getItems().length is 1
-          pane.destroy()
-        else
-          paneItem.destroy()
-        return true
+destroyCommitEditor = (filePath) ->
+  if atom.config.get('git-plus.openInPane')
+    atom.workspace?.getPanes().forEach (pane) ->
+      pane.destroy() if pane.itemForURI(filePath)
+  else
+    atom.workspace.getPaneItems().forEach (paneItem) ->
+      paneItem.destroy() if paneItem.getPath() is filePath
 
 trimFile = (filePath, commentChar) ->
   cwd = Path.dirname(filePath)
@@ -63,11 +61,11 @@ commit = (directory, filePath) ->
   git.cmd(['commit', "--cleanup=strip", "--file=#{filePath}"], cwd: directory)
   .then (data) ->
     notifier.addSuccess data
-    destroyCommitEditor()
+    destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
     notifier.addError data
-    destroyCommitEditor()
+    destroyCommitEditor(filePath)
 
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.isAlive()

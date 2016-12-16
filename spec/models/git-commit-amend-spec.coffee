@@ -64,7 +64,7 @@ describe "GitCommitAmend", ->
     textEditor.save()
     expect(git.cmd).toHaveBeenCalledWith ['commit', '--amend', '--cleanup=strip', "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
 
-  it "closes the commit pane when commit is successful", ->
+  xit "closes the commit pane when commit is successful", ->
     GitCommitAmend repo
     textEditor.save()
     waitsFor -> commitPane.destroy.callCount > 0
