@@ -1,5 +1,9 @@
 ## Changelog
 
+### 5.29.1
+- Fixes [#568](https://github.com/akonwi/git-plus/issues/568)
+- Fixes [#405](https://github.com/akonwi/git-plus/issues/405)
+
 ### 5.29.0
 - Fixes [#531](https://github.com/akonwi/git-plus/issues/531)
 - Fixes [#292](https://github.com/akonwi/git-plus/issues/292)
