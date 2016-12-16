@@ -91,18 +91,24 @@ prepFile = ({commentChar, message, prevChangedFiles, status, filePath}) ->
       #{commentChar} #{status}"""
 
 showFile = (filePath) ->
-  if atom.config.get('git-plus.openInPane')
-    splitDirection = atom.config.get('git-plus.splitPane')
-    atom.workspace.getActivePane()["split#{splitDirection}"]()
-  atom.workspace.open filePath
+  commitEditor = atom.workspace.paneForURI(filePath)?.itemForURI(filePath)
+  if not commitEditor
+    if atom.config.get('git-plus.openInPane')
+      splitDirection = atom.config.get('git-plus.splitPane')
+      atom.workspace.getActivePane()["split#{splitDirection}"]()
+    atom.workspace.open filePath
+  else
+    if atom.config.get('git-plus.openInPane')
+      atom.workspace.paneForURI(filePath).activate()
+    else
+      atom.workspace.paneForURI(filePath).activateItemForURI(filePath)
+    Promise.resolve(commitEditor)
 
 destroyCommitEditor = (filePath) ->
   if atom.config.get('git-plus.openInPane')
-    atom.workspace?.getPanes().forEach (pane) ->
-      pane.destroy() if pane.itemForURI(filePath)
+    atom.workspace.paneForURI(filePath)?.destroy()
   else
-    atom.workspace.getPaneItems().forEach (paneItem) ->
-      paneItem.destroy() if paneItem.getPath() is filePath
+    atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
 
 commit = (directory, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
@@ -115,7 +121,7 @@ commit = (directory, filePath) ->
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.isAlive()
   disposables.dispose()
-  fs.unlink filePath
+  fs.removeSync filePath
 
 module.exports = (repo) ->
   currentPane = atom.workspace.getActivePane()
