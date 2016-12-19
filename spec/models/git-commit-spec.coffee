@@ -1,224 +1,145 @@
-fs = require 'fs-plus'
+os = require 'os'
 Path = require 'path'
-
-{
-  repo,
-  workspace,
-  pathToRepoFile,
-  currentPane,
-  textEditor,
-  commitPane
-} = require '../fixtures'
+quibble = require 'quibble'
+fs = require 'fs-plus'
+{GitRepository} = require 'atom'
 git = require '../../lib/git'
+GitPush = quibble '../../lib/models/git-push', jasmine.createSpy('GitPush')
 GitCommit = require '../../lib/models/git-commit'
 notifier = require '../../lib/notifier'
 
-commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
-status =
-  replace: -> status
-  trim: -> status
-templateFilePath = '~/template'
-commitTemplate = 'foobar'
-commitFileContent =
-  toString: -> commitFileContent
-  indexOf: -> 5
-  substring: -> 'commit message'
-  split: (splitPoint) -> if splitPoint is '\n' then ['commit message', '# comments to be deleted']
-commitResolution = Promise.resolve 'commit success'
-
-setupMocks = ({commentChar, template}={}) ->
-  commentChar ?= null
-  template ?= ''
-  atom.config.set 'git-plus.openInPane', false
-  spyOn(currentPane, 'activate')
-  spyOn(commitPane, 'destroy').andCallThrough()
-  spyOn(commitPane, 'splitRight')
-  spyOn(atom.workspace, 'getActivePane').andReturn currentPane
-  spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
-  spyOn(atom.workspace, 'getPanes').andReturn [currentPane, commitPane]
-  spyOn(atom.workspace, 'paneForURI').andReturn commitPane
-  spyOn(status, 'replace').andCallFake -> status
-  spyOn(status, 'trim').andCallThrough()
-  spyOn(commitFileContent, 'substring').andCallThrough()
-  spyOn(fs, 'readFileSync').andCallFake ->
-    if fs.readFileSync.mostRecentCall.args[0] is fs.absolute(templateFilePath)
-      template
-    else
-      commitFileContent
-  spyOn(fs, 'writeFileSync')
-  spyOn(fs, 'writeFile')
-  spyOn(fs, 'unlink')
-  spyOn(git, 'refresh')
-  spyOn(git, 'getConfig').andCallFake ->
-    arg = git.getConfig.mostRecentCall.args[1]
-    if arg is 'commit.template'
-      templateFilePath
-    else if arg is 'core.commentchar'
-      commentChar
-  spyOn(git, 'cmd').andCallFake ->
-    args = git.cmd.mostRecentCall.args[0]
-    if args[2] is 'status'
-      Promise.resolve status
-    else if args[0] is 'commit'
-      commitResolution
-    else if args[0] is 'diff'
-      Promise.resolve 'diff'
-  spyOn(git, 'stagedFiles').andCallFake ->
-    args = git.stagedFiles.mostRecentCall.args
-    if args[0].getWorkingDirectory() is repo.getWorkingDirectory()
-      Promise.resolve [pathToRepoFile]
-  spyOn(git, 'add').andCallFake ->
-    args = git.add.mostRecentCall.args
-    if args[0].getWorkingDirectory() is repo.getWorkingDirectory() and args[1].update
-      Promise.resolve true
-
-  spyOn(notifier, 'addError')
-  spyOn(notifier, 'addInfo')
-  spyOn(notifier, 'addSuccess')
+commentChar = '%'
+workingDirectory = Path.join(os.homedir(), 'fixture-repo')
+commitFilePath = Path.join(workingDirectory, '/.git/COMMIT_EDITMSG')
+file = Path.join(workingDirectory, 'fake.file')
+repo = null
 
 describe "GitCommit", ->
+  beforeEach ->
+    fs.writeFileSync file, 'foobar'
+    waitsForPromise -> git.cmd(['init'], cwd: workingDirectory)
+    waitsForPromise -> git.cmd(['config', 'core.commentchar', commentChar], cwd: workingDirectory)
+    waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+    waitsForPromise -> git.cmd(['commit', '--allow-empty', '--allow-empty-message', '-m', ''], cwd: workingDirectory)
+    waitsForPromise -> git.cmd(['tag', '-a', '-m', '', 'ROOT'], cwd: workingDirectory)
+    runs -> repo = GitRepository.open(workingDirectory)
+
+  afterEach ->
+    fs.removeSync workingDirectory
+    repo.destroy()
+
   describe "a regular commit", ->
     beforeEach ->
-      atom.config.set "git-plus.openInPane", false
-      commitResolution = Promise.resolve 'commit success'
-      setupMocks()
-      waitsForPromise ->
-        GitCommit(repo)
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+      waitsForPromise -> GitCommit(repo)
 
-    it "gets the current pane", ->
-      expect(atom.workspace.getActivePane).toHaveBeenCalled()
-
-    it "gets the commentchar from configs", ->
-      expect(git.getConfig).toHaveBeenCalledWith repo, 'core.commentchar'
+    it "uses the commentchar from git configs", ->
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      expect(editor.getText().trim()[0]).toBe commentChar
 
     it "gets staged files", ->
-      expect(git.cmd).toHaveBeenCalledWith ['-c', 'color.ui=false', 'status'], cwd: repo.getWorkingDirectory()
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      expect(editor.getText()).toContain 'modified:   fake.file'
 
-    it "removes lines with '(...)' from status", ->
-      expect(status.replace).toHaveBeenCalled()
-
-    it "gets the commit template from git configs", ->
-      expect(git.getConfig).toHaveBeenCalledWith repo, 'commit.template'
-
-    it "writes to a file", ->
-      argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-      expect(argsTo_fsWriteFile[0]).toEqual commitFilePath
-
-    xit "shows the file", ->
-      expect(atom.workspace.open).toHaveBeenCalled()
-
-    xit "calls git.cmd with ['commit'...] on textEditor save", ->
-      textEditor.save()
-      waitsFor -> git.cmd.callCount > 1
+    it "makes a commit when the commit file is saved and closes the textEditor", ->
+      spyOn(notifier, 'addSuccess')
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      spyOn(editor, 'destroy').andCallThrough()
+      editor.setText 'this is a commit'
+      editor.save()
+      log = null
+      waitsFor -> editor.destroy.callCount > 0
+      waitsForPromise -> log = git.cmd(['whatchanged', '-1', '--name-status'], cwd: workingDirectory)
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['commit', "--cleanup=strip", "--file=#{commitFilePath}"], cwd: repo.getWorkingDirectory()
+        expect(notifier.addSuccess).toHaveBeenCalled()
+        log.then (l) -> expect(l).toContain 'this is a commit'
 
-    xit "closes the commit pane when commit is successful", ->
-      atom.config.set('git-plus.openInPane')
-      textEditor.save()
-      waitsFor -> commitPane.destroy.callCount > 0
-      runs -> expect(commitPane.destroy).toHaveBeenCalled()
-
-    xit "notifies of success when commit is successful", ->
-      textEditor.save()
-      waitsFor -> notifier.addSuccess.callCount > 0
-      runs -> expect(notifier.addSuccess).toHaveBeenCalledWith 'commit success'
-
-    xit "cancels the commit on textEditor destroy", ->
-      textEditor.destroy()
-      expect(currentPane.activate).toHaveBeenCalled()
-      expect(fs.unlink).toHaveBeenCalledWith commitFilePath
-
-  describe "when core.commentchar config is not set", ->
-    it "uses '#' in commit file", ->
-      setupMocks()
-      GitCommit(repo).then ->
-        args = fs.writeFileSync.mostRecentCall.args
-        expect(args[1].trim().charAt(0)).toBe '#'
-
-  describe "when core.commentchar config is set to '$'", ->
-    it "uses '$' as the commentchar", ->
-      setupMocks(commentChar: '$')
-      waitsForPromise -> GitCommit(repo)
-      runs ->
-        args = fs.writeFileSync.mostRecentCall.args
-        expect(args[1].trim().charAt(0)).toBe '$'
-
-  describe "when commit.template config is not set", ->
-    it "commit file starts with a blank line", ->
-      setupMocks()
-      waitsForPromise ->
-        GitCommit(repo).then ->
-          argsTo_fsWriteFile = fs.writeFileSync.mostRecentCall.args
-          expect(argsTo_fsWriteFile[1].charAt(0)).toEqual "\n"
+    it "cancels the commit on textEditor destroy", ->
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      editor.destroy()
+      expect(fs.existsSync(commitFilePath)).toBe false
 
   describe "when commit.template config is set", ->
-    it "commit file starts with content of that file", ->
-      template = 'template'
-      setupMocks({template})
-      GitCommit(repo)
-      waitsFor ->
-        fs.writeFileSync.callCount > 0
-      runs ->
-        args = fs.writeFileSync.mostRecentCall.args
-        expect(args[1].indexOf(template)).toBe 0
+    beforeEach ->
+      templateFile = Path.join(os.tmpdir(), 'commit-template')
+      fs.writeFileSync templateFile, 'foobar'
+      waitsForPromise -> git.cmd(['config', 'commit.template', templateFile], cwd: workingDirectory)
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+      waitsForPromise -> GitCommit(repo)
+
+    it "pre-populates the commit with the previous message", ->
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      expect(editor.getText().startsWith('foobar')).toBe true
+      git.cmd(['config', '--unset', 'commit.template'], cwd: workingDirectory)
 
   describe "when 'stageChanges' option is true", ->
-    it "calls git.add with update option set to true", ->
-      setupMocks()
-      GitCommit(repo, stageChanges: true).then ->
-        expect(git.add).toHaveBeenCalledWith repo, update: true
-
-  xdescribe "a failing commit", ->
     beforeEach ->
-      atom.config.set "git-plus.openInPane", false
-      commitResolution = Promise.reject 'commit error'
-      setupMocks()
-      waitsForPromise ->
-        GitCommit(repo)
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> GitCommit(repo, stageChanges: true)
+
+    it "stages modified and tracked files", ->
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      expect(editor.getText()).toContain 'modified:   fake.file'
+
+  describe "a failing commit", ->
+    beforeEach ->
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+      waitsForPromise -> GitCommit(repo)
 
     it "notifies of error and closes commit pane", ->
-      textEditor.save()
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      spyOn(editor, 'destroy').andCallThrough()
+      spyOn(notifier, 'addError')
+      spyOn(git, 'cmd').andReturn Promise.reject()
+      editor.save()
       waitsFor -> notifier.addError.callCount > 0
       runs ->
-        expect(notifier.addError).toHaveBeenCalledWith 'commit error'
-        expect(commitPane.destroy).toHaveBeenCalled()
+        expect(notifier.addError).toHaveBeenCalled()
+        expect(editor.destroy).toHaveBeenCalled()
 
   describe "when the verbose commit setting is true", ->
     beforeEach ->
-      atom.config.set "git-plus.openInPane", false
       atom.config.set "git-plus.experimental", true
       atom.config.set "git-plus.verboseCommits", true
-      setupMocks()
-
-    it "calls git.cmd with the --verbose flag", ->
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
       waitsForPromise -> GitCommit(repo)
-      runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['diff', '--color=never', '--staged'], cwd: repo.getWorkingDirectory()
 
-    xit "trims the commit file", ->
-      textEditor.save()
-      waitsFor -> commitFileContent.substring.callCount > 0
-      runs ->
-        expect(commitFileContent.substring).toHaveBeenCalledWith 0, commitFileContent.indexOf()
+    it "puts the diff in the commit file", ->
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      waitsForPromise ->
+        git.cmd(['diff', '--color=never', '--staged'], cwd: workingDirectory)
+        .then (diff) ->
+          expect(editor.getText()).toContain diff
 
-  ## atom.config.get('git-plus.openInPane') is always false inside the module
-  # describe "when the `git-plus.openInPane` setting is true", ->
-  #   it "defaults to opening to the right", ->
-  #     setupMocks()
-  #     atom.config.set 'git-plus.openInPane', false
-  #     waitsForPromise -> GitCommit(repo).then ->
-  #       expect(commitPane.splitRight).toHaveBeenCalled()
-#
-#   ## Tough as nails to test because GitPush is called outside of test
-#   # describe "when 'andPush' option is true", ->
-#   #   it "calls git.cmd with ['remote'...] as args", ->
-#   #     setupMocks()
-#   #     GitCommit(repo, andPush: true).then ->
-#   #       runs ->
-#   #         textEditor.save()
-#   #       waitsFor((->
-#   #         git.cmd.mostRecentCall.args[0][0] is 'remote'),
-#   #         "some stuff", 10000
-#   #       )
-#   #       expect(git.cmd).toHaveBeenCalledWith ['remote']
+  describe "when the `git-plus.openInPane` setting is true", ->
+    beforeEach ->
+      atom.config.set 'git-plus.openInPane', true
+      atom.config.set 'git-plus.splitPane', 'Right'
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+      waitsForPromise -> GitCommit(repo)
+
+    it "closes the created pane on finish", ->
+      pane = atom.workspace.paneForURI(commitFilePath)
+      spyOn(pane, 'destroy').andCallThrough()
+      pane.itemForURI(commitFilePath).save()
+      waitsFor -> pane.destroy.callCount > 0
+      runs -> expect(pane.destroy).toHaveBeenCalled()
+
+  describe "when 'andPush' option is true", ->
+    beforeEach ->
+      fs.writeFileSync file, Math.random()
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+      waitsForPromise -> GitCommit(repo, andPush: true)
+
+    it "tries to push after a successful commit", ->
+      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      spyOn(editor, 'destroy').andCallThrough()
+      editor.setText 'blah blah'
+      editor.save()
+      waitsFor -> editor.destroy.callCount > 0
+      runs -> expect(GitPush).toHaveBeenCalledWith repo
