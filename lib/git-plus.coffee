@@ -155,6 +155,9 @@ module.exports =
     if atom.config.get 'git-plus.enableStatusBarIcon'
       @setupOutputViewToggle statusBar
 
+  consumeAutosave: ({dontSaveIf}) ->
+    dontSaveIf (paneItem) -> paneItem.getPath().includes 'COMMIT_EDITMSG'
+
   setupOutputViewToggle: (statusBar) ->
     div = document.createElement 'div'
     div.classList.add 'inline-block'

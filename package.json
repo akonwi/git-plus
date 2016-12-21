@@ -11,6 +11,11 @@
       "versions": {
         "^1.0.0": "consumeStatusBar"
       }
+    },
+    "autosave": {
+      "versions": {
+        "1.0.0": "consumeAutosave"
+      }
     }
   },
   "repository": "https://github.com/akonwi/git-plus",
