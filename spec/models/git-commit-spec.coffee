@@ -69,7 +69,7 @@ describe "GitCommit", ->
       waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
       waitsForPromise -> GitCommit(repo)
 
-    it "pre-populates the commit with the previous message", ->
+    it "pre-populates the commit with the template message", ->
       editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
       expect(editor.getText().startsWith('foobar')).toBe true
       git.cmd(['config', '--unset', 'commit.template'], cwd: workingDirectory)
