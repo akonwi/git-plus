@@ -16,7 +16,6 @@ describe "Git Pull", ->
 
   describe "when 'alwaysPullFromCurrentBranch' is enabled", ->
     it "pulls immediately from the upstream branch", ->
-      atom.config.set('git-plus.experimental', true)
       atom.config.set('git-plus.alwaysPullFromUpstream', true)
       GitPull(repo)
       expect(git.cmd).not.toHaveBeenCalledWith ['remote'], options

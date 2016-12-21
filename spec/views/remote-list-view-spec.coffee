@@ -86,7 +86,6 @@ describe "RemoteListView", ->
           spyOn(git, 'cmd').andReturn Promise.resolve 'branch1'
           atom.config.set(pullBeforePush, 'pull')
           atom.config.set('git-plus.alwaysPullFromUpstream', true)
-          atom.config.set('git-plus.experimental', true)
 
           view = new RemoteListView(repo, remotes, mode: 'push')
           view.confirmSelection()

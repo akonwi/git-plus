@@ -8,7 +8,7 @@ GitPull = require './git-pull'
 
 disposables = new CompositeDisposable
 
-verboseCommitsEnabled = -> atom.config.get('git-plus.experimental') and atom.config.get('git-plus.verboseCommits')
+verboseCommitsEnabled = -> atom.config.get('git-plus.verboseCommits')
 
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->

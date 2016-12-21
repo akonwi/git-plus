@@ -48,7 +48,7 @@ module.exports =
     type: 'boolean'
     default: false
   verboseCommits:
-    description: '(Experimental) Show diffs in commit pane?'
+    description: 'Show diffs in commit pane?'
     type: 'boolean'
     default: false
   alwaysPullFromUpstream:
