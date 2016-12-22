@@ -122,3 +122,22 @@ describe "Context-menu commands", ->
         spyOn(notifier, 'addInfo')
         GitUnstageFileContext()
         expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to unstage"
+
+  describe "GitPullContext", ->
+    [GitPull, GitPullContext] = []
+
+    beforeEach ->
+      GitPull = quibble '../../lib/models/git-pull', jasmine.createSpy('GitPull')
+      GitPullContext = require '../../lib/models/context/git-pull-context'
+
+    describe "when an object in the tree is selected", ->
+      it "calls GitPull with the options received", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        waitsForPromise -> GitPullContext(rebase: true)
+        runs -> expect(GitPull).toHaveBeenCalledWith repo, rebase: true
+
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitPullContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No repository found"

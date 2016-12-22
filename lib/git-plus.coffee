@@ -26,6 +26,7 @@ GitFetchPrune          = require './models/git-fetch-prune.coffee'
 GitInit                = require './models/git-init'
 GitLog                 = require './models/git-log'
 GitPull                = require './models/git-pull'
+GitPullContext         = require './models/context/git-pull-context'
 GitPush                = require './models/git-push'
 GitRemove              = require './models/git-remove'
 GitShow                = require './models/git-show'
@@ -144,6 +145,8 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> GitCheckoutFileContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> GitDiffContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> GitDifftoolContext()
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:pull', -> GitPullContext()
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:pull-using-rebase', -> GitPullContext(rebase: true)
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> GitUnstageFileContext()
       @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
       @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar

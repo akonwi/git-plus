@@ -25,9 +25,17 @@ module.exports = ->
           'command': 'git-plus-context:difftool'
         },
         {
+          label: 'Git pull',
+          'command': 'git-plus-context:pull'
+        },
+        {
+          label: 'Git pull --rebase',
+          'command': 'git-plus-context:pull-using-rebase'
+        },
+        {
           label: 'Git unstage',
           'command': 'git-plus-context:unstage-file'
-        },
+        }
       ],
       { type: 'separator'}
     ],
