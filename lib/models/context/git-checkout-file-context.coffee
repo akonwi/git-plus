@@ -1,9 +1,11 @@
 contextPackageFinder = require '../../context-package-finder'
+git = require '../../git'
 notifier = require '../../notifier'
 GitCheckoutFile = require '../git-checkout-file'
 
-module.exports = (repo) ->
+module.exports = ->
   if path = contextPackageFinder.get()?.selectedPath
-    GitCheckoutFile repo, file: repo.relativize(path)
+    git.getRepoForPath(path).then (repo) ->
+      GitCheckoutFile repo, file: repo.relativize(path)
   else
     notifier.addInfo "No file selected to checkout"

@@ -8,113 +8,117 @@ GitUnstageFileContext = require '../../lib/models/context/git-unstage-file-conte
 {repo} = require '../fixtures'
 selectedFilePath = 'selected/path'
 
-describe "GitAddContext", ->
-  describe "when an object in the tree is selected", ->
-    it "calls git::add", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-      spyOn(git, 'add')
-      GitAddContext repo
-      expect(git.add).toHaveBeenCalledWith repo, file: selectedFilePath
-
-  describe "when an object is not selected", ->
-    it "notifies the user of the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitAddContext repo
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add"
-
-describe "GitAddAndCommitContext", ->
-  GitAddAndCommitContext = null
-  GitCommit = null
-
+describe "Context-menu commands", ->
   beforeEach ->
-    GitCommit = quibble '../../lib/models/git-commit', jasmine.createSpy('GitCommit')
-    GitAddAndCommitContext = require '../../lib/models/context/git-add-and-commit-context'
+    spyOn(git, 'getRepoForPath').andReturn Promise.resolve(repo)
 
-  describe "when an object in the tree is selected", ->
-    it "calls git::add and GitCommit", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-      spyOn(git, 'add').andReturn Promise.resolve()
-      waitsForPromise -> GitAddAndCommitContext repo
-      runs ->
-        expect(git.add).toHaveBeenCalledWith repo, file: selectedFilePath
-        expect(GitCommit).toHaveBeenCalledWith repo
+  describe "GitAddContext", ->
+    describe "when an object in the tree is selected", ->
+      it "calls git::add", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        spyOn(git, 'add')
+        waitsForPromise -> GitAddContext()
+        runs -> expect(git.add).toHaveBeenCalledWith repo, file: selectedFilePath
 
-  describe "when an object is not selected", ->
-    it "notifies the user of the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitAddAndCommitContext repo
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add and commit"
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitAddContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add"
 
-describe "GitDiffContext", ->
-  GitDiff = null
-  GitDiffContext = null
+  describe "GitAddAndCommitContext", ->
+    GitAddAndCommitContext = null
+    GitCommit = null
 
-  beforeEach ->
-    GitDiff = quibble '../../lib/models/git-diff', jasmine.createSpy('GitDiff')
-    GitDiffContext = require '../../lib/models/context/git-diff-context'
+    beforeEach ->
+      GitCommit = quibble '../../lib/models/git-commit', jasmine.createSpy('GitCommit')
+      GitAddAndCommitContext = require '../../lib/models/context/git-add-and-commit-context'
 
-  describe "when an object in the tree is selected", ->
-    it "calls GitDiff", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-      GitDiffContext repo
-      expect(GitDiff).toHaveBeenCalledWith repo, file: selectedFilePath
+    describe "when an object in the tree is selected", ->
+      it "calls git::add and GitCommit", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        spyOn(git, 'add').andReturn Promise.resolve()
+        waitsForPromise -> GitAddAndCommitContext()
+        runs ->
+          expect(git.add).toHaveBeenCalledWith repo, file: selectedFilePath
+          expect(GitCommit).toHaveBeenCalledWith repo
 
-  describe "when an object is not selected", ->
-    it "notifies the user of the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitDiffContext repo
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitAddAndCommitContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add and commit"
 
-describe "GitDifftoolContext", ->
-  GitDiffTool = null
-  GitDifftoolContext = null
+  describe "GitDiffContext", ->
+    GitDiff = null
+    GitDiffContext = null
 
-  beforeEach ->
-    GitDiffTool = quibble '../../lib/models/git-difftool', jasmine.createSpy('GitDiffTool')
-    GitDifftoolContext = require '../../lib/models/context/git-difftool-context'
+    beforeEach ->
+      GitDiff = quibble '../../lib/models/git-diff', jasmine.createSpy('GitDiff')
+      GitDiffContext = require '../../lib/models/context/git-diff-context'
 
-  describe "when an object in the tree is selected", ->
-    it "calls GitDiffTool", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-      GitDifftoolContext repo
-      expect(GitDiffTool).toHaveBeenCalledWith repo, file: selectedFilePath
+    describe "when an object in the tree is selected", ->
+      it "calls GitDiff", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        waitsForPromise -> GitDiffContext()
+        runs -> expect(GitDiff).toHaveBeenCalledWith repo, file: selectedFilePath
 
-  describe "when an object is not selected", ->
-    it "notifies the user of the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitDifftoolContext repo
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitDiffContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
 
-describe "GitCheckoutFileContext", ->
-  GitCheckoutFile = null
-  GitCheckoutFileContext = null
+  describe "GitDifftoolContext", ->
+    GitDiffTool = null
+    GitDifftoolContext = null
 
-  beforeEach ->
-    GitCheckoutFile = quibble '../../lib/models/git-checkout-file', jasmine.createSpy('GitCheckoutFile')
-    GitCheckoutFileContext = require '../../lib/models/context/git-checkout-file-context'
+    beforeEach ->
+      GitDiffTool = quibble '../../lib/models/git-difftool', jasmine.createSpy('GitDiffTool')
+      GitDifftoolContext = require '../../lib/models/context/git-difftool-context'
 
-  describe "when an object in the tree is selected", ->
-    it "calls CheckoutFile", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-      GitCheckoutFileContext repo
-      expect(GitCheckoutFile).toHaveBeenCalledWith repo, file: selectedFilePath
+    describe "when an object in the tree is selected", ->
+      it "calls GitDiffTool", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        waitsForPromise -> GitDifftoolContext()
+        runs -> expect(GitDiffTool).toHaveBeenCalledWith repo, file: selectedFilePath
 
-  describe "when an object is not selected", ->
-    it "notifies the user of the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitCheckoutFileContext repo
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to checkout"
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitDifftoolContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to diff"
 
-describe "GitUnstageFileContext", ->
-  describe "when an object in the tree is selected", ->
-    it "calls git::cmd to unstage files", ->
-      spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-      spyOn(git, 'cmd').andReturn Promise.resolve()
-      GitUnstageFileContext repo
-      expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD', '--', selectedFilePath], cwd: repo.getWorkingDirectory()
+  describe "GitCheckoutFileContext", ->
+    GitCheckoutFile = null
+    GitCheckoutFileContext = null
 
-  describe "when an object is not selected", ->
-    it "notifies the user of the issue", ->
-      spyOn(notifier, 'addInfo')
-      GitUnstageFileContext repo
-      expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to unstage"
+    beforeEach ->
+      GitCheckoutFile = quibble '../../lib/models/git-checkout-file', jasmine.createSpy('GitCheckoutFile')
+      GitCheckoutFileContext = require '../../lib/models/context/git-checkout-file-context'
+
+    describe "when an object in the tree is selected", ->
+      it "calls CheckoutFile", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        waitsForPromise -> GitCheckoutFileContext()
+        runs -> expect(GitCheckoutFile).toHaveBeenCalledWith repo, file: selectedFilePath
+
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitCheckoutFileContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to checkout"
+
+  describe "GitUnstageFileContext", ->
+    describe "when an object in the tree is selected", ->
+      it "calls git::cmd to unstage files", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        spyOn(git, 'cmd').andReturn Promise.resolve()
+        waitsForPromise -> GitUnstageFileContext()
+        runs -> expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD', '--', selectedFilePath], cwd: repo.getWorkingDirectory()
+
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitUnstageFileContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to unstage"

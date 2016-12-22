@@ -127,6 +127,23 @@ module.exports = git =
         else
           resolve(repos[0])
 
+  getRepoForPath: (path) ->
+    if not path?
+      Promise.reject "No file to find repository for"
+    else
+      new Promise (resolve, reject) ->
+        project = atom.project
+        directory = project.getDirectories().filter((d) -> d.contains(path))[0]
+        if directory?
+          project.repositoryForDirectory(directory)
+          .then (repo) ->
+            submodule = repo.repo.submoduleForPath(path)
+            if submodule? then resolve(submodule) else resolve(repo)
+          .catch (e) ->
+            reject(e)
+        else
+          reject "no current file"
+
   getSubmodule: (path) ->
     path ?= atom.workspace.getActiveTextEditor()?.getPath()
     atom.project.getRepositories().filter((r) ->

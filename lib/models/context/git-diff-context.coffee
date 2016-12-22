@@ -1,14 +1,16 @@
 contextPackageFinder = require '../../context-package-finder'
+git = require '../../git'
 notifier = require '../../notifier'
 GitDiff = require '../git-diff'
 
-module.exports = (repo) ->
+module.exports = ->
   if path = contextPackageFinder.get()?.selectedPath
-    if path is repo.getWorkingDirectory()
-      file = path
-    else
-      file = repo.relativize(path)
-    file = undefined if file is ''
-    GitDiff repo, {file}
+    git.getRepoForPath(path).then (repo) ->
+      if path is repo.getWorkingDirectory()
+        file = path
+      else
+        file = repo.relativize(path)
+      file = undefined if file is ''
+      GitDiff repo, {file}
   else
     notifier.addInfo "No file selected to diff"

@@ -136,12 +136,12 @@ module.exports =
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:merge-no-fast-forward', -> git.getRepo().then((repo) -> GitMerge(repo, noFastForward: true))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:rebase', -> git.getRepo().then((repo) -> GitRebase(repo))
     @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> git.getRepo().then(GitAddContext)
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> git.getRepo().then(GitAddAndCommitContext)
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> git.getRepo().then(GitCheckoutFileContext)
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> git.getRepo().then(GitDiffContext)
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> git.getRepo().then(GitDifftoolContext)
-    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> git.getRepo().then(GitUnstageFileContext)
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> GitAddContext()
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> GitAddAndCommitContext()
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> GitCheckoutFileContext()
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> GitDiffContext()
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> GitDifftoolContext()
+    @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> GitUnstageFileContext()
     @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
     @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
 
