@@ -2,6 +2,7 @@
 {$}                    = require 'atom-space-pen-views'
 git                    = require './git'
 configurations         = require './config'
+contextMenu            = require './context-menu'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
 GitAddContext          = require './models/context/git-add-context'
@@ -86,6 +87,7 @@ module.exports =
     if repos.length is 0
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', => GitInit().then => @activate()
     else
+      contextMenu()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add', -> git.getRepo().then((repo) -> git.add(repo, file: currentFile(repo)))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add-modified', -> git.getRepo().then((repo) -> git.add(repo, update: true))
