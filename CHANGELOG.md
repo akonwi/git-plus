@@ -1,5 +1,12 @@
 ## Changelog
 
+### 6.0.0
+- __BREAKING__ The configuration option of 'Pull Before Push' is now a simple toggle and there is a second option 'Pull Rebase', which is also a toggle for whether to do all pulls with the `--rebase` flag.
+- Fixes [#235](https://github.com/akonwi/git-plus/issues/235)
+- Fixes [#576](https://github.com/akonwi/git-plus/issues/576)
+- Remove the experimental tag from the 'Verbose Commits' feature
+- Only show the `Init` command in the atom palette when there is no repo in the project
+
 ### 5.29.1
 - Fixes [#568](https://github.com/akonwi/git-plus/issues/568)
 - Fixes [#405](https://github.com/akonwi/git-plus/issues/405)
