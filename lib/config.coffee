@@ -40,9 +40,8 @@ module.exports =
     enum: ['oneline', 'short', 'medium', 'full', 'fuller', 'email', 'raw', 'none']
   pullBeforePush:
     description: 'Pull from remote before pushing'
-    type: 'string'
-    default: 'no'
-    enum: ['no', 'pull', 'pull --rebase']
+    type: 'boolean'
+    default: false
   pullRebase:
     description: 'Pull with --rebase flag'
     type: 'boolean'
