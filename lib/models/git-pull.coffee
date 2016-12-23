@@ -2,8 +2,8 @@ git = require '../git'
 pull = require './_pull'
 RemoteListView = require '../views/remote-list-view'
 
-module.exports = (repo, {rebase}={}) ->
-  extraArgs = if rebase then ['--rebase'] else []
+module.exports = (repo) ->
+  extraArgs = if atom.config.get('git-plus.pullRebase') then ['--rebase'] else []
   if atom.config.get('git-plus.alwaysPullFromUpstream')
     pull repo, {extraArgs}
   else

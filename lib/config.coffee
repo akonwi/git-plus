@@ -43,6 +43,10 @@ module.exports =
     type: 'string'
     default: 'no'
     enum: ['no', 'pull', 'pull --rebase']
+  pullRebase:
+    description: 'Pull with --rebase flag'
+    type: 'boolean'
+    default: false
   experimental:
     description: 'Enable beta features and behavior'
     type: 'boolean'

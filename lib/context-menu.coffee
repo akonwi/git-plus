@@ -29,10 +29,6 @@ module.exports = ->
           'command': 'git-plus-context:pull'
         },
         {
-          label: 'Git pull --rebase',
-          'command': 'git-plus-context:pull-using-rebase'
-        },
-        {
           label: 'Git push',
           'command': 'git-plus-context:push'
         },

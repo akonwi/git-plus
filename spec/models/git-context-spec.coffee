@@ -133,8 +133,8 @@ describe "Context-menu commands", ->
     describe "when an object in the tree is selected", ->
       it "calls GitPull with the options received", ->
         spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-        waitsForPromise -> GitPullContext(rebase: true)
-        runs -> expect(GitPull).toHaveBeenCalledWith repo, rebase: true
+        waitsForPromise -> GitPullContext()
+        runs -> expect(GitPull).toHaveBeenCalledWith repo
 
     describe "when an object is not selected", ->
       it "notifies the user of the issue", ->
