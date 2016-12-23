@@ -33,6 +33,14 @@ module.exports = ->
           'command': 'git-plus-context:pull-using-rebase'
         },
         {
+          label: 'Git push',
+          'command': 'git-plus-context:push'
+        },
+        {
+          label: 'Git push --set-upstream',
+          'command': 'git-plus-context:push-set-upstream'
+        },
+        {
           label: 'Git unstage',
           'command': 'git-plus-context:unstage-file'
         }

@@ -141,3 +141,22 @@ describe "Context-menu commands", ->
         spyOn(notifier, 'addInfo')
         GitPullContext()
         expect(notifier.addInfo).toHaveBeenCalledWith "No repository found"
+
+  describe "GitPushContext", ->
+    [GitPush, GitPushContext] = []
+
+    beforeEach ->
+      GitPush = quibble '../../lib/models/git-push', jasmine.createSpy('GitPush')
+      GitPushContext = require '../../lib/models/context/git-push-context'
+
+    describe "when an object in the tree is selected", ->
+      it "calls GitPush with the options received", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        waitsForPromise -> GitPushContext(setUpstream: true)
+        runs -> expect(GitPush).toHaveBeenCalledWith repo, setUpstream: true
+
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitPushContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No repository found"

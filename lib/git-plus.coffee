@@ -28,6 +28,7 @@ GitLog                 = require './models/git-log'
 GitPull                = require './models/git-pull'
 GitPullContext         = require './models/context/git-pull-context'
 GitPush                = require './models/git-push'
+GitPushContext         = require './models/context/git-push-context'
 GitRemove              = require './models/git-remove'
 GitShow                = require './models/git-show'
 GitStageFiles          = require './models/git-stage-files'
@@ -147,6 +148,8 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> GitDifftoolContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:pull', -> GitPullContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:pull-using-rebase', -> GitPullContext(rebase: true)
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push', -> GitPushContext()
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push-set-upstream', -> GitPushContext(setUpstream: true)
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> GitUnstageFileContext()
       @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
       @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
