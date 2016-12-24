@@ -1,5 +1,8 @@
 ## Changelog
 
+### 6.0.1
+- Fixes [#576](https://github.com/akonwi/git-plus/issues/576)
+
 ### 6.0.0
 - __BREAKING__ The configuration option of 'Pull Before Push' is now a simple toggle and there is a second option 'Pull Rebase', which is also a toggle for whether to do all pulls with the `--rebase` flag.
 - Fixes [#235](https://github.com/akonwi/git-plus/issues/235)
