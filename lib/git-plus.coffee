@@ -87,7 +87,8 @@ module.exports =
     @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
     if repos.length is 0
-      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', => GitInit().then => @activate()
+      atom.project.onDidChangePaths (paths) => @activate()
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', => GitInit().then(@activate)
     else
       contextMenu()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
