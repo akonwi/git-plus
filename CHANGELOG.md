@@ -1,5 +1,8 @@
 ## Changelog
 
+### 6.0.2
+- Fixes [#579](https://github.com/akonwi/git-plus/issues/579)
+
 ### 6.0.1
 - Fixes [#576](https://github.com/akonwi/git-plus/issues/576)
 
