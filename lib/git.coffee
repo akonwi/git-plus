@@ -133,7 +133,7 @@ module.exports = git =
     else
       new Promise (resolve, reject) ->
         project = atom.project
-        directory = project.getDirectories().filter((d) -> d.contains(path))[0]
+        directory = project.getDirectories().filter((d) -> d.contains(path) or d.getPath() is path)[0]
         if directory?
           project.repositoryForDirectory(directory)
           .then (repo) ->
