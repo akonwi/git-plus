@@ -74,7 +74,7 @@ getCommands = ->
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
       commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]
       commands.push ['git-plus:show', 'Show', -> GitShow(repo)]
-      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.singleStageFiles')
+      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.stageFilesBeta')
         commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFilesBeta(repo)]
       else
         commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles(repo)]
