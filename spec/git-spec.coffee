@@ -1,6 +1,7 @@
 Path = require 'path'
 Os = require 'os'
 fs = require 'fs-plus'
+{GitRepository} = require 'atom'
 git = require '../lib/git'
 notifier = require '../lib/notifier'
 {
@@ -130,81 +131,62 @@ describe "Git-Plus git module", ->
         git.reset(repo).then ->
           expect(git.cmd).toHaveBeenCalledWith ['reset', 'HEAD'], cwd: repo.getWorkingDirectory()
 
-  describe "git.stagedFiles", ->
-    it "returns an empty array when there are no staged files", ->
-      spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
-      waitsForPromise ->
-        git.stagedFiles(repo)
-        .then (files) ->
-          expect(files.length).toEqual 0
+  describe "getting staged/unstaged files", ->
+    workingDirectory = Path.join(Os.homedir(), 'fixture-repo')
+    file = Path.join(workingDirectory, 'fake.file')
+    repository = null
 
-    # it "returns an array with size 1 when there is a staged file", ->
-    #   spyOn(git, 'cmd').andCallFake -> Promise.resolve("M\tsomefile.txt")
-    #   waitsForPromise ->
-    #     git.stagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 1
-    #
-    # it "returns an array with size 4 when there are 4 staged files", ->
-    #   spyOn(git, 'cmd').andCallFake ->
-    #     Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
-    #   waitsForPromise ->
-    #     git.stagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 4
+    beforeEach ->
+      fs.writeFileSync file, 'foobar'
+      waitsForPromise -> git.cmd(['init'], cwd: workingDirectory)
+      waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+      waitsForPromise -> git.cmd(['commit', '--allow-empty', '--allow-empty-message', '-m', ''], cwd: workingDirectory)
+      runs -> repository = GitRepository.open(workingDirectory)
 
-  describe "git.unstagedFiles", ->
-    it "returns an empty array when there are no unstaged files", ->
-      spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
-      waitsForPromise ->
-        git.unstagedFiles(repo)
-        .then (files) ->
-          expect(files.length).toEqual 0
+    afterEach ->
+      fs.removeSync workingDirectory
+      repository.destroy()
 
-    ## Need a way to mock the terminal's first char identifier (\0)
-    # it "returns an array with size 1 when there is an unstaged file", ->
-    #   spyOn(git, 'cmd').andCallFake -> Promise.resolve "M\tsomefile.txt"
-    #   waitsForPromise ->
-    #     git.unstagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 1
-    #       expect(files[0].mode).toEqual 'M'
-    #
-    # it "returns an array with size 4 when there are 4 unstaged files", ->
-    #   spyOn(git, 'cmd').andCallFake ->
-    #     Promise.resolve("M\tsomefile.txt\nA\tfoo.file\nD\tanother.text\nM\tagain.rb")
-    #   waitsForPromise ->
-    #     git.unstagedFiles(repo)
-    #     .then (files) ->
-    #       expect(files.length).toEqual 4
-    #       expect(files[1].mode).toEqual 'A'
-    #       expect(files[3].mode).toEqual 'M'
+    describe "git.stagedFiles", ->
+      it "returns an empty array when there are no staged files", ->
+        git.stagedFiles(repository)
+        .then (files) -> expect(files.length).toEqual 0
 
-  # describe "git.unstagedFiles and showUntracked: true", ->
-  #   it "returns an array with size 1 when there is only an untracked file", ->
-  #     spyOn(git, 'cmd').andCallFake ->
-  #       if git.cmd.callCount is 2
-  #         Promise.resolve "somefile.txt"
-  #       else
-  #         Promise.resolve ''
-  #         waitsForPromise ->
-  #           git.unstagedFiles(repo, showUntracked: true)
-  #           .then (files) ->
-  #             expect(files.length).toEqual 1
-  #             expect(files[0].mode).toEqual '?'
-  #
-  #   it "returns an array of size 2 when there is an untracked file and an unstaged file", ->
-  #     spyOn(git, 'cmd').andCallFake ->
-  #       if git.cmd.callCount is 2
-  #         Promise.resolve "untracked.txt"
-  #       else
-  #         Promise.resolve 'M\tunstaged.file'
-  #     waitsForPromise ->
-  #       git.unstagedFiles(repo, showUntracked: true)
-  #       .then (files) ->
-  #         expect(files.length).toEqual 2
-  #         expect(files[0].mode).toEqual 'M'
-  #         expect(files[1].mode).toEqual '?'
+      it "returns a non-empty array when there are staged files", ->
+        fs.writeFileSync file, 'some stuff'
+        waitsForPromise -> git.cmd(['add', 'fake.file'], cwd: workingDirectory)
+        waitsForPromise ->
+          git.stagedFiles(repository)
+          .then (files) ->
+            expect(files.length).toEqual 1
+            expect(files[0].mode).toEqual 'M'
+            expect(files[0].path).toEqual 'fake.file'
+            expect(files[0].staged).toBe true
+
+    describe "git.unstagedFiles", ->
+      it "returns an empty array when there are no unstaged files", ->
+        git.unstagedFiles(repository)
+        .then (files) -> expect(files.length).toEqual 0
+
+      it "returns a non-empty array when there are unstaged files", ->
+        fs.writeFileSync file, 'some stuff'
+        waitsForPromise -> git.cmd(['reset'], cwd: workingDirectory)
+        waitsForPromise ->
+          git.unstagedFiles(repository)
+          .then (files) ->
+            expect(files.length).toEqual 1
+            expect(files[0].mode).toEqual 'M'
+            expect(files[0].staged).toBe false
+
+    describe "git.unstagedFiles(showUntracked: true)", ->
+      it "returns an array with size 1 when there is only an untracked file", ->
+        newFile = Path.join(workingDirectory, 'another.file')
+        fs.writeFileSync newFile, 'this is untracked'
+        waitsForPromise ->
+          git.unstagedFiles(repository, showUntracked: true)
+          .then (files) ->
+            expect(files.length).toEqual 1
+            expect(files[0].mode).toEqual '?'
 
   describe "git.status", ->
     it "calls git.cmd with 'status' as the first argument", ->

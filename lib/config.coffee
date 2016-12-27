@@ -50,6 +50,10 @@ module.exports =
     description: 'Enable beta features and behavior'
     type: 'boolean'
     default: false
+  stageFilesBeta:
+    description: '(Experimental) Stage and unstage files in a single command'
+    type: 'boolean'
+    default: true
   verboseCommits:
     description: 'Show diffs in commit pane?'
     type: 'boolean'
