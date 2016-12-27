@@ -29,17 +29,22 @@ prepFile = (text, objectHash) ->
     if err then notifier.addError err else showFile objectHash
 
 showFile = (objectHash) ->
+  filePath = showCommitFilePath(objectHash)
   disposables = new CompositeDisposable
-  if atom.config.get('git-plus.openInPane')
-    splitDirection = atom.config.get('git-plus.splitPane')
-    atom.workspace.getActivePane()["split#{splitDirection}"]()
-  atom.workspace
-    .open(showCommitFilePath(objectHash), activatePane: true)
-    .then (textBuffer) ->
-      if textBuffer?
-        disposables.add textBuffer.onDidDestroy ->
-          disposables.dispose()
-          try fs.unlinkSync showCommitFilePath(objectHash)
+  editorForDiffs = atom.workspace.getPaneItems().filter((item) -> item.getURI().includes('.diff'))[0]
+  if editorForDiffs
+    editorForDiffs.setText fs.readFileSync(filePath, encoding: 'utf-8')
+  else
+    if atom.config.get('git-plus.openInPane')
+      splitDirection = atom.config.get('git-plus.splitPane')
+      atom.workspace.getActivePane()["split#{splitDirection}"]()
+    atom.workspace
+      .open(filePath, pending: true, activatePane: true)
+      .then (textBuffer) ->
+        if textBuffer?
+          disposables.add textBuffer.onDidDestroy ->
+            disposables.dispose()
+            try fs.unlinkSync filePath
 
 class InputView extends View
   @content: ->
