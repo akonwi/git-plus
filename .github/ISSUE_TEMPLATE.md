@@ -4,6 +4,9 @@ Are you on a windows machine and do you have trouble pushing to remote repositor
 
 Are you having problems using submodules in atom with this package? Check out [this thread](https://github.com/akonwi/git-plus/issues/312).
 
+Are you running MacOs 10.12 Sierra and having issues pulling/pushing? Check out [this comment](https://github.com/akonwi/git-plus/issues/575#issuecomment-269336172).
+
+Did you update the package and you are seeing this message `Failed to load the git-plus package`? Run `apm install` from the package's directory and restart atom.
 -----------------
 
 [Description of issue here]
