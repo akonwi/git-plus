@@ -126,11 +126,6 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:show', -> git.getRepo().then((repo) -> GitShow(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:log', -> git.getRepo().then((repo) -> GitLog(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:log-current-file', -> git.getRepo().then((repo) -> GitLog(repo, onlyCurrentFile: true))
-      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.stageFilesBeta')
-        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFilesBeta)
-      else
-        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then((repo) -> GitStageFiles(repo))
-      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:unstage-files', -> git.getRepo().then((repo) -> GitUnstageFiles(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-hunk', -> git.getRepo().then((repo) -> GitStageHunk(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stash-save', -> git.getRepo().then((repo) -> GitStashSave(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stash-save-message', -> git.getRepo().then((repo) -> GitStashSaveMessage(repo))
@@ -156,6 +151,14 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> GitUnstageFileContext()
       @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
       @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
+      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.stageFilesBeta')
+        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFilesBeta)
+      else
+        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:unstage-files', -> git.getRepo().then(GitUnstageFiles)
+        @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFiles)
+      @subscriptions.add atom.config.onDidChange 'git-plus.stageFilesBeta', =>
+        @subscriptions.dispose()
+        @activate()
 
   deactivate: ->
     @subscriptions.dispose()
