@@ -1,5 +1,9 @@
 ## Changelog
 
+### 6.3.0
+- Fixes [#395](https://github.com/akonwi/git-plus/issues/395)
+- Fixes [#408](https://github.com/akonwi/git-plus/issues/408)
+
 ### 6.2.0
 - Introduce new setting 'Stage Files Beta', to combine the 'Stage Files' and 'Unstage Files' commands into a single command.
 
