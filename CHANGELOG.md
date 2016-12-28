@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 6.4.0
-- Introducing Custom Commands. This is an experimental feature to allow users to define their own commonly used commands. Read about [them](https://github.com/akonwi/git-plus#custom-commands)
+- Introducing Custom Commands. This is an experimental feature to allow users to define their own commonly used commands. Read about [them](https://github.com/akonwi/git-plus#experimental-features)
 
 ### 6.3.0
 - Fixes [#395](https://github.com/akonwi/git-plus/issues/395)
