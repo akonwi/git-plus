@@ -78,6 +78,8 @@ If you would like to use experimental features, please enable the 'Experimental'
   > The name of the command in the Git-plus palette will be the undasherized version of what you provided -> 'Undo Last Commit'.
 
   > *Please beware of giving your commands the same name(undo-last-commit) as existing commands. They will appear as duplicates in the Git-plus palette.*
+* Stage Files Beta
+  > When enabled, the 'Unstage Files' and 'Stage Files' commands will be merged into one view where the staged status of multiple files can be toggled.
 
 ## Contributing
 
