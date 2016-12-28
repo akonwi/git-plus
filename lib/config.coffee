@@ -54,6 +54,10 @@ module.exports =
     description: '(Experimental) Stage and unstage files in a single command'
     type: 'boolean'
     default: true
+  customCommands:
+    description: '(Experimental) Allow custom commands to be declared in your `init` file and run within Git-plus'
+    type: 'boolean'
+    default: false
   verboseCommits:
     description: 'Show diffs in commit pane?'
     type: 'boolean'

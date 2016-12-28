@@ -83,6 +83,8 @@ module.exports =
 
   subscriptions: null
 
+  provideService: -> require './service'
+
   activate: (state) ->
     setDiffGrammar()
     @subscriptions = new CompositeDisposable

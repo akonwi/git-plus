@@ -38,7 +38,7 @@ class GitPaletteView extends SelectListView
       .then (commands) =>
         keystrokes = CommandsKeystrokeHumanizer.get(commands)
         commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2], keystroke: keystrokes[c[0]] }
-        commands = _.sortBy(commands, 'name')
+        commands = _.sortBy(commands, 'description')
         @setItems(commands)
         @panel.show()
         @focusFilterEditor()

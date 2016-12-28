@@ -32,7 +32,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 
 > Git Add All Commit And Push == `git-plus:add-all-commit-and-push`
 
-  __Note: This list is not exhaustive. And if what you want isn't a feature, You can use `Git Run` and enter the command__
+  __Note: The following list of commands is not exhaustive. If what you want isn't a feature, you can use `Git Run` and enter the command.__
 
 | Command | Effect | Default key binding |
 |----------|--------|------------------
@@ -57,9 +57,27 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
 | `Git Tags` | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete. | |
 
-### Commit window
+### Commit Window
 To change where the commit window appears go to settings and find
 ![screenshot](http://imgur.com/cdc7M5p.png)
+
+### Experimental Features
+If you would like to use experimental features, please enable the 'Experimental' toggle and the experimental feature in the package settings.
+* Custom Commands
+  > If enabled, you can define your own commands in your atom `init.coffee` or `init.js` file. These commands will appear in both the atom command palette as well as the Git-Plus command palette. Just like any other commands, you can define keybindings for them as well.
+
+  > Example command for undoing the last commit:
+  ``` coffeescript
+  # In init.coffee
+  atom.packages.onDidActivateInitialPackages (p) ->
+  if gitPlus = atom.packages.getActivePackage('git-plus')?.mainModule.provideService()
+    gitPlus.registerCommand 'atom-text-editor', 'akonwi:undo-last-commit', ->
+      gitPlus.getRepo() # If there are multiple repos in the project, you will be prompted to select which to use
+      .then (repo) -> gitPlus.run repo, 'reset HEAD~1'
+  ```
+  > The name of the command in the Git-plus palette will be the undasherized version of what you provided -> 'Undo Last Commit'.
+
+  > *Please beware of giving your commands the same name(undo-last-commit) as existing commands. They will appear as duplicates in the Git-plus palette.*
 
 ## Contributing
 

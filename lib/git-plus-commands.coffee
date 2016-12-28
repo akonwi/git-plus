@@ -41,6 +41,8 @@ getCommands = ->
       currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
       git.refresh repo
       commands = []
+      if atom.config.get('git-plus.customCommands')
+        commands = commands.concat(require('./service').getCustomCommands())
       commands.push ['git-plus:add', 'Add', -> git.add(repo, file: currentFile)]
       commands.push ['git-plus:add-modified', 'Add Modified', -> git.add(repo, update: true)]
       commands.push ['git-plus:add-all', 'Add All', -> git.add(repo)]
