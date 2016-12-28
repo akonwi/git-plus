@@ -18,11 +18,14 @@ showObject = (repo, objectHash, file) ->
   showFormatOption = atom.config.get 'git-plus.showFormat'
   args.push "--format=#{showFormatOption}" if showFormatOption != 'none'
   args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
-  args.push objectHash
+  args.push objectHash unless isEmpty objectHash
   args.push '--', file if file?
 
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> prepFile(data, objectHash) if data.length > 0
+
+isEmpty = (objectHash) ->
+  objectHash.length is 1 and objectHash[0].length is 0
 
 prepFile = (text, objectHash) ->
   fs.writeFile showCommitFilePath(objectHash), text, flag: 'w+', (err) ->
