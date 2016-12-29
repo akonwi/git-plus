@@ -62,7 +62,7 @@ To change where the commit window appears go to settings and find
 ![screenshot](http://imgur.com/cdc7M5p.png)
 
 ### Experimental Features
-If you would like to use experimental features, please enable the 'Experimental' toggle and the experimental feature in the package settings.
+If you would like to use experimental features, enable them in the package settings.
 * Custom Commands
   > If enabled, you can define your own commands in your atom `init.coffee` or `init.js` file. These commands will appear in both the atom command palette as well as the Git-Plus command palette. Just like any other commands, you can define keybindings for them as well.
 

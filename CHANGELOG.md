@@ -1,5 +1,8 @@
 ## Changelog
 
+### 7.0.1
+- Fixes [#582](https://github.com/akonwi/git-plus/issues/582)
+
 ### 7.0.0
 - Refactored package settings. This update will reset your configurations for this package as the config options have been refactored.
 - Add analytics to track which features are being used.
