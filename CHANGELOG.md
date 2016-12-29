@@ -1,5 +1,8 @@
 ## Changelog
 
+### 7.0.4
+- Minor changes
+
 ### 7.0.3
 - More fixes for [#582](https://github.com/akonwi/git-plus/issues/582)
 
