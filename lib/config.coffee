@@ -134,7 +134,8 @@ configs =
 
 module.exports = ->
   # Cleanup user's config.cson if config properties change
-  Object.keys(atom.config.getAll('git-plus')[0]?.value).forEach (key) =>
-    atom.config.unset "git-plus.#{key}" if not configs[key]
+  if userConfigs = atom.config.getAll('git-plus')[0]?.value
+    Object.keys(userConfigs).forEach (key) =>
+      atom.config.unset "git-plus.#{key}" if not configs[key]
 
   configs
