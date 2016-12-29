@@ -41,7 +41,7 @@ getCommands = ->
       currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
       git.refresh repo
       commands = []
-      if atom.config.get('git-plus.customCommands')
+      if atom.config.get('git-plus.general.customCommands')
         commands = commands.concat(require('./service').getCustomCommands())
       commands.push ['git-plus:add', 'Add', -> git.add(repo, file: currentFile)]
       commands.push ['git-plus:add-modified', 'Add Modified', -> git.add(repo, update: true)]
@@ -76,7 +76,7 @@ getCommands = ->
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
       commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]
       commands.push ['git-plus:show', 'Show', -> GitShow(repo)]
-      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.stageFilesBeta')
+      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.general.stageFilesBeta')
         commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFilesBeta(repo)]
       else
         commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles(repo)]

@@ -5,7 +5,7 @@ _ = require 'underscore-plus'
 git = require '../git'
 GitShow = require '../models/git-show'
 
-numberOfCommitsToShow = -> atom.config.get('git-plus.numberOfCommitsToShow')
+numberOfCommitsToShow = -> atom.config.get('git-plus.general.numberOfCommitsToShow')
 
 module.exports =
 class LogListView extends View

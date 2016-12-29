@@ -8,7 +8,7 @@ GitPull = require './git-pull'
 
 disposables = new CompositeDisposable
 
-verboseCommitsEnabled = -> atom.config.get('git-plus.verboseCommits')
+verboseCommitsEnabled = -> atom.config.get('git-plus.general.verboseCommits')
 
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
@@ -43,7 +43,7 @@ prepFile = ({status, filePath, diff, commentChar, template}) ->
   fs.writeFileSync filePath, content
 
 destroyCommitEditor = (filePath) ->
-  if atom.config.get('git-plus.openInPane')
+  if atom.config.get('git-plus.general.openInPane')
     atom.workspace.paneForURI(filePath)?.destroy()
   else
     atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
@@ -73,12 +73,12 @@ cleanup = (currentPane, filePath) ->
 showFile = (filePath) ->
   commitEditor = atom.workspace.paneForURI(filePath)?.itemForURI(filePath)
   if not commitEditor
-    if atom.config.get('git-plus.openInPane')
-      splitDirection = atom.config.get('git-plus.splitPane')
+    if atom.config.get('git-plus.general.openInPane')
+      splitDirection = atom.config.get('git-plus.general.splitPane')
       atom.workspace.getActivePane()["split#{splitDirection}"]()
     atom.workspace.open filePath
   else
-    if atom.config.get('git-plus.openInPane')
+    if atom.config.get('git-plus.general.openInPane')
       atom.workspace.paneForURI(filePath).activate()
     else
       atom.workspace.paneForURI(filePath).activateItemForURI(filePath)
@@ -92,7 +92,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   init = -> getStagedFiles(repo).then (status) ->
     if verboseCommitsEnabled()
       args = ['diff', '--color=never', '--staged']
-      args.push '--word-diff' if atom.config.get('git-plus.wordDiff')
+      args.push '--word-diff' if atom.config.get('git-plus.general.wordDiff')
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (diff) -> prepFile {status, filePath, diff, commentChar, template}
     else

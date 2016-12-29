@@ -15,9 +15,9 @@ isEmpty = (string) -> string is ''
 showObject = (repo, objectHash, file) ->
   objectHash = if isEmpty objectHash then 'HEAD' else objectHash
   args = ['show', '--color=never']
-  showFormatOption = atom.config.get 'git-plus.showFormat'
+  showFormatOption = atom.config.get 'git-plus.general.showFormat'
   args.push "--format=#{showFormatOption}" if showFormatOption != 'none'
-  args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
+  args.push '--word-diff' if atom.config.get 'git-plus.general.wordDiff'
   args.push objectHash
   args.push '--', file if file?
 
@@ -35,8 +35,8 @@ showFile = (objectHash) ->
   if editorForDiffs
     editorForDiffs.setText fs.readFileSync(filePath, encoding: 'utf-8')
   else
-    if atom.config.get('git-plus.openInPane')
-      splitDirection = atom.config.get('git-plus.splitPane')
+    if atom.config.get('git-plus.general.openInPane')
+      splitDirection = atom.config.get('git-plus.general.splitPane')
       atom.workspace.getActivePane()["split#{splitDirection}"]()
     atom.workspace
       .open(filePath, pending: true, activatePane: true)

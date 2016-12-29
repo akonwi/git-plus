@@ -11,8 +11,8 @@ nothingToShow = 'Nothing to show.'
 disposables = new CompositeDisposable
 
 showFile = (filePath) ->
-  if atom.config.get('git-plus.openInPane')
-    splitDirection = atom.config.get('git-plus.splitPane')
+  if atom.config.get('git-plus.general.openInPane')
+    splitDirection = atom.config.get('git-plus.general.splitPane')
     atom.workspace.getActivePane()["split#{splitDirection}"]()
   atom.workspace.open(filePath)
 
@@ -30,8 +30,8 @@ module.exports = (repo, {diffStat, file}={}) ->
   if not file
     return notifier.addError "No open file. Select 'Diff All'."
   args = ['diff', '--color=never']
-  args.push 'HEAD' if atom.config.get 'git-plus.includeStagedDiff'
-  args.push '--word-diff' if atom.config.get 'git-plus.wordDiff'
+  args.push 'HEAD' if atom.config.get 'git-plus.general.includeStagedDiff'
+  args.push '--word-diff' if atom.config.get 'git-plus.general.wordDiff'
   args.push file unless diffStat
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> prepFile((diffStat ? '') + data, diffFilePath)

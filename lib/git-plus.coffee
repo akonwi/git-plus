@@ -60,8 +60,8 @@ setDiffGrammar = ->
   while atom.grammars.grammarForScopeName 'source.diff'
     atom.grammars.removeGrammarForScopeName 'source.diff'
 
-  enableSyntaxHighlighting = atom.config.get('git-plus').syntaxHighlighting
-  wordDiff = atom.config.get('git-plus').wordDiff
+  enableSyntaxHighlighting = atom.config.get('git-plus.general.syntaxHighlighting')
+  wordDiff = atom.config.get('git-plus.general.wordDiff')
   diffGrammar = null
   baseGrammar = null
 
@@ -152,17 +152,17 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push', -> GitPushContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push-set-upstream', -> GitPushContext(setUpstream: true)
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> GitUnstageFileContext()
-      @subscriptions.add atom.config.observe 'git-plus.syntaxHighlighting', setDiffGrammar
-      @subscriptions.add atom.config.observe 'git-plus.wordDiff', setDiffGrammar
-      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.stageFilesBeta')
+      @subscriptions.add atom.config.observe 'git-plus.general.syntaxHighlighting', setDiffGrammar
+      @subscriptions.add atom.config.observe 'git-plus.general.wordDiff', setDiffGrammar
+      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.general.stageFilesBeta')
         @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFilesBeta)
       else
         @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:unstage-files', -> git.getRepo().then(GitUnstageFiles)
         @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFiles)
-      @subscriptions.add atom.config.onDidChange 'git-plus.stageFilesBeta', =>
+      @subscriptions.add atom.config.onDidChange 'git-plus.general.stageFilesBeta', =>
         @subscriptions.dispose()
         @activate()
-      analytics() if atom.config.get("git-plus.analytics")
+      analytics() if atom.config.get("git-plus.general.analytics")
 
 
   deactivate: ->
@@ -172,7 +172,7 @@ module.exports =
 
   consumeStatusBar: (statusBar) ->
     @setupBranchesMenuToggle statusBar
-    if atom.config.get 'git-plus.enableStatusBarIcon'
+    if atom.config.get 'git-plus.general.enableStatusBarIcon'
       @setupOutputViewToggle statusBar
 
   consumeAutosave: ({dontSaveIf}) ->

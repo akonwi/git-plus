@@ -10,7 +10,7 @@ module.exports =
       @panel ?= atom.workspace.addBottomPanel(item: this)
       setTimeout =>
         @destroy()
-      , atom.config.get('git-plus.messageTimeout') * 1000
+      , atom.config.get('git-plus.general.messageTimeout') * 1000
 
     destroy: ->
       @panel?.destroy()

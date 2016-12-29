@@ -2,22 +2,21 @@ git = require '../lib/git'
 GitRun = require '../lib/models/git-run'
 {repo} = require './fixtures'
 
-fdescribe "Git-Plus service", ->
+describe "Git-Plus service", ->
   service = null
 
   beforeEach ->
-    atom.config.set('git-plus.customCommands', true)
+    atom.config.set('git-plus.general.customCommands', true)
     service = require '../lib/service'
 
   describe "registerCommand", ->
-    fit "registers the given command with atom and saves it for the Git-Plus command palette", ->
+    it "registers the given command with atom and saves it for the Git-Plus command palette", ->
       fn = () ->
       service.registerCommand('some-element', 'foobar:do-cool-stuff', fn)
       command = service.getCustomCommands()[0]
       expect(command[0]).toBe 'foobar:do-cool-stuff'
       expect(command[1]).toBe 'Do Cool Stuff'
       expect(command[2]).toBe fn
-
 
   describe "::getRepo", ->
     it "is the getRepo function", ->
