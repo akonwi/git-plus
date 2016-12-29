@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.0.0
+- Refactored package settings. This update will reset your configurations for this package as the config options have been refactored.
+- Add analytics to track which features are being used.
+
 ### 6.4.0
 - Introducing Custom Commands. This is an experimental feature to allow users to define their own commonly used commands. Read about [them](https://github.com/akonwi/git-plus#experimental-features)
 
