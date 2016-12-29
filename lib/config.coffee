@@ -1,4 +1,4 @@
-module.exports =
+configs =
   general:
     order: 1
     type: "object"
@@ -131,3 +131,10 @@ module.exports =
         type: "boolean"
         default: false
         description: "Allow custom commands to be declared in your `init` file and run within Git-plus"
+
+module.exports = ->
+  # Cleanup user's config.cson if config properties change
+  Object.keys(atom.config.getAll('git-plus')[0].value).forEach (key) =>
+    atom.config.unset "git-plus.#{key}" if not configs[key]
+
+  configs

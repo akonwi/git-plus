@@ -80,7 +80,7 @@ setDiffGrammar = ->
     atom.grammars.addGrammar grammar
 
 module.exports =
-  config: configurations
+  config: configurations()
 
   subscriptions: null
 
