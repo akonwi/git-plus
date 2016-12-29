@@ -30,8 +30,8 @@ module.exports = (repo, {diffStat, file}={}) ->
   if not file
     return notifier.addError "No open file. Select 'Diff All'."
   args = ['diff', '--color=never']
-  args.push 'HEAD' if atom.config.get 'git-plus.general.includeStagedDiff'
-  args.push '--word-diff' if atom.config.get 'git-plus.general.wordDiff'
+  args.push 'HEAD' if atom.config.get 'git-plus.diffs.includeStagedDiff'
+  args.push '--word-diff' if atom.config.get 'git-plus.diffs.wordDiff'
   args.push file unless diffStat
   git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) -> prepFile((diffStat ? '') + data, diffFilePath)

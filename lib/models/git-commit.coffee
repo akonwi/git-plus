@@ -8,7 +8,7 @@ GitPull = require './git-pull'
 
 disposables = new CompositeDisposable
 
-verboseCommitsEnabled = -> atom.config.get('git-plus.general.verboseCommits')
+verboseCommitsEnabled = -> atom.config.get('git-plus.commits.verboseCommits')
 
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
@@ -92,7 +92,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   init = -> getStagedFiles(repo).then (status) ->
     if verboseCommitsEnabled()
       args = ['diff', '--color=never', '--staged']
-      args.push '--word-diff' if atom.config.get('git-plus.general.wordDiff')
+      args.push '--word-diff' if atom.config.get('git-plus.diffs.wordDiff')
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (diff) -> prepFile {status, filePath, diff, commentChar, template}
     else

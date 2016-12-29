@@ -60,8 +60,8 @@ setDiffGrammar = ->
   while atom.grammars.grammarForScopeName 'source.diff'
     atom.grammars.removeGrammarForScopeName 'source.diff'
 
-  enableSyntaxHighlighting = atom.config.get('git-plus.general.syntaxHighlighting')
-  wordDiff = atom.config.get('git-plus.general.wordDiff')
+  enableSyntaxHighlighting = atom.config.get('git-plus.diffs.syntaxHighlighting')
+  wordDiff = atom.config.get('git-plus.diffs.wordDiff')
   diffGrammar = null
   baseGrammar = null
 
@@ -152,14 +152,14 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push', -> GitPushContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push-set-upstream', -> GitPushContext(setUpstream: true)
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:unstage-file', -> GitUnstageFileContext()
-      @subscriptions.add atom.config.observe 'git-plus.general.syntaxHighlighting', setDiffGrammar
-      @subscriptions.add atom.config.observe 'git-plus.general.wordDiff', setDiffGrammar
-      if atom.config.get('git-plus.experimental') and atom.config.get('git-plus.general.stageFilesBeta')
+      @subscriptions.add atom.config.observe 'git-plus.diffs.syntaxHighlighting', setDiffGrammar
+      @subscriptions.add atom.config.observe 'git-plus.diffs.wordDiff', setDiffGrammar
+      if atom.config.get('git-plus.experimental.stageFilesBeta')
         @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFilesBeta)
       else
         @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:unstage-files', -> git.getRepo().then(GitUnstageFiles)
         @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:stage-files', -> git.getRepo().then(GitStageFiles)
-      @subscriptions.add atom.config.onDidChange 'git-plus.general.stageFilesBeta', =>
+      @subscriptions.add atom.config.onDidChange 'git-plus.experimental.stageFilesBeta', =>
         @subscriptions.dispose()
         @activate()
       analytics() if atom.config.get("git-plus.general.analytics")

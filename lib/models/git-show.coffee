@@ -17,7 +17,7 @@ showObject = (repo, objectHash, file) ->
   args = ['show', '--color=never']
   showFormatOption = atom.config.get 'git-plus.general.showFormat'
   args.push "--format=#{showFormatOption}" if showFormatOption != 'none'
-  args.push '--word-diff' if atom.config.get 'git-plus.general.wordDiff'
+  args.push '--word-diff' if atom.config.get 'git-plus.diffs.wordDiff'
   args.push objectHash
   args.push '--', file if file?
 

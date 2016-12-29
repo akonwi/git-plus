@@ -102,7 +102,7 @@ describe "GitCommit", ->
 
   describe "when the verbose commit setting is true", ->
     beforeEach ->
-      atom.config.set "git-plus.general.verboseCommits", true
+      atom.config.set "git-plus.commits.verboseCommits", true
       fs.writeFileSync file, Math.random()
       waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
       waitsForPromise -> GitCommit(repo)

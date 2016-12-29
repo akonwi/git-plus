@@ -4,9 +4,9 @@ RemoteListView = require '../../lib/views/remote-list-view'
 options = {cwd: repo.getWorkingDirectory()}
 colorOptions = {color: true}
 remotes = "remote1\nremote2"
-pullBeforePush = 'git-plus.general.pullBeforePush'
-pullRebase = 'git-plus.general.pullRebase'
-alwaysPullFromUpstream = 'git-plus.general.alwaysPullFromUpstream'
+pullBeforePush = 'git-plus.remoteInteractions.pullBeforePush'
+pullRebase = 'git-plus.remoteInteractions.pullRebase'
+alwaysPullFromUpstream = 'git-plus.remoteInteractions.alwaysPullFromUpstream'
 
 describe "RemoteListView", ->
   it "displays a list of remotes", ->

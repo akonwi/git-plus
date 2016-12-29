@@ -11,14 +11,14 @@ module.exports = (repo, {file}={}) ->
     return notifier.addInfo "No open file. Select 'Diff All'."
 
   # We parse the output of git diff-index to handle the case of a staged file
-  # when git-plus.general.includeStagedDiff is set to false.
+  # when git-plus.diffs.includeStagedDiff is set to false.
   unless tool = git.getConfig(repo, 'diff.tool')
     notifier.addInfo "You don't have a difftool configured."
   else
     git.cmd(['diff-index', 'HEAD', '-z'], cwd: repo.getWorkingDirectory())
     .then (data) ->
       diffIndex = data.split('\0')
-      includeStagedDiff = atom.config.get 'git-plus.general.includeStagedDiff'
+      includeStagedDiff = atom.config.get 'git-plus.diffs.includeStagedDiff'
 
       if isFolder
         args = ['difftool', '-d', '--no-prompt']

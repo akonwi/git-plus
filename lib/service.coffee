@@ -7,7 +7,7 @@ customCommands = []
 
 service = {}
 
-if atom.config.get('git-plus.general.customCommands')
+if atom.config.get('git-plus.experimental.customCommands')
   service.getCustomCommands = -> customCommands
   service.getRepo = git.getRepo
   service.registerCommand = (element, name, fn) ->

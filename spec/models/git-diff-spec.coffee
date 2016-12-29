@@ -14,21 +14,21 @@ openPromise =
 
 describe "GitDiff", ->
   beforeEach ->
-    atom.config.set 'git-plus.general.includeStagedDiff', true
+    atom.config.set 'git-plus.diffs.includeStagedDiff', true
     spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(git, 'cmd').andReturn Promise.resolve('diffs')
     waitsForPromise ->
       GitDiff repo, file: pathToRepoFile
 
-  describe "when git-plus.general.includeStagedDiff config is true", ->
+  describe "when git-plus.diffs.includeStagedDiff config is true", ->
     it "calls git.cmd and specifies 'HEAD'", ->
       expect('HEAD' in git.cmd.mostRecentCall.args[0]).toBe true
 
-describe "GitDiff when git-plus.general.wordDiff config is true", ->
+describe "GitDiff when git-plus.diffs.wordDiff config is true", ->
   beforeEach ->
-    atom.config.set 'git-plus.general.wordDiff', true
-    atom.config.set 'git-plus.general.includeStagedDiff', true
+    atom.config.set 'git-plus.diffs.wordDiff', true
+    atom.config.set 'git-plus.diffs.includeStagedDiff', true
     spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(git, 'cmd').andReturn Promise.resolve('diffs')
@@ -40,7 +40,7 @@ describe "GitDiff when git-plus.general.wordDiff config is true", ->
 
 describe "GitDiff when a file is not specified", ->
   beforeEach ->
-    atom.config.set 'git-plus.general.includeStagedDiff', true
+    atom.config.set 'git-plus.diffs.includeStagedDiff', true
     spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(git, 'cmd').andReturn Promise.resolve('diffs')
@@ -66,7 +66,7 @@ describe "GitDiff when a file is not specified", ->
 
 describe "GitDiffAll", ->
   beforeEach ->
-    atom.config.set 'git-plus.general.includeStagedDiff', true
+    atom.config.set 'git-plus.diffs.includeStagedDiff', true
     spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(fs, 'writeFile').andCallFake -> fs.writeFile.mostRecentCall.args[3]()
