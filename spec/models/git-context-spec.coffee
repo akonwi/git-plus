@@ -100,6 +100,7 @@ describe "Context-menu commands", ->
     describe "when an object in the tree is selected", ->
       it "calls CheckoutFile", ->
         spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        spyOn(atom, 'confirm').andCallFake -> atom.confirm.mostRecentCall.args[0].buttons.Yes()
         waitsForPromise -> GitCheckoutFileContext()
         runs -> expect(GitCheckoutFile).toHaveBeenCalledWith repo, file: selectedFilePath
 
