@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.0.5
+- Fixes [#587](https://github.com/akonwi/git-plus/issues/587)
+- Fixes [#584](https://github.com/akonwi/git-plus/issues/584)
+
 ### 7.0.4
 - Minor changes
 
