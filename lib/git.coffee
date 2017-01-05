@@ -137,7 +137,7 @@ module.exports = git =
         if directory?
           project.repositoryForDirectory(directory)
           .then (repo) ->
-            submodule = repo.repo.submoduleForPath(path)
+            submodule = repo?.repo.submoduleForPath(path)
             if submodule? then resolve(submodule) else resolve(repo)
           .catch (e) ->
             reject(e)
