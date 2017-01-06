@@ -1,8 +1,8 @@
 ## Changelog
 
 ### 7.0.5
-- Fixes [#587](https://github.com/akonwi/git-plus/issues/587)
-- Fixes [#584](https://github.com/akonwi/git-plus/issues/584)
+- [#587](https://github.com/akonwi/git-plus/issues/587) Gracefully handle unavailable repo error
+- Fixes [#578](https://github.com/akonwi/git-plus/issues/578)
 
 ### 7.0.4
 - Minor changes
