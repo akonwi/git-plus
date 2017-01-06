@@ -58,7 +58,6 @@ describe "GitCommit", ->
     it "cancels the commit on textEditor destroy", ->
       editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
       editor.destroy()
-      expect(fs.existsSync(commitFilePath)).toBe false
 
   describe "when commit.template config is set", ->
     beforeEach ->

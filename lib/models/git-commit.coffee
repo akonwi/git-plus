@@ -68,7 +68,6 @@ commit = (directory, filePath) ->
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.isAlive()
   disposables.dispose()
-  fs.removeSync filePath
 
 showFile = (filePath) ->
   commitEditor = atom.workspace.paneForURI(filePath)?.itemForURI(filePath)

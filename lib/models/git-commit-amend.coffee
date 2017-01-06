@@ -117,11 +117,13 @@ commit = (directory, filePath) ->
     notifier.addSuccess data
     destroyCommitEditor(filePath)
     git.refresh()
+  .catch (data) ->
+    notifier.addError data
+    destroyCommitEditor(filePath)
 
 cleanup = (currentPane, filePath) ->
   currentPane.activate() if currentPane.isAlive()
   disposables.dispose()
-  fs.removeSync filePath
 
 module.exports = (repo) ->
   currentPane = atom.workspace.getActivePane()
