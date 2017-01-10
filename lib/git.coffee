@@ -1,5 +1,5 @@
 Os = require 'os'
-{BufferedProcess} = require 'atom'
+{BufferedProcess, Directory} = require 'atom'
 
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
@@ -132,17 +132,15 @@ module.exports = git =
       Promise.reject "No file to find repository for"
     else
       new Promise (resolve, reject) ->
-        project = atom.project
-        directory = project.getDirectories().filter((d) -> d.contains(path) or d.getPath() is path)[0]
-        if directory?
-          project.repositoryForDirectory(directory)
-          .then (repo) ->
-            submodule = repo?.repo.submoduleForPath(path)
-            if submodule? then resolve(submodule) else resolve(repo)
-          .catch (e) ->
-            reject(e)
-        else
-          reject "no current file"
+        repoPromises =
+          atom.project.getDirectories()
+          .map(atom.project.repositoryForDirectory.bind(atom.project))
+          
+        Promise.all(repoPromises).then (repos) ->
+          repos.forEach (repo) ->
+            if (new Directory(repo.getWorkingDirectory())).contains path
+              submodule = repo?.repo.submoduleForPath(path)
+              if submodule? then resolve(submodule) else resolve(repo)
 
   getSubmodule: (path) ->
     path ?= atom.workspace.getActiveTextEditor()?.getPath()
