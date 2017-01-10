@@ -135,10 +135,10 @@ module.exports = git =
         repoPromises =
           atom.project.getDirectories()
           .map(atom.project.repositoryForDirectory.bind(atom.project))
-          
+
         Promise.all(repoPromises).then (repos) ->
           repos.forEach (repo) ->
-            if (new Directory(repo.getWorkingDirectory())).contains path
+            if repo? and (new Directory(repo.getWorkingDirectory())).contains path
               submodule = repo?.repo.submoduleForPath(path)
               if submodule? then resolve(submodule) else resolve(repo)
 
