@@ -1,5 +1,8 @@
 ## Changelog
 
+### 7.0.7
+- [[#587]](https://github.com/akonwi/git-plus/issues/587) - Refactoring around tree-view context actions
+
 ### 7.0.6
 - [[#584]](https://github.com/akonwi/git-plus/issues/584)-The COMMIT_EDITMSG file is kept after commit attempts so in case of failure the previously typed message is easily retrievable
 - Fixes [#591](https://github.com/akonwi/git-plus/issues/591)
