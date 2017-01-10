@@ -1,7 +1,12 @@
 ## Changelog
 
+### 7.0.6
+- [[#584]](https://github.com/akonwi/git-plus/issues/584)-The COMMIT_EDITMSG file is kept after commit attempts so in case of failure the previously typed message is easily retrievable
+- Fixes [#591](https://github.com/akonwi/git-plus/issues/591)
+- Fixes [#593](https://github.com/akonwi/git-plus/issues/593)
+
 ### 7.0.5
-- [#587](https://github.com/akonwi/git-plus/issues/587) Gracefully handle unavailable repo error
+- [[#587]](https://github.com/akonwi/git-plus/issues/587) Gracefully handle unavailable repo error
 - Fixes [#578](https://github.com/akonwi/git-plus/issues/578)
 
 ### 7.0.4
