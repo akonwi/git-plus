@@ -60,18 +60,29 @@ describe "GitCommit", ->
       editor.destroy()
 
   describe "when commit.template config is set", ->
-    beforeEach ->
+    it "pre-populates the commit with the template message", ->
       templateFile = Path.join(os.tmpdir(), 'commit-template')
       fs.writeFileSync templateFile, 'foobar'
       waitsForPromise -> git.cmd(['config', 'commit.template', templateFile], cwd: workingDirectory)
       fs.writeFileSync file, Math.random()
       waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
       waitsForPromise -> GitCommit(repo)
+      runs ->
+        editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+        expect(editor.getText().startsWith('foobar')).toBe true
+        git.cmd(['config', '--unset', 'commit.template'], cwd: workingDirectory)
+        fs.removeSync(templateFile)
 
-    it "pre-populates the commit with the template message", ->
-      editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
-      expect(editor.getText().startsWith('foobar')).toBe true
-      git.cmd(['config', '--unset', 'commit.template'], cwd: workingDirectory)
+    describe "when the template file can't be found", ->
+      it "notifies user", ->
+        spyOn(notifier, 'addError')
+        templateFile = Path.join(os.tmpdir(), 'commit-template')
+        waitsForPromise -> git.cmd(['config', 'commit.template', templateFile], cwd: workingDirectory)
+        fs.writeFileSync file, Math.random()
+        waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
+        waitsForPromise -> GitCommit(repo).catch -> Promise.resolve()
+        runs ->
+          expect(notifier.addError).toHaveBeenCalledWith "Your configured commit template file can't be found."
 
   describe "when 'stageChanges' option is true", ->
     beforeEach ->

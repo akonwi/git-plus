@@ -19,7 +19,10 @@ getStagedFiles = (repo) ->
 
 getTemplate = (filePath) ->
   if filePath
-    fs.readFileSync(fs.absolute(filePath.trim())).toString().trim()
+    try
+      fs.readFileSync(fs.absolute(filePath.trim())).toString().trim()
+    catch e
+      throw new Error("Your configured commit template file can't be found.")
   else
     ''
 
@@ -87,7 +90,12 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   filePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
   currentPane = atom.workspace.getActivePane()
   commentChar = git.getConfig(repo, 'core.commentchar') ? '#'
-  template = getTemplate(git.getConfig(repo, 'commit.template'))
+  try
+    template = getTemplate(git.getConfig(repo, 'commit.template'))
+  catch e
+    notifier.addError(e.message)
+    return Promise.reject(e.message)
+
   init = -> getStagedFiles(repo).then (status) ->
     if verboseCommitsEnabled()
       args = ['diff', '--color=never', '--staged']
