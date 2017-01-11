@@ -1,6 +1,6 @@
 ## Changelog
 
-### 7.1
+### 7.1.0
 - Fixes [#573](https://github.com/akonwi/git-plus/issues/573)
 
 ### 7.0.7
