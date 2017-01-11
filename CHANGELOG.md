@@ -1,5 +1,8 @@
 ## Changelog
 
+### 7.1
+- Fixes [#573](https://github.com/akonwi/git-plus/issues/573)
+
 ### 7.0.7
 - [[#587]](https://github.com/akonwi/git-plus/issues/587) - Refactoring around tree-view context actions
 
