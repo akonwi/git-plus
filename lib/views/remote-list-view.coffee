@@ -78,10 +78,11 @@ class ListView extends SelectListView
     message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
     startMessage = notifier.addInfo message, dismissable: true
     git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
-    .then (data) ->
+    .then (data) =>
       if data isnt ''
         view.setContent(data).finish()
       startMessage.dismiss()
+      git.refresh @repo
     .catch (data) =>
       if data isnt ''
         view.setContent(data).finish()
