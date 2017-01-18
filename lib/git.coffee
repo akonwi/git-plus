@@ -81,7 +81,7 @@ module.exports = git =
     git.getSubmodule(path)?.relativize(path) ? atom.project.getRepositories()[0]?.relativize(path) ? path
 
   diff: (repo, path) ->
-    git.cmd(['diff', '-p', '-U1', path], cwd: repo.getWorkingDirectory())
+    git.cmd(['diff', '--cached', '-p', '-U1', path], cwd: repo.getWorkingDirectory())
     .then (data) -> _prettifyDiff(data)
 
   stagedFiles: (repo) ->

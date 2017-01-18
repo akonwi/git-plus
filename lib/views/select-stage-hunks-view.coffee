@@ -8,8 +8,10 @@ SelectListMultipleView = require './select-list-multiple-view'
 module.exports =
 class SelectStageHunks extends SelectListMultipleView
   initialize: (@repo, data) ->
+    console.log "diff data is", data
     super
     @patch_header = data[0]
+    console.log "patch header is", @patch_header
     return @completed @_generateObjects(data[1..]) if data.length is 2
     @show()
     @setItems @_generateObjects(data[1..])
@@ -56,6 +58,7 @@ class SelectStageHunks extends SelectListMultipleView
 
     patchPath = @repo.getWorkingDirectory() + '/GITPLUS_PATCH'
     fs.writeFile patchPath, patch_full, flag: 'w+', (err) =>
+      debugger
       unless err
         git.cmd(['apply', '--cached', '--', patchPath], cwd: @repo.getWorkingDirectory())
         .then (data) =>
@@ -68,6 +71,10 @@ class SelectStageHunks extends SelectListMultipleView
   _generateObjects: (data) ->
     for hunk in data when hunk isnt ''
       hunkSplit = hunk.match /(@@[ \-\+\,0-9]*@@.*)\n([\s\S]*)/
+      console.log "hunk", hunk
+      console.log "pos", hunkSplit[1]
+      console.log "diff", hunkSplit[2]
+      console.log "patch is the hunk"
       {
         pos: hunkSplit[1]
         diff: hunkSplit[2]
