@@ -47,7 +47,9 @@ class InputView extends View
       # TODO: remove this?
       if args[0] is 1 then args.shift()
       runCommand args, @repo.getWorkingDirectory()
-      .then => @currentPane.activate()
+      .then =>
+        @currentPane.activate()
+        git.refresh @repo
 
 module.exports = (repo, args) ->
   if args
