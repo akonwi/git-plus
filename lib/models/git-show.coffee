@@ -31,7 +31,7 @@ prepFile = (text, objectHash) ->
 showFile = (objectHash) ->
   filePath = showCommitFilePath(objectHash)
   disposables = new CompositeDisposable
-  editorForDiffs = atom.workspace.getPaneItems().filter((item) -> item.getURI()?.includes('.diff'))[0]
+  editorForDiffs = atom.workspace.getPaneItems().filter((item) -> item.getURI?()?.includes('.diff'))[0]
   if editorForDiffs?
     editorForDiffs.setText fs.readFileSync(filePath, encoding: 'utf-8')
   else
