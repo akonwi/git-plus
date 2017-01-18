@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.1.1
+- Fixes [#598](https://github.com/akonwi/git-plus/issues/598)
+- Fixes [#599](https://github.com/akonwi/git-plus/issues/599)
+
 ### 7.1.0
 - Fixes [#573](https://github.com/akonwi/git-plus/issues/573)
 
