@@ -9,16 +9,16 @@ options =
 describe "Git Pull", ->
   beforeEach -> spyOn(git, 'cmd').andReturn Promise.resolve true
 
-  it "calls git.cmd with ['remote'] to get remote repositories", ->
-    atom.config.set('git-plus.remoteInteractions.alwaysPullFromUpstream', false)
-    GitPull(repo)
-    expect(git.cmd).toHaveBeenCalledWith ['remote'], options
-
-  describe "when 'alwaysPullFromCurrentBranch' is enabled", ->
-    it "pulls immediately from the upstream branch", ->
-      atom.config.set('git-plus.remoteInteractions.alwaysPullFromUpstream', true)
+  describe "when 'promptForBranch' is disabled", ->
+    it "calls git.cmd with ['pull'] and the upstream branch path", ->
       GitPull(repo)
-      expect(git.cmd).not.toHaveBeenCalledWith ['remote'], options
+      expect(git.cmd).toHaveBeenCalledWith ['pull', 'origin', 'foo'], options, {color: true}
+
+  describe "when 'promptForBranch' is enabled", ->
+    it "calls git.cmd with ['remote']", ->
+      atom.config.set('git-plus.remoteInteractions.promptForBranch', true)
+      GitPull(repo)
+      expect(git.cmd).toHaveBeenCalledWith ['remote'], options
 
   describe "The pull function", ->
     it "calls git.cmd", ->

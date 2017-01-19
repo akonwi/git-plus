@@ -44,12 +44,12 @@ class ListView extends SelectListView
       @li name
 
   pull: (remoteName) ->
-    if atom.config.get('git-plus.remoteInteractions.alwaysPullFromUpstream')
-      _pull @repo, extraArgs: [@extraArgs]
-    else
+    if atom.config.get('git-plus.remoteInteractions.promptForBranch')
       git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
       .then (data) =>
         new PullBranchListView(@repo, data, remoteName, @extraArgs).result
+    else
+      _pull @repo, extraArgs: @extraArgs
 
   confirmed: ({name}) ->
     if @mode is 'pull'
