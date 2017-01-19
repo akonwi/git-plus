@@ -40,7 +40,7 @@ module.exports =
       args = ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
       git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
-        @resolve()
+        @resolve remoteBranch
         view.setContent(data).finish()
         startMessage.dismiss()
         git.refresh @repo

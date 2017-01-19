@@ -13,10 +13,13 @@ describe "PullBranchListView", ->
     expect(@view.items.length).toBe 3
     expect(@view.items[0].name).toEqual '== Current =='
 
-  it "has a property called result which is a promise", ->
-    expect(@view.result).toBeDefined()
-    expect(@view.result.then).toBeDefined()
-    expect(@view.result.catch).toBeDefined()
+  it "has a property called result, which is a resolved with the selected branch name", ->
+    @view.selectNextItemView()
+    @view.confirmSelection()
+    waitsForPromise => @view.result
+    runs =>
+      @view.result.then (branch) ->
+        expect(branch).toBe 'branch1'
 
   it "removes the 'origin/HEAD' option in the list of branches", ->
     view = new PullBranchListView(repo, "branch1\nbranch2\norigin/HEAD", "remote", '')

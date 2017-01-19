@@ -4,8 +4,6 @@ quibble = require 'quibble'
 fs = require 'fs-plus'
 {GitRepository} = require 'atom'
 git = require '../../lib/git'
-GitPush = quibble '../../lib/models/git-push', jasmine.createSpy('GitPush')
-GitCommit = require '../../lib/models/git-commit'
 notifier = require '../../lib/notifier'
 
 commentChar = '%'
@@ -15,6 +13,8 @@ file = Path.join(workingDirectory, 'fake.file')
 repo = null
 
 describe "GitCommit", ->
+  GitPush = quibble '../../lib/models/git-push', jasmine.createSpy('GitPush')
+  GitCommit = require '../../lib/models/git-commit'
   beforeEach ->
     fs.writeFileSync file, 'foobar'
     waitsForPromise -> git.cmd(['init'], cwd: workingDirectory)
