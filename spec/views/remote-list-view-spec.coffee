@@ -36,7 +36,7 @@ describe "RemoteListView", ->
         view.confirmSelection()
         waitsFor -> git.cmd.callCount > 0
         runs ->
-          expect(git.cmd).toHaveBeenCalledWith ['pull', 'origin', 'foo'], options, {color: true}
+          expect(git.cmd).toHaveBeenCalledWith ['pull', 'origin', 'foo'], options, colorOptions
 
   describe "when mode is fetch", ->
     it "it calls git.cmd to with ['fetch'] and the remote name", ->
