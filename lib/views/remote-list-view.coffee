@@ -5,6 +5,7 @@ _pull = require '../models/_pull'
 notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'
 PullBranchListView = require './pull-branch-list-view'
+PushBranchListView = require './push-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
@@ -70,23 +71,27 @@ class ListView extends SelectListView
     @cancel()
 
   execute: (remote='', extraArgs='') ->
-    view = OutputViewManager.create()
-    args = [@mode]
-    if extraArgs.length > 0
-      args.push extraArgs
-    args = args.concat([remote, @tag]).filter((arg) -> arg isnt '')
-    message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
-    startMessage = notifier.addInfo message, dismissable: true
-    git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
-    .then (data) =>
-      if data isnt ''
-        view.setContent(data).finish()
-      startMessage.dismiss()
-      git.refresh @repo
-    .catch (data) =>
-      if data isnt ''
-        view.setContent(data).finish()
-      startMessage.dismiss()
+    if atom.config.get('git-plus.remoteInteractions.promptForBranch')
+      git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
+      .then (data) => new PushBranchListView(@repo, data, remote, extraArgs).result
+    else
+      view = OutputViewManager.create()
+      args = [@mode]
+      if extraArgs.length > 0
+        args.push extraArgs
+      args = args.concat([remote, @tag]).filter((arg) -> arg isnt '')
+      message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
+      startMessage = notifier.addInfo message, dismissable: true
+      git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
+      .then (data) =>
+        if data isnt ''
+          view.setContent(data).finish()
+        startMessage.dismiss()
+        git.refresh @repo
+      .catch (data) =>
+        if data isnt ''
+          view.setContent(data).finish()
+        startMessage.dismiss()
 
   pushAndSetUpstream: (remote='') ->
     view = OutputViewManager.create()

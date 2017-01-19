@@ -7,8 +7,8 @@ branchFilter = (item) -> item isnt '' and item.indexOf('origin/HEAD') < 0
 
 module.exports =
   # Extension of BranchListView
-  # Takes the name of the remote to pull from
-  class PullBranchListView extends BranchListView
+  # Takes the name of the remote to push to
+  class PushBranchListView extends BranchListView
     initialize: (@repo, @data, @remote, @extraArgs) ->
       super
       @result = new Promise (resolve, reject) =>
@@ -16,28 +16,22 @@ module.exports =
         @reject = reject
 
     parseData: ->
-      @currentBranchString = '== Current =='
-      currentBranch =
-        name: @currentBranchString
       items = @data.split("\n")
       branches = items.filter(branchFilter).map (item) -> {name: item.replace(/\s/g, '')}
       if branches.length is 1
         @confirmed branches[0]
       else
-        @setItems [currentBranch].concat branches
+        @setItems branches
       @focusFilterEditor()
 
     confirmed: ({name}) ->
-      if name is @currentBranchString
-        @pull()
-      else
-        @pull name.substring(name.indexOf('/') + 1)
+      @push name.substring(name.indexOf('/') + 1)
       @cancel()
 
-    pull: (remoteBranch='') ->
+    push: (remoteBranch) ->
       view = OutputViewManager.create()
-      startMessage = notifier.addInfo "Pulling...", dismissable: true
-      args = ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
+      startMessage = notifier.addInfo "Pushing...", dismissable: true
+      args = ['push'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
       git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
         @resolve()

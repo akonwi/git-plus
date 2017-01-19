@@ -115,6 +115,12 @@ configs =
         type: "boolean"
         default: false
         description: "Always pull from current branch upstream?"
+      promptForBranch:
+        order: 4
+        title: "Prompt for branch selection"
+        type: "boolean"
+        default: false
+        description: "If false, it defaults to upstream branch"
   experimental:
     order: 6
     type: "object"
