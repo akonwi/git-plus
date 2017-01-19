@@ -109,18 +109,12 @@ configs =
         type: "boolean"
         default: false
         description: "Pull from remote before pushing"
-      alwaysPullFromUpstream:
-        order: 3
-        title: "Pull From Upstream"
-        type: "boolean"
-        default: false
-        description: "Always pull from current branch upstream?"
       promptForBranch:
-        order: 4
-        title: "Prompt for branch selection"
+        order: 3
+        title: "Prompt for branch selection when pulling/pushing"
         type: "boolean"
         default: false
-        description: "If false, it defaults to upstream branch"
+        description: "If false, it defaults to current branch upstream"
   experimental:
     order: 6
     type: "object"
