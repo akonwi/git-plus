@@ -136,7 +136,7 @@ configs =
         title: "Custom Commands"
         type: "boolean"
         default: false
-        description: "Allow custom commands to be declared in your `init` file and run within Git-plus"
+        description: "Declared custom commands in your `init` file that can be run from the Git-plus command palette"
 
 module.exports = ->
   # Cleanup user's config.cson if config properties change
