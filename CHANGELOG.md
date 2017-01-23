@@ -1,5 +1,11 @@
 ## Changelog
 
+### 7.2.0
+- Fixes [#596](https://github.com/akonwi/git-plus/issues/596)
+  - __BREAKING__ the config option of `Pull From Upstream` is now the default behavior.
+  - If your git config for 'push.default' is set to nothing or you want to intentionally choose a branch, turn on the 'Prompt for branch...' option
+- Merges [#604](https://github.com/akonwi/git-plus/issues/604) thanks to (@lgeiger)
+
 ### 7.1.1
 - Fixes [#598](https://github.com/akonwi/git-plus/issues/598)
 - Fixes [#599](https://github.com/akonwi/git-plus/issues/599)
