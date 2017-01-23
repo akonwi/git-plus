@@ -3,7 +3,8 @@ OutputViewManager = require '../output-view-manager'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 
-branchFilter = (item) -> item isnt '' and item.indexOf('origin/HEAD') < 0
+isValidBranch = (item, remote) ->
+  item.startsWith(remote + '/') and not item.includes('/HEAD')
 
 module.exports =
   # Extension of BranchListView
@@ -16,8 +17,8 @@ module.exports =
         @reject = reject
 
     parseData: ->
-      items = @data.split("\n")
-      branches = items.filter(branchFilter).map (item) -> {name: item.replace(/\s/g, '')}
+      items = @data.split("\n").map (item) -> item.replace(/\s/g, '')
+      branches = items.filter((item) => isValidBranch(item, @remote)).map (item) -> {name: item}
       if branches.length is 1
         @confirmed branches[0]
       else
