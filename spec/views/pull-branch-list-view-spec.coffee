@@ -6,7 +6,7 @@ colorOptions = {color: true}
 
 describe "PullBranchListView", ->
   beforeEach ->
-    @view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '')
+    @view = new PullBranchListView(repo, "remote/branch1\nremote/branch2", "remote", '')
     spyOn(git, 'cmd').andReturn Promise.resolve 'pulled'
 
   it "displays a list of branches and the first option is a special one for the current branch", ->
@@ -22,8 +22,12 @@ describe "PullBranchListView", ->
         expect(branch).toBe 'branch1'
 
   it "removes the 'origin/HEAD' option in the list of branches", ->
-    view = new PullBranchListView(repo, "branch1\nbranch2\norigin/HEAD", "remote", '')
-    expect(@view.items.length).toBe 3
+    view = new PullBranchListView(repo, "origin/branch1\norigin/branch2\norigin/HEAD", "origin", '')
+    expect(view.items.length).toBe 3
+
+  it "only shows branches from the selected remote", ->
+    view = new PullBranchListView(repo, "remote/master\nremote/foo\norigin/master", "remote", '')
+    expect(view.items.length).toBe 3
 
   describe "when the special option is selected", ->
     it "calls git.cmd with ['pull'] and remote name", ->
@@ -44,7 +48,7 @@ describe "PullBranchListView", ->
 
   describe "when '--rebase' is passed as extraArgs", ->
     it "calls git.cmd with ['pull', '--rebase'], the remote name", ->
-      view = new PullBranchListView(repo, "branch1\nbranch2", "remote", '--rebase')
+      view = new PullBranchListView(repo, "remote/branch1\nremote/branch2", "remote", '--rebase')
       view.confirmSelection()
 
       waitsFor -> git.cmd.callCount > 0
