@@ -97,14 +97,14 @@ describe "RemoteListView", ->
 
     describe "when promptForBranch is enabled", ->
       it "calls git.cmd with ['branch', '--no-color', '-r']", ->
-        spyOn(git, 'cmd').andReturn Promise.resolve 'branch1'
+        spyOn(git, 'cmd').andReturn Promise.resolve 'remote/branch1'
         atom.config.set(pullBeforePush, true)
         atom.config.set(promptForBranch, true)
 
         view = new RemoteListView(repo, remotes, mode: 'push')
         view.confirmSelection()
 
-        waitsFor -> git.cmd.callCount > 1
+        waitsFor -> git.cmd.callCount > 0
         runs ->
           expect(git.cmd).toHaveBeenCalledWith ['branch', '--no-color', '-r'], options
 

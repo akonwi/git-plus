@@ -3,8 +3,9 @@ OutputViewManager = require '../output-view-manager'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 
-branchFilter = (item) ->
-  item isnt '' and item.indexOf('origin/HEAD') < 0 and item.indexOf(@remote + '/') == 0
+isValidBranch = (item, remote) ->
+  item.startsWith(remote + '/') and not item.includes('/HEAD')
+
 module.exports =
   # Extension of BranchListView
   # Takes the name of the remote to pull from
@@ -16,22 +17,16 @@ module.exports =
         @reject = reject
 
     parseData: ->
-      @currentBranchString = '== Current =='
-      currentBranch =
-        name: @currentBranchString
       items = @data.split("\n").map (item) -> item.replace(/\s/g, '')
-      branches = items.filter(branchFilter.bind(@)).map (item) -> {name: item}
+      branches = items.filter((item) => isValidBranch(item, @remote)).map (item) -> {name: item}
       if branches.length is 1
         @confirmed branches[0]
       else
-        @setItems [currentBranch].concat branches
+        @setItems branches
       @focusFilterEditor()
 
     confirmed: ({name}) ->
-      if name is @currentBranchString
-        @pull()
-      else
-        @pull name.substring(name.indexOf('/') + 1)
+      @pull name.substring(name.indexOf('/') + 1)
       @cancel()
 
     pull: (remoteBranch='') ->

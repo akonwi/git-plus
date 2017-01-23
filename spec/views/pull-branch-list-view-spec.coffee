@@ -10,11 +10,9 @@ describe "PullBranchListView", ->
     spyOn(git, 'cmd').andReturn Promise.resolve 'pulled'
 
   it "displays a list of branches and the first option is a special one for the current branch", ->
-    expect(@view.items.length).toBe 3
-    expect(@view.items[0].name).toEqual '== Current =='
+    expect(@view.items.length).toBe 2
 
   it "has a property called result, which is a resolved with the selected branch name", ->
-    @view.selectNextItemView()
     @view.confirmSelection()
     waitsForPromise => @view.result
     runs =>
@@ -23,23 +21,14 @@ describe "PullBranchListView", ->
 
   it "removes the 'origin/HEAD' option in the list of branches", ->
     view = new PullBranchListView(repo, "origin/branch1\norigin/branch2\norigin/HEAD", "origin", '')
-    expect(view.items.length).toBe 3
+    expect(view.items.length).toBe 2
 
   it "only shows branches from the selected remote", ->
     view = new PullBranchListView(repo, "remote/master\nremote/foo\norigin/master", "remote", '')
-    expect(view.items.length).toBe 3
-
-  describe "when the special option is selected", ->
-    it "calls git.cmd with ['pull'] and remote name", ->
-      @view.confirmSelection()
-
-      waitsFor -> git.cmd.callCount > 0
-      runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['pull', 'remote'], options, colorOptions
+    expect(view.items.length).toBe 2
 
   describe "when a branch option is selected", ->
     it "calls git.cmd with ['pull'], the remote name, and branch name", ->
-      @view.selectNextItemView()
       @view.confirmSelection()
 
       waitsFor -> git.cmd.callCount > 0
@@ -53,4 +42,4 @@ describe "PullBranchListView", ->
 
       waitsFor -> git.cmd.callCount > 0
       runs ->
-        expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote'], options, colorOptions
+        expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'remote', 'branch1'], options, colorOptions

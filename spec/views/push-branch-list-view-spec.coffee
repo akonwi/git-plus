@@ -6,7 +6,7 @@ colorOptions = {color: true}
 
 describe "PushBranchListView", ->
   beforeEach ->
-    @view = new PushBranchListView(repo, "branch1\nbranch2", "remote", '')
+    @view = new PushBranchListView(repo, "remote/branch1\nremote/branch2", "remote", '')
     spyOn(git, 'cmd').andReturn Promise.resolve 'push'
 
   it "has a property called result which is a promise", ->
@@ -15,8 +15,8 @@ describe "PushBranchListView", ->
     expect(@view.result.catch).toBeDefined()
 
   it "removes the 'origin/HEAD' option in the list of branches", ->
-    view = new PushBranchListView(repo, "branch1\nbranch2\norigin/HEAD", "remote", '')
-    expect(@view.items.length).toBe 2
+    view = new PushBranchListView(repo, "remote/branch1\nremote/branch2\norigin/HEAD", "remote", '')
+    expect(view.items.length).toBe 2
 
   describe "when a branch option is selected", ->
     it "calls git.cmd with ['push'], the remote name, and branch name", ->
