@@ -90,10 +90,11 @@ module.exports =
     setDiffGrammar()
     @subscriptions = new CompositeDisposable
     repos = atom.project.getRepositories().filter (r) -> r?
-    if repos.length is 0
+    if atom.project.getDirectories().length is 0
       atom.project.onDidChangePaths (paths) => @activate()
+    if repos.length is 0 and atom.project.getDirectories().length > 0
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', => GitInit().then(@activate)
-    else
+    if repos.length > 0
       contextMenu()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add', -> git.getRepo().then((repo) -> git.add(repo, file: currentFile(repo)))
