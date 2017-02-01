@@ -7,7 +7,7 @@ configs =
         order: 1
         title: "Anonymous Analytics"
         type : "boolean"
-        default : true
+        default : false
         description : "[Google Analytics](http://www.google.com/analytics/) is used to track which features are being used the most and causing the most errors. Everything is anonymized and no personal information, source code, or repository information is sent."
       _analyticsUserId:
         order: 2
