@@ -31,22 +31,17 @@ module.exports =
   class DiffBranchListView extends BranchListView
     initialize: (@repo, @data) ->
       super
-      console.log('initialize.@repo', @repo)
       _repo = @repo
 
     confirmed: ({name}) ->
       name = name.slice(1) if name.startsWith "*"
-      console.log("diff-branch-view:", name)
       args = ['diff', '--name-status', name]
-      console.log("diff-branch-view:args", args)
       git.cmd(args, cwd: _repo.getWorkingDirectory())
       .then (data) ->
         diffStat = data
-        console.log("diff-branch-view.then", data)
         diffFilePath = Path.join(_repo.getPath(), "atom_git_plus.diff")
         args = ['diff', '--color=never', _repo.branch, name]
         args.push '--word-diff' if atom.config.get 'git-plus.diffs.wordDiff'
-        console.log("diff-branch-view:args", args)
         git.cmd(args, cwd: _repo.getWorkingDirectory())
         .then (data) -> prepFile((diffStat ? '') + data, diffFilePath)
         .then -> showFile diffFilePath
