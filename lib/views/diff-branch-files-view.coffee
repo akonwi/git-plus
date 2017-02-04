@@ -1,14 +1,19 @@
 {$$, SelectListView} = require 'atom-space-pen-views'
 fs = require 'fs-plus'
+Path = require 'path'
+
 git = require '../git'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 GitDiff = require '../models/git-diff'
 
+_repo = null
+
 module.exports =
 class DiffBranchFilesListView extends BranchListView
   initialize: (@repo, @data) ->
     super
+    _repo = @repo
     @show()
     @setItems @parseData @data
     @focusFilterEditor()
@@ -58,14 +63,10 @@ class DiffBranchFilesListView extends BranchListView
   confirmed: ({type, path}) ->
     console.log("confirmed", {type, path})
     @cancel()
-    if type is '??'
-      git.add @repo, file: path
-    else
-      fullPath = Path.join(@repo.getWorkingDirectory(), path)
-
-      fs.stat fullPath, (err, stat) =>
-        if err
-          notifier.addError(err.message)
-        else
-          GitDiff(@repo, file: path)
-          # GitDiff(repo, diffStat: data, file: file)
+    fullPath = Path.join(_repo.getWorkingDirectory(), path)
+    fs.stat fullPath, (err, stat) =>
+      if err
+        notifier.addError(err.message)
+      else
+        GitDiff(_repo, file: path)
+        # GitDiff(repo, diffStat: data, file: file)
