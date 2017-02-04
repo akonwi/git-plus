@@ -6,7 +6,6 @@ fs = require 'fs-plus'
 git = require '../git'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
-DiffBranchFilesView = require '../views/diff-branch-files-view'
 GitDiff = require '../models/git-diff'
 _repo = null
 
@@ -45,7 +44,7 @@ module.exports =
         diffStat = data
         console.log("diff-branch-view.then", data)
         diffFilePath = Path.join(_repo.getPath(), "atom_git_plus.diff")
-        args = ['diff', '--color=never', _repo.branch, name, '--', '.']
+        args = ['diff', '--color=never', _repo.branch, name]
         args.push '--word-diff' if atom.config.get 'git-plus.diffs.wordDiff'
         console.log("diff-branch-view:args", args)
         git.cmd(args, cwd: _repo.getWorkingDirectory())
