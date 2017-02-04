@@ -10,6 +10,7 @@ getCommands = ->
   GitCommit              = require './models/git-commit'
   GitCommitAmend         = require './models/git-commit-amend'
   GitDiff                = require './models/git-diff'
+  GitDiffBranches        = require './models/git-diff-branches'
   GitDifftool            = require './models/git-difftool'
   GitDiffAll             = require './models/git-diff-all'
   GitFetch               = require './models/git-fetch'
@@ -66,6 +67,7 @@ getCommands = ->
       commands.push ['git-plus:delete-remote-branch', 'Delete Remote Branch', -> GitDeleteRemoteBranch(repo)]
       commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick(repo)]
       commands.push ['git-plus:diff', 'Diff', -> GitDiff(repo, file: currentFile)]
+      commands.push ['git-plus:diff-branches', 'Diff branches', -> GitDiffBranches(repo)]
       commands.push ['git-plus:difftool', 'Difftool', -> GitDifftool(repo)]
       commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll(repo)]
       commands.push ['git-plus:fetch', 'Fetch', -> GitFetch(repo)]

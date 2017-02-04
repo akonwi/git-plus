@@ -30,6 +30,10 @@
           'command': 'git-plus:diff'
         },
         {
+          'label': 'Diff Branches'
+          'command': 'git-plus:diff-branches'
+        },
+        {
           'label': 'Difftool'
           'command': 'git-plus:difftool'
         },
