@@ -35,7 +35,7 @@ module.exports =
 
     confirmed: ({name}) ->
       name = name.slice(1) if name.startsWith "*"
-      args = ['diff', '--name-status', name]
+      args = ['diff', '--stat', _repo.branch, name]
       git.cmd(args, cwd: _repo.getWorkingDirectory())
       .then (data) ->
         diffStat = data
