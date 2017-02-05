@@ -40,15 +40,11 @@ class DiffBranchFilesListView extends BranchListView
     @focusFilterEditor()
 
   parseData: (files) ->
-    console.log("diff-branch-files-view:files", files)
-    console.log("diff-branch-files-view:data", @data)
     trim_files_string = @data.replace /^\n+|\n+$/g, ""
     files_list = trim_files_string.split("\n")
-    console.log("diff-branch-files-view:files_list", files_list)
     for line in files_list when /^([ MADRCU?!]{1})\s+(.*)/.test line
       if line != ""
         line = line.match /^([ MADRCU?!]{1})\s+(.*)/
-        console.log('line:', line)
         {type: line[1], path: line[2]}
 
   getFilterKey: -> 'path'
@@ -82,19 +78,15 @@ class DiffBranchFilesListView extends BranchListView
         @span path
 
   confirmed: ({type, path}) ->
-    console.log("confirmed", {type, path})
     @cancel()
-    console.log('git diff file path', path)
     fullPath = Path.join(_cwd, path)
     if type == "M"
       args = ['diff', '--raw', _currentBranch, _branchName, fullPath]
       _cwd = Path.dirname(fullPath)
-      console.log('git diff file', args, _cwd)
       git.cmd(args, cwd: _cwd)
       .then (data) ->
         if !!data
           metaData = data.split(/\s/g)
-          console.log('metaData', metaData)
           revHash = metaData[3].replace(/\.+/, "")
           file = metaData[5]
           promise = atom.workspace.open file,
@@ -103,4 +95,4 @@ class DiffBranchFilesListView extends BranchListView
             activateItem: true
             searchAllPanes: false
           promise.then (editor) ->
-            RevisionView.showRevision(editor, revHash, {cwd:_cwd})
+            RevisionView.showRevision(editor, _branchName)
