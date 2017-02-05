@@ -8,10 +8,6 @@ GitDiff = require '../models/git-diff'
 Path = require 'path'
 RevisionView = require './git-revision-view'
 
-_cwd  = ""
-_currentBranch = ""
-_branchName = ""
-
 disposables = new CompositeDisposable
 
 showFile = (filePath) ->
@@ -32,9 +28,6 @@ module.exports =
 class DiffBranchFilesListView extends BranchListView
   initialize: (@repo, @data, @branchName) ->
     super
-    _cwd = @repo.getWorkingDirectory()
-    _currentBranch = @repo.branch
-    _branchName = @branchName
     @show()
     @setItems @parseData @data
     @focusFilterEditor()
@@ -79,11 +72,12 @@ class DiffBranchFilesListView extends BranchListView
 
   confirmed: ({type, path}) ->
     @cancel()
-    fullPath = Path.join(_cwd, path)
+    fullPath = Path.join(@repo.getWorkingDirectory(), path)
+    branchName = @branchName
     promise = atom.workspace.open fullPath,
       split: "left"
       activatePane: false
       activateItem: true
       searchAllPanes: false
     promise.then (editor) ->
-      RevisionView.showRevision(editor, _branchName, {type: type})
+      RevisionView.showRevision(editor, branchName, {type: type})

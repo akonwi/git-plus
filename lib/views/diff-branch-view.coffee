@@ -7,7 +7,6 @@ git = require '../git'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 GitDiff = require '../models/git-diff'
-_repo = null
 
 nothingToShow = 'Nothing to show.'
 
@@ -29,11 +28,10 @@ prepFile = (text, filePath) ->
 
 module.exports =
   class DiffBranchListView extends BranchListView
-    initialize: (@repo, @data) ->
-      super
-      _repo = @repo
+    initialize: (@repo, @data) -> super
 
     confirmed: ({name}) ->
+      _repo = @repo
       name = name.slice(1) if name.startsWith "*"
       args = ['diff', '--stat', _repo.branch, name]
       git.cmd(args, cwd: _repo.getWorkingDirectory())
