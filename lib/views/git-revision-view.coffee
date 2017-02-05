@@ -25,7 +25,7 @@ class GitRevisionView
     stdout = (output) =>
       fileContents += output
     exit = (code) =>
-      if code is 0
+      if code is 0 || options.type == "D"
         @_showRevision(file, editor, branch, fileContents, options)
       else
         atom.notifications.addError "Could not retrieve revision for #{path.basename(file)} (#{code})"

@@ -80,19 +80,10 @@ class DiffBranchFilesListView extends BranchListView
   confirmed: ({type, path}) ->
     @cancel()
     fullPath = Path.join(_cwd, path)
-    if type == "M"
-      args = ['diff', '--raw', _currentBranch, _branchName, fullPath]
-      _cwd = Path.dirname(fullPath)
-      git.cmd(args, cwd: _cwd)
-      .then (data) ->
-        if !!data
-          metaData = data.split(/\s/g)
-          revHash = metaData[3].replace(/\.+/, "")
-          file = metaData[5]
-          promise = atom.workspace.open file,
-            split: "left"
-            activatePane: false
-            activateItem: true
-            searchAllPanes: false
-          promise.then (editor) ->
-            RevisionView.showRevision(editor, _branchName)
+    promise = atom.workspace.open fullPath,
+      split: "left"
+      activatePane: false
+      activateItem: true
+      searchAllPanes: false
+    promise.then (editor) ->
+      RevisionView.showRevision(editor, _branchName, {type: type})
