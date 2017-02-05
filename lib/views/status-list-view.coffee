@@ -67,12 +67,15 @@ class StatusListView extends SelectListView
             if isDirectory
               atom.open(pathsToOpen: fullPath, newWindow: true)
             else
-              promise = atom.workspace.open fullPath,
-                split: "left"
-                activatePane: false
-                activateItem: true
-                searchAllPanes: false
-              promise.then (editor) ->
-                RevisionView.showRevision(editor, currentBranch, {type: type})
+              if atom.config.get('git-plus.diffs.splitDiff')
+                promise = atom.workspace.open fullPath,
+                  split: "left"
+                  activatePane: false
+                  activateItem: true
+                  searchAllPanes: false
+                promise.then (editor) ->
+                  RevisionView.showRevision(editor, currentBranch, {type: type})
+              else
+                atom.workspace.open(fullPath)
           else
             GitDiff(@repo, file: path)

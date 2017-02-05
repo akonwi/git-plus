@@ -69,7 +69,8 @@ getCommands = ->
       commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick(repo)]
       commands.push ['git-plus:diff', 'Diff', -> GitDiff(repo, file: currentFile)]
       commands.push ['git-plus:diff-branches', 'Diff branches', -> GitDiffBranches(repo)]
-      commands.push ['git-plus:diff-branche-files', 'Diff branche files', -> GitDiffBrancheFiles(repo)]
+      if atom.config.get('git-plus.diffs.splitDiff')
+        commands.push ['git-plus:diff-branche-files', 'Diff branche files', -> GitDiffBrancheFiles(repo)]
       commands.push ['git-plus:difftool', 'Difftool', -> GitDifftool(repo)]
       commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll(repo)]
       commands.push ['git-plus:fetch', 'Fetch', -> GitFetch(repo)]
