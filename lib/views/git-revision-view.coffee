@@ -13,7 +13,7 @@ class GitRevisionView
 
   @FILE_PREFIX = "Git Plus - "
 
-  @showRevision: (editor, branch, options={}) ->
+  @showRevision: (editor, gitRevision, options={}) ->
     options = _.defaults options,
       diff: false
 
@@ -26,11 +26,11 @@ class GitRevisionView
       fileContents += output
     exit = (code) =>
       if code is 0 || options.type is "D"
-        @_showRevision(file, editor, branch, fileContents, options)
+        @_showRevision(file, editor, gitRevision, fileContents, options)
       else
         atom.notifications.addError "Could not retrieve revision for #{path.basename(file)} (#{code})"
 
-    showArgs = ["show", "#{branch}:./#{path.basename(file)}"]
+    showArgs = ["show", "#{gitRevision}:./#{path.basename(file)}"]
     process = new BufferedProcess({
       command: "git",
       args: showArgs,
@@ -47,7 +47,7 @@ class GitRevisionView
       return lineNumber - 5
 
 
-  @_showRevision: (file, editor, branch, fileContents, options={}) ->
+  @_showRevision: (file, editor, gitRevision, fileContents, options={}) ->
     outputDir = "#{atom.getConfigDirPath()}/git-plus"
     fs.mkdir outputDir if not fs.existsSync outputDir
     outputFilePath = "#{outputDir}/#{@FILE_PREFIX}#{path.basename(file)}"
@@ -67,10 +67,10 @@ class GitRevisionView
             activateItem: true
             searchAllPanes: false
           promise.then (newTextEditor) =>
-            @_updateNewTextEditor(newTextEditor, editor, branch, fileContents)
+            @_updateNewTextEditor(newTextEditor, editor, gitRevision, fileContents)
 
 
-  @_updateNewTextEditor: (newTextEditor, editor, branch, fileContents) ->
+  @_updateNewTextEditor: (newTextEditor, editor, gitRevision, fileContents) ->
     _.delay =>
       lineEnding = editor.buffer?.lineEndingForRow(0) || "\n"
       fileContents = fileContents.replace(/(\r\n|\n)/g, lineEnding)
@@ -79,18 +79,18 @@ class GitRevisionView
       newTextEditor.buffer.cachedDiskContents = fileContents
       @_splitDiff(editor, newTextEditor)
       @_syncScroll(editor, newTextEditor)
-      @_affixTabTitle newTextEditor, branch
+      @_affixTabTitle newTextEditor, gitRevision
     , 300
 
 
-  @_affixTabTitle: (newTextEditor, branch) ->
+  @_affixTabTitle: (newTextEditor, gitRevision) ->
     $el = $(atom.views.getView(newTextEditor))
     $tabTitle = $el.parents('atom-pane').find('li.tab.active .title')
     titleText = $tabTitle.text()
     if titleText.indexOf('@') >= 0
-      titleText = titleText.replace(/\@.*/, "@#{branch}")
+      titleText = titleText.replace(/\@.*/, "@#{gitRevision}")
     else
-      titleText += " @#{branch}"
+      titleText += " @#{gitRevision}"
     $tabTitle.text(titleText)
 
 
