@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.2.1
+- Swapped pin icon in the status-bar for 'git+'. [#613](https://github.com/akonwi/git-plus/issues/613)
+- Removed analytics
+
 ### 7.2.0
 - Fixes [#596](https://github.com/akonwi/git-plus/issues/596)
   - __BREAKING__ the config option of `Pull From Upstream` is now the default behavior.

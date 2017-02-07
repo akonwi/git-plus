@@ -78,6 +78,8 @@ setDiffGrammar = ->
     grammar.packageName = 'git-plus'
     atom.grammars.addGrammar grammar
 
+getWorkspaceRepos = -> atom.project.getRepositories().filter (r) -> r?
+
 module.exports =
   config: configurations()
 
@@ -88,7 +90,7 @@ module.exports =
   activate: (state) ->
     setDiffGrammar()
     @subscriptions = new CompositeDisposable
-    repos = atom.project.getRepositories().filter (r) -> r?
+    repos = getWorkspaceRepos()
     if atom.project.getDirectories().length is 0
       atom.project.onDidChangePaths (paths) => @activate()
     if repos.length is 0 and atom.project.getDirectories().length > 0
@@ -166,12 +168,12 @@ module.exports =
   deactivate: ->
     @subscriptions.dispose()
     @statusBarTile?.destroy()
-    delete @statusBarTile
 
   consumeStatusBar: (statusBar) ->
-    @setupBranchesMenuToggle statusBar
-    if atom.config.get 'git-plus.general.enableStatusBarIcon'
-      @setupOutputViewToggle statusBar
+    if getWorkspaceRepos().length > 0
+      @setupBranchesMenuToggle statusBar
+      if atom.config.get 'git-plus.general.enableStatusBarIcon'
+        @setupOutputViewToggle statusBar
 
   consumeAutosave: ({dontSaveIf}) ->
     dontSaveIf (paneItem) -> paneItem.getPath().includes 'COMMIT_EDITMSG'
@@ -180,7 +182,7 @@ module.exports =
     div = document.createElement 'div'
     div.classList.add 'inline-block'
     icon = document.createElement 'span'
-    icon.classList.add 'icon', 'icon-pin'
+    icon.textContent = 'git+'
     link = document.createElement 'a'
     link.appendChild icon
     link.onclick = (e) -> OutputViewManager.getView().toggle()
