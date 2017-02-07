@@ -3,7 +3,6 @@
 git                    = require './git'
 configurations         = require './config'
 contextMenu            = require './context-menu'
-analytics              = require './analytics'
 OutputViewManager      = require './output-view-manager'
 GitPaletteView         = require './views/git-palette-view'
 GitAddContext          = require './models/context/git-add-context'
@@ -163,8 +162,6 @@ module.exports =
       @subscriptions.add atom.config.onDidChange 'git-plus.experimental.stageFilesBeta', =>
         @subscriptions.dispose()
         @activate()
-      analytics() if atom.config.get("git-plus.general.analytics")
-
 
   deactivate: ->
     @subscriptions.dispose()
