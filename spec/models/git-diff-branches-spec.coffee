@@ -7,8 +7,8 @@ describe "GitDiffBranches", ->
     spyOn(git, 'cmd').andReturn Promise.resolve 'foobar'
 
   it "calls git.status", ->
-    GitDiffBranches(repo)
-    expect(git.cmd).toHaveBeenCalledWith ['branch', '--no-color'], cwd: repo.getWorkingDirectory()
+    GitDiffBranches(repo).then (data) ->
+      expect(git.cmd).toHaveBeenCalledWith ['branch', '--no-color'], cwd: repo.getWorkingDirectory()
 
   it "creates a new DiffBranchView", ->
     GitDiffBranches(repo).then (data) ->
