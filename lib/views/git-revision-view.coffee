@@ -1,11 +1,12 @@
 _ = require 'underscore-plus'
 path = require 'path'
 fs = require 'fs'
+git = require '../git'
 
 {CompositeDisposable, BufferedProcess} = require "atom"
 {$} = require "atom-space-pen-views"
 
-SplitDiff = require 'split-diff'
+SplitDiff = require atom.packages.resolvePackagePath('split-diff')
 
 
 module.exports =
@@ -19,10 +20,11 @@ class GitRevisionView
 
     file = editor.getPath()
 
+    self = @
     args = ["show", "#{gitRevision}:./#{path.basename(file)}"]
     git.cmd(args, cwd: path.dirname(file))
     .then (data) ->
-      @_showRevision(file, editor, gitRevision, data, options)
+      self._showRevision(file, editor, gitRevision, data, options)
     .catch (code) ->
       atom.notifications.addError "Could not retrieve revision for #{path.basename(file)} (#{code})"
 
@@ -37,23 +39,24 @@ class GitRevisionView
   @_showRevision: (file, editor, gitRevision, fileContents, options={}) ->
     outputDir = "#{atom.getConfigDirPath()}/git-plus"
     fs.mkdir outputDir if not fs.existsSync outputDir
-    outputFilePath = "#{outputDir}/#{gitRevision}#{path.basename(file)}"
+    gitRevision = path.basename(gitRevision)
+    outputFilePath = "#{outputDir}/#{gitRevision}##{path.basename(file)}"
     outputFilePath += ".diff" if options.diff
     tempContent = "Loading..." + editor.buffer?.lineEndingForRow(0)
     fs.writeFile outputFilePath, tempContent, (error) =>
       if not error
-        promise = atom.workspace.open file,
+        atom.workspace.open file,
           split: "left"
           activatePane: false
           activateItem: true
           searchAllPanes: false
-        promise.then (editor) =>
-          promise = atom.workspace.open outputFilePath,
+        .then (editor) =>
+          atom.workspace.open outputFilePath,
             split: "right"
             activatePane: false
             activateItem: true
             searchAllPanes: false
-          promise.then (newTextEditor) =>
+          .then (newTextEditor) =>
             @_updateNewTextEditor(newTextEditor, editor, gitRevision, fileContents)
 
 
@@ -90,6 +93,7 @@ class GitRevisionView
     SplitDiff._setConfig 'diffWords', true
     SplitDiff._setConfig 'ignoreWhitespace', true
     SplitDiff._setConfig 'syncHorizontalScroll', true
+    SplitDiff.diffPanes()
     SplitDiff.editorSubscriptions = new CompositeDisposable()
     SplitDiff.editorSubscriptions.add editors.editor1.onDidStopChanging =>
       SplitDiff.updateDiff(editors) if editors?
