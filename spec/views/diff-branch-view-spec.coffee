@@ -22,12 +22,11 @@ describe "GitBranchView", ->
         Promise.resolve 'diff stats\n'
       else
         Promise.resolve 'diffs'
-    waitsForPromise ->
-      GitBranchView(repo, 'stats')
 
   it "includes the diff stats in the diffs window", ->
     expect(atom.workspace.getActiveTextEditor).toHaveBeenCalled()
     expect(atom.workspace.open).toHaveBeenCalled()
     branchView = new GitBranchView(repo, 'remote_branch')
+    waitsFor -> git.cmd.callCount > 0
     expect(git.cmd).toHaveBeenCalledWith ['diff', '--stat', repo.branch, 'remote_branch'], cwd: repo.getWorkingDirectory()
     expect(fs.writeFile.mostRecentCall.args[1].includes 'diff stats').toBe true

@@ -4,8 +4,8 @@ GitDiffBranchFileChooser = require '../../lib/views/git-diff-branch-file-chooser
 
 describe "GitDiffBranchFileChooser", ->
   beforeEach ->
-    @view = new GitDiffBranchFileChooser(repo, [" M\tfile.txt", " D\tanother.txt", ''])
-    spyOn(git, 'cmd')
+    @view = new GitDiffBranchFileChooser(repo, "branch1\nbranch2")
+    spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
 
   it "displays a list of files", ->
     expect(@view.items.length).toBe 2
@@ -14,5 +14,4 @@ describe "GitDiffBranchFileChooser", ->
     @view.confirmSelection()
     @view.checkout 'name'
     waitsFor -> git.cmd.callCount > 0
-    runs ->
-      expect(git.cmd).toHaveBeenCalledWith ['diff', '--name-status', repo.branch, 'name'], cwd: repo.getWorkingDirectory()
+    expect(git.cmd).toHaveBeenCalledWith ['diff', '--name-status', repo.branch, 'branch1'], cwd: repo.getWorkingDirectory()
