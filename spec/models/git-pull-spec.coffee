@@ -28,3 +28,8 @@ describe "Git Pull", ->
     it "calls git.cmd with extra arguments if passed", ->
       _pull repo, extraArgs: ['--rebase']
       expect(git.cmd).toHaveBeenCalledWith ['pull', '--rebase', 'origin', 'foo'], options, {color: true}
+
+    it "understands branch names with a '/'", ->
+      spyOn(repo, 'getUpstreamBranch').andReturn 'refs/remotes/origin/foo/cool-feature'
+      _pull repo
+      expect(git.cmd).toHaveBeenCalledWith ['pull', 'origin', 'foo/cool-feature'], options, {color: true}

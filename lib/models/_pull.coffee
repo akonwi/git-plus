@@ -5,7 +5,10 @@ OutputViewManager = require '../output-view-manager'
 emptyOrUndefined = (thing) -> thing isnt '' and thing isnt undefined
 
 getUpstream = (repo) ->
-  repo.getUpstreamBranch()?.substring('refs/remotes/'.length).split('/')
+  branchInfo = repo.getUpstreamBranch()?.substring('refs/remotes/'.length).split('/')
+  remote = branchInfo[0]
+  branch = branchInfo.slice(1).join('/')
+  [remote, branch]
 
 module.exports = (repo, {extraArgs}={}) ->
   extraArgs ?= []
