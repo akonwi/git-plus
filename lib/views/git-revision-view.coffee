@@ -67,10 +67,9 @@ class GitRevisionView
     editors =
       editor1: newTextEditor    # the older revision
       editor2: editor           # current rev
-    SplitDiff._setConfig 'rightEditorColor', 'green'
-    SplitDiff._setConfig 'leftEditorColor', 'red'
     SplitDiff._setConfig 'diffWords', true
     SplitDiff._setConfig 'ignoreWhitespace', true
     SplitDiff._setConfig 'syncHorizontalScroll', true
+    SplitDiff.activate()
     SplitDiff.diffPanes()
     SplitDiff.updateDiff editors
