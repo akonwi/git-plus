@@ -80,6 +80,11 @@ setDiffGrammar = ->
 
 getWorkspaceRepos = -> atom.project.getRepositories().filter (r) -> r?
 
+onPathsChanged = (gp) ->
+  gp.deactivate()
+  gp.activate()
+  gp.consumeStatusBar(gp.statusBar) if gp.statusBar
+
 module.exports =
   config: configurations()
 
@@ -92,10 +97,11 @@ module.exports =
     @subscriptions = new CompositeDisposable
     repos = getWorkspaceRepos()
     if atom.project.getDirectories().length is 0
-      atom.project.onDidChangePaths (paths) => @activate()
+      atom.project.onDidChangePaths (paths) => onPathsChanged(this)
     if repos.length is 0 and atom.project.getDirectories().length > 0
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:init', => GitInit().then(@activate)
     if repos.length > 0
+      atom.project.onDidChangePaths (paths) => onPathsChanged(this)
       contextMenu()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:menu', -> new GitPaletteView()
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:add', -> git.getRepo().then((repo) -> git.add(repo, file: currentFile(repo)))
@@ -169,14 +175,14 @@ module.exports =
     @subscriptions.dispose()
     @statusBarTile?.destroy()
 
-  consumeStatusBar: (statusBar) ->
-    if getWorkspaceRepos().length > 0
-      @setupBranchesMenuToggle statusBar
-      if atom.config.get 'git-plus.general.enableStatusBarIcon'
-        @setupOutputViewToggle statusBar
-
   consumeAutosave: ({dontSaveIf}) ->
     dontSaveIf (paneItem) -> paneItem.getPath().includes 'COMMIT_EDITMSG'
+
+  consumeStatusBar: (@statusBar) ->
+    if getWorkspaceRepos().length > 0
+      @setupBranchesMenuToggle @statusBar
+      if atom.config.get 'git-plus.general.enableStatusBarIcon'
+        @setupOutputViewToggle @statusBar
 
   setupOutputViewToggle: (statusBar) ->
     div = document.createElement 'div'
