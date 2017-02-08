@@ -6,14 +6,20 @@ git = require '../git'
 {CompositeDisposable, BufferedProcess} = require "atom"
 {$} = require "atom-space-pen-views"
 
-SplitDiff = require atom.packages.resolvePackagePath('split-diff')
-SyncScroll = require atom.packages.resolvePackagePath('split-diff') + '/lib/sync-scroll'
-
+SplitDiff = null
+SyncScroll = null
 
 module.exports =
 class GitRevisionView
 
   @showRevision: (editor, gitRevision, options={}) ->
+    if not SplitDiff
+      try
+        SplitDiff = require atom.packages.resolvePackagePath('split-diff')
+        SyncScroll = require atom.packages.resolvePackagePath('split-diff') + '/lib/sync-scroll'
+      catch error
+        return atom.notifications.addInfo("Git Plus: Could not load 'split-diff' package to open diff view. Please install it `apm install split-diff`.")
+
     options = _.defaults options,
       diff: false
 
@@ -27,7 +33,7 @@ class GitRevisionView
     .then (data) ->
       self._showRevision(file, editor, gitRevision, data, options)
     .catch (code) ->
-      atom.notifications.addError "Could not retrieve revision for #{path.basename(file)} (#{code})"
+      atom.notifications.addError("Git Plus: Could not retrieve revision for #{path.basename(file)} (#{code})")
 
   @_getInitialLineNumber: (editor) ->
     editorEle = atom.views.getView editor
@@ -72,6 +78,6 @@ class GitRevisionView
     SplitDiff._setConfig 'ignoreWhitespace', true
     SplitDiff._setConfig 'syncHorizontalScroll', true
     SplitDiff.diffPanes()
-    SplitDiff.updateDiff editors
+    SplitDiff.updateDiff(editors)
     syncScroll = new SyncScroll(editors.editor1, editors.editor2, true)
     syncScroll.syncPositions()
