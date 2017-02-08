@@ -68,14 +68,12 @@ class StatusListView extends SelectListView
               atom.open(pathsToOpen: fullPath, newWindow: true)
             else
               if atom.config.get('git-plus.diffs.splitDiff')
-                console.log('DIFF YES')
                 atom.workspace.open fullPath,
                   split: "left"
                   activatePane: false
                   activateItem: true
                   searchAllPanes: false
                 .then (editor) ->
-                  console.log('RESOLVE')
                   RevisionView.showRevision(editor, currentBranch, {type: type})
               else
                 atom.workspace.open(fullPath)

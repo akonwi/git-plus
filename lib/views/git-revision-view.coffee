@@ -47,18 +47,11 @@ class GitRevisionView
       if not error
         atom.workspace.open file,
           split: "left"
-          activatePane: false
-          activateItem: true
-          searchAllPanes: false
         .then (editor) =>
           atom.workspace.open outputFilePath,
             split: "right"
-            activatePane: false
-            activateItem: true
-            searchAllPanes: false
           .then (newTextEditor) =>
             @_updateNewTextEditor(newTextEditor, editor, gitRevision, fileContents)
-
 
   @_updateNewTextEditor: (newTextEditor, editor, gitRevision, fileContents) ->
     _.delay =>
@@ -68,21 +61,7 @@ class GitRevisionView
       newTextEditor.setText(fileContents)
       newTextEditor.buffer.cachedDiskContents = fileContents
       @_splitDiff(editor, newTextEditor)
-      @_syncScroll(editor, newTextEditor)
-      @_affixTabTitle newTextEditor, gitRevision
     , 300
-
-
-  @_affixTabTitle: (newTextEditor, gitRevision) ->
-    $el = $(atom.views.getView(newTextEditor))
-    $tabTitle = $el.parents('atom-pane').find('li.tab.active .title')
-    titleText = $tabTitle.text()
-    if titleText.indexOf('@') >= 0
-      titleText = titleText.replace(/\@.*/, "@#{gitRevision}")
-    else
-      titleText += " @#{gitRevision}"
-    $tabTitle.text(titleText)
-
 
   @_splitDiff: (editor, newTextEditor) ->
     editors =
@@ -94,22 +73,4 @@ class GitRevisionView
     SplitDiff._setConfig 'ignoreWhitespace', true
     SplitDiff._setConfig 'syncHorizontalScroll', true
     SplitDiff.diffPanes()
-    SplitDiff.editorSubscriptions = new CompositeDisposable()
-    SplitDiff.editorSubscriptions.add editors.editor1.onDidStopChanging =>
-      SplitDiff.updateDiff(editors) if editors?
-    SplitDiff.editorSubscriptions.add editors.editor2.onDidStopChanging =>
-      SplitDiff.updateDiff(editors) if editors?
-    SplitDiff.editorSubscriptions.add editors.editor1.onDidDestroy =>
-      editors = null;
-      SplitDiff.disable(false)
-    SplitDiff.editorSubscriptions.add editors.editor2.onDidDestroy =>
-      editors = null;
-      SplitDiff.disable(false)
     SplitDiff.updateDiff editors
-
-
-  @_syncScroll: (editor, newTextEditor) ->
-    _.delay =>
-      return if newTextEditor.isDestroyed()
-      newTextEditor.scrollToBufferPosition({row: @_getInitialLineNumber(editor), column: 0})
-    , 50
