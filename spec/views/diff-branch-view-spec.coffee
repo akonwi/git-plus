@@ -23,7 +23,7 @@ describe "GitBranchView", ->
       else
         Promise.resolve 'diffs'
     waitsForPromise ->
-      GitBranchView repo 'stats'
+      GitBranchView(repo, 'stats')
 
   it "includes the diff stats in the diffs window", ->
     expect(atom.workspace.getActiveTextEditor).toHaveBeenCalled()
