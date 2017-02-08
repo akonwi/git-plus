@@ -11,8 +11,6 @@ SplitDiff = require 'split-diff'
 module.exports =
 class GitRevisionView
 
-  @FILE_PREFIX = "Git Plus - "
-
   @showRevision: (editor, gitRevision, options={}) ->
     options = _.defaults options,
       diff: false
@@ -21,23 +19,12 @@ class GitRevisionView
 
     file = editor.getPath()
 
-    fileContents = ""
-    stdout = (output) =>
-      fileContents += output
-    exit = (code) =>
-      if code is 0 || options.type is "D"
-        @_showRevision(file, editor, gitRevision, fileContents, options)
-      else
-        atom.notifications.addError "Could not retrieve revision for #{path.basename(file)} (#{code})"
-
-    showArgs = ["show", "#{gitRevision}:./#{path.basename(file)}"]
-    process = new BufferedProcess({
-      command: "git",
-      args: showArgs,
-      options: { cwd:path.dirname(file) },
-      stdout,
-      exit
-    })
+    args = ["show", "#{gitRevision}:./#{path.basename(file)}"]
+    git.cmd(args, cwd: path.dirname(file))
+    .then (data) ->
+      @_showRevision(file, editor, gitRevision, data, options)
+    .catch (code) ->
+      atom.notifications.addError "Could not retrieve revision for #{path.basename(file)} (#{code})"
 
   @_getInitialLineNumber: (editor) ->
     editorEle = atom.views.getView editor
@@ -50,7 +37,7 @@ class GitRevisionView
   @_showRevision: (file, editor, gitRevision, fileContents, options={}) ->
     outputDir = "#{atom.getConfigDirPath()}/git-plus"
     fs.mkdir outputDir if not fs.existsSync outputDir
-    outputFilePath = "#{outputDir}/#{@FILE_PREFIX}#{path.basename(file)}"
+    outputFilePath = "#{outputDir}/#{gitRevision}#{path.basename(file)}"
     outputFilePath += ".diff" if options.diff
     tempContent = "Loading..." + editor.buffer?.lineEndingForRow(0)
     fs.writeFile outputFilePath, tempContent, (error) =>
