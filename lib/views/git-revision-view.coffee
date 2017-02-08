@@ -7,6 +7,7 @@ git = require '../git'
 {$} = require "atom-space-pen-views"
 
 SplitDiff = require atom.packages.resolvePackagePath('split-diff')
+SyncScroll = require atom.packages.resolvePackagePath('split-diff') + '/lib/sync-scroll'
 
 
 module.exports =
@@ -70,6 +71,7 @@ class GitRevisionView
     SplitDiff._setConfig 'diffWords', true
     SplitDiff._setConfig 'ignoreWhitespace', true
     SplitDiff._setConfig 'syncHorizontalScroll', true
-    SplitDiff.activate()
     SplitDiff.diffPanes()
     SplitDiff.updateDiff editors
+    syncScroll = new SyncScroll(editors.editor1, editors.editor2, true)
+    syncScroll.syncPositions()
