@@ -22,9 +22,9 @@ If you are on a Windows machine, I recommend checking out [this thread](https://
 
 ### Push/Pull/Fetch notifications
 Notifications will appear in a console output above the status bar.
-This view can be toggled by clicking the pin icon in the bottom right of the status bar.
+This view can be toggled by clicking the 'git+' icon in the bottom right of the status bar.
 
-![screenshot](https://github.com/akonwi/git-plus/raw/master/pin.png)
+![screenshot](https://dl.dropboxusercontent.com/s/oe3x8wyt6lnmbv7/git%2B.png)
 
 ### Commands
 _Commands are accessible for keybindings by dasherizing the command title._

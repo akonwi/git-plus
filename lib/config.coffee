@@ -3,51 +3,39 @@ configs =
     order: 1
     type: "object"
     properties:
-      analytics:
-        order: 1
-        title: "Anonymous Analytics"
-        type : "boolean"
-        default : true
-        description : "[Google Analytics](http://www.google.com/analytics/) is used to track which features are being used the most and causing the most errors. Everything is anonymized and no personal information, source code, or repository information is sent."
-      _analyticsUserId:
-        order: 2
-        title: "Analytics User Id"
-        type : "string"
-        default : ""
-        description : "Unique identifier for this user for tracking usage analytics"
       gitPath:
-        order: 3
+        order: 1
         title: "Git Path"
         type: "string"
         default: "git"
         description: "If git is not in your PATH, specify where the executable is"
       enableStatusBarIcon:
-        order: 4
+        order: 2
         title: "Status-bar Pin Icon"
         type: "boolean"
         default: true
         description: "The pin icon in the bottom-right of the status-bar toggles the output view above the status-bar"
       openInPane:
-        order: 5
+        order: 3
         title: "Allow commands to open new panes"
         type: "boolean"
         default: true
         description: "Commands like `Commit`, `Log`, `Show`, `Diff` can be split into new panes"
       splitPane:
-        order: 6
+        order: 4
         title: "Split pane direction"
         type: "string"
         default: "Down"
         description: "Where should new panes go?"
         enum: ["Up", "Right", "Down", "Left"]
       messageTimeout:
-        order: 7
+        order: 5
         title: "Output view timeout"
         type: "integer"
         default: 5
         description: "For how many seconds should the output view above the status-bar stay open?"
       showFormat:
-        order: 9
+        order: 6
         title: "Format option for 'Git Show'"
         type: "string"
         default: "full"
