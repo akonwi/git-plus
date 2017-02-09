@@ -1,28 +1,20 @@
 fs = require 'fs-plus'
-{repo, pathToRepoFile, textEditor} = require '../fixtures'
-git = require '../../lib/git'
+{repo, textEditor, commitPane, currentPane} = require '../fixtures'
 GitBranchFilesView = require '../../lib/views/diff-branch-files-view'
 RevisionView = require '../../lib/views/git-revision-view'
 
-currentPane =
-  splitRight: ->
-diffPane =
-  splitRight: -> undefined
-  getActiveEditor: -> textEditor
-openPromise =
-  done: (cb) -> cb textEditor
-
 describe "GitBranchFilesView", ->
   beforeEach ->
-    spyOn(atom.workspace, 'getActiveTextEditor').andReturn textEditor
+    @branchView = new GitBranchFilesView(repo, "M\tfile.txt\nD\tanother.txt", 'remote_branch')
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(RevisionView, 'showRevision').andReturn Promise.resolve true
-    spyOn(fs, 'writeFile').andCallFake -> fs.writeFile.mostRecentCall.args[3]()
 
-  it "includes the diff stats in the diffs window", ->
-    expect(atom.workspace.getActiveTextEditor).toHaveBeenCalled()
-    expect(atom.workspace.open).toHaveBeenCalled()
-    branchView = new GitBranchFilesView(repo, 'data', 'remote_branch')
-    expect(fs.writeFile.mostRecentCall.args[1].includes 'data').toBe true
+  it "displays a list of diff branch files", ->
+    expect(@branchView.items.length).toBe 2
+
+  it "calls revision view", ->
+    @branchView.confirmSelection()
     waitsFor -> RevisionView.showRevision.callCount > 0
-    expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, 'remote_branch', {type: ''}
+    runs ->
+      expect(atom.workspace.open).toHaveBeenCalled()
+      expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, 'remote_branch', {type: 'M'}
