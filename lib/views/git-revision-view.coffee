@@ -17,6 +17,7 @@ class GitRevisionView
       try
         SplitDiff = require atom.packages.resolvePackagePath('split-diff')
         SyncScroll = require atom.packages.resolvePackagePath('split-diff') + '/lib/sync-scroll'
+        atom.themes.requireStylesheet(atom.packages.resolvePackagePath('split-diff') + '/styles/split-diff')
       catch error
         return atom.notifications.addInfo("Git Plus: Could not load 'split-diff' package to open diff view. Please install it `apm install split-diff`.")
 
