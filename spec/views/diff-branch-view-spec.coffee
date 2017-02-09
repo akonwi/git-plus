@@ -12,7 +12,7 @@ describe "GitBranchView", ->
       stat = isDirectory: -> false
       fs.stat.mostRecentCall.args[1](null, stat)
 
-  it "displays a list of diff branch files", ->
+  it "displays a list of diff branches", ->
     expect(@branchView.items.length).toBe 2
 
   it "calls git diff and opens file", ->
