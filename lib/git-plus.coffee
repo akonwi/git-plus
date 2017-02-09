@@ -153,6 +153,8 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> GitAddAndCommitContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> GitCheckoutFileContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> GitDiffContext()
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff-branches', -> git.getRepo().then((repo) -> GitDiffBranches(repo))
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff-branch-files', -> git.getRepo().then((repo) -> GitDiffBranchFiles(repo))
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> GitDifftoolContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:pull', -> GitPullContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:push', -> GitPushContext()
