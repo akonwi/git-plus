@@ -14,5 +14,4 @@ module.exports =
       args = ['diff', '--name-status', repo.branch, name]
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (data) ->
-        console.log("diff-branch-view.then", data)
         new DiffBranchFilesView(repo, data, name)
