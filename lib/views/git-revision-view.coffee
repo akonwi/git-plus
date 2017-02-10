@@ -6,6 +6,7 @@ git = require '../git'
 {CompositeDisposable, BufferedProcess} = require "atom"
 {$} = require "atom-space-pen-views"
 
+disposables = new CompositeDisposable
 SplitDiff = null
 SyncScroll = null
 
@@ -63,7 +64,7 @@ class GitRevisionView
             try
               disposables.add newTextEditor.onDidDestroy -> fs.unlink outputFilePath
             catch error
-              return atom.notifications.addError error
+              return atom.notifications.addError "Could not remove file #{outputFilePath}"
 
   @_updateNewTextEditor: (newTextEditor, editor, gitRevision, fileContents) ->
     _.delay =>
