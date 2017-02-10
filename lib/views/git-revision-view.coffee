@@ -60,6 +60,10 @@ class GitRevisionView
             split: "right"
           .then (newTextEditor) =>
             @_updateNewTextEditor(newTextEditor, editor, gitRevision, fileContents)
+            try
+              disposables.add newTextEditor.onDidDestroy -> fs.unlink outputFilePath
+            catch error
+              return atom.notifications.addError error
 
   @_updateNewTextEditor: (newTextEditor, editor, gitRevision, fileContents) ->
     _.delay =>
