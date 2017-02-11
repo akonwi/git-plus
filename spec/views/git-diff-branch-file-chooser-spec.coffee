@@ -1,10 +1,10 @@
 {repo} = require '../fixtures'
 git = require '../../lib/git'
-GitDiffBranchFileChooser = require '../../lib/views/git-diff-branch-file-chooser'
+DiffBranchFileChooser = require '../../lib/views/diff-branch-file-chooser'
 
-describe "GitDiffBranchFileChooser", ->
+describe "DiffBranchFileChooser", ->
   beforeEach ->
-    @view = new GitDiffBranchFileChooser(repo, "branch1\nbranch2")
+    @view = new DiffBranchFileChooser(repo, "branch1\nbranch2")
     spyOn(git, 'cmd').andCallFake -> Promise.resolve ''
 
   it "displays a list of files", ->
