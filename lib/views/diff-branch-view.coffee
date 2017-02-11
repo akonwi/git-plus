@@ -28,25 +28,23 @@ prepFile = (text, filePath) ->
 
 module.exports =
   class DiffBranchListView extends BranchListView
-    initialize: (@repo, @data) -> super
-
     confirmed: ({name}) ->
-      _repo = @repo
       name = name.slice(1) if name.startsWith "*"
-      args = ['diff', '--stat', _repo.branch, name]
-      git.cmd(args, cwd: _repo.getWorkingDirectory())
-      .then (data) ->
+      args = ['diff', '--stat', @repo.branch, name]
+      git.cmd(args, cwd: @repo.getWorkingDirectory())
+      .then (data) =>
         diffStat = data
-        diffFilePath = Path.join(_repo.getPath(), "atom_git_plus.diff")
-        args = ['diff', '--color=never', _repo.branch, name]
+        diffFilePath = Path.join(@repo.getPath(), "atom_git_plus.diff")
+        args = ['diff', '--color=never', @repo.branch, name]
         args.push '--word-diff' if atom.config.get 'git-plus.diffs.wordDiff'
-        git.cmd(args, cwd: _repo.getWorkingDirectory())
+        git.cmd(args, cwd: @repo.getWorkingDirectory())
         .then (data) -> prepFile((diffStat ? '') + data, diffFilePath)
         .then -> showFile diffFilePath
         .then (textEditor) ->
           disposables.add textEditor.onDidDestroy -> fs.unlink diffFilePath
-        .catch (err) ->
+        .catch (err) =>
           if err is nothingToShow
             notifier.addInfo err
+            @cancel()
           else
             notifier.addError err
