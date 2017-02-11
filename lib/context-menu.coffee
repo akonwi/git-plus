@@ -21,6 +21,14 @@ module.exports = ->
           'command': 'git-plus-context:diff'
         },
         {
+          label: 'Git diff branches',
+          'command': 'git-plus-context:diff-branches'
+        },
+        {
+          label: 'Git diff branche files',
+          'command': 'git-plus-context:diff-branch-files'
+        },
+        {
           label: 'Git difftool',
           'command': 'git-plus-context:difftool'
         },

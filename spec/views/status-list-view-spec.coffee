@@ -1,7 +1,8 @@
 fs = require 'fs-plus'
 git = require '../../lib/git'
-{repo} = require '../fixtures'
+{repo, textEditor} = require '../fixtures'
 StatusListView = require '../../lib/views/status-list-view'
+RevisionView = require '../../lib/views/git-revision-view'
 
 describe "StatusListView", ->
   describe "when there are modified files", ->
@@ -32,6 +33,21 @@ describe "StatusListView", ->
       view = new StatusListView(repo, [" M\tfile.txt", " D\tanother.txt", ''])
       view.confirmSelection()
       expect(atom.workspace.open).toHaveBeenCalled()
+
+    it "opens the file when it is a file and split diff config enabled", ->
+      atom.config.set('git-plus.diffs.splitDiff', true)
+      spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
+      spyOn(RevisionView, 'showRevision').andReturn Promise.resolve true
+      spyOn(fs, 'stat').andCallFake ->
+        stat = isDirectory: -> false
+        fs.stat.mostRecentCall.args[1](null, stat)
+      view = new StatusListView(repo, [" M\tfile.txt", " D\tanother.txt", ''])
+      view.confirmSelection()
+      expect(atom.workspace.open).toHaveBeenCalled()
+      waitsFor ->
+        RevisionView.showRevision.callCount > 0
+      runs ->
+        expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, repo.branch, {type: ' M'}
 
     it "opens the directory in a project when it is a directory", ->
       spyOn(atom, 'open')
