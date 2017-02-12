@@ -1,4 +1,3 @@
-fs = require 'fs-plus'
 {repo, pathToRepoFile, textEditor} = require '../fixtures'
 git = require '../../lib/git'
 DiffBranchView = require '../../lib/views/diff-branch-view'

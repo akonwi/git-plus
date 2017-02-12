@@ -1,11 +1,10 @@
-fs = require 'fs-plus'
-{repo, textEditor, commitPane, currentPane} = require '../fixtures'
+{repo, textEditor} = require '../fixtures'
 GitBranchFilesView = require '../../lib/views/diff-branch-files-view'
 RevisionView = require '../../lib/views/git-revision-view'
 
 describe "GitBranchFilesView", ->
   beforeEach ->
-    @branchView = new GitBranchFilesView(repo, "M\tfile.txt\nD\tanother.txt", 'remote_branch')
+    @branchView = new GitBranchFilesView(repo, "M\tfile.txt\nD\tanother.txt", 'branchName')
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(RevisionView, 'showRevision').andReturn Promise.resolve true
 
@@ -17,4 +16,4 @@ describe "GitBranchFilesView", ->
     waitsFor -> RevisionView.showRevision.callCount > 0
     runs ->
       expect(atom.workspace.open).toHaveBeenCalled()
-      expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, 'remote_branch', {type: 'M'}
+      expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, 'branchName'

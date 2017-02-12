@@ -3,7 +3,7 @@
 fs = require 'fs-plus'
 git = require '../git'
 notifier = require '../notifier'
-BranchListView = require './branch-list-view'
+StatusListView = require './status-list-view'
 GitDiff = require '../models/git-diff'
 Path = require 'path'
 RevisionView = require './git-revision-view'
@@ -25,11 +25,14 @@ prepFile = (text, filePath) ->
         if err then reject err else resolve true
 
 module.exports =
-class DiffBranchFilesListView extends BranchListView
+class DiffBranchFilesListView extends StatusListView
   initialize: (@repo, @data, @branchName) ->
     super
     @show()
     @setItems @parseData @data
+    if @items.length is 0
+      notifier.addInfo("The branch '#{@branchName}' has no differences")
+      @cancel()
     @focusFilterEditor()
 
   parseData: (files) ->
@@ -39,36 +42,6 @@ class DiffBranchFilesListView extends BranchListView
       if line != ""
         line = line.match /^([ MADRCU?!]{1})\s+(.*)/
         {type: line[1], path: line[2]}
-
-  getFilterKey: -> 'path'
-
-  getEmptyMessage: -> "Nothing to diff."
-
-  show: ->
-    @panel ?= atom.workspace.addModalPanel(item: this)
-    @panel.show()
-    @storeFocusedElement()
-
-  cancelled: -> @hide()
-
-  hide: -> @panel?.destroy()
-
-  viewForItem: ({type, path}) ->
-    getIcon = (s) ->
-      return 'status-added icon icon-diff-added' if s[0] is 'A'
-      return 'status-removed icon icon-diff-removed' if s[0] is 'D'
-      return 'status-renamed icon icon-diff-renamed' if s[0] is 'R'
-      return 'status-modified icon icon-diff-modified' if s[0] is 'M' or s[1] is 'M'
-      return ''
-
-    $$ ->
-      @li =>
-        @div
-          class: 'pull-right highlight'
-          style: 'white-space: pre-wrap; font-family: monospace'
-          type
-        @span class: getIcon(type)
-        @span path
 
   confirmed: ({type, path}) ->
     @cancel()
@@ -80,4 +53,4 @@ class DiffBranchFilesListView extends BranchListView
       activateItem: true
       searchAllPanes: false
     promise.then (editor) ->
-      RevisionView.showRevision(editor, branchName, {type: type})
+      RevisionView.showRevision(editor, branchName)
