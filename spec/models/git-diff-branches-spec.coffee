@@ -14,5 +14,5 @@ describe "GitDiffBranches", ->
     GitDiffBranches(repo)
     expect(git.cmd).toHaveBeenCalledWith ['branch', '--no-color'], cwd: repo.getWorkingDirectory()
 
-  # it "creates a new DiffBranchView", ->
-  #   GitDiffBranches(repo).then -> expect(DiffBranchView).toHaveBeenCalledWith(repo, branches)
+  it "creates a DiffBranchView", ->
+    GitDiffBranches(repo).then (view) -> expect(view instanceof DiffBranchView).toBe true
