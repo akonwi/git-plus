@@ -19,6 +19,7 @@ GitCommit              = require './models/git-commit'
 GitCommitAmend         = require './models/git-commit-amend'
 GitDiff                = require './models/git-diff'
 GitDiffBranches        = require './models/git-diff-branches'
+GitDiffBranchesContext = require './models/context/git-diff-branches-context'
 GitDiffBranchFiles     = require './models/git-diff-branch-files'
 GitDifftool            = require './models/git-difftool'
 GitDifftoolContext     = require './models/context/git-difftool-context'
@@ -159,7 +160,7 @@ module.exports =
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> GitAddAndCommitContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> GitCheckoutFileContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff', -> GitDiffContext()
-      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff-branches', -> git.getRepo().then((repo) -> GitDiffBranches(repo))
+      @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff-branches', GitDiffBranchesContext
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:diff-branch-files', -> git.getRepo().then((repo) -> GitDiffBranchFiles(repo))
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:difftool', -> GitDifftoolContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:pull', -> GitPullContext()
