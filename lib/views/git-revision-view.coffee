@@ -36,7 +36,7 @@ showRevision = (filePath, editor, gitRevision, fileContents, options={}) ->
   outputDir = "#{atom.getConfigDirPath()}/git-plus"
   fs.mkdir outputDir if not fs.existsSync outputDir
   gitRevision = path.basename(gitRevision)
-  outputFilePath = "#{outputDir}/#{gitRevision}##{path.basename(filePath)}"
+  outputFilePath = "#{outputDir}/{#{gitRevision}} #{path.basename(filePath)}"
   outputFilePath += ".diff" if options.diff
   tempContent = "Loading..." + editor.buffer?.lineEndingForRow(0)
   fs.writeFile outputFilePath, tempContent, (error) =>
