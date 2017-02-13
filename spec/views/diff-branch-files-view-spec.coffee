@@ -1,19 +1,18 @@
-{repo, textEditor} = require '../fixtures'
-GitBranchFilesView = require '../../lib/views/diff-branch-files-view'
 RevisionView = require '../../lib/views/git-revision-view'
+DiffBranchFilesView = require '../../lib/views/diff-branch-files-view'
+{repo, textEditor} = require '../fixtures'
 
-describe "GitBranchFilesView", ->
+describe "DiffBranchFilesView", ->
+  branchView = new DiffBranchFilesView(repo, "M\tfile.txt\nD\tanother.txt", 'branchName')
+
   beforeEach ->
-    @branchView = new GitBranchFilesView(repo, "M\tfile.txt\nD\tanother.txt", 'branchName')
+    spyOn(RevisionView, 'showRevision')
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
-    spyOn(RevisionView, 'showRevision').andReturn Promise.resolve true
 
   it "displays a list of diff branch files", ->
-    expect(@branchView.items.length).toBe 2
+    expect(branchView.items.length).toBe 2
 
   it "calls revision view", ->
-    @branchView.confirmSelection()
-    waitsFor -> RevisionView.showRevision.callCount > 0
+    waitsForPromise -> branchView.confirmSelection()
     runs ->
-      expect(atom.workspace.open).toHaveBeenCalled()
       expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, 'branchName'

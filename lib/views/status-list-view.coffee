@@ -74,7 +74,7 @@ class StatusListView extends SelectListView
                   activateItem: true
                   searchAllPanes: false
                 .then (editor) ->
-                  RevisionView.showRevision(editor, currentBranch, {type: type})
+                  RevisionView.showRevision(editor, currentBranch)
               else
                 atom.workspace.open(fullPath)
           else

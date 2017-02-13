@@ -46,11 +46,10 @@ class DiffBranchFilesListView extends StatusListView
   confirmed: ({type, path}) ->
     @cancel()
     fullPath = Path.join(@repo.getWorkingDirectory(), path)
-    branchName = @branchName
     promise = atom.workspace.open fullPath,
       split: "left"
       activatePane: false
       activateItem: true
       searchAllPanes: false
-    promise.then (editor) ->
-      RevisionView.showRevision(editor, branchName)
+    promise.then (editor) =>
+      RevisionView.showRevision(editor, @branchName)

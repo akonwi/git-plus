@@ -47,7 +47,7 @@ describe "StatusListView", ->
       waitsFor ->
         RevisionView.showRevision.callCount > 0
       runs ->
-        expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, repo.branch, {type: ' M'}
+        expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, repo.branch
 
     it "opens the directory in a project when it is a directory", ->
       spyOn(atom, 'open')
