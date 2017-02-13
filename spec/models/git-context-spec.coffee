@@ -180,3 +180,22 @@ describe "Context-menu commands", ->
         spyOn(notifier, 'addInfo')
         GitDiffBranchesContext()
         expect(notifier.addInfo).toHaveBeenCalledWith "No repository found"
+
+  describe "GitDiffBranchFilesContext", ->
+    [GitDiffBranchFiles, GitDiffBranchFilesContext] = []
+
+    beforeEach ->
+      GitDiffBranchFiles = quibble '../../lib/models/git-diff-branch-files', jasmine.createSpy('GitDiffBranchFiles')
+      GitDiffBranchFilesContext = require '../../lib/models/context/git-diff-branch-files-context'
+
+    describe "when an object in the tree is selected", ->
+      it "calls GitDiffBranchFiles", ->
+        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
+        waitsForPromise -> GitDiffBranchFilesContext()
+        runs -> expect(GitDiffBranchFiles).toHaveBeenCalledWith repo, selectedFilePath
+
+    describe "when an object is not selected", ->
+      it "notifies the user of the issue", ->
+        spyOn(notifier, 'addInfo')
+        GitDiffBranchFilesContext()
+        expect(notifier.addInfo).toHaveBeenCalledWith "No repository found"

@@ -26,13 +26,14 @@ prepFile = (text, filePath) ->
 
 module.exports =
 class DiffBranchFilesListView extends StatusListView
-  initialize: (@repo, @data, @branchName) ->
+  initialize: (@repo, @data, @branchName, selectedFilePath) ->
     super
-    @show()
     @setItems @parseData @data
     if @items.length is 0
       notifier.addInfo("The branch '#{@branchName}' has no differences")
-      @cancel()
+      return @cancel()
+    @confirmed(path: @repo.relativize(selectedFilePath)) if selectedFilePath
+    @show()
     @focusFilterEditor()
 
   parseData: (files) ->
