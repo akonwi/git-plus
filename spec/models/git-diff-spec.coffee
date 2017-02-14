@@ -53,7 +53,7 @@ describe "GitDiff when a file is not specified", ->
 
 describe "when the useSplitDiff config is set to true", ->
   it "calls RevisionView.showRevision", ->
-    atom.config.set('git-plus.diffs.useSplitDiff', true)
+    atom.config.set('git-plus.experimental.useSplitDiff', true)
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
     spyOn(RevisionView, 'showRevision')
     GitDiff(repo, file: pathToRepoFile)
@@ -64,7 +64,7 @@ describe "when the useSplitDiff config is set to true", ->
 
   describe "when no current repository file is open", ->
     it "notifies user that the split-diff feature won't work unless invoked on a repository file", ->
-      atom.config.set('git-plus.diffs.useSplitDiff', true)
+      atom.config.set('git-plus.experimental.useSplitDiff', true)
       spyOn(atom.workspace, 'open')
       spyOn(RevisionView, 'showRevision')
       GitDiff(repo)
@@ -73,7 +73,7 @@ describe "when the useSplitDiff config is set to true", ->
 
   describe "when file option is '.'", ->
     it "does not try to use split-dif", ->
-      atom.config.set('git-plus.diffs.useSplitDiff', true)
+      atom.config.set('git-plus.experimental.useSplitDiff', true)
       spyOn(atom.workspace, 'open')
       spyOn(RevisionView, 'showRevision')
       GitDiff(repo, file: '.')
