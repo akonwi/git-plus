@@ -4,7 +4,6 @@ Path = require 'path'
 git = require '../git'
 GitDiff = require '../models/git-diff'
 notifier = require '../notifier'
-RevisionView = require './git-revision-view'
 
 module.exports =
 class StatusListView extends SelectListView
@@ -56,7 +55,6 @@ class StatusListView extends SelectListView
     else
       openFile = confirm("Open #{path}?")
       fullPath = Path.join(@repo.getWorkingDirectory(), path)
-      currentBranch = @repo.branch
 
       fs.stat fullPath, (err, stat) =>
         if err
@@ -67,15 +65,6 @@ class StatusListView extends SelectListView
             if isDirectory
               atom.open(pathsToOpen: fullPath, newWindow: true)
             else
-              if atom.config.get('git-plus.diffs.splitDiff')
-                atom.workspace.open fullPath,
-                  split: "left"
-                  activatePane: false
-                  activateItem: true
-                  searchAllPanes: false
-                .then (editor) ->
-                  RevisionView.showRevision(editor, currentBranch)
-              else
-                atom.workspace.open(fullPath)
+              atom.workspace.open(fullPath)
           else
             GitDiff(@repo, file: path)

@@ -2,6 +2,7 @@ _ = require 'underscore-plus'
 path = require 'path'
 fs = require 'fs'
 git = require '../git'
+notifier = require '../notifier'
 
 {CompositeDisposable, BufferedProcess} = require "atom"
 {$} = require "atom-space-pen-views"
@@ -61,7 +62,7 @@ module.exports =
         SyncScroll = require atom.packages.resolvePackagePath('split-diff') + '/lib/sync-scroll'
         atom.themes.requireStylesheet(atom.packages.resolvePackagePath('split-diff') + '/styles/split-diff')
       catch error
-        return atom.notifications.addInfo("Git Plus: Could not load 'split-diff' package to open diff view. Please install it `apm install split-diff`.")
+        return notifier.addInfo("Could not load 'split-diff' package to open diff view. Please install it `apm install split-diff`.")
 
     options = {diff: false}
 
