@@ -1,4 +1,4 @@
-configs =
+module.exports =
   general:
     order: 1
     type: "object"
@@ -131,11 +131,3 @@ configs =
         type: "boolean"
         default: false
         description: "Use the split-diff package to show diffs for a single file. Only works with `Diff` command when a file is open."
-
-module.exports = ->
-  # Cleanup user's config.cson if config properties change
-  if userConfigs = atom.config.getAll('git-plus')[0]?.value
-    Object.keys(userConfigs).forEach (key) =>
-      atom.config.unset "git-plus.#{key}" if not configs[key]
-
-  configs

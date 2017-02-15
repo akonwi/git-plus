@@ -90,7 +90,7 @@ onPathsChanged = (gp) ->
   gp.consumeStatusBar(gp.statusBar) if gp.statusBar
 
 module.exports =
-  config: configurations()
+  config: configurations
 
   subscriptions: null
 
