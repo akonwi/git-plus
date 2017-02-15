@@ -1,6 +1,6 @@
 ## Changelog
 
-### 7.2.3
+### 7.3.0
 - [Experimental Features] Show diffs between branches (@yacut)
 - [Experimental Features] Use the split-diff package to show diffs for a single file (@yacut)
 
