@@ -1,4 +1,4 @@
-configs =
+module.exports =
   general:
     order: 1
     type: "object"
@@ -119,11 +119,15 @@ configs =
         type: "boolean"
         default: false
         description: "Declared custom commands in your `init` file that can be run from the Git-plus command palette"
-
-module.exports = ->
-  # Cleanup user's config.cson if config properties change
-  if userConfigs = atom.config.getAll('git-plus')[0]?.value
-    Object.keys(userConfigs).forEach (key) =>
-      atom.config.unset "git-plus.#{key}" if not configs[key]
-
-  configs
+      diffBranches:
+        order: 3
+        title: "Show diffs across branches"
+        type: "boolean"
+        default: false
+        description: "Diffs will be shown for the current branch against a branch you choose. The `Diff branch files` command will allow choosing which file to compare. The file feature requires the 'split-diff' package to be installed."
+      useSplitDiff:
+        order: 4
+        title: "Split diff"
+        type: "boolean"
+        default: false
+        description: "Use the split-diff package to show diffs for a single file. Only works with `Diff` command when a file is open."

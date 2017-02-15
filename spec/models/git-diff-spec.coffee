@@ -3,6 +3,7 @@ fs = require 'fs-plus'
 git = require '../../lib/git'
 GitDiff = require '../../lib/models/git-diff'
 GitDiffAll = require '../../lib/models/git-diff-all'
+RevisionView = require '../../lib/views/git-revision-view'
 
 currentPane =
   splitRight: ->
@@ -49,6 +50,35 @@ describe "GitDiff when a file is not specified", ->
 
   it "checks for the current open file", ->
     expect(atom.workspace.getActiveTextEditor).toHaveBeenCalled()
+
+describe "when the useSplitDiff config is set to true", ->
+  it "calls RevisionView.showRevision", ->
+    atom.config.set('git-plus.experimental.useSplitDiff', true)
+    spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
+    spyOn(RevisionView, 'showRevision')
+    GitDiff(repo, file: pathToRepoFile)
+    waitsFor -> RevisionView.showRevision.callCount > 0
+    runs ->
+      expect(atom.workspace.open).toHaveBeenCalled()
+      expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, repo.branch
+
+  describe "when no current repository file is open", ->
+    it "notifies user that the split-diff feature won't work unless invoked on a repository file", ->
+      atom.config.set('git-plus.experimental.useSplitDiff', true)
+      spyOn(atom.workspace, 'open')
+      spyOn(RevisionView, 'showRevision')
+      GitDiff(repo)
+      expect(atom.workspace.open).not.toHaveBeenCalled()
+      expect(RevisionView.showRevision).not.toHaveBeenCalled()
+
+  describe "when file option is '.'", ->
+    it "does not try to use split-dif", ->
+      atom.config.set('git-plus.experimental.useSplitDiff', true)
+      spyOn(atom.workspace, 'open')
+      spyOn(RevisionView, 'showRevision')
+      GitDiff(repo, file: '.')
+      expect(atom.workspace.open).not.toHaveBeenCalled()
+      expect(RevisionView.showRevision).not.toHaveBeenCalled()
 
 # describe "when git-plus.general.openInPane config is true", ->
 #   beforeEach ->
