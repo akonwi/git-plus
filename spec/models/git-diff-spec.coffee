@@ -60,7 +60,7 @@ describe "when the useSplitDiff config is set to true", ->
     waitsFor -> RevisionView.showRevision.callCount > 0
     runs ->
       expect(atom.workspace.open).toHaveBeenCalled()
-      expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, repo.branch
+      expect(RevisionView.showRevision).toHaveBeenCalledWith repo, textEditor, repo.branch
 
   describe "when no current repository file is open", ->
     it "notifies user that the split-diff feature won't work unless invoked on a repository file", ->

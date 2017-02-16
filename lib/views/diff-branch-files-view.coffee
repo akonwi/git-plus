@@ -53,4 +53,4 @@ class DiffBranchFilesListView extends StatusListView
       activateItem: true
       searchAllPanes: false
     promise.then (editor) =>
-      RevisionView.showRevision(editor, @branchName)
+      RevisionView.showRevision(@repo, editor, @branchName)

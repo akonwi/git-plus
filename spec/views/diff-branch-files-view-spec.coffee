@@ -20,7 +20,7 @@ describe "DiffBranchFilesView", ->
     it "calls RevisionView.showRevision", ->
       waitsForPromise -> branchView.confirmSelection()
       runs ->
-        expect(RevisionView.showRevision).toHaveBeenCalledWith textEditor, 'branchName'
+        expect(RevisionView.showRevision).toHaveBeenCalledWith repo, textEditor, 'branchName'
 
   describe "when a selectedFilePath is provided", ->
     it "does not show the view and automatically calls RevisionView.showRevision", ->
@@ -28,5 +28,6 @@ describe "DiffBranchFilesView", ->
       expect(branchView.isVisible()).toBe false
       waitsFor -> RevisionView.showRevision.callCount > 0
       runs ->
-        expect(RevisionView.showRevision.mostRecentCall.args[0].getPath()).toBe(pathToRepoFile)
-        expect(RevisionView.showRevision.mostRecentCall.args[1]).toBe('branchName')
+        expect(RevisionView.showRevision.mostRecentCall.args[0]).toBe(repo)
+        expect(RevisionView.showRevision.mostRecentCall.args[1].getPath()).toBe(pathToRepoFile)
+        expect(RevisionView.showRevision.mostRecentCall.args[2]).toBe('branchName')
