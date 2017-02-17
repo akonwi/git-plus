@@ -3,8 +3,6 @@
 
 git = require '../git'
 notifier = require '../notifier'
-BranchListView = require '../views/branch-list-view'
-RemoteBranchListView = require '../views/remote-branch-list-view'
 
 class InputView extends View
   @content: ->
@@ -39,7 +37,3 @@ class InputView extends View
 
 module.exports.newBranch = (repo) ->
   new InputView(repo)
-
-module.exports.gitRemoteBranches = (repo) ->
-  git.cmd(['branch', '-r', '--no-color'], cwd: repo.getWorkingDirectory())
-  .then (data) -> new RemoteBranchListView(repo, data)

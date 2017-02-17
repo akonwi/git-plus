@@ -1,22 +1,12 @@
 git = require '../../lib/git'
 {repo, pathToRepoFile} = require '../fixtures'
 {
-  gitRemoteBranches,
   newBranch
 } = require '../../lib/models/git-branch'
 
 describe "GitBranch", ->
   beforeEach ->
     spyOn(atom.workspace, 'addModalPanel').andCallThrough()
-
-  describe ".gitRemoteBranches", ->
-    beforeEach ->
-      spyOn(git, 'cmd').andReturn Promise.resolve 'branch1\nbranch2'
-      waitsForPromise -> gitRemoteBranches(repo)
-
-    it "displays a list of the repo's remote branches", ->
-      expect(git.cmd).toHaveBeenCalledWith ['branch', '-r', '--no-color'], cwd: repo.getWorkingDirectory()
-      expect(atom.workspace.addModalPanel).toHaveBeenCalled()
 
   describe ".newBranch", ->
     beforeEach ->
