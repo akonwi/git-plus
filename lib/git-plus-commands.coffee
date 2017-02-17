@@ -2,6 +2,7 @@ git = require './git'
 
 getCommands = ->
   GitBranch              = require './models/git-branch'
+  GitCheckoutBranch      = require './models/git-checkout-branch'
   GitDeleteLocalBranch   = require './models/git-delete-local-branch'
   GitDeleteRemoteBranch  = require './models/git-delete-remote-branch'
   GitCheckoutAllFiles    = require './models/git-checkout-all-files'
@@ -61,7 +62,7 @@ getCommands = ->
       commands.push ['git-plus:add-all-and-commit', 'Add All And Commit', -> git.add(repo).then -> GitCommit(repo)]
       commands.push ['git-plus:add-all-commit-and-push', 'Add All, Commit And Push', -> git.add(repo).then -> GitCommit(repo, andPush: true)]
       commands.push ['git-plus:commit-all-and-push', 'Commit All And Push', -> GitCommit(repo, stageChanges: true, andPush: true)]
-      commands.push ['git-plus:checkout', 'Checkout', -> GitBranch.gitBranches(repo)]
+      commands.push ['git-plus:checkout', 'Checkout', -> GitCheckoutBranch(repo)]
       commands.push ['git-plus:checkout-remote', 'Checkout Remote', -> GitBranch.gitRemoteBranches(repo)]
       commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitBranch.newBranch(repo)]
       commands.push ['git-plus:delete-local-branch', 'Delete Local Branch', -> GitDeleteLocalBranch(repo)]
