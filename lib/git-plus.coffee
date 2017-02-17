@@ -10,8 +10,7 @@ GitDiffContext         = require './models/context/git-diff-context'
 GitAddAndCommitContext = require './models/context/git-add-and-commit-context'
 GitCheckoutNewBranch   = require './models/git-checkout-new-branch'
 GitCheckoutBranch      = require './models/git-checkout-branch'
-GitDeleteLocalBranch   = require './models/git-delete-local-branch.coffee'
-GitDeleteRemoteBranch  = require './models/git-delete-remote-branch.coffee'
+GitDeleteBranch        = require './models/git-delete-branch'
 GitCheckoutAllFiles    = require './models/git-checkout-all-files'
 GitCheckoutFile        = require './models/git-checkout-file'
 GitCheckoutFileContext = require './models/context/git-checkout-file-context'
@@ -125,8 +124,8 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout-current-file', -> git.getRepo().then((repo) -> GitCheckoutFile(repo, file: currentFile(repo)))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:checkout-all-files', -> git.getRepo().then((repo) -> GitCheckoutAllFiles(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:new-branch', -> git.getRepo().then((repo) -> GitCheckoutNewBranch(repo))
-      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:delete-local-branch', -> git.getRepo().then((repo) -> GitDeleteLocalBranch(repo))
-      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:delete-remote-branch', -> git.getRepo().then((repo) -> GitDeleteRemoteBranch(repo))
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:delete-local-branch', -> git.getRepo().then((repo) -> GitDeleteBranch(repo))
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:delete-remote-branch', -> git.getRepo().then((repo) -> GitDeleteBranch(repo, {remote: true}))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:cherry-pick', -> git.getRepo().then((repo) -> GitCherryPick(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:diff', -> git.getRepo().then((repo) -> GitDiff(repo, file: currentFile(repo)))
       if atom.config.get('git-plus.experimental.diffBranches')
