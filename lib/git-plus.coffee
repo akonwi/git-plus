@@ -85,9 +85,9 @@ setDiffGrammar = ->
 getWorkspaceRepos = -> atom.project.getRepositories().filter (r) -> r?
 
 onPathsChanged = (gp) ->
-  gp.deactivate()
-  gp.activate()
-  gp.consumeStatusBar(gp.statusBar) if gp.statusBar
+  gp.deactivate?()
+  gp.activate?()
+  gp.consumeStatusBar?(gp.statusBar) if gp.statusBar
 
 module.exports =
   config: configurations
