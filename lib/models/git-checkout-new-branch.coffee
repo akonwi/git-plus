@@ -35,5 +35,4 @@ class InputView extends View
       .catch (err) =>
         notifier.addError err
 
-module.exports.newBranch = (repo) ->
-  new InputView(repo)
+module.exports = (repo) -> new InputView(repo)
