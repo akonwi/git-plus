@@ -1,28 +1,4 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
-'context-menu':
-  'atom-text-editor:not(.mini)': [
-    {
-      'label': 'Git add file'
-      'command': 'git-plus:add'
-    }
-  ]
-  '.tree-view.full-menu .file, .tree-view.full-menu .directory': [
-    { type: 'separator'},
-    'label': 'Git',
-    'submenu': [
-      {
-        label: 'Git add',
-        'command': 'git-plus-context:add'
-      },
-      {
-        label: 'Git difftool',
-        'command': 'git-plus-context:difftool'
-      },
-    ],
-    { type: 'separator'}
-  ]
-
-
 'menu': [
   {
     'label': 'Packages'
@@ -32,80 +8,96 @@
         {
           'label': 'Add'
           'command': 'git-plus:add'
-        }
+        },
         {
           'label': 'Add Modified'
           'command': 'git-plus:add-modified'
-        }
+        },
         {
           'label': 'Add All'
           'command': 'git-plus:add-all'
-        }
+        },
+        {
+          'label': 'Checkout Current File'
+          'command': 'git-plus:checkout-current-file'
+        },
         {
           'label': 'Commit'
           'command': 'git-plus:commit'
-        }
+        },
         {
           'label': 'Diff'
           'command': 'git-plus:diff'
-        }
+        },
+        {
+          'label': 'Diff Branches'
+          'command': 'git-plus:diff-branches'
+        },
+        {
+          'label': 'Diff Branche Files'
+          'command': 'git-plus:diff-branch-files'
+        },
         {
           'label': 'Difftool'
           'command': 'git-plus:difftool'
-        }
+        },
         {
           'label': 'Diff All'
           'command': 'git-plus:diff-all'
-        }
+        },
         {
           'label': 'Add + Commit'
           'command': 'git-plus:add-and-commit'
-        }
+        },
         {
           'label': 'Add + Commit + Push'
           'command': 'git-plus:add-and-commit-and-push'
-        }
+        },
         {
           'label': 'Add All + Commit'
           'command': 'git-plus:add-all-and-commit'
-        }
+        },
         {
           'label': 'Add All + Commit + Push'
           'command': 'git-plus:add-all-commit-and-push'
-        }
+        },
         {
           'label': 'Push'
           'command': 'git-plus:push'
-        }
+        },
         {
           'label': 'Log'
           'command': 'git-plus:log'
-        }
+        },
         {
           'label': 'Merge'
           'submenu': [
             {
               'label': 'Normal Merge'
               'command': 'git-plus:merge'
-            }
+            },
             {
               'label': 'Merge Remote'
               'command': 'git-plus:merge-remote'
-            }
+            },
             {
               'label': 'Merge without fast-forward'
               'command': 'git-plus:merge-no-fast-forward'
             }
           ]
-        }
+        },
         {
           'label': 'Pull Using Rebase'
           'command': 'git-plus:pull-using-rebase'
-        }
+        },
         {
           'label': 'Rebase'
           'command': 'git-plus:rebase'
-        }
+        },
+        {
+          'label': 'Run'
+          'command': 'git-plus:run'
+        },
       ]
     ]
   }

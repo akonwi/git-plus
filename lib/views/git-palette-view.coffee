@@ -3,6 +3,7 @@ _ = require 'underscore-plus'
 GitPlusCommands = require '../git-plus-commands'
 GitInit = require '../models/git-init'
 fuzzyFilter = require('fuzzaldrin').filter
+CommandsKeystrokeHumanizer = require('../command-keystroke-humanizer')()
 module.exports =
 class GitPaletteView extends SelectListView
 
@@ -35,8 +36,9 @@ class GitPaletteView extends SelectListView
 
     GitPlusCommands()
       .then (commands) =>
-        commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2] }
-        commands = _.sortBy(commands, 'name')
+        keystrokes = CommandsKeystrokeHumanizer.get(commands)
+        commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2], keystroke: keystrokes[c[0]] }
+        commands = _.sortBy(commands, 'description')
         @setItems(commands)
         @panel.show()
         @focusFilterEditor()
@@ -73,10 +75,15 @@ class GitPaletteView extends SelectListView
   hide: ->
     @panel?.destroy()
 
-  viewForItem: ({name, description}, matchedStr) ->
+  viewForItem: ({name, description, keystroke}, matchedStr) ->
     $$ ->
       @li class: 'command', 'data-command-name': name, =>
-        if matchedStr? then @raw(matchedStr) else @span description
+        if matchedStr? then @raw(matchedStr)
+        else
+          @span description
+          if keystroke?
+            @div class: 'pull-right', =>
+              @kbd class: 'key-binding', keystroke
 
   confirmed: ({func}) ->
     @cancel()

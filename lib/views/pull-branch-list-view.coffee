@@ -3,7 +3,8 @@ OutputViewManager = require '../output-view-manager'
 notifier = require '../notifier'
 BranchListView = require './branch-list-view'
 
-branchFilter = (item) -> item isnt '' and item.indexOf('origin/HEAD') < 0
+isValidBranch = (item, remote) ->
+  item.startsWith(remote + '/') and not item.includes('/HEAD')
 
 module.exports =
   # Extension of BranchListView
@@ -16,22 +17,16 @@ module.exports =
         @reject = reject
 
     parseData: ->
-      @currentBranchString = '== Current =='
-      currentBranch =
-        name: @currentBranchString
-      items = @data.split("\n")
-      branches = items.filter(branchFilter).map (item) -> {name: item.replace(/\s/g, '')}
+      items = @data.split("\n").map (item) -> item.replace(/\s/g, '')
+      branches = items.filter((item) => isValidBranch(item, @remote)).map (item) -> {name: item}
       if branches.length is 1
         @confirmed branches[0]
       else
-        @setItems [currentBranch].concat branches
+        @setItems branches
       @focusFilterEditor()
 
     confirmed: ({name}) ->
-      if name is @currentBranchString
-        @pull()
-      else
-        @pull name.substring(name.indexOf('/') + 1)
+      @pull name.substring(name.indexOf('/') + 1)
       @cancel()
 
     pull: (remoteBranch='') ->
@@ -40,9 +35,10 @@ module.exports =
       args = ['pull'].concat(@extraArgs, @remote, remoteBranch).filter((arg) -> arg isnt '')
       git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
-        @resolve()
+        @resolve remoteBranch
         view.setContent(data).finish()
         startMessage.dismiss()
+        git.refresh @repo
       .catch (error) =>
         ## Should @result be rejected for those depending on this view?
         # @reject()

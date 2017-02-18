@@ -24,7 +24,7 @@ class OutputView extends ScrollView
     @show()
     @timeout = setTimeout =>
       @hide()
-    , atom.config.get('git-plus.messageTimeout') * 1000
+    , atom.config.get('git-plus.general.messageTimeout') * 1000
 
   toggle: ->
     clearTimeout @timeout if @timeout

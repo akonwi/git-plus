@@ -5,13 +5,15 @@ _ = require 'underscore-plus'
 git = require '../git'
 GitShow = require '../models/git-show'
 
-numberOfCommitsToShow = -> atom.config.get('git-plus.numberOfCommitsToShow')
+numberOfCommitsToShow = -> atom.config.get('git-plus.logs.numberOfCommitsToShow')
 
 module.exports =
 class LogListView extends View
   @content: ->
     @div class: 'git-plus-log', tabindex: -1, =>
       @table id: 'git-plus-commits', outlet: 'commitsListView'
+      @div class: 'show-more', =>
+        @a id: 'show-more', 'Show More'
 
   getURI: -> 'atom://git-plus:log'
 
@@ -20,11 +22,13 @@ class LogListView extends View
   initialize: ->
     @skipCommits = 0
     @finished = false
+    loadMore = _.debounce( =>
+      @getLog() if @prop('scrollHeight') - @scrollTop() - @height() < 20
+    , 50)
     @on 'click', '.commit-row', ({currentTarget}) =>
       @showCommitLog currentTarget.getAttribute('hash')
-    @scroll(_.debounce( =>
-      @getLog() if @prop('scrollHeight') - @scrollTop() - @height() < 20
-    , 50))
+    @on 'click', '#show-more', loadMore
+    @scroll(loadMore)
 
   attached: ->
     @commandSubscription = atom.commands.add @element,

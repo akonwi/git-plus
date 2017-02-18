@@ -16,7 +16,7 @@ describe "GitShow", ->
     expect(pathToRepoFile in args).toBe true
 
   it "uses the format option from package settings", ->
-    atom.config.set('git-plus.showFormat', 'fuller')
+    atom.config.set('git-plus.general.showFormat', 'fuller')
     GitShow repo, 'foobar-hash', pathToRepoFile
     args = git.cmd.mostRecentCall.args[0]
     expect('--format=fuller' in args).toBe true

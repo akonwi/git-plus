@@ -21,6 +21,10 @@
 	&.info-view {
 		overflow  : auto;
 		max-height: 30vh;
+
+		.output {
+			background-color: inherit;
+		}
 	}
 }
 
@@ -32,31 +36,31 @@
 }
 
 atom-text-editor,
-atom-text-editor::shadow {
-	.diff {
-		.unimportant {
+atom-text-editor.editor {
+	.syntax--diff {
+		.syntax--unimportant {
 			color: mix(@syntax-text-color, @syntax-background-color, 25%);
 		}
 
-		.info {
+		.syntax--info {
 			color: @syntax-color-modified;
 		}
 
-		.deletion {
+		.syntax--deletion {
 			color: @syntax-color-removed;
 		}
 
-		.insertion {
+		.syntax--insertion {
 			color: @syntax-color-added;
 		}
 
-		.markup.removed.diff,
-		.meta.diff.header.from-file {
+		.syntax--markup.syntax--removed.syntax--diff,
+		.syntax--meta.syntax--diff.syntax--header.syntax--from-file {
 			border-bottom: 2px solid @syntax-color-removed;
 		}
 
-		.markup.added.diff,
-		.meta.diff.header.to-file {
+		.syntax--markup.syntax--added.syntax--diff,
+		.syntax--meta.syntax--diff.syntax--header.syntax--to-file {
 			border-bottom: 2px solid @syntax-color-added;
 		}
 	}
@@ -67,6 +71,7 @@ atom-text-editor::shadow {
 	overflow-y      : auto;
 
 	#git-plus-commits {
+		width: 100%;
 		color : @text-color;
 		cursor: pointer;
 
@@ -92,5 +97,12 @@ atom-text-editor::shadow {
 			width     : 10%;
 			text-align: right;
 		}
+	}
+
+	.show-more {
+		text-align: center;
+	}
+	#show-more {
+		padding-top: 10px;
 	}
 }

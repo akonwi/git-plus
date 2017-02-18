@@ -19,7 +19,6 @@ describe "StatusListView", ->
       view.confirmSelection()
       expect('diff' in git.cmd.mostRecentCall.args[0]).toBe true
 
-
   describe "when there are unstaged files", ->
     beforeEach ->
       spyOn(window, 'confirm').andReturn true
@@ -41,9 +40,3 @@ describe "StatusListView", ->
       view = new StatusListView(repo, [" M\tfile.txt", " D\tanother.txt", ''])
       view.confirmSelection()
       expect(atom.open).toHaveBeenCalled()
-  # describe "when there are unstaged files", ->
-  #   it "checkouts the selected branch", ->
-  #     @view.confirmSelection()
-  #     @view.checkout 'branch1'
-  #     waitsFor -> git.cmd.callCount > 0
-  #     expect(git.cmd).toHaveBeenCalledWith ['checkout', 'branch1'], cwd: repo.getWorkingDirectory()
