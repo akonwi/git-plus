@@ -7,7 +7,7 @@ module.exports = (repo, filePath) ->
   git.cmd(['branch', '--no-color'], cwd: repo.getWorkingDirectory())
   .then (branches) ->
     new BranchListView repo, branches, ({name}) ->
-      branchName = if name.startsWith "*" then name.slice(1) else name
+      branchName = name
       args = ['diff', '--name-status', repo.branch, branchName]
       git.cmd(args, cwd: repo.getWorkingDirectory())
       .then (diffData) ->

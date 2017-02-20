@@ -12,3 +12,9 @@ describe "BranchListView", ->
       view = new BranchListView(repo, "branch1\nbranch2", onConfirm)
       view.confirmSelection()
       expect(onConfirm).toHaveBeenCalledWith name: 'branch1'
+
+    it "removes the '*' character from in the branch name if it is there", ->
+      onConfirm = jasmine.createSpy()
+      view = new BranchListView(repo, "*branch1\nbranch2", onConfirm)
+      view.confirmSelection()
+      expect(onConfirm).toHaveBeenCalledWith name: 'branch1'

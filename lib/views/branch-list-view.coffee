@@ -12,10 +12,10 @@ class ListView extends SelectListView
   parseData: ->
     items = @data.split("\n")
     branches = []
-    for item in items
+    items.forEach (item) ->
       item = item.replace(/\s/g, '')
-      unless item is ''
-        branches.push {name: item}
+      name = if item.startsWith("*") then item.slice(1) else item
+      branches.push({name}) unless item is ''
     @setItems branches
     @focusFilterEditor()
 

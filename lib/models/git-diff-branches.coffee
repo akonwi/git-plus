@@ -24,7 +24,7 @@ module.exports = (repo) ->
   disposable = null
   git.cmd(['branch', '--no-color'], cwd: repo.getWorkingDirectory())
   .then (data) -> new BranchListView repo, data, ({name}) ->
-    branchName = name.slice(1) if name.startsWith "*"
+    branchName = name
     args = ['diff', '--stat', repo.branch, name]
     git.cmd(args, cwd: repo.getWorkingDirectory())
     .then (data) ->
