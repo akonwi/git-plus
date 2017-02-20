@@ -1,5 +1,10 @@
 ## Changelog
 
+### 7.3.1
+- Fixes [#626](https://github.com/akonwi/git-plus/issues/626)
+- Change location of the split-diff generated file
+- Removed some dependencies
+
 ### 7.3.0
 - [Experimental Features] Show diffs between branches (@yacut)
 - [Experimental Features] Use the split-diff package to show diffs for a single file (@yacut)
