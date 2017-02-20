@@ -42,6 +42,5 @@ module.exports = (repo) ->
       .catch (err) =>
         if err is nothingToShow
           notifier.addInfo err
-          @cancel()
         else
           notifier.addError err
