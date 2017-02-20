@@ -5,8 +5,8 @@ isValidBranch = (item, remote) ->
 
 module.exports =
   class RemoteBranchListView extends BranchListView
-    initialize: (repo, data, @remote, onConfirm) ->
-      super(repo, data, onConfirm)
+    initialize: (data, @remote, onConfirm) ->
+      super(data, onConfirm)
 
     parseData: ->
       items = @data.split("\n").map (item) -> item.replace(/\s/g, '')

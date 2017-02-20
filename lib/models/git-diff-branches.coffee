@@ -23,7 +23,7 @@ prepFile = (text, filePath) ->
 module.exports = (repo) ->
   disposable = null
   git.cmd(['branch', '--no-color'], cwd: repo.getWorkingDirectory())
-  .then (data) -> new BranchListView repo, data, ({name}) ->
+  .then (data) -> new BranchListView data, ({name}) ->
     branchName = name
     args = ['diff', '--stat', repo.branch, name]
     git.cmd(args, cwd: repo.getWorkingDirectory())

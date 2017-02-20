@@ -45,7 +45,7 @@ class ListView extends SelectListView
       git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
       .then (data) =>
         new Promise (resolve, reject) =>
-          new RemoteBranchListView @repo, data, remoteName, ({name}) =>
+          new RemoteBranchListView data, remoteName, ({name}) =>
             branchName = name.substring(name.indexOf('/') + 1)
             view = OutputViewManager.create()
             startMessage = notifier.addInfo "Pulling...", dismissable: true
@@ -105,7 +105,7 @@ class ListView extends SelectListView
       else
         git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
         .then (data) =>
-          new RemoteBranchListView @repo, data, remote, ({name}) ->
+          new RemoteBranchListView data, remote, ({name}) ->
             branchName = name.substring(name.indexOf('/') + 1)
             view = OutputViewManager.create()
             startMessage = notifier.addInfo "Pushing...", dismissable: true
