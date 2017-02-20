@@ -43,4 +43,4 @@ class ListView extends SelectListView
   confirmed: (item) ->
     @onConfirm(item)
     @cancel()
-    @currentPane.activate() if @currentPane.isAlive()
+    @currentPane.activate() if @currentPane?.isAlive()

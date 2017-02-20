@@ -5,7 +5,6 @@ _pull = require '../models/_pull'
 notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'
 RemoteBranchListView = require './remote-branch-list-view'
-PushBranchListView = require './push-branch-list-view'
 
 module.exports =
 class ListView extends SelectListView
@@ -105,7 +104,20 @@ class ListView extends SelectListView
           startMessage.dismiss()
       else
         git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
-        .then (data) => new PushBranchListView(@repo, data, remote, extraArgs).result
+        .then (data) =>
+          new RemoteBranchListView @repo, data, remote, ({name}) ->
+            branchName = name.substring(name.indexOf('/') + 1)
+            view = OutputViewManager.create()
+            startMessage = notifier.addInfo "Pushing...", dismissable: true
+            args = ['push'].concat(extraArgs, remote, branchName).filter((arg) -> arg isnt '')
+            git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
+            .then (data) =>
+              view.setContent(data).finish()
+              startMessage.dismiss()
+              git.refresh @repo
+            .catch (error) =>
+              view.setContent(error).finish()
+              startMessage.dismiss()
     else
       view = OutputViewManager.create()
       args = [@mode]
