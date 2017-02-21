@@ -7,7 +7,8 @@ OutputViewManager = require '../output-view-manager'
 
 runCommand = (args, workingDirectory) ->
   view = OutputViewManager.create()
-  git.cmd(args, cwd: workingDirectory, {color: true})
+  promise = git.cmd(args, cwd: workingDirectory, {color: true})
+  promise
   .then (data) ->
     msg = "git #{args.join(' ')} was successful"
     notifier.addSuccess(msg)
@@ -22,6 +23,7 @@ runCommand = (args, workingDirectory) ->
     else
       view.reset()
     view.finish()
+  return promise
 
 class InputView extends View
   @content: ->

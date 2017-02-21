@@ -15,5 +15,10 @@ describe "GitRun", ->
   describe "when called with a repository and a string with arguments", ->
     it "calls git.cmd with the arguments passed", ->
       spyOn(git, 'cmd').andReturn Promise.resolve true
-      view = GitRun(repo, "status --list")
+      GitRun(repo, "status --list")
       expect(git.cmd).toHaveBeenCalledWith ['status', '--list'], cwd: repo.getWorkingDirectory(), {color: true}
+
+    it "returns a promise that resolves with the result from git CLI", ->
+      spyOn(git, 'cmd').andReturn Promise.resolve 'a real git thing'
+      GitRun(repo, "status --list")
+      .then (result) -> expect(result).toBe 'a real git thing'
