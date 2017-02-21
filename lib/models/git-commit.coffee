@@ -112,10 +112,10 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
         commit(repo.getWorkingDirectory(), filePath)
         .then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
-    .catch (msg) -> notifier.addError msg
+    .catch(notifier.addError)
 
   if stageChanges
-    git.add(repo, update: stageChanges).then(-> init()).then -> startCommit()
+    git.add(repo, update: true).then(init).then(startCommit)
   else
     init().then -> startCommit()
     .catch (message) ->
