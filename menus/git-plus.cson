@@ -87,10 +87,6 @@
           ]
         },
         {
-          'label': 'Pull Using Rebase'
-          'command': 'git-plus:pull-using-rebase'
-        },
-        {
           'label': 'Rebase'
           'command': 'git-plus:rebase'
         },
