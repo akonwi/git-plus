@@ -1,9 +1,12 @@
 ## Changelog
 
+### 7.3.3
+- Fixed [#631](https://github.com/akonwi/git-plus/issues/631)
+
 ### 7.3.2
 - Fixed [#627](https://github.com/akonwi/git-plus/issues/627)
 - Removed `Pull using rebase` command from the packages menu in OS status bar
-- The `run` function for custom commands now returns a promise that resolves with the git output. Which allows for chaining for more complicated commands. 
+- The `run` function for custom commands now returns a promise that resolves with the git output. Which allows for chaining for more complicated commands.
 
 ### 7.3.1
 - Fixes [#626](https://github.com/akonwi/git-plus/issues/626)
