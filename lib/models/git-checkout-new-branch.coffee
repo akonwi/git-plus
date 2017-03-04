@@ -6,7 +6,7 @@ notifier = require '../notifier'
 
 class InputView extends View
   @content: ->
-    @div =>
+    @div class: 'git-branch', =>
       @subview 'branchEditor', new TextEditorView(mini: true, placeholderText: 'New branch name')
 
   initialize: (@repo) ->
