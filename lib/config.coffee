@@ -1,3 +1,11 @@
+meta = #Key
+  define: "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/metaKey"
+  key:
+    switch process.platform
+      when "darwin" then "⌘"
+      when "linux" then "Super"
+      when "win32" then "❖"
+
 module.exports =
   general:
     order: 1
@@ -15,27 +23,34 @@ module.exports =
         type: "boolean"
         default: true
         description: "The pin icon in the bottom-right of the status-bar toggles the output view above the status-bar"
-      openInPane:
+      newBranchKey:
         order: 3
+        title: "Status-bar New Branch modifier key"
+        type: "string"
+        default: "alt"
+        description: "Status-bar branch list modifier key to alternatively create a new branch if held on click. Note that _[`meta`](#{meta.define})_ is <kbd>#{meta.key}</kbd>"
+        enum: ["alt", "shift", "meta", "ctrl"]
+      openInPane:
+        order: 4
         title: "Allow commands to open new panes"
         type: "boolean"
         default: true
         description: "Commands like `Commit`, `Log`, `Show`, `Diff` can be split into new panes"
       splitPane:
-        order: 4
+        order: 5
         title: "Split pane direction"
         type: "string"
         default: "Down"
         description: "Where should new panes go?"
         enum: ["Up", "Right", "Down", "Left"]
       messageTimeout:
-        order: 5
+        order: 6
         title: "Output view timeout"
         type: "integer"
         default: 5
         description: "For how many seconds should the output view above the status-bar stay open?"
       showFormat:
-        order: 6
+        order: 7
         title: "Format option for 'Git Show'"
         type: "string"
         default: "full"
