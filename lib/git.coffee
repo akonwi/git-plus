@@ -115,6 +115,11 @@ module.exports = git =
         notifier.addSuccess "Added #{file ? 'all files'}"
     .catch (msg) -> notifier.addError msg
 
+  getAllRepos: ->
+    {project} = atom
+    Promise.all(project.getDirectories()
+      .map(project.repositoryForDirectory.bind(project)))
+
   getRepo: ->
     new Promise (resolve, reject) ->
       getRepoForCurrentFile().then (repo) -> resolve(repo)

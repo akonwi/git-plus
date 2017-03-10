@@ -26,6 +26,7 @@ GitDifftool            = require './models/git-difftool'
 GitDifftoolContext     = require './models/context/git-difftool-context'
 GitDiffAll             = require './models/git-diff-all'
 GitFetch               = require './models/git-fetch'
+GitFetchAll            = require './models/git-fetch-all'
 GitFetchPrune          = require './models/git-fetch-prune.coffee'
 GitInit                = require './models/git-init'
 GitLog                 = require './models/git-log'
@@ -134,6 +135,7 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:difftool', -> git.getRepo().then((repo) -> GitDifftool(repo, file: currentFile(repo)))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:diff-all', -> git.getRepo().then((repo) -> GitDiffAll(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch', -> git.getRepo().then((repo) -> GitFetch(repo))
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch-all', -> git.getAllRepos().then((repos) -> GitFetchAll(repos))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch-prune', -> git.getRepo().then((repo) -> GitFetchPrune(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:pull', -> git.getRepo().then((repo) -> GitPull(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:push', -> git.getRepo().then((repo) -> GitPush(repo))
