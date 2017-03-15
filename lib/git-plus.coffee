@@ -95,6 +95,8 @@ module.exports =
 
   subscriptions: null
 
+  workspace: document.querySelector('atom-workspace')
+
   provideService: -> require './service'
 
   activate: (state) ->
@@ -181,10 +183,18 @@ module.exports =
       @subscriptions.add atom.config.onDidChange 'git-plus.experimental.stageFilesBeta', =>
         @subscriptions.dispose()
         @activate()
+      @subscriptions.add atom.config.observe 'git-plus.remoteInteractions.autoFetch', (interval) => @autoFetch(interval)
 
   deactivate: ->
     @subscriptions.dispose()
     @statusBarTile?.destroy()
+    clearInterval @autoFetchInterval
+
+  autoFetch: (interval) ->
+    clearInterval @autoFetchInterval
+    if ms = (interval * 60) * 1000
+      fetch = => atom.commands.dispatch(@workspace, 'git-plus:fetch-all')
+      @autoFetchInterval = setInterval(fetch, ms)
 
   consumeAutosave: ({dontSaveIf}) ->
     dontSaveIf (paneItem) -> paneItem.getPath().includes 'COMMIT_EDITMSG'
@@ -210,7 +220,7 @@ module.exports =
   setupBranchesMenuToggle: (statusBar) ->
     statusBar.getRightTiles().some ({item}) =>
       if item?.classList?.contains? 'git-view'
-        $(item).find('.git-branch').on 'click', ({altKey, shiftKey}) ->
+        $(item).find('.git-branch').on 'click', ({altKey, shiftKey}) =>
           unless altKey or shiftKey
-            atom.commands.dispatch(document.querySelector('atom-workspace'), 'git-plus:checkout')
+            atom.commands.dispatch(@workspace, 'git-plus:checkout')
         return true
