@@ -49,7 +49,7 @@ module.exports = git =
         command: atom.config.get('git-plus.general.gitPath') ? 'git'
         args: args
         options: options
-        stdout: (data) -> output += data.toString()
+        stdout: (data) -> output += data.toString().trim()
         stderr: (data) ->
           output += data.toString()
         exit: (code) ->
