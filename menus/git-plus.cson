@@ -104,6 +104,10 @@
             {
               'label': 'Edit Config'
               'command': 'git-plus:edit-config'
+            },
+            {
+              'label': 'Edit Excludes'
+              'command': 'git-plus:edit-excludes'
             }
           ]
         }
