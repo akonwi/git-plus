@@ -94,6 +94,15 @@
           'label': 'Run'
           'command': 'git-plus:run'
         },
+        {
+          'label': 'Config'
+          'submenu': [
+            {
+              'label': 'Edit Attributes'
+              'command': 'git-plus:edit-attributes'
+            }
+          ]
+        }
       ]
     ]
   }

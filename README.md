@@ -58,6 +58,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Show` | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`. | |
 | `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
 | `Git Tags` | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete. | |
+| `Edit Attributes` | Open your _local_ git attributes file in a new tab. | |
 
 ### Commit Window
 To change where the commit window appears go to settings and find
