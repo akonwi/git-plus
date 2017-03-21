@@ -53,6 +53,7 @@ GitRebase              = require './models/git-rebase'
 GitOpenChangedFiles    = require './models/git-open-changed-files'
 diffGrammars           = require './grammars/diff.js'
 GitEditAttributes      = require './models/git-edit-attributes'
+GitEditConfig          = require './models/git-edit-config'
 
 baseWordGrammar = __dirname + '/grammars/word-diff.json'
 baseLineGrammar = __dirname + '/grammars/line-diff.json'
@@ -160,6 +161,7 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:rebase', -> git.getRepo().then((repo) -> GitRebase(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:git-open-changed-files', -> git.getRepo().then((repo) -> GitOpenChangedFiles(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-attributes', -> git.getRepo().then((repo) -> GitEditAttributes(repo))
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-config', -> git.getRepo().then((repo) -> GitEditConfig(repo))
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> GitAddContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> GitAddAndCommitContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> GitCheckoutFileContext()

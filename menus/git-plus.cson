@@ -100,6 +100,10 @@
             {
               'label': 'Edit Attributes'
               'command': 'git-plus:edit-attributes'
+            },
+            {
+              'label': 'Edit Config'
+              'command': 'git-plus:edit-config'
             }
           ]
         }

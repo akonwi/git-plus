@@ -38,6 +38,7 @@ getCommands = ->
   GitRebase              = require './models/git-rebase'
   GitOpenChangedFiles    = require './models/git-open-changed-files'
   GitEditAttributes      = require './models/git-edit-attributes'
+  GitEditConfig          = require './models/git-edit-config'
 
   git.getRepo()
     .then (repo) ->
@@ -102,6 +103,7 @@ getCommands = ->
       commands.push ['git-plus:rebase', 'Rebase', -> GitRebase(repo)]
       commands.push ['git-plus:git-open-changed-files', 'Open Changed Files', -> GitOpenChangedFiles(repo)]
       commands.push ['git-plus:edit-attributes', 'Edit Attributes', -> GitEditAttributes(repo)]
+      commands.push ['git-plus:edit-config', 'Edit Config', -> GitEditConfig(repo)]
 
       return commands
 
