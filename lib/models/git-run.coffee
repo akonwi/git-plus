@@ -5,11 +5,10 @@ git = require '../git'
 notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'
 
-runCommand = (args, workingDirectory) ->
+runCommand = (repo, args) ->
   view = OutputViewManager.create()
-  promise = git.cmd(args, cwd: workingDirectory, {color: true})
-  promise
-  .then (data) ->
+  promise = git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
+  promise.then (data) ->
     msg = "git #{args.join(' ')} was successful"
     notifier.addSuccess(msg)
     if data?.length > 0
@@ -17,12 +16,14 @@ runCommand = (args, workingDirectory) ->
     else
       view.reset()
     view.finish()
+    git.refresh repo
   .catch (msg) =>
     if msg?.length > 0
       view.setContent msg
     else
       view.reset()
     view.finish()
+    git.refresh repo
   return promise
 
 class InputView extends View
@@ -45,17 +46,12 @@ class InputView extends View
     @disposables.add atom.commands.add 'atom-text-editor', 'core:confirm', (e) =>
       @disposables.dispose()
       @panel?.destroy()
-      args = @commandEditor.getText().split(' ')
-      # TODO: remove this?
-      if args[0] is 1 then args.shift()
-      runCommand args, @repo.getWorkingDirectory()
-      .then =>
+      runCommand(@repo, @commandEditor.getText().split(' ')).then =>
         @currentPane.activate()
         git.refresh @repo
 
-module.exports = (repo, args) ->
-  if args
-    args = args.split(' ')
-    runCommand args, repo.getWorkingDirectory()
+module.exports = (repo, args=[]) ->
+  if args.length > 0
+    runCommand repo, args.split(' ')
   else
     new InputView(repo)
