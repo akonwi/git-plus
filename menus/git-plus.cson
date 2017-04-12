@@ -116,6 +116,10 @@
             {
               'label': 'Edit Global Config'
               'command': 'git-plus:edit-global-config'
+            },
+            {
+              'label': 'Edit Global Ignore'
+              'command': 'git-plus:edit-global-ignore'
             }
           ]
         }
