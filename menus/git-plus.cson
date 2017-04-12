@@ -98,3 +98,9 @@
     ]
   }
 ]
+
+'context-menu':
+  '.status-bar .git-branch': [
+    label: "New Branch"
+    command: 'git-plus:new-branch'
+  ]
