@@ -108,6 +108,10 @@
             {
               'label': 'Edit Excludes'
               'command': 'git-plus:edit-excludes'
+            },
+            {
+              'label': 'Edit Global Attributes'
+              'command': 'git-plus:edit-global-attributes'
             }
           ]
         }

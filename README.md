@@ -61,6 +61,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Edit Attributes` | Open your _local_ git attributes file in a new tab. | |
 | `Edit Config` | Open your _local_ git config in a new tab. | |
 | `Edit Excludes` | Open your _[exclude](https://help.github.com/articles/ignoring-files/#explicit-repository-excludes)_ file in a new tab. | |
+| `Edit Global Attributes` | Open your _global_ git _[attributes](http://git-scm.com/docs/gitattributes#gitattributes-Unspecified)_ file in a new tab. | |
 
 ### Commit Window
 To change where the commit window appears go to settings and find
