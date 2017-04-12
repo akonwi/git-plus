@@ -26,6 +26,7 @@ GitDifftool            = require './models/git-difftool'
 GitDifftoolContext     = require './models/context/git-difftool-context'
 GitDiffAll             = require './models/git-diff-all'
 GitFetch               = require './models/git-fetch'
+GitFetchAll            = require './models/git-fetch-all'
 GitFetchPrune          = require './models/git-fetch-prune.coffee'
 GitInit                = require './models/git-init'
 GitLog                 = require './models/git-log'
@@ -94,6 +95,8 @@ module.exports =
 
   subscriptions: null
 
+  workspace: document.querySelector('atom-workspace')
+
   provideService: -> require './service'
 
   activate: (state) ->
@@ -134,6 +137,7 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:difftool', -> git.getRepo().then((repo) -> GitDifftool(repo, file: currentFile(repo)))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:diff-all', -> git.getRepo().then((repo) -> GitDiffAll(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch', -> git.getRepo().then((repo) -> GitFetch(repo))
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch-all', -> git.getAllRepos().then((repos) -> GitFetchAll(repos))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:fetch-prune', -> git.getRepo().then((repo) -> GitFetchPrune(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:pull', -> git.getRepo().then((repo) -> GitPull(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:push', -> git.getRepo().then((repo) -> GitPush(repo))
@@ -179,10 +183,18 @@ module.exports =
       @subscriptions.add atom.config.onDidChange 'git-plus.experimental.stageFilesBeta', =>
         @subscriptions.dispose()
         @activate()
+      @subscriptions.add atom.config.observe 'git-plus.experimental.autoFetch', (interval) => @autoFetch(interval)
 
   deactivate: ->
     @subscriptions.dispose()
     @statusBarTile?.destroy()
+    clearInterval @autoFetchInterval
+
+  autoFetch: (interval) ->
+    clearInterval @autoFetchInterval
+    if fetchIntervalMs = (interval * 60) * 1000
+      fetch = => atom.commands.dispatch(@workspace, 'git-plus:fetch-all')
+      @autoFetchInterval = setInterval(fetch, fetchIntervalMs)
 
   consumeAutosave: ({dontSaveIf}) ->
     dontSaveIf (paneItem) -> paneItem.getPath().includes 'COMMIT_EDITMSG'
@@ -208,7 +220,7 @@ module.exports =
   setupBranchesMenuToggle: (statusBar) ->
     statusBar.getRightTiles().some ({item}) =>
       if item?.classList?.contains? 'git-view'
-        $(item).find('.git-branch').on 'click', ({altKey, shiftKey}) ->
+        $(item).find('.git-branch').on 'click', ({altKey, shiftKey}) =>
           unless altKey or shiftKey
-            atom.commands.dispatch(document.querySelector('atom-workspace'), 'git-plus:checkout')
+            atom.commands.dispatch(@workspace, 'git-plus:checkout')
         return true
