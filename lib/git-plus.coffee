@@ -56,6 +56,7 @@ GitEditAttributes      = require './models/git-edit-attributes'
 GitEditConfig          = require './models/git-edit-config'
 GitEditExcludes        = require './models/git-edit-excludes'
 GitEditGlobalAttributes     = require './models/git-edit-global-attributes'
+GitEditGlobalConfig    = require './models/git-edit-global-config'
 
 baseWordGrammar = __dirname + '/grammars/word-diff.json'
 baseLineGrammar = __dirname + '/grammars/line-diff.json'
@@ -166,6 +167,7 @@ module.exports =
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-config', -> git.getRepo().then((repo) -> GitEditConfig(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-excludes', -> git.getRepo().then((repo) -> GitEditExcludes(repo))
       @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-global-attributes', -> GitEditGlobalAttributes()
+      @subscriptions.add atom.commands.add 'atom-workspace', 'git-plus:edit-global-config', -> GitEditGlobalConfig()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add', -> GitAddContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:add-and-commit', -> GitAddAndCommitContext()
       @subscriptions.add atom.commands.add '.tree-view', 'git-plus-context:checkout-file', -> GitCheckoutFileContext()

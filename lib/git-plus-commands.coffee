@@ -41,6 +41,7 @@ getCommands = ->
   GitEditConfig          = require './models/git-edit-config'
   GitEditExcludes        = require './models/git-edit-excludes'
   GitEditGlobalAttributes    = require './models/git-edit-global-attributes'
+  GitEditGlobalConfig    = require './models/git-edit-global-config'
 
   git.getRepo()
     .then (repo) ->
@@ -108,6 +109,7 @@ getCommands = ->
       commands.push ['git-plus:edit-config', 'Edit Config', -> GitEditConfig(repo)]
       commands.push ['git-plus:edit-excludes', 'Edit Excludes', -> GitEditExcludes(repo)]
       commands.push ['git-plus:edit-global-attributes', 'Edit Global Attributes', -> GitEditGlobalAttributes()]
+      commands.push ['git-plus:edit-global-config', 'Edit Global Config', -> GitEditGlobalConfig()]
 
       return commands
 
