@@ -220,7 +220,8 @@ module.exports =
   setupBranchesMenuToggle: (statusBar) ->
     statusBar.getRightTiles().some ({item}) =>
       if item?.classList?.contains? 'git-view'
-        $(item).find('.git-branch').on 'click', ({altKey, shiftKey}) =>
-          unless altKey or shiftKey
+        $(item).find('.git-branch').on 'click', (e) =>
+          keys = ['alt', 'shift', 'meta', 'ctrl']
+          unless (keys.some (key) -> e["#{key}Key"])
             atom.commands.dispatch(@workspace, 'git-plus:checkout')
         return true
