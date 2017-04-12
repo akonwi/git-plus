@@ -85,33 +85,20 @@ module.exports =
     order: 5
     type: "object"
     properties:
-      autoFetch:
-        order: 1
-        title: "Auto-fetch"
-        type: "integer"
-        default: 1
-        maximum: 60
-        description: "Automatically fetch remote repositories every `x` minutes (`0` will disable this feature)"
-      autoFetchNotify:
-        order: 2
-        title: "Auto-fetch notification"
-        type: "boolean"
-        default: false
-        description: "Notify after `fetch --all`?"
       pullRebase:
-        order: 3
+        order: 1
         title: "Pull Rebase"
         type: "boolean"
         default: false
         description: "Pull with `--rebase` flag?"
       pullBeforePush:
-        order: 4
+        order: 2
         title: "Pull Before Pushing"
         type: "boolean"
         default: false
         description: "Pull from remote before pushing"
       promptForBranch:
-        order: 5
+        order: 3
         title: "Prompt for branch selection when pulling/pushing"
         type: "boolean"
         default: false
@@ -144,3 +131,16 @@ module.exports =
         type: "boolean"
         default: false
         description: "Use the split-diff package to show diffs for a single file. Only works with `Diff` command when a file is open."
+      autoFetch:
+        order: 5
+        title: "Auto-fetch"
+        type: "integer"
+        default: 0
+        maximum: 60
+        description: "Automatically fetch remote repositories every `x` minutes (`0` will disable this feature)"
+      autoFetchNotify:
+        order: 6
+        title: "Auto-fetch notification"
+        type: "boolean"
+        default: false
+        description: "Show notifications while running `fetch --all`?"

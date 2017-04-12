@@ -183,7 +183,7 @@ module.exports =
       @subscriptions.add atom.config.onDidChange 'git-plus.experimental.stageFilesBeta', =>
         @subscriptions.dispose()
         @activate()
-      @subscriptions.add atom.config.observe 'git-plus.remoteInteractions.autoFetch', (interval) => @autoFetch(interval)
+      @subscriptions.add atom.config.observe 'git-plus.experimental.autoFetch', (interval) => @autoFetch(interval)
 
   deactivate: ->
     @subscriptions.dispose()
@@ -192,9 +192,9 @@ module.exports =
 
   autoFetch: (interval) ->
     clearInterval @autoFetchInterval
-    if ms = (interval * 60) * 1000
+    if fetchIntervalMs = (interval * 60) * 1000
       fetch = => atom.commands.dispatch(@workspace, 'git-plus:fetch-all')
-      @autoFetchInterval = setInterval(fetch, ms)
+      @autoFetchInterval = setInterval(fetch, fetchIntervalMs)
 
   consumeAutosave: ({dontSaveIf}) ->
     dontSaveIf (paneItem) -> paneItem.getPath().includes 'COMMIT_EDITMSG'

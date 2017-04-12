@@ -5,9 +5,10 @@ module.exports = (repos) ->
     cwd = repo.getWorkingDirectory()
     git.cmd(['fetch','--all'], {cwd})
     .then (message) ->
-      if atom.config.get('git-plus.remoteInteractions.autoFetchNotify')
-        fork = cwd.split('/').pop()
-        notification =
+      if atom.config.get('git-plus.experimental.autoFetchNotify')
+        repoName = cwd.split('/').pop()
+        options =
           icon: 'repo-pull'
-          detail: message.replace(/(Fetch)ing/g, '$1ed')
-        atom.notifications.addSuccess("Git-Plus: #{fork}", notification)
+          detail: "In #{repoName} repo:"
+          description: message.replace(/(Fetch)ing/g, '$1ed')
+        atom.notifications.addSuccess('Git-Plus', options)
