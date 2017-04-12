@@ -85,20 +85,33 @@ module.exports =
     order: 5
     type: "object"
     properties:
-      pullRebase:
+      autoFetch:
         order: 1
+        title: "Auto-fetch"
+        type: "integer"
+        default: 1
+        maximum: 60
+        description: "Automatically fetch remote repositories every `x` minutes (`0` will disable this feature)"
+      autoFetchNotify:
+        order: 2
+        title: "Auto-fetch notification"
+        type: "boolean"
+        default: false
+        description: "Notify after `fetch --all`?"
+      pullRebase:
+        order: 3
         title: "Pull Rebase"
         type: "boolean"
         default: false
         description: "Pull with `--rebase` flag?"
       pullBeforePush:
-        order: 2
+        order: 4
         title: "Pull Before Pushing"
         type: "boolean"
         default: false
         description: "Pull from remote before pushing"
       promptForBranch:
-        order: 3
+        order: 5
         title: "Prompt for branch selection when pulling/pushing"
         type: "boolean"
         default: false

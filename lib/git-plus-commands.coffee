@@ -11,10 +11,11 @@ getCommands = ->
   GitCommitAmend         = require './models/git-commit-amend'
   GitDiff                = require './models/git-diff'
   GitDiffBranches        = require './models/git-diff-branches'
-  GitDiffBranchFiles    = require './models/git-diff-branch-files'
+  GitDiffBranchFiles     = require './models/git-diff-branch-files'
   GitDifftool            = require './models/git-difftool'
   GitDiffAll             = require './models/git-diff-all'
   GitFetch               = require './models/git-fetch'
+  GitFetchAll            = require './models/git-fetch-all'
   GitFetchPrune          = require './models/git-fetch-prune'
   GitInit                = require './models/git-init'
   GitLog                 = require './models/git-log'
@@ -38,11 +39,14 @@ getCommands = ->
   GitRebase              = require './models/git-rebase'
   GitOpenChangedFiles    = require './models/git-open-changed-files'
 
+  commands = []
+  git.getAllRepos().then (repos) ->
+    commands.push ['git-plus:fetch-all', 'Fetch All', -> GitFetchAll(repos)]
+
   git.getRepo()
     .then (repo) ->
       currentFile = repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
       git.refresh repo
-      commands = []
       if atom.config.get('git-plus.experimental.customCommands')
         commands = commands.concat(require('./service').getCustomCommands())
       commands.push ['git-plus:add', 'Add', -> git.add(repo, file: currentFile)]
