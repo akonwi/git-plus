@@ -1,5 +1,10 @@
 ## Changelog
 
+### 7.4.0
+- Adds a new command (`Fetch all`), thanks to @danielbayley
+  - This also comes with a new experimental setting for auto fetching the currently open repos
+- Fixed bug where atom's git highlighting in the tree-view and branch in the status bar didn't change after custom commands ran
+
 ### 7.3.3
 - Fixed [#631](https://github.com/akonwi/git-plus/issues/631)
 
