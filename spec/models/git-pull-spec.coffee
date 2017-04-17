@@ -1,4 +1,5 @@
 git = require '../../lib/git'
+notifier = require '../../lib/notifier'
 {repo} = require '../fixtures'
 GitPull = require '../../lib/models/git-pull'
 _pull = require '../../lib/models/_pull'
@@ -33,3 +34,11 @@ describe "Git Pull", ->
       spyOn(repo, 'getUpstreamBranch').andReturn 'refs/remotes/origin/foo/cool-feature'
       _pull repo
       expect(git.cmd).toHaveBeenCalledWith ['pull', 'origin', 'foo/cool-feature'], options, {color: true}
+
+    describe "when there is no upstream branch", ->
+      it "shows a message", ->
+        spyOn(repo, 'getUpstreamBranch').andReturn undefined
+        spyOn(notifier, 'addInfo')
+        _pull repo
+        expect(git.cmd).not.toHaveBeenCalled()
+        expect(notifier.addInfo).toHaveBeenCalled()
