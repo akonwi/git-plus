@@ -31,8 +31,10 @@ describe("GitCheckoutBranch", () => {
     })
   })
 
-  it("checkouts the selected branch", () => {
-    waitsForPromise(() => GitCheckoutBranch(repo).then(view => view.confirmSelection()))
-    runs(() => expect(git.cmd).toHaveBeenCalledWith ['checkout', 'branch1'], {cwd})
+  fit("checkouts the selected branch", () => {
+    waitsForPromise(() => GitCheckoutBranch(repo, {remote: true}).then(view => view.confirmSelection()))
+    runs(() => {
+      expect(git.cmd).toHaveBeenCalledWith(['checkout', 'branch1', '--track'], {cwd})
+    })
   })
 })
