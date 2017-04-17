@@ -1,8 +1,14 @@
 ## Changelog
 
+### 7.5.0
+- Bug fix where trying to pull from a non-existent upstream branch threw an error
+- Merge [#634](https://github.com/akonwi/git-plus/pull/634) (@danielbayley), Which allows using right click or a modifier key
+to open the new branch command by clicking on the branch name in the status-bar
+- Fix [#633] (@oppin)
+
 ### 7.4.0
 - Adds a new command (`Fetch all`), thanks to @danielbayley
-  - This also comes with a new experimental setting for auto fetching the currently open repos
+  - [Experimental] Setting for auto fetching the currently open repos
 - Fixed bug where atom's git highlighting in the tree-view and branch in the status bar didn't change after custom commands ran
 
 ### 7.3.3
