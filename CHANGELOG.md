@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.6.0
+- Merge [#648](https://github.com/akonwi/git-plus/pull/648) (@ios122), Which allows executing context actions on the git root path of tree-view
+- Update README with details of list views that allow selecting multiple options
+
 ### 7.5.0
 - Bug fix where trying to pull from a non-existent upstream branch threw an error
 - Merge [#634](https://github.com/akonwi/git-plus/pull/634) (@danielbayley), Which allows using right click or a modifier key
