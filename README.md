@@ -62,6 +62,11 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
 | `Git Tags` | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete. | |
 
+### Select lists that allow selecting multiple options
+Commands like `Stage hunk` and `Cherry-Pick` provide a list with the ability to select multiple options.
+In this view, there are 'cancel' and 'apply/complete' buttons. The `esc` key can be used to cancel and
+the 'confirm' option can be invoked with `shift-enter` or `ctrl-enter`.
+
 ### Commit Window
 To change where the commit window appears go to settings and find
 ![screenshot](http://imgur.com/cdc7M5p.png)
