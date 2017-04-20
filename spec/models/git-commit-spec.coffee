@@ -18,6 +18,7 @@ describe "GitCommit", ->
   beforeEach ->
     fs.writeFileSync file, 'foobar'
     waitsForPromise -> git.cmd(['init'], cwd: workingDirectory)
+    waitsForPromise -> git.cmd(['config', 'user.useconfigonly', 'false'], cwd: workingDirectory)
     waitsForPromise -> git.cmd(['config', 'core.commentchar', commentChar], cwd: workingDirectory)
     waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
     waitsForPromise -> git.cmd(['commit', '--allow-empty', '--allow-empty-message', '-m', ''], cwd: workingDirectory)
