@@ -143,7 +143,7 @@ module.exports = git =
 
         Promise.all(repoPromises).then (repos) ->
           repos.forEach (repo) ->
-            if repo? and (new Directory(repo.getWorkingDirectory())).contains path
+            if repo? and ((new Directory(repo.getWorkingDirectory())).contains path) or ((new Directory(repo.getWorkingDirectory())).getPath() == path)
               submodule = repo?.repo.submoduleForPath(path)
               if submodule? then resolve(submodule) else resolve(repo)
 
