@@ -159,3 +159,9 @@ module.exports =
         type: "boolean"
         default: false
         description: "Show notifications while running `fetch --all`?"
+      signTags:
+        order: 7
+        title: "Sign git tags with GPG"
+        type: "boolean"
+        default: false
+        description: "Use a GPG key to sign Git tags"
