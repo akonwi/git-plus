@@ -35,9 +35,9 @@ class TagCreateView extends View
     flag = if atom.config.get('git-plus.tags.signTags') then '-s' else '-a'
     git.cmd(['tag', flag, tag.name, '-m', tag.message], cwd: @repo.getWorkingDirectory())
     .then (success) ->
-      notifier.addSuccess("Tag '#{tag.name}' has been created successfully!") if success
-    .catch (msg) ->
-      notifier.addError msg
+      console.info("Created git tag #{tag.name}:", success)
+      notifier.addSuccess("Tag '#{tag.name}' has been created successfully!")
+    .catch notifier.addError
     @destroy()
 
   destroy: ->
