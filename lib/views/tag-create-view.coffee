@@ -32,7 +32,7 @@ class TagCreateView extends View
 
   createTag: ->
     tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
-    flag = if atom.config.get('git-plus.experimental.signTags') then '-s' else '-a'
+    flag = if atom.config.get('git-plus.tags.signTags') then '-s' else '-a'
     git.cmd(['tag', flag, tag.name, '-m', tag.message], cwd: @repo.getWorkingDirectory())
     .then (success) ->
       notifier.addSuccess("Tag '#{tag.name}' has been created successfully!") if success

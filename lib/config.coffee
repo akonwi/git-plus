@@ -118,8 +118,17 @@ module.exports =
         type: "boolean"
         default: false
         description: "If false, it defaults to current branch upstream"
-  experimental:
+  tags:
     order: 6
+    type: "object"
+    properties:
+      signTags:
+        title: "Sign git tags with GPG"
+        type: "boolean"
+        default: false
+        description: "Use a GPG key to sign Git tags"
+  experimental:
+    order: 7
     type: "object"
     properties:
       stageFilesBeta:
@@ -159,9 +168,3 @@ module.exports =
         type: "boolean"
         default: false
         description: "Show notifications while running `fetch --all`?"
-      signTags:
-        order: 7
-        title: "Sign git tags with GPG"
-        type: "boolean"
-        default: false
-        description: "Use a GPG key to sign Git tags"

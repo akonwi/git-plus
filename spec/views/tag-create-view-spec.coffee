@@ -20,7 +20,7 @@ describe "TagCreateView", ->
       expect(git.cmd).toHaveBeenCalledWith ['tag', '-a', 'tag1', '-m', 'tag1 message'], {cwd}
 
     it "creates a signed tag with the given name and message", ->
-      atom.config.set('git-plus.experimental.signTags', true)
+      atom.config.set('git-plus.tags.signTags', true)
       spyOn(git, 'cmd').andReturn Promise.resolve 0
       cwd = repo.getWorkingDirectory()
       @view.tagName.setText 'tag2'
