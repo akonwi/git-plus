@@ -78,7 +78,7 @@ module.exports =
         order: 2
         title: "Word diff"
         type: "boolean"
-        default: true
+        default: false
         description: "Should diffs be generated with the `--word-diff` flag?"
       syntaxHighlighting:
         order: 3
