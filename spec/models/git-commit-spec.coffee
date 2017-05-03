@@ -51,7 +51,7 @@ describe "GitCommit", ->
       editor.save()
       log = null
       waitsFor -> editor.destroy.callCount > 0
-      waitsForPromise -> log = git.cmd(['whatchanged', '-1', '--name-status'], cwd: workingDirectory)
+      waitsForPromise -> log = git.cmd(['whatchanged', '-1'], cwd: workingDirectory)
       runs ->
         expect(notifier.addSuccess).toHaveBeenCalled()
         log.then (l) -> expect(l).toContain 'this is a commit'

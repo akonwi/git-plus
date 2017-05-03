@@ -10,6 +10,8 @@ disposables = new CompositeDisposable
 
 verboseCommitsEnabled = -> atom.config.get('git-plus.commits.verboseCommits')
 
+scissorsLine = '------------------------ >8 ------------------------'
+
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
     if files.length >= 1
@@ -38,6 +40,9 @@ prepFile = ({status, filePath, diff, commentChar, template}) ->
   status = status.trim().replace(/\n/g, "\n#{commentChar} ")
   content =
     """#{template}
+    #{commentChar} #{scissorsLine}
+    #{commentChar} Do not touch the line above.
+    #{commentChar} Everything below will be removed.
     #{commentChar} Please enter the commit message for your changes. Lines starting
     #{commentChar} with '#{commentChar}' will be ignored, and an empty message aborts the commit.
     #{commentChar}
@@ -45,9 +50,6 @@ prepFile = ({status, filePath, diff, commentChar, template}) ->
   if diff
     content +=
       """\n#{commentChar}
-      #{commentChar} ------------------------ >8 ------------------------
-      #{commentChar} Do not touch the line above.
-      #{commentChar} Everything below will be removed.
       #{diff}"""
   fs.writeFileSync filePath, content
 
@@ -58,14 +60,17 @@ destroyCommitEditor = (filePath) ->
     atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
 
 trimFile = (filePath, commentChar) ->
+  findScissorsLine = (line) ->
+    line.includes("#{commentChar} #{scissorsLine}")
+
   cwd = Path.dirname(filePath)
   content = fs.readFileSync(fs.absolute(filePath)).toString()
-  startOfComments = content.indexOf(content.split('\n').find (line) -> line.startsWith commentChar)
-  content = content.substring(0, startOfComments)
+  startOfComments = content.indexOf(content.split('\n').find(findScissorsLine))
+  content = if startOfComments > 0 then content.substring(0, startOfComments) else content
   fs.writeFileSync filePath, content
 
 commit = (directory, filePath) ->
-  git.cmd(['commit', "--cleanup=strip", "--file=#{filePath}"], cwd: directory)
+  git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: directory)
   .then (data) ->
     notifier.addSuccess data
     destroyCommitEditor(filePath)
@@ -116,7 +121,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
       disposables.dispose()
       disposables = new CompositeDisposable
       disposables.add textEditor.onDidSave ->
-        trimFile(filePath, commentChar) if verboseCommitsEnabled()
+        trimFile(filePath, commentChar)
         commit(repo.getWorkingDirectory(), filePath)
         .then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup(currentPane)
