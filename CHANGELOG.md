@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.8.0
+- Fixes [#654](https://github.com/akonwi/git-plus/issues/654)
+- Fixes [#655](https://github.com/akonwi/git-plus/issues/655)
+
 ### 7.7.0
 - Merge [#653](https://github.com/akonwi/git-plus/pull/653) (@jgnagy)
   - Adds a new config in 'Tags' section to sign tags with GPG
