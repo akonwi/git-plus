@@ -90,12 +90,12 @@ onPathsChanged = (gp) ->
   gp.activate?()
   gp.consumeStatusBar?(gp.statusBar) if gp.statusBar
 
+getWorkspaceNode = -> document.querySelector('atom-workspace')
+
 module.exports =
   config: configurations
 
   subscriptions: null
-
-  workspace: document.querySelector('atom-workspace')
 
   provideService: -> require './service'
 
@@ -193,7 +193,7 @@ module.exports =
   autoFetch: (interval) ->
     clearInterval @autoFetchInterval
     if fetchIntervalMs = (interval * 60) * 1000
-      fetch = => atom.commands.dispatch(@workspace, 'git-plus:fetch-all')
+      fetch = => atom.commands.dispatch(getWorkspaceNode(), 'git-plus:fetch-all')
       @autoFetchInterval = setInterval(fetch, fetchIntervalMs)
 
   consumeAutosave: ({dontSaveIf}) ->
@@ -218,13 +218,13 @@ module.exports =
     @statusBarTile = statusBar.addRightTile item: div, priority: 0
 
   setupBranchesMenuToggle: (statusBar) ->
-    statusBar.getRightTiles().some ({item}) =>
+    statusBar.getRightTiles().some ({item}) ->
       if item?.classList?.contains? 'git-view'
-        $(item).find('.git-branch').on 'click', (e) =>
+        $(item).find('.git-branch').on 'click', (e) ->
           {newBranchKey} = atom.config.get('git-plus.general')
           pressed = (key) -> e["#{key}Key"]
           if pressed newBranchKey
-            atom.commands.dispatch(@workspace, 'git-plus:new-branch')
+            atom.commands.dispatch(getWorkspaceNode(), 'git-plus:new-branch')
           else
-            atom.commands.dispatch(@workspace, 'git-plus:checkout')
+            atom.commands.dispatch(getWorkspaceNode(), 'git-plus:checkout')
         return true
