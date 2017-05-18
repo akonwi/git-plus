@@ -1,5 +1,9 @@
 ## Changelog
 
+### 7.8.1
+- Fixes git+ commands not showing up in tree-view context menu
+on atom v1.17.0 [#664](https://github.com/akonwi/git-plus/pull/664) (@pixilz)
+
 ### 7.8.0
 - Fixes [#654](https://github.com/akonwi/git-plus/issues/654)
 - Fixes [#655](https://github.com/akonwi/git-plus/issues/655)

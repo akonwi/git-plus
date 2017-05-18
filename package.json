@@ -29,7 +29,7 @@
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
-    "atom": ">= 1.13"
+    "atom": ">= 1.17"
   },
   "dependencies": {
     "ansi-to-html": "^0.4.1",
