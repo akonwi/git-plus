@@ -1,6 +1,6 @@
 module.exports = ->
   atom.contextMenu.add {
-    '.tree-view.full-menu .file, .tree-view.full-menu .directory': [
+    '.tree-view > .full-menu .file, .tree-view > .full-menu .directory': [
       { type: 'separator'},
       'label': 'Git',
       'submenu': [
