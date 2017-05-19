@@ -61,9 +61,6 @@ currentFile = (repo) ->
   repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
 
 setDiffGrammar = ->
-  while atom.grammars.grammarForScopeName 'source.diff'
-    atom.grammars.removeGrammarForScopeName 'source.diff'
-
   enableSyntaxHighlighting = atom.config.get('git-plus.diffs.syntaxHighlighting')
   wordDiff = atom.config.get('git-plus.diffs.wordDiff')
   diffGrammar = null
@@ -77,11 +74,9 @@ setDiffGrammar = ->
     baseGrammar = baseLineGrammar
 
   if enableSyntaxHighlighting
+    while atom.grammars.grammarForScopeName 'source.diff'
+      atom.grammars.removeGrammarForScopeName 'source.diff'
     atom.grammars.addGrammar diffGrammar
-  else
-    grammar = atom.grammars.readGrammarSync baseGrammar
-    grammar.packageName = 'git-plus'
-    atom.grammars.addGrammar grammar
 
 getWorkspaceRepos = -> atom.project.getRepositories().filter (r) -> r?
 
