@@ -47,18 +47,18 @@ class ListView extends SelectListView
         new Promise (resolve, reject) =>
           new RemoteBranchListView data, remoteName, ({name}) =>
             branchName = name.substring(name.indexOf('/') + 1)
-            view = OutputViewManager.create()
+            view = OutputViewManager.getView()
             startMessage = notifier.addInfo "Pulling...", dismissable: true
             args = ['pull'].concat(@extraArgs, remoteName, branchName).filter((arg) -> arg isnt '')
             git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
             .then (data) =>
               resolve branchName
-              view.setContent(data).finish()
+              view.showContent(data)
               startMessage.dismiss()
               git.refresh @repo
             .catch (error) =>
               reject()
-              view.setContent(error).finish()
+              view.showContent(error)
               startMessage.dismiss()
     else
       _pull @repo, extraArgs: @extraArgs
@@ -85,7 +85,7 @@ class ListView extends SelectListView
   execute: (remote='', extraArgs='', branch) ->
     if atom.config.get('git-plus.remoteInteractions.promptForBranch')
       if branch?
-        view = OutputViewManager.create()
+        view = OutputViewManager.getView()
         args = [@mode]
         if extraArgs.length > 0
           args.push extraArgs
@@ -95,31 +95,31 @@ class ListView extends SelectListView
         git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
         .then (data) =>
           if data isnt ''
-            view.setContent(data).finish()
+            view.showContent(data)
           startMessage.dismiss()
           git.refresh @repo
         .catch (data) =>
           if data isnt ''
-            view.setContent(data).finish()
+            view.showContent(data)
           startMessage.dismiss()
       else
         git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
         .then (data) =>
           new RemoteBranchListView data, remote, ({name}) =>
             branchName = name.substring(name.indexOf('/') + 1)
-            view = OutputViewManager.create()
+            view = OutputViewManager.getView()
             startMessage = notifier.addInfo "Pushing...", dismissable: true
             args = ['push'].concat(extraArgs, remote, branchName).filter((arg) -> arg isnt '')
             git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
             .then (data) =>
-              view.setContent(data).finish()
+              view.showContent(data)
               startMessage.dismiss()
               git.refresh @repo
             .catch (error) =>
-              view.setContent(error).finish()
+              view.showContent(error)
               startMessage.dismiss()
     else
-      view = OutputViewManager.create()
+      view = OutputViewManager.getView()
       args = [@mode]
       if extraArgs.length > 0
         args.push extraArgs
@@ -129,25 +129,25 @@ class ListView extends SelectListView
       git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
         if data isnt ''
-          view.setContent(data).finish()
+          view.showContent(data)
         startMessage.dismiss()
         git.refresh @repo
       .catch (data) =>
         if data isnt ''
-          view.setContent(data).finish()
+          view.showContent(data)
         startMessage.dismiss()
 
   pushAndSetUpstream: (remote='') ->
-    view = OutputViewManager.create()
+    view = OutputViewManager.getView()
     args = ['push', '-u', remote, 'HEAD'].filter((arg) -> arg isnt '')
     message = "Pushing..."
     startMessage = notifier.addInfo message, dismissable: true
     git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
     .then (data) ->
       if data isnt ''
-        view.setContent(data).finish()
+        view.showContent(data)
       startMessage.dismiss()
     .catch (data) =>
       if data isnt ''
-        view.setContent(data).finish()
+        view.showContent(data)
       startMessage.dismiss()

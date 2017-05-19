@@ -14,15 +14,15 @@ getUpstream = (repo) ->
 module.exports = (repo, {extraArgs}={}) ->
   if upstream = getUpstream(repo)
     extraArgs ?= []
-    view = OutputViewManager.create()
+    view = OutputViewManager.getView()
     startMessage = notifier.addInfo "Pulling...", dismissable: true
     args = ['pull'].concat(extraArgs).concat(upstream).filter(emptyOrUndefined)
     git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
     .then (data) ->
-      view.setContent(data).finish()
+      view.showContent(data)
       startMessage.dismiss()
     .catch (error) ->
-      view.setContent(error).finish()
+      view.showContent(error)
       startMessage.dismiss()
   else
     notifier.addInfo 'The current branch is not tracking from upstream'

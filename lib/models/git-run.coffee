@@ -6,23 +6,21 @@ notifier = require '../notifier'
 OutputViewManager = require '../output-view-manager'
 
 runCommand = (repo, args) ->
-  view = OutputViewManager.create()
+  view = OutputViewManager.getView()
   promise = git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
   promise.then (data) ->
     msg = "git #{args.join(' ')} was successful"
     notifier.addSuccess(msg)
     if data?.length > 0
-      view.setContent data
+      view.showContent data
     else
       view.reset()
-    view.finish()
     git.refresh repo
   .catch (msg) =>
     if msg?.length > 0
-      view.setContent msg
+      view.showContent msg
     else
       view.reset()
-    view.finish()
     git.refresh repo
   return promise
 

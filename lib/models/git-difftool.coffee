@@ -25,7 +25,7 @@ module.exports = (repo, {file}={}) ->
         args.push 'HEAD' if includeStagedDiff
         args.push file
         git.cmd(args, cwd: repo.getWorkingDirectory())
-        .catch (msg) -> OutputViewManager.create().setContent(msg).finish()
+        .catch (msg) -> OutputViewManager.getView().showContent(msg)
         return
 
       diffsForCurrentFile = diffIndex.map (line, i) ->
@@ -41,6 +41,6 @@ module.exports = (repo, {file}={}) ->
         args.push 'HEAD' if includeStagedDiff
         args.push file
         git.cmd(args, cwd: repo.getWorkingDirectory())
-        .catch (msg) -> OutputViewManager.create().setContent(msg).finish()
+        .catch (msg) -> OutputViewManager.getView().showContent(msg)
       else
         notifier.addInfo 'Nothing to show.'

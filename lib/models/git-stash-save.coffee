@@ -8,6 +8,6 @@ module.exports = (repo, {message}={}) ->
   args.push(message) if message
   git.cmd(args, {cwd}, color: true)
   .then (msg) ->
-    OutputViewManager.create().setContent(msg).finish() if msg isnt ''
+    OutputViewManager.getView().showContent(msg) if msg isnt ''
   .catch (msg) ->
     notifier.addInfo msg
