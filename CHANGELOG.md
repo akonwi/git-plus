@@ -1,8 +1,11 @@
 ## Changelog
 
+### 7.9.1
+- Fixes [#663](https://github.com/akonwi/git-plus/pull/663)
+
 ### 7.9.0
 - The output view above the status-bar has been incorporated into the docks of atom v1.17.0
-  - The timeout setting for this has also been removed since this is no longer just a notification 
+  - The timeout setting for this has also been removed since this is no longer just a notification
 
 ### 7.8.1
 - Fixes git+ commands not showing up in tree-view context menu
