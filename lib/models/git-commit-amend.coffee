@@ -95,7 +95,7 @@ showFile = (filePath) ->
   if not commitEditor
     if atom.config.get('git-plus.general.openInPane')
       splitDirection = atom.config.get('git-plus.general.splitPane')
-      atom.workspace.getActivePane()["split#{splitDirection}"]()
+      atom.workspace.getCenter().getActivePane()["split#{splitDirection}"]()
     atom.workspace.open filePath
   else
     if atom.config.get('git-plus.general.openInPane')

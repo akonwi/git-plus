@@ -9,7 +9,7 @@ nothingToShow = 'Nothing to show.'
 showFile = (filePath) ->
   if atom.config.get('git-plus.general.openInPane')
     splitDirection = atom.config.get('git-plus.general.splitPane')
-    atom.workspace.getActivePane()["split#{splitDirection}"]()
+    atom.workspace.getCenter().getActivePane()["split#{splitDirection}"]()
   atom.workspace.open(filePath)
 
 prepFile = (text, filePath) ->
