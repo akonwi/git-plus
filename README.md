@@ -97,7 +97,7 @@ If you would like to use experimental features, enable them in the package setti
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Write tests
 4. Make your changes
-5. Run `apm test`
-6. Commit your changes (`git commit -am 'Add some feature'`)
+5. Run `npm test`
+6. Commit your changes
 7. Push to the branch (`git push origin my-new-feature`)
 8. Create new Pull Request

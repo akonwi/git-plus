@@ -14,6 +14,9 @@
       }
     }
   },
+  "scripts": {
+    "test": "eslint --fix \"lib/**/*.js\" \"spec/**/*.js\" && apm test"
+  },
   "consumedServices": {
     "status-bar": {
       "versions": {
@@ -40,6 +43,7 @@
     "underscore-plus": "^1.6.6"
   },
   "devDependencies": {
+    "lint": "^1.1.2",
     "quibble": "^0.3.0"
   }
 }
