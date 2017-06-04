@@ -29,7 +29,7 @@ _prettifyDiff = (data) ->
 getRepoForCurrentFile = ->
   new Promise (resolve, reject) ->
     project = atom.project
-    path = atom.workspace.getActiveTextEditor()?.getPath()
+    path = atom.workspace.getCenter().getActiveTextEditor()?.getPath()
     directory = project.getDirectories().filter((d) -> d.contains(path))[0]
     if directory?
       project.repositoryForDirectory(directory).then (repo) ->
