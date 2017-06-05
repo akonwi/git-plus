@@ -1,5 +1,8 @@
 ## Changelog
 
+### 7.9.3
+- Fixes [#677](https://github.com/akonwi/git-plus/pull/677)
+
 ### 7.9.2
 - Fixes [#666](https://github.com/akonwi/git-plus/pull/666)
 
