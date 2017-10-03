@@ -100,14 +100,20 @@ module.exports =
         type: "boolean"
         default: false
         description: "Pull with `--rebase` flag?"
-      pullBeforePush:
+      pullAutostash:
         order: 2
+        title: "Pull AutoStash"
+        type: "boolean"
+        default: false
+        description: "Pull with `--autostash` flag?"
+      pullBeforePush:
+        order: 3
         title: "Pull Before Pushing"
         type: "boolean"
         default: false
         description: "Pull from remote before pushing"
       promptForBranch:
-        order: 3
+        order: 4
         title: "Prompt for branch selection when pulling/pushing"
         type: "boolean"
         default: false
