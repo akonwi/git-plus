@@ -34,7 +34,7 @@
           'command': 'git-plus:diff-branches'
         },
         {
-          'label': 'Diff Branche Files'
+          'label': 'Diff Branch Files'
           'command': 'git-plus:diff-branch-files'
         },
         {
