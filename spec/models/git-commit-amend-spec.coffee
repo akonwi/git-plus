@@ -13,7 +13,7 @@ GitCommitAmend = require '../../lib/models/git-commit-amend'
 
 commitFilePath = Path.join(repo.getPath(), 'COMMIT_EDITMSG')
 
-describe "GitCommitAmend", ->
+describe "GitCommitAmendShort", ->
   beforeEach ->
     spyOn(atom.workspace, 'getActivePane').andReturn currentPane
     spyOn(atom.workspace, 'open').andReturn Promise.resolve textEditor
@@ -39,7 +39,7 @@ describe "GitCommitAmend", ->
         else Promise.resolve ''
 
   it "gets the previous commit message and changed files", ->
-    expectedGitArgs = ['whatchanged', '-1', '--name-status', '--format=%B']
+    expectedGitArgs = ['whatchanged', '-1', '--format=%B']
     GitCommitAmend repo
     expect(git.cmd).toHaveBeenCalledWith expectedGitArgs, cwd: repo.getWorkingDirectory()
 
