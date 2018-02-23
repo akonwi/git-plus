@@ -33,11 +33,9 @@ updateNewTextEditor = (newTextEditor, editor, gitRevision, fileContents) ->
     splitDiff(editor, newTextEditor)
   , 300
 
-showRevision = (filePath, editor, gitRevision, fileContents, options={}) ->
-  outputDir = "#{atom.getConfigDirPath()}/git-plus"
-  fs.mkdir outputDir if not fs.existsSync outputDir
+showRevision = (repo, filePath, editor, gitRevision, fileContents, options={}) ->
   gitRevision = path.basename(gitRevision)
-  outputFilePath = "#{outputDir}/{#{gitRevision}} #{path.basename(filePath)}"
+  outputFilePath = "#{repo.getPath()}/{#{gitRevision}} #{path.basename(filePath)}"
   outputFilePath += ".diff" if options.diff
   tempContent = "Loading..." + editor.buffer?.lineEndingForRow(0)
   fs.writeFile outputFilePath, tempContent, (error) =>
@@ -55,7 +53,7 @@ showRevision = (filePath, editor, gitRevision, fileContents, options={}) ->
             return atom.notifications.addError "Could not remove file #{outputFilePath}"
 
 module.exports =
-  showRevision: (editor, gitRevision) ->
+  showRevision: (repo, editor, gitRevision) ->
     if not SplitDiff
       try
         SplitDiff = require atom.packages.resolvePackagePath('split-diff')
@@ -74,6 +72,6 @@ module.exports =
     args = ["show", "#{gitRevision}:./#{fileName}"]
     git.cmd(args, cwd: path.dirname(filePath))
     .then (data) ->
-      showRevision(filePath, editor, gitRevision, data, options)
+      showRevision(repo, filePath, editor, gitRevision, data, options)
     .catch (code) ->
       atom.notifications.addError("Git Plus: Could not retrieve revision for #{fileName} (#{code})")

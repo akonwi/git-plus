@@ -18,6 +18,7 @@ describe "GitCommit", ->
   beforeEach ->
     fs.writeFileSync file, 'foobar'
     waitsForPromise -> git.cmd(['init'], cwd: workingDirectory)
+    waitsForPromise -> git.cmd(['config', 'user.useconfigonly', 'false'], cwd: workingDirectory)
     waitsForPromise -> git.cmd(['config', 'core.commentchar', commentChar], cwd: workingDirectory)
     waitsForPromise -> git.cmd(['add', file], cwd: workingDirectory)
     waitsForPromise -> git.cmd(['commit', '--allow-empty', '--allow-empty-message', '-m', ''], cwd: workingDirectory)
@@ -50,7 +51,7 @@ describe "GitCommit", ->
       editor.save()
       log = null
       waitsFor -> editor.destroy.callCount > 0
-      waitsForPromise -> log = git.cmd(['whatchanged', '-1', '--name-status'], cwd: workingDirectory)
+      waitsForPromise -> log = git.cmd(['whatchanged', '-1'], cwd: workingDirectory)
       runs ->
         expect(notifier.addSuccess).toHaveBeenCalled()
         log.then (l) -> expect(l).toContain 'this is a commit'

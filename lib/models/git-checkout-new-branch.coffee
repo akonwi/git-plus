@@ -3,12 +3,10 @@
 
 git = require '../git'
 notifier = require '../notifier'
-BranchListView = require '../views/branch-list-view'
-RemoteBranchListView = require '../views/remote-branch-list-view'
 
 class InputView extends View
   @content: ->
-    @div =>
+    @div class: 'git-branch', =>
       @subview 'branchEditor', new TextEditorView(mini: true, placeholderText: 'New branch name')
 
   initialize: (@repo) ->
@@ -37,13 +35,4 @@ class InputView extends View
       .catch (err) =>
         notifier.addError err
 
-module.exports.newBranch = (repo) ->
-  new InputView(repo)
-
-module.exports.gitBranches = (repo) ->
-  git.cmd(['branch', '--no-color'], cwd: repo.getWorkingDirectory())
-  .then (data) -> new BranchListView(repo, data)
-
-module.exports.gitRemoteBranches = (repo) ->
-  git.cmd(['branch', '-r', '--no-color'], cwd: repo.getWorkingDirectory())
-  .then (data) -> new RemoteBranchListView(repo, data)
+module.exports = (repo) -> new InputView(repo)

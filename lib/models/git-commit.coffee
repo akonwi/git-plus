@@ -10,6 +10,8 @@ disposables = new CompositeDisposable
 
 verboseCommitsEnabled = -> atom.config.get('git-plus.commits.verboseCommits')
 
+scissorsLine = '------------------------ >8 ------------------------'
+
 getStagedFiles = (repo) ->
   git.stagedFiles(repo).then (files) ->
     if files.length >= 1
@@ -27,11 +29,20 @@ getTemplate = (filePath) ->
     ''
 
 prepFile = ({status, filePath, diff, commentChar, template}) ->
+  if commitEditor = atom.workspace.paneForURI(filePath)?.itemForURI(filePath)
+    text = commitEditor.getText()
+    indexOfComments = text.indexOf(commentChar)
+    if indexOfComments > 0
+      template = text.substring(0, indexOfComments - 1)
+
   cwd = Path.dirname(filePath)
   status = status.replace(/\s*\(.*\)\n/g, "\n")
   status = status.trim().replace(/\n/g, "\n#{commentChar} ")
   content =
     """#{template}
+    #{commentChar} #{scissorsLine}
+    #{commentChar} Do not touch the line above.
+    #{commentChar} Everything below will be removed.
     #{commentChar} Please enter the commit message for your changes. Lines starting
     #{commentChar} with '#{commentChar}' will be ignored, and an empty message aborts the commit.
     #{commentChar}
@@ -39,9 +50,6 @@ prepFile = ({status, filePath, diff, commentChar, template}) ->
   if diff
     content +=
       """\n#{commentChar}
-      #{commentChar} ------------------------ >8 ------------------------
-      #{commentChar} Do not touch the line above.
-      #{commentChar} Everything below will be removed.
       #{diff}"""
   fs.writeFileSync filePath, content
 
@@ -52,14 +60,17 @@ destroyCommitEditor = (filePath) ->
     atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
 
 trimFile = (filePath, commentChar) ->
+  findScissorsLine = (line) ->
+    line.includes("#{commentChar} #{scissorsLine}")
+
   cwd = Path.dirname(filePath)
   content = fs.readFileSync(fs.absolute(filePath)).toString()
-  startOfComments = content.indexOf(content.split('\n').find (line) -> line.startsWith commentChar)
-  content = content.substring(0, startOfComments)
+  startOfComments = content.indexOf(content.split('\n').find(findScissorsLine))
+  content = if startOfComments > 0 then content.substring(0, startOfComments) else content
   fs.writeFileSync filePath, content
 
 commit = (directory, filePath) ->
-  git.cmd(['commit', "--cleanup=strip", "--file=#{filePath}"], cwd: directory)
+  git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: directory)
   .then (data) ->
     notifier.addSuccess data
     destroyCommitEditor(filePath)
@@ -68,7 +79,7 @@ commit = (directory, filePath) ->
     notifier.addError data
     destroyCommitEditor(filePath)
 
-cleanup = (currentPane, filePath) ->
+cleanup = (currentPane) ->
   currentPane.activate() if currentPane.isAlive()
   disposables.dispose()
 
@@ -77,7 +88,7 @@ showFile = (filePath) ->
   if not commitEditor
     if atom.config.get('git-plus.general.openInPane')
       splitDirection = atom.config.get('git-plus.general.splitPane')
-      atom.workspace.getActivePane()["split#{splitDirection}"]()
+      atom.workspace.getCenter().getActivePane()["split#{splitDirection}"]()
     atom.workspace.open filePath
   else
     if atom.config.get('git-plus.general.openInPane')
@@ -107,15 +118,17 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
   startCommit = ->
     showFile filePath
     .then (textEditor) ->
+      disposables.dispose()
+      disposables = new CompositeDisposable
       disposables.add textEditor.onDidSave ->
-        trimFile(filePath, commentChar) if verboseCommitsEnabled()
+        trimFile(filePath, commentChar)
         commit(repo.getWorkingDirectory(), filePath)
         .then -> GitPush(repo) if andPush
-      disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
-    .catch (msg) -> notifier.addError msg
+      disposables.add textEditor.onDidDestroy -> cleanup(currentPane)
+    .catch(notifier.addError)
 
   if stageChanges
-    git.add(repo, update: stageChanges).then(-> init()).then -> startCommit()
+    git.add(repo, update: true).then(init).then(startCommit)
   else
     init().then -> startCommit()
     .catch (message) ->

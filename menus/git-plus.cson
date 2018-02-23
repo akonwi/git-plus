@@ -34,7 +34,7 @@
           'command': 'git-plus:diff-branches'
         },
         {
-          'label': 'Diff Branche Files'
+          'label': 'Diff Branch Files'
           'command': 'git-plus:diff-branch-files'
         },
         {
@@ -87,10 +87,6 @@
           ]
         },
         {
-          'label': 'Pull Using Rebase'
-          'command': 'git-plus:pull-using-rebase'
-        },
-        {
           'label': 'Rebase'
           'command': 'git-plus:rebase'
         },
@@ -102,3 +98,9 @@
     ]
   }
 ]
+
+'context-menu':
+  '.status-bar .git-branch': [
+    label: "New Branch"
+    command: 'git-plus:new-branch'
+  ]

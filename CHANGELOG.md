@@ -1,5 +1,62 @@
 ## Changelog
 
+### 7.10.0
+- Introduces a new option to pull with the '--autostash' flag thanks to (@Fryuni)[#707](https://github.com/akonwi/git-plus/pull/707)
+- Changes misspelling of 'branch' in the submenu (@j4cobgarby)[#708](https://github.com/akonwi/git-plus/pull/708)
+
+### 7.9.3
+- Fixes [#677](https://github.com/akonwi/git-plus/pull/677)
+
+### 7.9.2
+- Fixes [#666](https://github.com/akonwi/git-plus/pull/666)
+
+### 7.9.1
+- Fixes [#663](https://github.com/akonwi/git-plus/pull/663)
+
+### 7.9.0
+- The output view above the status-bar has been incorporated into the docks of atom v1.17.0
+  - The timeout setting for this has also been removed since this is no longer just a notification
+
+### 7.8.1
+- Fixes git+ commands not showing up in tree-view context menu
+on atom v1.17.0 [#664](https://github.com/akonwi/git-plus/pull/664) (@pixilz)
+
+### 7.8.0
+- Fixes [#654](https://github.com/akonwi/git-plus/issues/654)
+- Fixes [#655](https://github.com/akonwi/git-plus/issues/655)
+
+### 7.7.0
+- Merge [#653](https://github.com/akonwi/git-plus/pull/653) (@jgnagy)
+  - Adds a new config in 'Tags' section to sign tags with GPG
+
+### 7.6.0
+- Merge [#648](https://github.com/akonwi/git-plus/pull/648) (@ios122), Which allows executing context actions on the git root path of tree-view
+- Update README with details of list views that allow selecting multiple options
+
+### 7.5.0
+- Bug fix where trying to pull from a non-existent upstream branch threw an error
+- Merge [#634](https://github.com/akonwi/git-plus/pull/634) (@danielbayley), Which allows using right click or a modifier key
+to open the new branch command by clicking on the branch name in the status-bar
+- Fix [#633] (@oppin)
+
+### 7.4.0
+- Adds a new command (`Fetch all`), thanks to @danielbayley
+  - [Experimental] Setting for auto fetching the currently open repos
+- Fixed bug where atom's git highlighting in the tree-view and branch in the status bar didn't change after custom commands ran
+
+### 7.3.3
+- Fixed [#631](https://github.com/akonwi/git-plus/issues/631)
+
+### 7.3.2
+- Fixed [#627](https://github.com/akonwi/git-plus/issues/627)
+- Removed `Pull using rebase` command from the packages menu in OS status bar
+- The `run` function for custom commands now returns a promise that resolves with the git output. Which allows for chaining for more complicated commands.
+
+### 7.3.1
+- Fixes [#626](https://github.com/akonwi/git-plus/issues/626)
+- Change location of the split-diff generated file
+- Removed some dependencies
+
 ### 7.3.0
 - [Experimental Features] Show diffs between branches (@yacut)
 - [Experimental Features] Use the split-diff package to show diffs for a single file (@yacut)

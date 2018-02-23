@@ -50,7 +50,7 @@ module.exports =
     rebase: (branch) ->
       git.cmd(['rebase', branch], cwd: @repo.getWorkingDirectory())
       .then (msg) =>
-        OutputViewManager.create().setContent(msg).finish()
+        OutputViewManager.getView().showContent(msg)
         atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.refresh @repo
