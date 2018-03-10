@@ -94,6 +94,35 @@
           'label': 'Run'
           'command': 'git-plus:run'
         },
+        {
+          'label': 'Config'
+          'submenu': [
+            {
+              'label': 'Edit Attributes'
+              'command': 'git-plus:edit-attributes'
+            },
+            {
+              'label': 'Edit Config'
+              'command': 'git-plus:edit-config'
+            },
+            {
+              'label': 'Edit Excludes'
+              'command': 'git-plus:edit-excludes'
+            },
+            {
+              'label': 'Edit Global Attributes'
+              'command': 'git-plus:edit-global-attributes'
+            },
+            {
+              'label': 'Edit Global Config'
+              'command': 'git-plus:edit-global-config'
+            },
+            {
+              'label': 'Edit Global Ignore'
+              'command': 'git-plus:edit-global-ignore'
+            }
+          ]
+        }
       ]
     ]
   }

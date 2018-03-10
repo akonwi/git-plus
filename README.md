@@ -64,6 +64,12 @@ _Commands are accessible for keybindings by dasherizing the command title._
 | `Git Show` | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`. | |
 | `Git Open Changed Files` | Open tabs with all added, modified or renamed files. | |
 | `Git Tags` | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete. | |
+| `Edit Attributes` | Open your _local_ git attributes file in a new tab. | |
+| `Edit Config` | Open your _local_ git config in a new tab. | |
+| `Edit Excludes` | Open your _[exclude](https://help.github.com/articles/ignoring-files/#explicit-repository-excludes)_ file in a new tab. | |
+| `Edit Global Attributes` | Open your _global_ git _[attributes](http://git-scm.com/docs/gitattributes#gitattributes-Unspecified)_ file in a new tab. | |
+| `Edit Global Config` | Open your _global_ git config in a new tab. | |
+| `Edit Global Ignore` | Open your _global_ gitignore file in a new tab. | |
 
 ### Select lists that allow selecting multiple options
 Commands like `Stage hunk` and `Cherry-Pick` provide a list with the ability to select multiple options.

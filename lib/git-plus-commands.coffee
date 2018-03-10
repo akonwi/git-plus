@@ -38,6 +38,12 @@ getCommands = ->
   GitMerge               = require './models/git-merge'
   GitRebase              = require './models/git-rebase'
   GitOpenChangedFiles    = require './models/git-open-changed-files'
+  GitEditAttributes      = require './models/git-edit-attributes'
+  GitEditConfig          = require './models/git-edit-config'
+  GitEditExcludes        = require './models/git-edit-excludes'
+  GitEditGlobalAttributes    = require './models/git-edit-global-attributes'
+  GitEditGlobalConfig    = require './models/git-edit-global-config'
+  GitEditGlobalIgnore    = require './models/git-edit-global-ignore'
 
   commands = []
   git.getAllRepos().then (repos) ->
@@ -104,6 +110,12 @@ getCommands = ->
       commands.push ['git-plus:merge-no-fast-forward', 'Merge without fast-forward', -> GitMerge(repo, noFastForward: true)]
       commands.push ['git-plus:rebase', 'Rebase', -> GitRebase(repo)]
       commands.push ['git-plus:git-open-changed-files', 'Open Changed Files', -> GitOpenChangedFiles(repo)]
+      commands.push ['git-plus:edit-attributes', 'Edit Attributes', -> GitEditAttributes(repo)]
+      commands.push ['git-plus:edit-config', 'Edit Config', -> GitEditConfig(repo)]
+      commands.push ['git-plus:edit-excludes', 'Edit Excludes', -> GitEditExcludes(repo)]
+      commands.push ['git-plus:edit-global-attributes', 'Edit Global Attributes', -> GitEditGlobalAttributes()]
+      commands.push ['git-plus:edit-global-config', 'Edit Global Config', -> GitEditGlobalConfig()]
+      commands.push ['git-plus:edit-global-ignore', 'Edit Global Ignore', -> GitEditGlobalIgnore()]
 
       return commands
 
