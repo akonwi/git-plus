@@ -27,7 +27,7 @@ If you are on a Windows machine, I recommend checking out [this thread](https://
 Notifications will appear in a console output above the status bar.
 This view can be toggled by clicking the 'git+' icon in the bottom right of the status bar.
 
-![screenshot](https://dl.dropboxusercontent.com/s/oe3x8wyt6lnmbv7/git%2B.png)
+![screenshot](https://dl.dropboxusercontent.com/s/lla1cba1ycxesdi/status-bar-icon.png.png)
 
 ### Auto-Fetch
 Keeps your local repo bang up to date by automatically fetching from all remotes in the background every minute by default. But this can be set to any interval up to an hour, or disabled if you prefer. A notification can also be set to keep you informed.
