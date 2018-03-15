@@ -1,5 +1,10 @@
 ## Changelog
 
+### 7.10.1
+- Merge [#719](https://github.com/akonwi/git-plus/pull/719) to fix #681 and #710 (@Fryuni)
+- Merge [#728](https://github.com/akonwi/git-plus/pull/728) to fix #717 (@ccjmne)
+- Fix [#732](https://github.com/akonwi/git-plus/pull/732) (@ocoka)
+
 ### 7.10.0
 - Introduces a new option to pull with the '--autostash' flag thanks to (@Fryuni)[#707](https://github.com/akonwi/git-plus/pull/707)
 - Changes misspelling of 'branch' in the submenu (@j4cobgarby)[#708](https://github.com/akonwi/git-plus/pull/708)
