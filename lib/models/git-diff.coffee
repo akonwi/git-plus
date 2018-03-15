@@ -26,7 +26,7 @@ prepFile = (text, filePath) ->
         if err then reject err else resolve true
 
 splitDiff = (repo, pathToFile) ->
-  atom.workspace.open(pathToFile, {
+  atom.workspace.open(Path.join(repo.getWorkingDirectory(),pathToFile), {
     split: 'left',
     activatePane: false,
     activateItem: true,
