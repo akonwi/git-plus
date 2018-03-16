@@ -7,7 +7,7 @@ vim-fugitive like package for atom. make commits and other git things without th
 ![A screenshot of your spankin' package](https://raw.githubusercontent.com/akonwi/git-plus/master/commit.gif)
 
 Git-plus is a pet project but my job right now is another plugin called CodeStream. Check it out at [codestream.com](https://www.codestream.com/)
-![Checkout CodeStream](https://dl.dropboxusercontent.com/s/h31q24dp8u3v6ez/hor_onwhite_RGB%403x.png)
+[![Checkout CodeStream](https://dl.dropboxusercontent.com/s/h31q24dp8u3v6ez/hor_onwhite_RGB%403x.png)](http://codestream.com/?utm_source=atomio&utm_medium=link&utm_campaign=gitplus)
 
 ## Usage
 
