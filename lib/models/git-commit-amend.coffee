@@ -106,10 +106,7 @@ showFile = (filePath) ->
     Promise.resolve(commitEditor)
 
 destroyCommitEditor = (filePath) ->
-  if atom.config.get('git-plus.general.openInPane')
-    atom.workspace.paneForURI(filePath)?.destroy()
-  else
-    atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
+  atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
 
 commit = (directory, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
