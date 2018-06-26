@@ -134,11 +134,11 @@ describe "GitCommit", ->
       waitsForPromise -> GitCommit(repo)
 
     it "closes the created pane on finish", ->
-      pane = atom.workspace.paneForURI(commitFilePath)
-      spyOn(pane, 'destroy').andCallThrough()
-      pane.itemForURI(commitFilePath).save()
-      waitsFor -> pane.destroy.callCount > 0
-      runs -> expect(pane.destroy).toHaveBeenCalled()
+      paneItem = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
+      spyOn(paneItem, 'destroy').andCallThrough()
+      paneItem.save()
+      waitsFor -> paneItem.destroy.callCount > 0
+      runs -> expect(paneItem.destroy).toHaveBeenCalled()
 
   describe "when 'andPush' option is true", ->
     beforeEach ->

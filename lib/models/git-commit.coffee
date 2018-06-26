@@ -54,10 +54,7 @@ prepFile = ({status, filePath, diff, commentChar, template}) ->
   fs.writeFileSync filePath, content
 
 destroyCommitEditor = (filePath) ->
-  if atom.config.get('git-plus.general.openInPane')
-    atom.workspace.paneForURI(filePath)?.destroy()
-  else
-    atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
+  atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
 
 trimFile = (filePath, commentChar) ->
   findScissorsLine = (line) ->
