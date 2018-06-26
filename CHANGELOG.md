@@ -1,5 +1,8 @@
 ## Changelog
 
+### 7.11.0
+- Merge [#739](https://github.com/akonwi/git-plus/pull/739) to fix #738 (@jdanbrown)
+
 ### 7.10.2
 - Merge [#719](https://github.com/akonwi/git-plus/pull/719) to fix #681 and #710 (@Fryuni)
 - Merge [#728](https://github.com/akonwi/git-plus/pull/728) to fix #717 (@ccjmne)
