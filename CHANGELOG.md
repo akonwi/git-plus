@@ -1,221 +1,283 @@
 ## Changelog
 
+### 7.12.0
+
+- Adds new feature `Manage Stashes` to address [#218](https://github.com/akonwi/git-plus/issues/218)
+  - This will show your stashes and allow operating specific ones out of stack order.
+
 ### 7.11.0
+
 - Merge [#739](https://github.com/akonwi/git-plus/pull/739) to fix #738 (@jdanbrown)
 
 ### 7.10.2
+
 - Merge [#719](https://github.com/akonwi/git-plus/pull/719) to fix #681 and #710 (@Fryuni)
 - Merge [#728](https://github.com/akonwi/git-plus/pull/728) to fix #717 (@ccjmne)
 - Fix [#732](https://github.com/akonwi/git-plus/pull/732) (@ocoka)
 
 ### 7.10.0
+
 - Introduces a new option to pull with the '--autostash' flag thanks to (@Fryuni)[#707](https://github.com/akonwi/git-plus/pull/707)
 - Changes misspelling of 'branch' in the submenu (@j4cobgarby)[#708](https://github.com/akonwi/git-plus/pull/708)
 
 ### 7.9.3
+
 - Fixes [#677](https://github.com/akonwi/git-plus/pull/677)
 
 ### 7.9.2
+
 - Fixes [#666](https://github.com/akonwi/git-plus/pull/666)
 
 ### 7.9.1
+
 - Fixes [#663](https://github.com/akonwi/git-plus/pull/663)
 
 ### 7.9.0
+
 - The output view above the status-bar has been incorporated into the docks of atom v1.17.0
   - The timeout setting for this has also been removed since this is no longer just a notification
 
 ### 7.8.1
+
 - Fixes git+ commands not showing up in tree-view context menu
-on atom v1.17.0 [#664](https://github.com/akonwi/git-plus/pull/664) (@pixilz)
+  on atom v1.17.0 [#664](https://github.com/akonwi/git-plus/pull/664) (@pixilz)
 
 ### 7.8.0
+
 - Fixes [#654](https://github.com/akonwi/git-plus/issues/654)
 - Fixes [#655](https://github.com/akonwi/git-plus/issues/655)
 
 ### 7.7.0
+
 - Merge [#653](https://github.com/akonwi/git-plus/pull/653) (@jgnagy)
   - Adds a new config in 'Tags' section to sign tags with GPG
 
 ### 7.6.0
+
 - Merge [#648](https://github.com/akonwi/git-plus/pull/648) (@ios122), Which allows executing context actions on the git root path of tree-view
 - Update README with details of list views that allow selecting multiple options
 
 ### 7.5.0
+
 - Bug fix where trying to pull from a non-existent upstream branch threw an error
 - Merge [#634](https://github.com/akonwi/git-plus/pull/634) (@danielbayley), Which allows using right click or a modifier key
-to open the new branch command by clicking on the branch name in the status-bar
-- Fix [#633] (@oppin)
+  to open the new branch command by clicking on the branch name in the status-bar
+- Fix [#633](@oppin)
 
 ### 7.4.0
+
 - Adds a new command (`Fetch all`), thanks to @danielbayley
   - [Experimental] Setting for auto fetching the currently open repos
 - Fixed bug where atom's git highlighting in the tree-view and branch in the status bar didn't change after custom commands ran
 
 ### 7.3.3
+
 - Fixed [#631](https://github.com/akonwi/git-plus/issues/631)
 
 ### 7.3.2
+
 - Fixed [#627](https://github.com/akonwi/git-plus/issues/627)
 - Removed `Pull using rebase` command from the packages menu in OS status bar
 - The `run` function for custom commands now returns a promise that resolves with the git output. Which allows for chaining for more complicated commands.
 
 ### 7.3.1
+
 - Fixes [#626](https://github.com/akonwi/git-plus/issues/626)
 - Change location of the split-diff generated file
 - Removed some dependencies
 
 ### 7.3.0
+
 - [Experimental Features] Show diffs between branches (@yacut)
 - [Experimental Features] Use the split-diff package to show diffs for a single file (@yacut)
 
 ### 7.2.2
+
 - Remove the git+ logo from status-bar when there is no git project in workspace and add it when there is a git project [#613](https://github.com/akonwi/git-plus/issues/613)
 - Fixes [#614](https://github.com/akonwi/git-plus/issues/614)
 
 ### 7.2.1
+
 - Swapped pin icon in the status-bar for 'git+'. [#613](https://github.com/akonwi/git-plus/issues/613)
 - Removed analytics
 
 ### 7.2.0
+
 - Fixes [#596](https://github.com/akonwi/git-plus/issues/596)
-  - __BREAKING__ the config option of `Pull From Upstream` is now the default behavior.
+  - **BREAKING** the config option of `Pull From Upstream` is now the default behavior.
   - If your git config for 'push.default' is set to nothing or you want to intentionally choose a branch, turn on the 'Prompt for branch...' option
 - Merges [#604](https://github.com/akonwi/git-plus/issues/604) thanks to (@lgeiger)
 
 ### 7.1.1
+
 - Fixes [#598](https://github.com/akonwi/git-plus/issues/598)
 - Fixes [#599](https://github.com/akonwi/git-plus/issues/599)
 
 ### 7.1.0
+
 - Fixes [#573](https://github.com/akonwi/git-plus/issues/573)
 
 ### 7.0.7
+
 - [[#587]](https://github.com/akonwi/git-plus/issues/587) - Refactoring around tree-view context actions
 
 ### 7.0.6
+
 - [[#584]](https://github.com/akonwi/git-plus/issues/584)-The COMMIT_EDITMSG file is kept after commit attempts so in case of failure the previously typed message is easily retrievable
 - Fixes [#591](https://github.com/akonwi/git-plus/issues/591)
 - Fixes [#593](https://github.com/akonwi/git-plus/issues/593)
 
 ### 7.0.5
+
 - [[#587]](https://github.com/akonwi/git-plus/issues/587) Gracefully handle unavailable repo error
 - Fixes [#578](https://github.com/akonwi/git-plus/issues/578)
 
 ### 7.0.4
+
 - Minor changes
 
 ### 7.0.3
+
 - More fixes for [#582](https://github.com/akonwi/git-plus/issues/582)
 
 ### 7.0.2
+
 - Fixes config issue where none of the non-general configs were being used
 
 ### 7.0.1
+
 - Fixes [#582](https://github.com/akonwi/git-plus/issues/582)
 
 ### 7.0.0
+
 - Refactored package settings. This update will reset your configurations for this package as the config options have been refactored.
 - Add analytics to track which features are being used.
 
 ### 6.4.0
+
 - Introducing Custom Commands. This is an experimental feature to allow users to define their own commonly used commands. Read about [them](https://github.com/akonwi/git-plus#experimental-features)
 
 ### 6.3.0
+
 - Fixes [#395](https://github.com/akonwi/git-plus/issues/395)
 - Fixes [#408](https://github.com/akonwi/git-plus/issues/408)
 
 ### 6.2.0
+
 - Introduce new setting 'Stage Files Beta', to combine the 'Stage Files' and 'Unstage Files' commands into a single command.
 
 ### 6.0.2
+
 - Fixes [#579](https://github.com/akonwi/git-plus/issues/579)
 
 ### 6.0.1
+
 - Fixes [#576](https://github.com/akonwi/git-plus/issues/576)
 
 ### 6.0.0
-- __BREAKING__ The configuration option of 'Pull Before Push' is now a simple toggle and there is a second option 'Pull Rebase', which is also a toggle for whether to do all pulls with the `--rebase` flag.
+
+- **BREAKING** The configuration option of 'Pull Before Push' is now a simple toggle and there is a second option 'Pull Rebase', which is also a toggle for whether to do all pulls with the `--rebase` flag.
 - Fixes [#235](https://github.com/akonwi/git-plus/issues/235)
 - Fixes [#576](https://github.com/akonwi/git-plus/issues/576)
 - Remove the experimental tag from the 'Verbose Commits' feature
 - Only show the `Init` command in the atom palette when there is no repo in the project
 
 ### 5.29.1
+
 - Fixes [#568](https://github.com/akonwi/git-plus/issues/568)
 - Fixes [#405](https://github.com/akonwi/git-plus/issues/405)
 
 ### 5.29.0
+
 - Fixes [#531](https://github.com/akonwi/git-plus/issues/531)
 - Fixes [#292](https://github.com/akonwi/git-plus/issues/292)
 - Remove the experimental tag from the 'Always pull from upstream' feature
 
 ### 5.28.0
+
 - Display keyboard shortcuts for the commands in the Git Plus menu (@metatalker-[pr-566](https://github.com/akonwi/git-plus/pull/566))
 
 ### 5.27.0
+
 - Added more commands to the tree-view context-menu
   - `Add`, `Add + commit`, `Diff`, `Unstage`, `Checkout`
 
 ### 5.25.5
+
 - Fix [#553](https://github.com/akonwi/git-plus/issues/553)
 - Refactoring
 
 ### 5.25.4
+
 - Show error when attempting to push to pull from non-existent upstream branch.
 
 ### 5.25.3
+
 - Fix [#548](https://github.com/akonwi/git-plus/issues/548)
 
 ### 5.25.2
+
 - Fix [#545](https://github.com/akonwi/git-plus/issues/545)
 
 ### 5.25.1
+
 - Use experimental toggle: 'Always Pull From Upstream', when pulling before pushing is enabled
 
 ### 5.25.0
+
 - Adds new experimental toggle: 'Always Pull From Upstream', which will pull from your current branch upstream automatically without prompting you for a branch to pull from.
 - Fix [#538](https://github.com/akonwi/git-plus/issues/538)
   - [#537](https://github.com/akonwi/git-plus/issues/537) has been left open as the original.
 
 ### 5.24.2
+
 - Fix [#436](https://github.com/akonwi/git-plus/issues/436)
 - Fix [#529](https://github.com/akonwi/git-plus/issues/529)
 
 ### 5.24.1
+
 - Fix [#515](https://github.com/akonwi/git-plus/issues/515)
 - Fix [#533](https://github.com/akonwi/git-plus/issues/533)
 
 ### 5.25.4
+
 - Show error when attempting to push to pull from non-existent upstream branch.
 
 ### 5.25.3
+
 - Fix [#548](https://github.com/akonwi/git-plus/issues/548)
 
 ### 5.25.2
+
 - Fix [#545](https://github.com/akonwi/git-plus/issues/545)
 
 ### 5.25.1
+
 - Use experimental toggle: 'Always Pull From Upstream', when pulling before pushing is enabled
 
 ### 5.25.0
+
 - Adds new experimental toggle: 'Always Pull From Upstream', which will pull from your current branch upstream automatically without prompting you for a branch to pull from.
 - Fix [#538](https://github.com/akonwi/git-plus/issues/538)
   - [#537](https://github.com/akonwi/git-plus/issues/537) has been left open as the original.
 
 ### 5.24.2
+
 - Fix [#436](https://github.com/akonwi/git-plus/issues/436)
 - Fix [#529](https://github.com/akonwi/git-plus/issues/529)
 
 ### 5.24.1
+
 - Fix [#515](https://github.com/akonwi/git-plus/issues/515)
 - Fix [#533](https://github.com/akonwi/git-plus/issues/533)
 
 ### 5.24.0
+
 - This enables basic support for submodules. You should be able to add, commit, and diff files that belong to submodules.
 - Small performance improvements for initial loading of the package's command palette.
 
 ### 5.23.3
+
 - Add new command, `Commit All and Push`
 - Fix [#509](https://github.com/akonwi/git-plus/issues/509) where multiple selected commits weren't being cherry picked.
 - Update README
@@ -223,14 +285,17 @@ to open the new branch command by clicking on the branch name in the status-bar
   - Add note for Windows users to check out [#224](https://github.com/akonwi/git-plus/issues/224) for troubleshooting pull/push problems
 
 ### 5.23.2
+
 - Fix #459 [pr #459](https://github.com/akonwi/git-plus/issues/459)
   - Output from commands executed by Git Run will be colored if git provides coloring
 
 ### 5.22.1
+
 - Fix #448 [pr #514](https://github.com/akonwi/git-plus/issues/448)
 - Fix #517 [pr #514](https://github.com/akonwi/git-plus/issues/517)
 
 ### 5.22.0
+
 - Adds a new command to do `git push -u`.
   - The old push command automatically retried after a failure with the `-u` flag and that can completely ignore some pre-push hooks. Fixes [#422](https://github.com/akonwi/git-plus/issues/422)
 - Files can now be staged from the Tree-view with a Git add command in the context menu from right clicking files and folders.
@@ -238,226 +303,285 @@ to open the new branch command by clicking on the branch name in the status-bar
   - This work also fixes an unreported bug where trying to open a difftool for a file from the tree-view that was different than the currently active file would not work.
 
 ### 5.21.0
+
 - Includes a format option for the Git Show command in package settings. [pr #527](https://github.com/akonwi/git-plus/issues/527)
 
 ### 5.20.0
+
 - Fix #510 [pr #514](https://github.com/akonwi/git-plus/issues/514)
 - Add new command (Add Modified) [pr #519](https://github.com/akonwi/git-plus/issues/519)
 
 ### 5.19.0
+
 - Add new command (Merge without fast-forward) [pr #492](https://github.com/akonwi/git-plus/issues/492)
 
 ### 5.18.3
+
 - Merge [pr #489](https://github.com/akonwi/git-plus/issues/489)
 
 ### 5.18.2
+
 - Git show defaults to HEAD if input is left empty. [pr #481](https://github.com/akonwi/git-plus/issues/481)
 - Pin icon in status bar can now be disabled. [pr #488](https://github.com/akonwi/git-plus/issues/488)
 
 ### 5.18.0
+
 - Enable activating the difftool on files and folders in the tree-view [pr #508](https://github.com/akonwi/git-plus/issues/508)
 - Allow the package to initialize immediately when atom loads
 
 ### 5.17.1
+
 - Fix bugs with new diff highlighting [#511](https://github.com/akonwi/git-plus/issues/511)
 
 ### 5.17.0
+
 - Add syntax highlighting to diffs [#507](https://github.com/akonwi/git-plus/issues/507)
 - Improves diff grammar and styling [#507](https://github.com/akonwi/git-plus/issues/507)
 
 ### 5.16.2
+
 - Fix [#476](https://github.com/akonwi/git-plus/issues/476)
 
 ### 5.16.1
+
 - Fix [#472](https://github.com/akonwi/git-plus/issues/472)
 
 ### 5.16.0
+
 - Add toggle for experimental features in package settings
 - Verbose commits is now an experimental feature([#90](https://github.com/akonwi/git-plus/issues/90))
 
 ### 5.15.0
+
 - New command to 'Add and commit and push' (@john-d-murphy)[#452](https://github.com/akonwi/git-plus/issues/452)
 - New command 'Open all changed files' (@flexoid) [#463](https://github.com/akonwi/git-plus/issues/463)
 
 ### 5.14.0
+
 - Add a new stash command to save with a message -> [#396](https://github.com/akonwi/git-plus/issues/396)
 - Fix placeholder text for Run command not displaying
 
 ### 5.13.6
+
 - Fix [#445](https://github.com/akonwi/git-plus/issues/445)
 
 ### 5.13.5
+
 - Fix [#412](https://github.com/akonwi/git-plus/issues/412)
 - Slight refactor to diff grammar
 
 ### 5.13.4
+
 - Fix [#423](https://github.com/akonwi/git-plus/issues/423)
 
 ### 5.13.3
+
 - Show errors when Add and Push commands fail
 
 ### 5.13.0
+
 - Add keyboard support for git log view (@aki77)[PR#389](https://github.com/akonwi/git-plus/pull/389)
 
 ### 5.12.3
+
 - Fix [#387](https://github.com/akonwi/git-plus/issues/387)
 - Fix [#383](https://github.com/akonwi/git-plus/issues/383)
 - Fix [#369](https://github.com/akonwi/git-plus/issues/369)
 
 ### 5.12.1
+
 - Merge [pr #380](https://github.com/akonwi/git-plus/issues/380)
 - Merge [pr #381](https://github.com/akonwi/git-plus/issues/381)
- - Fixes [#372](https://github.com/akonwi/git-plus/issues/372)
+- Fixes [#372](https://github.com/akonwi/git-plus/issues/372)
 - Fix [#377](https://github.com/akonwi/git-plus/issues/377)
 
 ### 5.12.0
+
 - Add `Merge Remote` command (@crshd)
 - Fix [#370](https://github.com/akonwi/git-plus/issues/370)
 - Fix [#371](https://github.com/akonwi/git-plus/issues/371)
 - Remove code that 'fixed' [#90](https://github.com/akonwi/git-plus/issues/90) because there are still gaps to figure out
 
 ### 5.11.0
+
 - Fix [#355](https://github.com/akonwi/git-plus/issues/355)
 - Fix [#354](https://github.com/akonwi/git-plus/issues/354)
 - Fix [#358](https://github.com/akonwi/git-plus/issues/358)
 
 ### 5.9.0
+
 - Fix a bug where the commit amend file didn't show the status of the previous
-commit if there were no new changed files
+  commit if there were no new changed files
 - Fix for a blank uncommented line inside the status of the amend file
 - Fix syntax error in the amend file. Changed 'removed' to 'deleted'
 
 ### 5.8.3
+
 - Show errors from `Diff` command
 
 ### 5.8.2
+
 - Fix for no notifications when changing branches
 
 ### 5.8.1
+
 - Remove verbose commit feature because it isn't fully implemented
 
 ### 5.8.0
+
 - Add setting for verbose commit panes
 
 ### 5.7.1
+
 - Fix #349 (@joshbaldock)
 
 ### 5.7.0
+
 - Added config options for pulling before pushing
 
 ### 5.6.10
+
 - Fix #340 (@brettle)
 
 ### 5.6.8
+
 - Fix #322 (@teefax)
 - Change format of list of commands in README (@capncodewash)
 
 ### 5.6.6
+
 - Fix #322 (@mightydok)
 - Make all notifications dismissable (@jamen)
 - Fix height for long log outputs (@sxasraf)
 
 ### 5.6.5
+
 - Trigger checkout from clicking on branch name in status bar on atom-workspace
 - Update splitPaneDirection config to be an enum
 
 ### 5.6.3
+
 - Fix #318
 
 ### 5.6.2
+
 - Disable color for 'Git show' (@modosc)
 
 ### 5.6.1
+
 - Display untracked files in list of files to stage as separate items
 
 ### 5.6.0
+
 - Fix #270. When pulling, you now have the default option to pull from the origin of the current branch
 
 ### 5.5.7
+
 - Fix #317 and #319
 
 ### 5.5.6
+
 - Fix #315
 
 ### 5.5.5
+
 - Complete fix for #310
 
 ### 5.5.4
+
 - Refactor
 - Try to ignore CRLF errors when commiting
 
 ### 5.5.3
+
 - Fix #311
 
 ### 5.5.2
+
 - Refactoring
 - Catch unstage files errors
 
 ### 5.5.0
+
 - A lot of refactoring into promises
-- __Output console__
+- **Output console**
   - Add toggle on the right of status-bar for toggling the output console
   - Output from `Git Run` will be displayed in the output console
   - Show notification when Push/Pull/Fetch starts in the output console
   - Show bigger messages like results of stash/merge in output console
 - Clicking on the branch name in the status-bar will trigger the `Git Checkout` menu (@kandros)
 - Amending no longer resets HEAD so you can safely cancel an amend
-- __`Add All Commit And Push`__
+- **`Add All Commit And Push`**
   - is now an activation command (@dbenson24)
   - it tries to `pull` before pushing (@mhuggins7278)
 - Add `Git Difftool` to open up a difftool (@outsmirkable)
 - Add `Git Rebase` (@afontaine)
 
 ### 5.4.7
+
 - #269
 
 ### 5.4.6
- - Refactor to fix #266
+
+- Refactor to fix #266
 
 ### 5.4.5
+
 - #265
 
 ### 5.4.4
+
 - #263
 
 ### 5.4.3
+
 - Add deactivate method to package
 - Refactoring
 
 ### 5.4.2
+
 - #261
 
 ### 5.4.1
+
 - #260: Destroy 'COMMIT_EDITMSG' pane not just editor
 
 ### 5.4.0
+
 - #201: Add `Commit All` command. Equivalent of `git commit -a`
 
 ### 5.3.5
+
 - #209: Only destroy textEditor for 'COMMIT_EDITMSG'
 
 ### 5.3.4
+
 - unlink COMMIT_EDITMSG file after commits
 - Respect no 'open pane' setting with commit window
 
 ### 5.3.3
+
 - #231: Shift-Enter confirms stage/unstage in dialogs
 
 ### 5.3.2
+
 - Fix #226: remove COMMIT_EDITMSG file from repo when committing
 - Fix #228: Don't show color codes in diff when `color.ui=always`
 
 ### 5.3.0
+
 - Fix #233 (@hotoiledgoblins)
 - Add 'Git checkout remote' to atom command palette
 - Respect `commit.template` config option
 
 ### 5.2.4
+
 - Fix #243
 - Fix #42
 - Add 'push' command to context menu
 
 ### 5.2.3
+
 - Make git-diff highlighting non-greedy. Thanks to @Victorystick
 
 ### 5.2.2
@@ -558,7 +682,7 @@ commit if there were no new changed files
 ### 4.4.6
 
 - Try to keep only one instance of GitRepository floating around by using either
-`atom.project.getRepo` or calling `::destroy` on an opened instance
+  `atom.project.getRepo` or calling `::destroy` on an opened instance
 
 ### 4.4.2
 
@@ -628,7 +752,7 @@ commit if there were no new changed files
 ### 4.2.1
 
 - Small fix in git-commit.coffee line 90 where promise returns a TextBuffer. Using given TextBuffer for subscriptions
-rather than the 'buffer' property in the TextBuffer.
+  rather than the 'buffer' property in the TextBuffer.
 
 ### 4.2.0
 
@@ -674,6 +798,7 @@ rather than the 'buffer' property in the TextBuffer.
 ### 3.9.0
 
 - From the Git Status list, you can go to the modified file or open its diff file
+
 ### 3.8.0
 
 - Adding commands for Git stash
@@ -691,21 +816,22 @@ rather than the 'buffer' property in the TextBuffer.
 - Can change commentchar in Git configs and Git-plus will use it in commit messages
 
 ### 3.6.0
+
 - Can now push tags to remote
 
 ### 3.5.0
 
 - The more common commands are now accessible through keybindings
 
-    * Add
-    * Add all and commit
-    * Add and commit
-    * Commit
-    * Diff [all]
-    * Log
-    * Status
-    * Pull
-    * Push
+  - Add
+  - Add all and commit
+  - Add and commit
+  - Commit
+  - Diff [all]
+  - Log
+  - Status
+  - Pull
+  - Push
 
 ### 3.4.0
 
@@ -732,10 +858,11 @@ rather than the 'buffer' property in the TextBuffer.
 - Should be able to close the views with feedback from commands through the `core:cancel` command.
 
 ### 3.0.0
+
 #### Includes massive amounts of refactoring to internal api
 
 - Dedicated command palette for git commands. Can be opened with
-`[cmd|ctrl]-shift-h`
+  `[cmd|ctrl]-shift-h`
 
 - `Git init` is available in projects that are not git repos.
 
@@ -763,7 +890,7 @@ rather than the 'buffer' property in the TextBuffer.
 
 ### 2.11.0
 
- - Add hide-output keymapping
+- Add hide-output keymapping
 
 ### 2.10.1
 
