@@ -26,7 +26,7 @@ getCommands = ->
   GitStageFiles          = require './models/git-stage-files'
   GitStageFilesBeta      = require './models/git-stage-files-beta'
   GitStageHunk           = require './models/git-stage-hunk'
-  GitStash               = require './models/git-stash'
+  ManageStash               = require './models/manage-stash'
   GitStashApply          = require './models/git-stash-apply'
   GitStashDrop           = require './models/git-stash-drop'
   GitStashPop            = require './models/git-stash-pop'
@@ -92,7 +92,7 @@ getCommands = ->
         commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles(repo)]
         commands.push ['git-plus:unstage-files', 'Unstage Files', -> GitUnstageFiles(repo)]
       commands.push ['git-plus:stage-hunk', 'Stage Hunk', -> GitStageHunk(repo)]
-      commands.push ['git-plus:stash', 'Stash', GitStash.default]
+      commands.push ['git-plus:manage-stash', 'Manage Stash', ManageStash.default]
       commands.push ['git-plus:stash-save', 'Stash: Save Changes', -> GitStashSave(repo)]
       commands.push ['git-plus:stash-save-message', 'Stash: Save Changes With Message', -> GitStashSaveMessage(repo)]
       commands.push ['git-plus:stash-pop', 'Stash: Apply (Pop)', -> GitStashPop(repo)]
