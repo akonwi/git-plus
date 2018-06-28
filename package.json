@@ -3,7 +3,9 @@
   "main": "./lib/git-plus",
   "version": "7.11.0",
   "description": "Do git things without the terminal",
-  "keywords": ["git"],
+  "keywords": [
+    "git"
+  ],
   "providedServices": {
     "git-plus": {
       "description": "Execute git commands",
@@ -38,10 +40,41 @@
     "singleQuote": true,
     "printWidth": 100
   },
+  "atomTranspilers": [
+    {
+      "glob": "{lib,spec}/**/*.js",
+      "transpiler": "atom-babel6-transpiler",
+      "options": {
+        "babel": {
+          "presets": [
+            "env",
+            "flow"
+          ],
+          "plugins": [
+            "transform-object-rest-spread",
+            [
+              "transform-class-properties",
+              {
+                "spec": true
+              }
+            ]
+          ],
+          "babelrc": false
+        }
+      }
+    }
+  ],
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.51",
     "ansi-to-html": "^0.4.1",
+    "atom-babel6-transpiler": "^1.2.0",
     "atom-notify": "^1.1.0",
+    "atom-select-list": "^0.7.1",
     "atom-space-pen-views": "^2.0.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "^6.23.0",
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
     "underscore-plus": "^1.6.6"
