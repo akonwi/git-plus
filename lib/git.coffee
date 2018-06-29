@@ -1,6 +1,5 @@
 Os = require 'os'
 {BufferedProcess, Directory} = require 'atom'
-
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
 
@@ -26,15 +25,24 @@ _prettifyDiff = (data) ->
   data[1..data.length] = ('@@' + line for line in data[1..])
   data
 
+reposByDirectory = new Map
+
 getRepoForCurrentFile = ->
   new Promise (resolve, reject) ->
     project = atom.project
     path = atom.workspace.getCenter().getActiveTextEditor()?.getPath()
     directory = project.getDirectories().filter((d) -> d.contains(path))[0]
     if directory?
+      if repo = reposByDirectory.get(directory.getPath()) then return resolve(repo)
+
       project.repositoryForDirectory(directory).then (repo) ->
-        submodule = repo.repo.submoduleForPath(path)
-        if submodule? then resolve(submodule) else resolve(repo)
+        submodule = repo.getRepo().submoduleForPath(path)
+        if submodule?
+          reposByDirectory.set(directory.getPath(), submodule)
+          resolve(submodule)
+        else
+          reposByDirectory.set(directory.getPath(), repo)
+          resolve(repo)
       .catch (e) ->
         reject(e)
     else
