@@ -24,26 +24,23 @@ declare module 'atom' {
     onDidChangeModified(callback: (isModified: boolean) => any): Disposable;
     onDidStopChanging(callback: Function): Disposable;
     onDidDestroy(callback: Function): Disposable;
+    getPath(): string;
   }
 
   declare export class GitRepository {
-    static open(
-      path: string,
-      options?: { refreshOnWindowFocus: boolean }
-    ): GitRepository | null;
+    static open(path: string, options?: { refreshOnWindowFocus: boolean }): GitRepository | null;
     getWorkingDirectory(): string;
     destroy(): void;
     isDestroyed(): boolean;
     relativize(path: string): string;
     isStatusModified(number): boolean;
     isPathModified(string): boolean;
-    onDidChangeStatus(
-      (event: { path: string, pathStatus: number }) => any
-    ): Disposable;
+    onDidChangeStatus((event: { path: string, pathStatus: number }) => any): Disposable;
   }
 
   declare export class Directory {
     constructor(path: string, symlink?: boolean): Directory;
+    getPath(): string;
   }
 
   declare type PointArray = [number, number]

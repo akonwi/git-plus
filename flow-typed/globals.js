@@ -37,8 +37,11 @@ type NotificationOptions = {
   icon?: string
 }
 type ErrorNotificationOptions = NotificationOptions & { stack?: string }
-
 type Notification = {}
+
+type WorkspaceCenter = {
+  getActiveTextEditor(): TextEditor | void
+}
 
 type Atom = {
   commands: {
@@ -50,10 +53,12 @@ type Atom = {
     addError(message: string, ?ErrorNotificationOptions): Notification
   },
   project: {
+    getDirectories(): Directory[],
     repositoryForDirectory(Directory): Promise<GitRepository>
   },
   workspace: {
     addModalPanel(PanelOptions): Panel,
+    getCenter(): WorkspaceCenter,
     getTextEditors(): TextEditor[],
     observeActiveTextEditor(callback: (editor: TextEditor | void) => any): Disposable
   }
