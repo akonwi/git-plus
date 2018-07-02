@@ -58,4 +58,26 @@ declare module 'atom' {
     end: Point;
     constructor(a: PointThing, b: PointThing): Range;
   }
+
+  declare type ProcessOptions = {
+    command: string,
+    args?: string[],
+    options?: {},
+    stdout?: (data: string) => any,
+    stderr?: (data: string) => any,
+    exit?: (code: number) => any,
+    autoStart?: boolean
+  }
+
+  declare type ProcessError = {
+    error: {},
+    handle(): void
+  }
+
+  declare export class BufferedProcess {
+    constructor(ProcessOptions): BufferedProcess;
+    onWillThrowError(callback: (error: ProcessError) => any): Disposable;
+    kill(): void;
+    start(): void;
+  }
 }

@@ -44,10 +44,21 @@ type WorkspaceCenter = {
   getActiveTextEditor(): TextEditor | void
 }
 
+type ScopeDescriptor = {}
+
+type ConfigQueryOptions = {
+  sources?: string[],
+  excludedSources?: string[],
+  scope?: ScopeDescriptor
+}
+
 type Atom = {
   commands: {
     add(target: string, commandName: string, listener: CommandListener): Disposable,
     add(target: string, commands: CommandListeners): Disposable
+  },
+  config: {
+    get(keyPath: string, options?: ConfigQueryOptions): string | boolean | number
   },
   notifications: {
     addSuccess(message: string, ?NotificationOptions): Notification,
