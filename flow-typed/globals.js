@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable */
 import { Directory, Disposable, GitRepository, TextEditor } from 'atom'
 
 type CommandListenerFunction = (event: any) => void
