@@ -3,9 +3,7 @@
   "main": "./lib/git-plus",
   "version": "7.12.0",
   "description": "Do git things without the terminal",
-  "keywords": [
-    "git"
-  ],
+  "keywords": ["git"],
   "providedServices": {
     "git-plus": {
       "description": "Execute git commands",
@@ -46,10 +44,7 @@
       "transpiler": "atom-babel6-transpiler",
       "options": {
         "babel": {
-          "presets": [
-            "env",
-            "flow"
-          ],
+          "presets": ["env", "flow"],
           "plugins": [
             "transform-object-rest-spread",
             [
@@ -81,6 +76,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",
+    "eslint": "^5.0.1",
     "flow-bin": "^0.75.0",
     "lint": "^1.1.2",
     "prettier": "^1.13.6",
