@@ -19,10 +19,10 @@ module.exports =
         description: "If git is not in your PATH, specify where the executable is"
       enableStatusBarIcon:
         order: 2
-        title: "Status-bar Pin Icon"
+        title: "Status-bar Icon"
         type: "boolean"
         default: true
-        description: "The pin icon in the bottom-right of the status-bar toggles the output view above the status-bar"
+        description: "The 'git+' icon in the bottom-right of the status-bar toggles the output view above the status-bar"
       newBranchKey:
         order: 3
         title: "Status-bar New Branch modifier key"
