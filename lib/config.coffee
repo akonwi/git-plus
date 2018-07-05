@@ -137,33 +137,27 @@ module.exports =
     order: 7
     type: "object"
     properties:
-      stageFilesBeta:
-        order: 1
-        title: "Stage Files Beta"
-        type: "boolean"
-        default: true
-        description: "Stage and unstage files in a single command"
       customCommands:
-        order: 2
+        order: 1
         title: "Custom Commands"
         type: "boolean"
         default: false
         description: "Declared custom commands in your `init` file that can be run from the Git-plus command palette"
       diffBranches:
-        order: 3
+        order: 2
         title: "Show diffs across branches"
         type: "boolean"
         default: false
         description: "Diffs will be shown for the current branch against a branch you choose. The `Diff branch files` command will allow choosing which file to compare. The file feature requires the 'split-diff' package to be installed."
       autoFetch:
-        order: 4
+        order: 3
         title: "Auto-fetch"
         type: "integer"
         default: 0
         maximum: 60
         description: "Automatically fetch remote repositories every `x` minutes (`0` will disable this feature)"
       autoFetchNotify:
-        order: 5
+        order: 4
         title: "Auto-fetch notification"
         type: "boolean"
         default: false
