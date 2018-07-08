@@ -102,6 +102,8 @@ If you would like to use experimental features, enable them in the package setti
 
   > _Please beware of giving your commands the same name(undo-last-commit) as existing commands. They will appear as duplicates in the Git-plus palette._
 
+  > Check out some commands [here](https://github.com/akonwi/git-plus/wiki/Custom-Commands-Snippets)
+
 - Stage Files Beta
   > When enabled, the 'Unstage Files' and 'Stage Files' commands will be merged into one view where the staged status of multiple files can be toggled.
 
