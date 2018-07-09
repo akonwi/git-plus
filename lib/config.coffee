@@ -50,6 +50,12 @@ module.exports =
         default: "full"
         enum: ["oneline", "short", "medium", "full", "fuller", "email", "raw", "none"]
         description: "Which format to use for `git show`? (`none` will use your git config default)"
+      alwaysOpenDockWithResult:
+        order: 7
+        title: "Always show result output"
+        type: "boolean"
+        default: false
+        description: "Always display bottom dock with output after command is complete (regardless of dock visibility)"
   commits:
     order: 2
     type: "object"
