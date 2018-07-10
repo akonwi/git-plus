@@ -1,9 +1,11 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "7.12.0",
+  "version": "8.0.0",
   "description": "Do git things without the terminal",
-  "keywords": ["git"],
+  "keywords": [
+    "git"
+  ],
   "providedServices": {
     "git-plus": {
       "description": "Execute git commands",
@@ -44,7 +46,10 @@
       "transpiler": "atom-babel6-transpiler",
       "options": {
         "babel": {
-          "presets": ["env", "flow"],
+          "presets": [
+            "env",
+            "flow"
+          ],
           "plugins": [
             "transform-object-rest-spread",
             [
