@@ -1,5 +1,12 @@
 ## Changelog
 
+### 8.0.0
+
+- Removes the default keybindings for commands (except for the menu). [#415](https://github.com/akonwi/git-plus/issues/415) [#688](https://github.com/akonwi/git-plus/issues/688)
+- Introduces new option to always open the dock to show results (@brycefranzen)[#746](https://github.com/akonwi/git-plus/pull/746)
+- `Stage Files`, which was experimental, is now the main command to manage your index and replaces the two commands, `Stage File` + `Unstage File`.
+- The split-diff option is now a core setting
+
 ### 7.12.0
 
 - Adds new feature `Manage Stashes` to address [#218](https://github.com/akonwi/git-plus/issues/218)
