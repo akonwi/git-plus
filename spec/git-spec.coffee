@@ -67,7 +67,7 @@ describe "Git-Plus git module", ->
   describe "git.cmd", ->
     it "returns a promise", ->
       waitsForPromise ->
-        promise = git.cmd()
+        promise = git.cmd([])
         expect(promise.catch).toBeDefined()
         expect(promise.then).toBeDefined()
         promise.catch (output) ->
