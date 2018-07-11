@@ -1,7 +1,7 @@
 // @flow
 declare module 'atom' {
   declare export class Disposable {
-    constructor(disposalAction: () => void): Disposable;
+    constructor(disposalAction: () => any): Disposable;
     dispose(): void;
     static isDisposable(object: any): boolean;
   }
