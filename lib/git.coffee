@@ -3,7 +3,6 @@ Os = require 'os'
 
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
-ActivityLogger = require('./activity-logger').default
 
 gitUntrackedFiles = (repo, dataUnstaged=[]) ->
   args = ['ls-files', '-o', '--exclude-standard']
@@ -54,7 +53,6 @@ module.exports = git =
         stderr: (data) ->
           output += data.toString()
         exit: (code) ->
-          ActivityLogger.record({ command: """git #{args.join(' ')}""", result: output })
           if code is 0
             resolve output
           else
