@@ -5,7 +5,8 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: 'eslint:recommended',
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  plugins: ['flowtype'],
   parser: 'babel-eslint',
   parserOptions: {
     sourceType: 'module',
@@ -14,11 +15,17 @@ module.exports = {
   globals: {
     atom: false
   },
+  settings: {
+    flowType: {
+      onlyFilesWithFlowAnnotation: true
+    }
+  },
   rules: {
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
     'no-console': 'off',
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'flowtype/define-flow-type': 'warn'
     // quotes: ['error', 'single'],
     // semi: ['error', 'never']
   }

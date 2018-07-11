@@ -87,6 +87,8 @@
   "devDependencies": {
     "babel-eslint": "^8.2.5",
     "eslint": "^5.0.1",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-react": "^7.10.0",
     "flow-bin": "^0.75.0",
     "lint": "^1.1.2",
     "prettier": "^1.13.6",
