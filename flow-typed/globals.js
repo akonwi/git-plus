@@ -52,6 +52,15 @@ type ConfigQueryOptions = {
   scope?: ScopeDescriptor
 }
 
+type OpenUriOptions = {}
+
+interface Dock {
+  show(): void;
+}
+
+type URI = string
+interface ViewItem { element: HTMLElement }
+
 type Atom = {
   commands: {
     add(target: string, commandName: string, listener: CommandListener): Disposable,
@@ -70,9 +79,12 @@ type Atom = {
   },
   workspace: {
     addModalPanel(PanelOptions): Panel,
+    getBottomDock(): Dock,
     getCenter(): WorkspaceCenter,
     getTextEditors(): TextEditor[],
-    observeActiveTextEditor(callback: (editor: TextEditor | void) => any): Disposable
+    hide(ViewItem | URI): boolean,
+    observeActiveTextEditor(callback: (editor: TextEditor | void) => any): Disposable,
+    open(?URI | ?ViewItem, ?OpenUriOptions): Promise<TextEditor>
   }
 }
 
