@@ -70,10 +70,11 @@ trimFile = (filePath, commentChar) ->
 commit = (directory, filePath) ->
   git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: directory)
   .then (data) ->
-    ActivityLogger.record({ command: 'commit', result: data})
+    ActivityLogger.record({ message: 'commit', output: data})
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
+    ActivityLogger.record({ message: 'commit', output: data, success: false })
     notifier.addError data
     destroyCommitEditor(filePath)
 
