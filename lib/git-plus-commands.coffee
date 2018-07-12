@@ -1,7 +1,8 @@
 git = require './git'
 
 getCommands = ->
-  GitAdd                = require('./models/add').default
+  gitAdd                = require('./models/add').default
+  gitAddModified        = require('./models/add-modified').default
   GitCheckoutNewBranch   = require './models/git-checkout-new-branch'
   GitCheckoutBranch      = require './models/git-checkout-branch'
   GitDeleteBranch        = require './models/git-delete-branch'
@@ -49,8 +50,8 @@ getCommands = ->
       git.refresh repo
       if atom.config.get('git-plus.experimental.customCommands')
         commands = commands.concat(require('./service').getCustomCommands())
-      commands.push ['git-plus:add', 'Add', GitAdd]
-      commands.push ['git-plus:add-modified', 'Add Modified', -> git.add(repo, update: true)]
+      commands.push ['git-plus:add', 'Add', gitAdd]
+      commands.push ['git-plus:add-modified', 'Add Modified', gitAddModified]
       commands.push ['git-plus:add-all', 'Add All', -> git.add(repo)]
       commands.push ['git-plus:log', 'Log', -> GitLog(repo)]
       commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(repo, onlyCurrentFile: true)]
