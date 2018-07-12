@@ -52,7 +52,7 @@ getCommands = ->
         commands = commands.concat(require('./service').getCustomCommands())
       commands.push ['git-plus:add', 'Add', gitAdd]
       commands.push ['git-plus:add-modified', 'Add Modified', gitAddModified]
-      commands.push ['git-plus:add-all', 'Add All', -> git.add(repo)]
+      commands.push ['git-plus:add-all', 'Add All', -> gitAdd(true)]
       commands.push ['git-plus:log', 'Log', -> GitLog(repo)]
       commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(repo, onlyCurrentFile: true)]
       commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove(repo)]
