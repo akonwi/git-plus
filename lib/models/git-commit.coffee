@@ -75,7 +75,6 @@ commit = (directory, filePath) ->
     git.refresh()
   .catch (data) ->
     ActivityLogger.record({ message: 'commit', output: data, success: false })
-    notifier.addError data
     destroyCommitEditor(filePath)
 
 cleanup = (currentPane) ->
