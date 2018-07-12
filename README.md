@@ -60,13 +60,14 @@ _Commands are accessible for keybindings by dasherizing the command title. Add y
 | `Git Checkout New branch`     | Create a new branch.                                                                                                                                    |
 | `Git Diff [All]`              | Show the diff for the current file, or all files. The diff can either be against the staged or un-staged tree, as selected in the options.              |
 | `Git Diff Branches`           | Show the diff for the current branch all files against another branch.                                                                                  |
-| `Git Diff Branche Files`      | Show the diff for the current branch file against another branch version.                                                                               |
+| `Git Diff Branch Files`       | Show the diff for the current branch file against another branch version.                                                                               |
 | `Git` _`[Push⎮Pull]`_         | Push to or pull from a remote repo. If you have multiple remote repos, you can choose which to push to or pull from.                                    |
 | `Git Remove [current file]`   | `git rm` the current file or open an selector to select the files to remove. You can select multiple files at once.                                     |
 | `Git Log [Current File]`      | Show the commit history [for the current file] and show display the selected commit.                                                                    |
 | `Git Show`                    | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`.                                                         |
 | `Git Open Changed Files`      | Open tabs with all added, modified or renamed files.                                                                                                    |
 | `Git Tags`                    | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete.                                                       |
+| `Manage Stashes`              | Similar to `Git Tags`. There are options to apply, pop, and drop.                                                                                       |
 
 ### Select lists that allow selecting multiple options
 
