@@ -81,6 +81,7 @@ type Atom = {
     addModalPanel(PanelOptions): Panel,
     getBottomDock(): Dock,
     getCenter(): WorkspaceCenter,
+    getActiveTextEditor(): TextEditor | void,
     getTextEditors(): TextEditor[],
     hide(ViewItem | URI): boolean,
     observeActiveTextEditor(callback: (editor: TextEditor | void) => any): Disposable,
