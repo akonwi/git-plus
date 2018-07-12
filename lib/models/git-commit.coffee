@@ -2,7 +2,8 @@ Path = require 'path'
 {CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
 git = require '../git'
-notifier = require '../notifier'
+notifier = require('../notifier')
+ActivityLogger = require('../activity-logger').default
 GitPush = require './git-push'
 GitPull = require './git-pull'
 
@@ -69,7 +70,7 @@ trimFile = (filePath, commentChar) ->
 commit = (directory, filePath) ->
   git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: directory)
   .then (data) ->
-    notifier.addSuccess data
+    ActivityLogger.record({ command: 'commit', result: data})
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
