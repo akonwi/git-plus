@@ -35,7 +35,7 @@ Keeps your local repo bang up to date by automatically fetching from all remotes
 
 ### Commands
 
-_Commands are accessible for keybindings by dasherizing the command title._
+_Commands are accessible for keybindings by dasherizing the command title. Add your own keybindings in your ~/.atom/keymap.cson file_
 
 > Git Add == `git-plus:add`
 
@@ -43,30 +43,30 @@ _Commands are accessible for keybindings by dasherizing the command title._
 
 **Note: The following list of commands is not exhaustive. If what you want isn't a feature, you can use `Git Run` and enter the command.**
 
-| Command                       | Effect                                                                                                                                                  | Default key binding                                                     |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `Git Run`                     | Execute a command manually by typing it **without** the git part. ex. `fetch --all`                                                                     |                                                                         |
-| `Git Status`                  | Show current status.                                                                                                                                    | `Cmd-Shift-A S`                                                         |
-| `Git Add`                     | Add the current file to the index.                                                                                                                      | `Cmd-Shift-A`                                                           |
-| `Git Add All`                 | Adds all files to the index (ex. `git add .`).                                                                                                          |                                                                         |
-| `Git Commit`                  | Commit the staged changes. Git-Plus will show an editor for the commit message. To make the commit, save the file. To cancel the commit, close the tab. | `Cmd-Shift-C`(_`Ctrl-Shift-X`_ on Windows and Linux)                    |
-| `Git Add And Commit`          | Stages the current file before preparing a commit. (`Git add all` and `Git commit` run in succession)                                                   | `Cmd-Shift-A c`                                                         |
-| `Git Add All and Commit`      | Stages all changes before preparing a commit. (`Git add all` and `Git commit` in succession)                                                            | `Cmd-Shift-A a`                                                         |
-| `Git Add And Commit And Push` | Commit currently open file and push to a remote repo.                                                                                                   | `Cmd-Shift-A Q`                                                         |
-| `Git Add All Commit And Push` | Commit all changes and push to a remote repo.                                                                                                           | `Cmd-Shift-A P`                                                         |
-| `Git Commit Amend`            | Amend the previous commit.                                                                                                                              |                                                                         |
-| `Git Checkout Current File`   | Undo changes and reset the current file to HEAD.                                                                                                        |                                                                         |
-| `Git Checkout`_`[ref]`_       | Change to another ref (branch or tag).                                                                                                                  | `Click` on status bar branch indicator.                                 |
-| `Git Checkout New branch`     | Create a new branch.                                                                                                                                    | `Alt-Click` (by default) or right click on status bar branch indicator. |
-| `Git Diff [All]`              | Show the diff for the current file, or all files. The diff can either be against the staged or un-staged tree, as selected in the options.              |                                                                         |
-| `Git Diff Branches`           | Show the diff for the current branch all files against another branch.                                                                                  |                                                                         |
-| `Git Diff Branche Files`      | Show the diff for the current branch file against another branch version.                                                                               |                                                                         |
-| `Git` _`[Push⎮Pull]`_         | Push to or pull from a remote repo. If you have multiple remote repos, you can choose which to push to or pull from.                                    |                                                                         |
-| `Git Remove [current file]`   | `git rm` the current file or open an selector to select the files to remove. You can select multiple files at once.                                     |                                                                         |
-| `Git Log [Current File]`      | Show the commit history [for the current file] and show display the selected commit.                                                                    |                                                                         |
-| `Git Show`                    | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`.                                                         |                                                                         |
-| `Git Open Changed Files`      | Open tabs with all added, modified or renamed files.                                                                                                    |                                                                         |
-| `Git Tags`                    | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete.                                                       |                                                                         |
+| Command                       | Effect                                                                                                                                                  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Git Run`                     | Execute a command manually by typing it **without** the git part. ex. `fetch --all`                                                                     |
+| `Git Status`                  | Show current status.                                                                                                                                    |
+| `Git Add`                     | Add the current file to the index.                                                                                                                      |
+| `Git Add All`                 | Adds all files to the index (ex. `git add .`).                                                                                                          |
+| `Git Commit`                  | Commit the staged changes. Git-Plus will show an editor for the commit message. To make the commit, save the file. To cancel the commit, close the tab. |
+| `Git Add And Commit`          | Stages the current file before preparing a commit. (`Git add all` and `Git commit` run in succession)                                                   |
+| `Git Add All and Commit`      | Stages all changes before preparing a commit. (`Git add all` and `Git commit` in succession)                                                            |
+| `Git Add And Commit And Push` | Commit currently open file and push to a remote repo.                                                                                                   |
+| `Git Add All Commit And Push` | Commit all changes and push to a remote repo.                                                                                                           |
+| `Git Commit Amend`            | Amend the previous commit.                                                                                                                              |
+| `Git Checkout Current File`   | Undo changes and reset the current file to HEAD.                                                                                                        |
+| `Git Checkout`_`[ref]`_       | Change to another ref (branch or tag).                                                                                                                  |
+| `Git Checkout New branch`     | Create a new branch.                                                                                                                                    |
+| `Git Diff [All]`              | Show the diff for the current file, or all files. The diff can either be against the staged or un-staged tree, as selected in the options.              |
+| `Git Diff Branches`           | Show the diff for the current branch all files against another branch.                                                                                  |
+| `Git Diff Branche Files`      | Show the diff for the current branch file against another branch version.                                                                               |
+| `Git` _`[Push⎮Pull]`_         | Push to or pull from a remote repo. If you have multiple remote repos, you can choose which to push to or pull from.                                    |
+| `Git Remove [current file]`   | `git rm` the current file or open an selector to select the files to remove. You can select multiple files at once.                                     |
+| `Git Log [Current File]`      | Show the commit history [for the current file] and show display the selected commit.                                                                    |
+| `Git Show`                    | Show the specified object, for example `HEAD`, `HEAD~2`,`3925a0d`, `origin/master` or `v2.7.3`.                                                         |
+| `Git Open Changed Files`      | Open tabs with all added, modified or renamed files.                                                                                                    |
+| `Git Tags`                    | Operate on tags individually. There are options to add, show, push, checkout, verify, and delete.                                                       |
 
 ### Select lists that allow selecting multiple options
 
