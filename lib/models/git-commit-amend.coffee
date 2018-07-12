@@ -3,6 +3,7 @@ Path = require 'path'
 fs = require 'fs-plus'
 git = require '../git'
 notifier = require '../notifier'
+ActivityLogger = require('../activity-logger').default
 
 disposables = new CompositeDisposable
 
@@ -112,11 +113,11 @@ commit = (directory, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
   git.cmd(args, cwd: directory)
   .then (data) ->
-    notifier.addSuccess data
+    ActivityLogger.record({ message: 'commit', output: data})
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
-    notifier.addError data
+    ActivityLogger.record({ message: 'commit', output: data, success: false })
     destroyCommitEditor(filePath)
 
 cleanup = (currentPane, filePath) ->
