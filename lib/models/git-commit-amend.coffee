@@ -117,7 +117,7 @@ commit = (directory, filePath) ->
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
-    ActivityLogger.record({ message: 'commit', output: data, success: false })
+    ActivityLogger.record({ message: 'commit', output: data, failed: true })
     destroyCommitEditor(filePath)
 
 cleanup = (currentPane, filePath) ->
