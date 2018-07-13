@@ -6,8 +6,7 @@ getCommands = ->
   GitCheckoutNewBranch   = require './models/git-checkout-new-branch'
   GitCheckoutBranch      = require './models/git-checkout-branch'
   GitDeleteBranch        = require './models/git-delete-branch'
-  GitCheckoutAllFiles    = require './models/git-checkout-all-files'
-  GitCheckoutFile        = require './models/git-checkout-file'
+  gitCheckoutFile        = require('./models/checkout-file').default
   GitCherryPick          = require './models/git-cherry-pick'
   GitCommit              = require './models/git-commit'
   GitCommitAmend         = require './models/git-commit-amend'
@@ -56,8 +55,8 @@ getCommands = ->
       commands.push ['git-plus:log', 'Log', -> GitLog(repo)]
       commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(repo, onlyCurrentFile: true)]
       commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove(repo)]
-      commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> GitCheckoutAllFiles(repo)]
-      commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> GitCheckoutFile(repo, file: currentFile)]
+      commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> gitCheckoutFile(true)]
+      commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> gitCheckoutFile()]
       commands.push ['git-plus:commit', 'Commit', -> GitCommit(repo)]
       commands.push ['git-plus:commit-all', 'Commit All', -> GitCommit(repo, stageChanges: true)]
       commands.push ['git-plus:commit-amend', 'Commit Amend', -> GitCommitAmend(repo)]
