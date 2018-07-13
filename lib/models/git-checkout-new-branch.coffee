@@ -1,8 +1,7 @@
 {CompositeDisposable} = require 'atom'
 {$, TextEditorView, View} = require 'atom-space-pen-views'
-
 git = require '../git'
-notifier = require '../notifier'
+ActivityLogger = require('../activity-logger').default
 
 class InputView extends View
   @content: ->
@@ -28,11 +27,12 @@ class InputView extends View
     @destroy()
     name = @branchEditor.getModel().getText()
     if name.length > 0
+      message = """checkout to new branch '#{name}'"""
       git.cmd(['checkout', '-b', name], cwd: @repo.getWorkingDirectory())
-      .then (message) =>
-        notifier.addSuccess message
+      .then (output) =>
+        ActivityLogger.record({message, output})
         git.refresh @repo
       .catch (err) =>
-        notifier.addError err
+        ActivityLogger.record({message, output: err, failed: true})
 
 module.exports = (repo) -> new InputView(repo)
