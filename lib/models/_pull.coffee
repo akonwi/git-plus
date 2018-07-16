@@ -14,6 +14,7 @@ getUpstream = (repo) ->
 
 module.exports = (repo, {extraArgs}={}) ->
   if upstream = getUpstream(repo)
+    if typeof extraArgs is 'string' then extraArgs = [extraArgs]
     extraArgs ?= []
     # view = OutputViewManager.getView()
     startMessage = notifier.addInfo "Pulling...", dismissable: true
