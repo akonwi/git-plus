@@ -17,7 +17,6 @@ getCommands = ->
   GitDiffAll             = require './models/git-diff-all'
   gitFetch               = require('./models/fetch').default
   gitFetchInAllRepos            = require('./models/fetch-in-all-repos').default
-  GitFetchPrune          = require './models/git-fetch-prune'
   GitInit                = require './models/git-init'
   GitLog                 = require './models/git-log'
   GitPull                = require './models/git-pull'
@@ -77,7 +76,7 @@ getCommands = ->
       commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll(repo)]
       commands.push ['git-plus:fetch', 'Fetch', gitFetch]
       commands.push ['git-plus:fetch-all', 'Fetch All (Repos & Remotes)', gitFetchInAllRepos]
-      commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> GitFetchPrune(repo)]
+      commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> gitFetch({prune: true})]
       commands.push ['git-plus:pull', 'Pull', -> GitPull(repo)]
       commands.push ['git-plus:push', 'Push', -> GitPush(repo)]
       commands.push ['git-plus:push-set-upstream', 'Push -u', -> GitPush(repo, setUpstream: true)]
