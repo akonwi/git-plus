@@ -5,6 +5,7 @@ fs = require 'fs-plus'
 {GitRepository} = require 'atom'
 git = require '../../lib/git'
 notifier = require '../../lib/notifier'
+ActivityLogger = require('../../lib/activity-logger').default
 
 commentChar = '%'
 workingDirectory = Path.join(os.homedir(), 'fixture-repo')
@@ -44,7 +45,7 @@ describe "GitCommit", ->
       expect(editor.getText()).toContain 'modified:   fake.file'
 
     it "makes a commit when the commit file is saved and closes the textEditor", ->
-      spyOn(notifier, 'addSuccess')
+      spyOn(ActivityLogger, 'record')
       editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
       spyOn(editor, 'destroy').andCallThrough()
       editor.setText 'this is a commit'
@@ -53,7 +54,7 @@ describe "GitCommit", ->
       waitsFor -> editor.destroy.callCount > 0
       waitsForPromise -> log = git.cmd(['whatchanged', '-1'], cwd: workingDirectory)
       runs ->
-        expect(notifier.addSuccess).toHaveBeenCalled()
+        expect(ActivityLogger.record).toHaveBeenCalled()
         log.then (l) -> expect(l).toContain 'this is a commit'
 
     it "cancels the commit on textEditor destroy", ->
@@ -103,12 +104,12 @@ describe "GitCommit", ->
     it "notifies of error and closes commit pane", ->
       editor = atom.workspace.paneForURI(commitFilePath).itemForURI(commitFilePath)
       spyOn(editor, 'destroy').andCallThrough()
-      spyOn(notifier, 'addError')
+      spyOn(ActivityLogger, 'record')
       spyOn(git, 'cmd').andReturn Promise.reject()
       editor.save()
-      waitsFor -> notifier.addError.callCount > 0
+      waitsFor -> ActivityLogger.record.callCount > 0
       runs ->
-        expect(notifier.addError).toHaveBeenCalled()
+        expect(ActivityLogger.record.mostRecentCall.args[0].failed).toBe(true)
         expect(editor.destroy).toHaveBeenCalled()
 
   describe "when the verbose commit setting is true", ->

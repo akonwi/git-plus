@@ -3,7 +3,9 @@ Os = require 'os'
 fs = require 'fs-plus'
 {GitRepository} = require 'atom'
 git = require '../lib/git'
-notifier = require '../lib/notifier'
+notifier = require('../lib/notifier')
+ActivityLogger = require('../lib/activity-logger').default
+
 {
   repo,
   pathToRepoFile,
@@ -117,12 +119,12 @@ describe "Git-Plus git module", ->
     describe "when it fails", ->
       it "notifies of failure", ->
         spyOn(git, 'cmd').andReturn Promise.reject 'git.add error'
-        spyOn(notifier, 'addError')
+        spyOn(ActivityLogger, 'record')
         waitsForPromise ->
           git.add(repo).then (result) ->
             fail "should have been rejected"
           .catch (error) ->
-            expect(notifier.addError).toHaveBeenCalledWith 'git.add error'
+            expect(ActivityLogger.record.mostRecentCall.args[0].failed).toBe(true)
 
   describe "git.reset", ->
     it "resets and unstages all files", ->
