@@ -15,7 +15,7 @@ getCommands = ->
   GitDiffBranchFiles     = require './models/git-diff-branch-files'
   GitDifftool            = require './models/git-difftool'
   GitDiffAll             = require './models/git-diff-all'
-  GitFetch               = require './models/git-fetch'
+  gitFetch               = require('./models/fetch').default
   GitFetchAll            = require './models/git-fetch-all'
   GitFetchPrune          = require './models/git-fetch-prune'
   GitInit                = require './models/git-init'
@@ -77,7 +77,7 @@ getCommands = ->
         commands.push ['git-plus:diff-branch-files', 'Diff branch files', -> GitDiffBranchFiles(repo)]
       commands.push ['git-plus:difftool', 'Difftool', -> GitDifftool(repo)]
       commands.push ['git-plus:diff-all', 'Diff All', -> GitDiffAll(repo)]
-      commands.push ['git-plus:fetch', 'Fetch', -> GitFetch(repo)]
+      commands.push ['git-plus:fetch', 'Fetch', gitFetch]
       commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> GitFetchPrune(repo)]
       commands.push ['git-plus:pull', 'Pull', -> GitPull(repo)]
       commands.push ['git-plus:push', 'Push', -> GitPush(repo)]
