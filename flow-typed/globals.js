@@ -70,6 +70,7 @@ type Atom = {
     get(keyPath: string, options?: ConfigQueryOptions): string | boolean | number
   },
   notifications: {
+    addInfo(message: string, ?NotificationOptions): Notification,
     addSuccess(message: string, ?NotificationOptions): Notification,
     addError(message: string, ?ErrorNotificationOptions): Notification
   },
