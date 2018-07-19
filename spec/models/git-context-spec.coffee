@@ -2,7 +2,6 @@ quibble = require 'quibble'
 git = require '../../lib/git'
 notifier = require '../../lib/notifier'
 contextPackageFinder = require '../../lib/context-package-finder'
-GitAddContext = require '../../lib/models/context/git-add-context'
 GitUnstageFileContext = require '../../lib/models/context/git-unstage-file-context'
 
 {repo} = require '../fixtures'
@@ -11,20 +10,6 @@ selectedFilePath = 'selected/path'
 describe "Context-menu commands", ->
   beforeEach ->
     spyOn(git, 'getRepoForPath').andReturn Promise.resolve(repo)
-
-  describe "GitAddContext", ->
-    describe "when an object in the tree is selected", ->
-      it "calls git::add", ->
-        spyOn(contextPackageFinder, 'get').andReturn {selectedPath: selectedFilePath}
-        spyOn(git, 'add')
-        waitsForPromise -> GitAddContext()
-        runs -> expect(git.add).toHaveBeenCalledWith repo, file: selectedFilePath
-
-    describe "when an object is not selected", ->
-      it "notifies the user of the issue", ->
-        spyOn(notifier, 'addInfo')
-        GitAddContext()
-        expect(notifier.addInfo).toHaveBeenCalledWith "No file selected to add"
 
   describe "GitAddAndCommitContext", ->
     GitAddAndCommitContext = null
