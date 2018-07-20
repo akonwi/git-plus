@@ -20,7 +20,7 @@ getCommands = ->
   GitInit                = require './models/git-init'
   GitLog                 = require './models/git-log'
   gitPull                = require('./models/pull').default
-  GitPush                = require './models/git-push'
+  gitPush                = require('./models/push').default
   GitRemove              = require './models/git-remove'
   GitShow                = require './models/git-show'
   GitStageFiles          = require './models/git-stage-files'
@@ -78,7 +78,7 @@ getCommands = ->
       commands.push ['git-plus:fetch-all', 'Fetch All (Repos & Remotes)', gitFetchInAllRepos]
       commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> gitFetch({prune: true})]
       commands.push ['git-plus:pull', 'Pull', gitPull]
-      commands.push ['git-plus:push', 'Push', -> GitPush(repo)]
+      commands.push ['git-plus:push', 'Push', gitPush]
       commands.push ['git-plus:push-set-upstream', 'Push -u', -> GitPush(repo, setUpstream: true)]
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
       commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]
