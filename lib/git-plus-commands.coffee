@@ -79,7 +79,7 @@ getCommands = ->
       commands.push ['git-plus:fetch-prune', 'Fetch Prune', -> gitFetch({prune: true})]
       commands.push ['git-plus:pull', 'Pull', gitPull]
       commands.push ['git-plus:push', 'Push', gitPush]
-      commands.push ['git-plus:push-set-upstream', 'Push -u', -> GitPush(repo, setUpstream: true)]
+      commands.push ['git-plus:push-set-upstream', 'Push -u', -> gitPush(true)]
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
       commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]
       commands.push ['git-plus:show', 'Show', -> GitShow(repo)]
