@@ -1,5 +1,5 @@
 git = require '../git'
-notifier = require '../notifier'
+ActivityLogger = require('../activity-logger').default
 RemoveListView = require '../views/remove-list-view'
 
 gitRemove = (repo, {showSelector}={}) ->
@@ -9,7 +9,8 @@ gitRemove = (repo, {showSelector}={}) ->
     if repo.isPathModified(currentFile) is false or window.confirm('Are you sure?')
       atom.workspace.getActivePaneItem().destroy()
       git.cmd(['rm', '-f', '--ignore-unmatch', currentFile], {cwd})
-      .then (data) -> notifier.addSuccess("Removed #{prettify data}")
+      .then (data) -> ActivityLogger.record({message: "Remove '#{prettify data}'", output: data})
+      .catch (data) -> ActivityLogger.record({message: "Remove '#{prettify data}'", output: data, failed: true})
   else
     git.cmd(['rm', '-r', '-n', '--ignore-unmatch', '-f', '*'], {cwd})
     .then (data) -> new RemoveListView(repo, prettify(data))
