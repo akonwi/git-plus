@@ -21,6 +21,7 @@ getCommands = ->
   GitLog                 = require './models/git-log'
   gitPull                = require('./models/pull').default
   gitPush                = require('./models/push').default
+  gitReset                = require('./models/reset').default
   GitRemove              = require './models/git-remove'
   GitShow                = require './models/git-show'
   GitStageFiles          = require './models/git-stage-files'
@@ -81,7 +82,7 @@ getCommands = ->
       commands.push ['git-plus:push', 'Push', gitPush]
       commands.push ['git-plus:push-set-upstream', 'Push -u', -> gitPush(true)]
       commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
-      commands.push ['git-plus:reset', 'Reset HEAD', -> git.reset(repo)]
+      commands.push ['git-plus:reset', 'Reset HEAD', gitReset]
       commands.push ['git-plus:show', 'Show', -> GitShow(repo)]
       commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles(repo)]
       commands.push ['git-plus:stage-hunk', 'Stage Hunk', -> GitStageHunk(repo)]
