@@ -4,8 +4,8 @@ fs = require 'fs-plus'
 
 {BufferedProcess, CompositeDisposable} = require 'atom'
 {$, TextEditorView, View} = require 'atom-space-pen-views'
-notifier = require '../notifier'
-git = require '../git'
+ActivityLogger = require('../activity-logger').default
+git = require('../git-es').default
 
 module.exports=
 class TagCreateView extends View
@@ -33,11 +33,9 @@ class TagCreateView extends View
   createTag: ->
     tag = name: @tagName.getModel().getText(), message: @tagMessage.getModel().getText()
     flag = if atom.config.get('git-plus.tags.signTags') then '-s' else '-a'
-    git.cmd(['tag', flag, tag.name, '-m', tag.message], cwd: @repo.getWorkingDirectory())
-    .then (success) ->
-      console.info("Created git tag #{tag.name}:", success)
-      notifier.addSuccess("Tag '#{tag.name}' has been created successfully!")
-    .catch notifier.addError
+    git(['tag', flag, tag.name, '-m', tag.message], cwd: @repo.getWorkingDirectory())
+    .then (result) ->
+      ActivityLogger.record(Object.assign({message: "Create tag '#{tag.name}'"}, result))
     @destroy()
 
   destroy: ->
