@@ -1,13 +1,10 @@
-git = require '../git'
-notifier = require '../notifier'
-OutputViewManager = require '../output-view-manager'
+git = require('../git-es').default
+ActivityLogger = require('../activity-logger').default
 
 module.exports = (repo, {message}={}) ->
   cwd = repo.getWorkingDirectory()
   args = ['stash', 'save']
   args.push(message) if message
-  git.cmd(args, {cwd}, color: true)
-  .then (msg) ->
-    OutputViewManager.getView().showContent(msg) if msg isnt ''
-  .catch (msg) ->
-    notifier.addInfo msg
+  git(args, {cwd, color: true})
+  .then (result) ->
+    ActivityLogger.record(Object.assign({message: 'Stash changes'} ,result))
