@@ -2,25 +2,13 @@
 {$, TextEditorView, View} = require 'atom-space-pen-views'
 
 git = require '../git'
-notifier = require '../notifier'
-OutputViewManager = require '../output-view-manager'
+git2 = require('../git-es').default
+ActivityLogger = require('../activity-logger').default
 
 runCommand = (repo, args) ->
-  view = OutputViewManager.getView()
-  promise = git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
-  promise.then (data) ->
-    msg = "git #{args.join(' ')} was successful"
-    notifier.addSuccess(msg)
-    if data?.length > 0
-      view.showContent data
-    else
-      view.reset()
-    git.refresh repo
-  .catch (msg) =>
-    if msg?.length > 0
-      view.showContent msg
-    else
-      view.reset()
+  promise = git2(args, cwd: repo.getWorkingDirectory(), color: true)
+  promise.then (result) ->
+    ActivityLogger.record(Object.assign({message: "#{args.join(' ')}"}, result))
     git.refresh repo
   return promise
 
