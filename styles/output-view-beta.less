@@ -1,9 +1,33 @@
-.git-plus.output .root {
+@gutter-width: 20px;
+
+.git-plus.output #root {
   height: 100%;
-  padding: 0 1%;
+  margin: 0 5px;
   overflow-y: scroll;
 
-  #empty-message {
-    text-align: center;
+  .record {
+    margin: 5px 0;
+
+    &.has-output:hover {
+      cursor: pointer;
+    }
+
+    .line {
+      display: flex;
+      flex-direction: row;
+
+      .gutter {
+        width: @gutter-width;
+      }
+    }
+
+    .output {
+      margin-left: @gutter-width;
+      margin-top: 5px;
+
+      &.collapsed {
+        display: none;
+      }
+    }
   }
 }
