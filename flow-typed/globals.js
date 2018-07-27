@@ -86,7 +86,8 @@ type Atom = {
     getTextEditors(): TextEditor[],
     hide(ViewItem | URI): boolean,
     observeActiveTextEditor(callback: (editor: TextEditor | void) => any): Disposable,
-    open(?URI | ?ViewItem, ?OpenUriOptions): Promise<TextEditor>
+    open(?URI | ?ViewItem, ?OpenUriOptions): Promise<TextEditor>,
+    toggle(URI | ViewItem): void
   }
 }
 
