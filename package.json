@@ -3,9 +3,7 @@
   "main": "./lib/git-plus",
   "version": "8.0.2",
   "description": "Do git things without the terminal",
-  "keywords": [
-    "git"
-  ],
+  "keywords": ["git"],
   "providedServices": {
     "git-plus": {
       "description": "Execute git commands",
@@ -17,6 +15,9 @@
   "scripts": {
     "test": "eslint --fix \"lib/**/*.js\" \"spec/**/*.js\" && apm test",
     "flow": "flow"
+  },
+  "deserializers": {
+    "git-plus/output-view": "deserializeOutputView"
   },
   "consumedServices": {
     "status-bar": {
@@ -46,11 +47,7 @@
       "transpiler": "atom-babel6-transpiler",
       "options": {
         "babel": {
-          "presets": [
-            "env",
-            "flow",
-            "react"
-          ],
+          "presets": ["env", "flow", "react"],
           "plugins": [
             "transform-object-rest-spread",
             [
