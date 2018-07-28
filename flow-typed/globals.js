@@ -61,13 +61,27 @@ interface Dock {
 type URI = string
 interface ViewItem { element: HTMLElement }
 
+type Bindings = {
+  [selector: string]: {
+    [key: string]: string
+  }
+}
+
 type Atom = {
+  clipboard: {
+    write(string): void,
+    read(): string
+  },
   commands: {
-    add(target: string, commandName: string, listener: CommandListener): Disposable,
-    add(target: string, commands: CommandListeners): Disposable
+    add(target: string, commands: CommandListeners): Disposable,
+    add(target: string, commandName: string, listener: CommandListener): Disposable
   },
   config: {
     get(keyPath: string, options?: ConfigQueryOptions): string | boolean | number
+  },
+  keymaps: {
+    add(source: string, bindings: Bindings, priority?: number): void,
+    removeBindingsFromSource(string): void
   },
   notifications: {
     addInfo(message: string, ?NotificationOptions): Notification,
