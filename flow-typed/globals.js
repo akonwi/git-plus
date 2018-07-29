@@ -38,7 +38,9 @@ type NotificationOptions = {
   icon?: string
 }
 type ErrorNotificationOptions = NotificationOptions & { stack?: string }
-type Notification = {}
+type Notification = {
+  dismiss: () => void
+}
 
 type WorkspaceCenter = {
   getActiveTextEditor(): TextEditor | void
