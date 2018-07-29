@@ -3,7 +3,7 @@
 git = require '../git'
 _pull = require '../models/_pull'
 notifier = require '../notifier'
-OutputViewManager = require '../output-view-manager'
+ActivityLogger = require('../activity-logger').default
 RemoteBranchListView = require './remote-branch-list-view'
 
 module.exports =
@@ -47,18 +47,17 @@ class ListView extends SelectListView
         new Promise (resolve, reject) =>
           new RemoteBranchListView data, remoteName, ({name}) =>
             branchName = name.substring(name.indexOf('/') + 1)
-            view = OutputViewManager.getView()
             startMessage = notifier.addInfo "Pulling...", dismissable: true
             args = ['pull'].concat(@extraArgs, remoteName, branchName).filter((arg) -> arg isnt '')
             git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
             .then (data) =>
               resolve branchName
-              view.showContent(data)
+              ActivityLogger.record({message: args.join(' '), output: data})
               startMessage.dismiss()
               git.refresh @repo
             .catch (error) =>
               reject()
-              view.showContent(error)
+              ActivityLogger.record({message: args.join(' '), output: error, failed: true})
               startMessage.dismiss()
     else
       _pull @repo, extraArgs: @extraArgs
@@ -85,7 +84,6 @@ class ListView extends SelectListView
   execute: (remote='', extraArgs='', branch) ->
     if atom.config.get('git-plus.remoteInteractions.promptForBranch')
       if branch?
-        view = OutputViewManager.getView()
         args = [@mode]
         if extraArgs.length > 0
           args.push extraArgs
@@ -94,32 +92,26 @@ class ListView extends SelectListView
         startMessage = notifier.addInfo message, dismissable: true
         git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
         .then (data) =>
-          if data isnt ''
-            view.showContent(data)
           startMessage.dismiss()
           git.refresh @repo
         .catch (data) =>
-          if data isnt ''
-            view.showContent(data)
           startMessage.dismiss()
       else
         git.cmd(['branch', '--no-color', '-r'], cwd: @repo.getWorkingDirectory())
         .then (data) =>
           new RemoteBranchListView data, remote, ({name}) =>
             branchName = name.substring(name.indexOf('/') + 1)
-            view = OutputViewManager.getView()
             startMessage = notifier.addInfo "Pushing...", dismissable: true
             args = ['push'].concat(extraArgs, remote, branchName).filter((arg) -> arg isnt '')
             git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
             .then (data) =>
-              view.showContent(data)
+              ActivityLogger.record({message: args.join(' '), output: data})
               startMessage.dismiss()
               git.refresh @repo
             .catch (error) =>
-              view.showContent(error)
+              ActivityLogger.record({message: args.join(' '), output: error, failed: true})
               startMessage.dismiss()
     else
-      view = OutputViewManager.getView()
       args = [@mode]
       if extraArgs.length > 0
         args.push extraArgs
@@ -128,26 +120,21 @@ class ListView extends SelectListView
       startMessage = notifier.addInfo message, dismissable: true
       git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
-        if data isnt ''
-          view.showContent(data)
+        ActivityLogger.record({message: args.join(' '), output: data})
         startMessage.dismiss()
         git.refresh @repo
       .catch (data) =>
-        if data isnt ''
-          view.showContent(data)
+        ActivityLogger.record({message: args.join(' '), output: data, failed: true})
         startMessage.dismiss()
 
   pushAndSetUpstream: (remote='') ->
-    view = OutputViewManager.getView()
     args = ['push', '-u', remote, 'HEAD'].filter((arg) -> arg isnt '')
     message = "Pushing..."
     startMessage = notifier.addInfo message, dismissable: true
     git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
     .then (data) ->
-      if data isnt ''
-        view.showContent(data)
+      ActivityLogger.record({message: args.join(' '), output: data})
       startMessage.dismiss()
     .catch (data) =>
-      if data isnt ''
-        view.showContent(data)
+      ActivityLogger.record({message: args.join(' '), output: data, failed: true})
       startMessage.dismiss()

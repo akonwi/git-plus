@@ -1,7 +1,6 @@
+fs = require 'fs-plus'
 git = require '../git'
 notifier = require '../notifier'
-OutputViewManager = require '../output-view-manager'
-fs = require 'fs-plus'
 
 module.exports = (repo, {file}={}) ->
   file ?= repo.relativize(atom.workspace.getActiveTextEditor()?.getPath())
@@ -25,7 +24,7 @@ module.exports = (repo, {file}={}) ->
         args.push 'HEAD' if includeStagedDiff
         args.push file
         git.cmd(args, cwd: repo.getWorkingDirectory())
-        .catch (msg) -> OutputViewManager.getView().showContent(msg)
+        .catch (message) -> atom.notifications.addError('Error opening difftool', {detail: message})
         return
 
       diffsForCurrentFile = diffIndex.map (line, i) ->
@@ -41,6 +40,6 @@ module.exports = (repo, {file}={}) ->
         args.push 'HEAD' if includeStagedDiff
         args.push file
         git.cmd(args, cwd: repo.getWorkingDirectory())
-        .catch (msg) -> OutputViewManager.getView().showContent(msg)
+        .catch (message) -> atom.notifications.addError('Error opening difftool', {detail: message})
       else
         notifier.addInfo 'Nothing to show.'
