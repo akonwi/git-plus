@@ -1,3 +1,4 @@
+path = require('path')
 git = require '../git'
 notifier = require '../notifier'
 ActivityLogger = require('../activity-logger').default
@@ -18,12 +19,13 @@ module.exports = (repo, {extraArgs}={}) ->
     startMessage = notifier.addInfo "Pulling...", dismissable: true
     recordMessage ="""pull #{extraArgs.join(' ')}"""
     args = ['pull'].concat(extraArgs).concat(upstream).filter(emptyOrUndefined)
+    repoName = path.basename(repo.getWorkingDirectory())
     git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
     .then (output) ->
-      ActivityLogger.record({message: recordMessage, output})
+      ActivityLogger.record({message: recordMessage, output, repoName})
       startMessage.dismiss()
     .catch (output) ->
-      ActivityLogger.record({message: recordMessage, output, failed: true})
+      ActivityLogger.record({message: recordMessage, output, repoName, failed: true})
       startMessage.dismiss()
   else
     notifier.addInfo 'The current branch is not tracking from upstream'
