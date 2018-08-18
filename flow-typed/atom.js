@@ -41,6 +41,12 @@ declare module 'atom' {
   declare export class Directory {
     constructor(path: string, symlink?: boolean): Directory;
     getPath(): string;
+    contains(path: string): boolean;
+  }
+
+  declare export class File {
+    constructor(path: string, symlink?: boolean): File;
+    getParent(): Directory;
   }
 
   declare type PointArray = [number, number]
