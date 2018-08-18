@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.0.1
+
+- minor bug fix
+
 ### 8.0.0
 
 - Removes the default keybindings for commands (except for the menu). You can add them to your local keymapping configuration by copying them from [here](https://github.com/akonwi/git-plus/blob/master/keymaps/git-plus.cson) [#415](https://github.com/akonwi/git-plus/issues/415) [#688](https://github.com/akonwi/git-plus/issues/688)
