@@ -2,6 +2,7 @@
 {$, TextEditorView, View} = require 'atom-space-pen-views'
 git = require '../git'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 
 class InputView extends View
   @content: ->
@@ -28,11 +29,12 @@ class InputView extends View
     name = @branchEditor.getModel().getText()
     if name.length > 0
       message = """checkout to new branch '#{name}'"""
+      repoName = new Repository(@repo).getName()
       git.cmd(['checkout', '-b', name], cwd: @repo.getWorkingDirectory())
       .then (output) =>
-        ActivityLogger.record({message, output})
+        ActivityLogger.record({repoName, message, output})
         git.refresh @repo
       .catch (err) =>
-        ActivityLogger.record({message, output: err, failed: true})
+        ActivityLogger.record({repoName, message, output: err, failed: true})
 
 module.exports = (repo) -> new InputView(repo)

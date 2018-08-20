@@ -4,6 +4,7 @@ fs = require 'fs-plus'
 git = require '../git'
 notifier = require('../notifier')
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 GitPush = require './git-push'
 GitPull = require './git-pull'
 
@@ -67,14 +68,15 @@ trimFile = (filePath, commentChar) ->
   content = if startOfComments > 0 then content.substring(0, startOfComments) else content
   fs.writeFileSync filePath, content
 
-commit = (directory, filePath) ->
-  git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: directory)
+commit = (repo, filePath) ->
+  repoName = new Repository(repo).getName()
+  git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: repo.getWorkingDirectory())
   .then (data) ->
-    ActivityLogger.record({ message: 'commit', output: data})
+    ActivityLogger.record({ repoName, message: 'commit', output: data})
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
-    ActivityLogger.record({ message: 'commit', output: data, failed: true })
+    ActivityLogger.record({repoName,  message: 'commit', output: data, failed: true })
     destroyCommitEditor(filePath)
 
 cleanup = (currentPane) ->
@@ -120,7 +122,7 @@ module.exports = (repo, {stageChanges, andPush}={}) ->
       disposables = new CompositeDisposable
       disposables.add textEditor.onDidSave ->
         trimFile(filePath, commentChar)
-        commit(repo.getWorkingDirectory(), filePath)
+        commit(repo, filePath)
         .then -> GitPush(repo) if andPush
       disposables.add textEditor.onDidDestroy -> cleanup(currentPane)
     .catch(notifier.addError)

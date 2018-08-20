@@ -4,6 +4,7 @@ fs = require 'fs-plus'
 git = require '../git'
 notifier = require '../notifier'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 
 disposables = new CompositeDisposable
 
@@ -109,15 +110,16 @@ showFile = (filePath) ->
 destroyCommitEditor = (filePath) ->
   atom.workspace.paneForURI(filePath).itemForURI(filePath)?.destroy()
 
-commit = (directory, filePath) ->
+commit = (repo, filePath) ->
   args = ['commit', '--amend', '--cleanup=strip', "--file=#{filePath}"]
-  git.cmd(args, cwd: directory)
+  repoName = new Repository(repo).getName()
+  git.cmd(args, cwd: repo.getWorkingDirectory())
   .then (data) ->
-    ActivityLogger.record({ message: 'commit', output: data})
+    ActivityLogger.record({ repoName, message: 'commit', output: data})
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->
-    ActivityLogger.record({ message: 'commit', output: data, failed: true })
+    ActivityLogger.record({repoName,  message: 'commit', output: data, failed: true })
     destroyCommitEditor(filePath)
 
 cleanup = (currentPane, filePath) ->
@@ -141,6 +143,6 @@ module.exports = (repo) ->
     .then (status) -> prepFile {commentChar, message, prevChangedFiles, status, filePath}
     .then -> showFile filePath
   .then (textEditor) ->
-    disposables.add textEditor.onDidSave -> commit(repo.getWorkingDirectory(), filePath)
+    disposables.add textEditor.onDidSave -> commit(repo, filePath)
     disposables.add textEditor.onDidDestroy -> cleanup currentPane, filePath
   .catch (msg) -> notifier.addInfo msg

@@ -1,7 +1,7 @@
-path = require('path')
 git = require '../git'
 notifier = require '../notifier'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 
 emptyOrUndefined = (thing) -> thing isnt '' and thing isnt undefined
 
@@ -19,7 +19,7 @@ module.exports = (repo, {extraArgs}={}) ->
     startMessage = notifier.addInfo "Pulling...", dismissable: true
     recordMessage ="""pull #{extraArgs.join(' ')}"""
     args = ['pull'].concat(extraArgs).concat(upstream).filter(emptyOrUndefined)
-    repoName = path.basename(repo.getWorkingDirectory())
+    repoName = new Repository(repo).getName()
     git.cmd(args, cwd: repo.getWorkingDirectory(), {color: true})
     .then (output) ->
       ActivityLogger.record({message: recordMessage, output, repoName})

@@ -3,6 +3,7 @@ Os = require 'os'
 
 RepoListView = require './views/repo-list-view'
 notifier = require './notifier'
+Repository =  require('./repository').default
 ActivityLogger = require('./activity-logger').default
 
 gitUntrackedFiles = (repo, dataUnstaged=[]) ->
@@ -113,10 +114,12 @@ module.exports = git =
 
     message = """git add #{args[args.length - 1]}"""
 
+    repoName = new Repository(repo).getName()
     git.cmd(args, cwd: repo.getWorkingDirectory())
-    .then (output) -> ActivityLogger.record({message,output})
+    .then (output) -> ActivityLogger.record({repoName, message,output})
     .catch (output) ->
       ActivityLogger.record({
+        repoName,
         message,
         output,
         failed: true
