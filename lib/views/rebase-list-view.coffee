@@ -3,6 +3,7 @@ fs = require 'fs-plus'
 git = require('../git-es').default
 notifier = require '../notifier'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 
 module.exports =
   class ListView extends SelectListView
@@ -50,7 +51,8 @@ module.exports =
     rebase: (branch) ->
       git(['rebase', branch], cwd: @repo.getWorkingDirectory())
       .then (result) =>
-        ActivityLogger.record(Object.assign({message: "Rebase branch '#{branch}'"}, result))
+        repoName = new Repository(repo).getName()
+        ActivityLogger.record(Object.assign({repoName, message: "Rebase branch '#{branch}'"}, result))
         atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.refresh @repo

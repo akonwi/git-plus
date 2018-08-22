@@ -1,5 +1,6 @@
 git = require('../git-es').default
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 
 module.exports = (repo, {message}={}) ->
   cwd = repo.getWorkingDirectory()
@@ -7,4 +8,5 @@ module.exports = (repo, {message}={}) ->
   args.push(message) if message
   git(args, {cwd, color: true})
   .then (result) ->
-    ActivityLogger.record(Object.assign({message: 'Stash changes'} ,result))
+    repoName = new Repository(repo).getName()
+    ActivityLogger.record(Object.assign({repoName, message: 'Stash changes'} ,result))

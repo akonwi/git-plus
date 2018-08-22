@@ -4,6 +4,7 @@ git = require '../git'
 _pull = require '../models/_pull'
 notifier = require '../notifier'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 RemoteBranchListView = require './remote-branch-list-view'
 
 module.exports =
@@ -49,15 +50,17 @@ class ListView extends SelectListView
             branchName = name.substring(name.indexOf('/') + 1)
             startMessage = notifier.addInfo "Pulling...", dismissable: true
             args = ['pull'].concat(@extraArgs, remoteName, branchName).filter((arg) -> arg isnt '')
+            repoName = new Repository(@repo).getName()
             git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
             .then (data) =>
               resolve branchName
-              ActivityLogger.record({message: args.join(' '), output: data})
+              repoName = new Repository(@repo).getName()
+              ActivityLogger.record({repoName, message: args.join(' '), output: data})
               startMessage.dismiss()
               git.refresh @repo
             .catch (error) =>
               reject()
-              ActivityLogger.record({message: args.join(' '), output: error, failed: true})
+              ActivityLogger.record({repoName, message: args.join(' '), output: error, failed: true})
               startMessage.dismiss()
     else
       _pull @repo, extraArgs: @extraArgs
@@ -103,13 +106,14 @@ class ListView extends SelectListView
             branchName = name.substring(name.indexOf('/') + 1)
             startMessage = notifier.addInfo "Pushing...", dismissable: true
             args = ['push'].concat(extraArgs, remote, branchName).filter((arg) -> arg isnt '')
+            repoName = new Repository(@repo).getName()
             git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
             .then (data) =>
-              ActivityLogger.record({message: args.join(' '), output: data})
+              ActivityLogger.record({repoName, message: args.join(' '), output: data})
               startMessage.dismiss()
               git.refresh @repo
             .catch (error) =>
-              ActivityLogger.record({message: args.join(' '), output: error, failed: true})
+              ActivityLogger.record({repoName, message: args.join(' '), output: error, failed: true})
               startMessage.dismiss()
     else
       args = [@mode]
@@ -118,23 +122,25 @@ class ListView extends SelectListView
       args = args.concat([remote, @tag]).filter((arg) -> arg isnt '')
       message = "#{@mode[0].toUpperCase()+@mode.substring(1)}ing..."
       startMessage = notifier.addInfo message, dismissable: true
+      repoName = new Repository(@repo).getName()
       git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
       .then (data) =>
-        ActivityLogger.record({message: args.join(' '), output: data})
+        ActivityLogger.record({repoName, message: args.join(' '), output: data})
         startMessage.dismiss()
         git.refresh @repo
       .catch (data) =>
-        ActivityLogger.record({message: args.join(' '), output: data, failed: true})
+        ActivityLogger.record({repoName, message: args.join(' '), output: data, failed: true})
         startMessage.dismiss()
 
   pushAndSetUpstream: (remote='') ->
     args = ['push', '-u', remote, 'HEAD'].filter((arg) -> arg isnt '')
     message = "Pushing..."
     startMessage = notifier.addInfo message, dismissable: true
+    repoName = new Repository(@repo).getName()
     git.cmd(args, cwd: @repo.getWorkingDirectory(), {color: true})
     .then (data) ->
-      ActivityLogger.record({message: args.join(' '), output: data})
+      ActivityLogger.record({repoName, message: args.join(' '), output: data})
       startMessage.dismiss()
     .catch (data) =>
-      ActivityLogger.record({message: args.join(' '), output: data, failed: true})
+      ActivityLogger.record({repoName, message: args.join(' '), output: data, failed: true})
       startMessage.dismiss()

@@ -2,6 +2,7 @@ fs = require 'fs-plus'
 {$$, SelectListView} = require 'atom-space-pen-views'
 git = require('../git-es').default
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 
 module.exports =
 class ListView extends SelectListView
@@ -50,7 +51,8 @@ class ListView extends SelectListView
     mergeArg = ['merge'].concat(@args).concat [branch]
     git(mergeArg, cwd: @repo.getWorkingDirectory(), color: true)
     .then (result) =>
-      ActivityLogger.record(Object.assign({message: "Merge branch '#{branch}'"}, result))
+      repoName = new Repository(repo).getName()
+      ActivityLogger.record(Object.assign({repoName, message: "Merge branch '#{branch}'"}, result))
       atom.workspace.getTextEditors().forEach (editor) ->
         fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
       git.refresh @repo

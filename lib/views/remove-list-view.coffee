@@ -2,6 +2,7 @@
 
 git = require '../git'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 SelectListMultipleView = require './select-list-multiple-view'
 
 prettify = (data) ->
@@ -56,8 +57,9 @@ class SelectStageFilesView extends SelectListMultipleView
 
     editor = atom.workspace.getActiveTextEditor()
     atom.views.getView(editor).remove() if currentFile in files
+    repoName = new Repository(@repo).getName()
     git.cmd(['rm', '-f'].concat(files), cwd: @repo.getWorkingDirectory())
     .then (data) ->
-      ActivityLogger.record({message: "Remove '#{prettify(data)}'", output: data})
+      ActivityLogger.record({repoName, message: "Remove '#{prettify(data)}'", output: data})
     .catch (data) ->
-      ActivityLogger.record({message: "Remove '#{prettify(data)}'", output: data, failed: true})
+      ActivityLogger.record({repoName, message: "Remove '#{prettify(data)}'", output: data, failed: true})

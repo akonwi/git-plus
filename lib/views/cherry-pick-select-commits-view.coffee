@@ -3,6 +3,7 @@
 git = require '../git'
 notifier = require '../notifier'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 SelectListMultipleView = require './select-list-multiple-view'
 
 module.exports =
@@ -55,10 +56,11 @@ class CherryPickSelectCommits extends SelectListMultipleView
     @cancel()
     commits = items.map (item) -> item.hash
     message =  """cherry pick commits: #{commits.join(' ')}"""
+    repoName = new Repository(@repo).getName()
     git.cmd(['cherry-pick'].concat(commits), cwd: @repo.getWorkingDirectory())
     .then (msg) ->
       notifier.addSuccess msg
-      ActivityLogger.record({message, output: msg})
+      ActivityLogger.record({repoName, message, output: msg})
     .catch (msg) ->
       notifier.addError msg
-      ActivityLogger.record({message, output: msg, failed: true})
+      ActivityLogger.record({repoName, message, output: msg, failed: true})

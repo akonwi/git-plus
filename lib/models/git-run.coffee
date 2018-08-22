@@ -3,12 +3,14 @@
 
 git = require '../git'
 git2 = require('../git-es').default
+Repository = require('../repository').default
 ActivityLogger = require('../activity-logger').default
 
 runCommand = (repo, args) ->
+  repoName = new Repository(repo).getName()
   promise = git2(args, cwd: repo.getWorkingDirectory(), color: true)
   promise.then (result) ->
-    ActivityLogger.record(Object.assign({message: "#{args.join(' ')}"}, result))
+    ActivityLogger.record(Object.assign({repoName, message: "#{args.join(' ')}"}, result))
     git.refresh repo
   return promise
 

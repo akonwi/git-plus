@@ -3,6 +3,7 @@
 git = require('../git-es').default
 GitShow = require '../models/git-show'
 ActivityLogger = require('../activity-logger').default
+Repository = require('../repository').default
 RemoteListView = require '../views/remote-list-view'
 
 module.exports =
@@ -56,5 +57,6 @@ class TagView extends SelectListView
         args = ['tag', '--delete', tag]
 
     if args?
+      repoName = new Repository(@repo).getName()
       git(args, cwd: @repo.getWorkingDirectory())
-      .then (result) -> ActivityLogger.record(Object.assign({message: "#{cmd} tag '#{tag}'"}, result))
+      .then (result) -> ActivityLogger.record(Object.assign({repoName, message: "#{cmd} tag '#{tag}'"}, result))
