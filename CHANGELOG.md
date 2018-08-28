@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.0.2
+
+- Fixes [#735](https://github.com/akonwi/git-plus/issues/735) to support showing diffs while using the experimental tree sitter grammars
+
 ### 8.0.1
 
 - minor bug fix
