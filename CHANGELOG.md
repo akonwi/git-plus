@@ -1,5 +1,13 @@
 ## Changelog
 
+### 8.1.0
+
+- The output view has been overhauled so it's now more of a log of commands executed.
+  - Entries with the settings icon (...) are clickable to toggle the command output
+  - Failures will be colored red
+  - This view can be dragged and moved into different docks or into main workspace
+  - Urls in this view are now clickable and copy-able [#586](https://github.com/akonwi/git-plus/issues/586)
+
 ### 8.0.2
 
 - Fixes [#735](https://github.com/akonwi/git-plus/issues/735) to support showing diffs while using the experimental tree sitter grammars
