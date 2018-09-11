@@ -51,8 +51,8 @@ module.exports =
     rebase: (branch) ->
       git(['rebase', branch], cwd: @repo.getWorkingDirectory())
       .then (result) =>
-        repoName = new Repository(repo).getName()
-        ActivityLogger.record(Object.assign({repoName, message: "Rebase branch '#{branch}'"}, result))
+        repoName = new Repository(@repo).getName()
+        ActivityLogger.record(Object.assign({repoName, message: "rebase branch '#{branch}'"}, result))
         atom.workspace.getTextEditors().forEach (editor) ->
           fs.exists editor.getPath(), (exist) -> editor.destroy() if not exist
         git.refresh @repo
