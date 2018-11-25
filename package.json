@@ -36,7 +36,7 @@
   "repository": "https://github.com/akonwi/git-plus",
   "license": "MIT",
   "engines": {
-    "atom": ">= 1.17"
+    "atom": ">= 1.28"
   },
   "prettier": {
     "semi": false,
