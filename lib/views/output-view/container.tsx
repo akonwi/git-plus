@@ -1,6 +1,5 @@
-// @flow
-import React from 'react'
-import ReactDOM from 'react-dom'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import Root from './Root'
 
 export default class OutputViewContainer {
@@ -16,7 +15,7 @@ export default class OutputViewContainer {
   }
 
   getURI() {
-    return this.constructor.URI
+    return OutputViewContainer.URI
   }
 
   getTitle() {
@@ -33,8 +32,10 @@ export default class OutputViewContainer {
     }
   }
 
-  show() {
-    atom.workspace.open(this, { activatePane: false })
+  async show() {
+    const focusedPane = atom.workspace.getActivePane()
+    await atom.workspace.open(this, { activatePane: true })
+    if (focusedPane && !focusedPane.isDestroyed()) focusedPane.activate()
   }
 
   hide() {
