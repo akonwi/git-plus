@@ -1,34 +1,36 @@
-// @flow
-import { CompositeDisposable } from 'atom'
+import { CompositeDisposable, CommandEvent } from 'atom'
 import * as React from 'react'
 import cx from 'classnames'
-import AnsiToHtml from 'ansi-to-html'
-import linkify from 'linkify-urls'
+import * as AnsiToHtml from 'ansi-to-html'
+import * as linkify from 'linkify-urls'
 import ActivityLogger from '../../activity-logger'
 import OutputViewContainer from './container'
 import { Entry } from './Entry'
-import type { Record } from '../../activity-logger'
+import { Record } from '../../activity-logger'
 
-function reverseMap(array, fn) {
-  const result = []
+function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {
+  const result: any[] = []
   for (let i = array.length - 1; i > -1; i--) {
     result.push(fn(array[i], i))
   }
   return result
 }
 
-type RootProps = {
+interface Props {
   container: OutputViewContainer
 }
-type RootState = { records: Record[] }
+interface State {
+  records: Record[]
+  latestId: string | null
+}
 
-export default class Root extends React.Component<RootProps, RootState> {
+export default class Root extends React.Component<Props, State> {
   state = {
     latestId: null,
     records: []
   }
   subscriptions = new CompositeDisposable()
-  $root = React.createRef()
+  $root = React.createRef<HTMLDivElement>()
   ansiConverter: { toHtml: (stuff: string) => string } = new AnsiToHtml()
 
   componentDidMount() {
@@ -38,8 +40,13 @@ export default class Root extends React.Component<RootProps, RootState> {
       }),
       atom.commands.add('atom-workspace', 'git-plus:copy', {
         hiddenInCommandPalette: true,
-        didDispatch: event => {
-          if (event.target.contains(document.querySelector('.git-plus.output')))
+        didDispatch: (event: CommandEvent) => {
+          if (
+            event.currentTarget &&
+            (event.currentTarget as HTMLElement).contains(
+              document.querySelector('.git-plus.output')
+            )
+          )
             atom.clipboard.write(window.getSelection().toString())
           else event.abortKeyBinding()
         }
@@ -55,7 +62,7 @@ export default class Root extends React.Component<RootProps, RootState> {
     })
   }
 
-  componentDidUpdate(previousProps: RootProps, previousState: RootState) {
+  componentDidUpdate(previousProps: Props, previousState: State) {
     if (previousState.records.length < this.state.records.length) {
       if (atom.config.get('git-plus.general.alwaysOpenDockWithResult')) this.props.container.show()
       if (this.$root.current) this.$root.current.scrollTop = 0
@@ -64,13 +71,13 @@ export default class Root extends React.Component<RootProps, RootState> {
 
   componentWillUnmount() {
     this.subscriptions.dispose()
-    atom.keymaps.removeBindingsFromSource('git-plus')
+    atom.keymaps['removeBindingsFromSource']('git-plus')
   }
 
   render() {
     return (
       <div id="root" ref={this.$root}>
-        {reverseMap(this.state.records, record => (
+        {reverseMap(this.state.records, (record: Record) => (
           <Entry
             isLatest={this.state.latestId === record.id}
             key={record.id}

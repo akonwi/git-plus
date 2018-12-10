@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import Root from './Root'
+import { Root } from './Root'
 
 export default class OutputViewContainer {
   static URI = 'git-plus://output-view'
