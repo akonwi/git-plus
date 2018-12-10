@@ -1,5 +1,12 @@
 ## Changelog
 
+### 8.2.0
+
+- bump minimum required atom version to 1.28
+- Address [#758](https://github.com/akonwi/git-plus/issues/758)
+  - Show command log and output in chronologically descending order. (most recent first)
+  - The 'Always show result output' config being enabled will also automatically expand the output of the last command
+
 ### 8.1.0
 
 - The output view has been overhauled so it's now more of a log of commands executed.
