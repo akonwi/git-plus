@@ -43,10 +43,8 @@ export class Root extends React.Component<Props, State> {
         hiddenInCommandPalette: true,
         didDispatch: (event: CommandEvent) => {
           if (
-            event.currentTarget &&
-            (event.currentTarget as HTMLElement).contains(
-              document.querySelector(".git-plus.output")
-            )
+            event.target &&
+            (event.target as HTMLElement).contains(document.querySelector(".git-plus.output"))
           ) {
             atom.clipboard.write(window.getSelection().toString());
           } else event.abortKeyBinding();

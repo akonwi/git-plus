@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.2.1
+
+- Fix issue with git plus hijacking copy/paste commands
+
 ### 8.2.0
 
 - bump minimum required atom version to 1.28
