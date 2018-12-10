@@ -1,77 +1,78 @@
-import { CompositeDisposable, CommandEvent } from 'atom'
-import * as React from 'react'
-import cx from 'classnames'
-import * as AnsiToHtml from 'ansi-to-html'
-import * as linkify from 'linkify-urls'
-import ActivityLogger from '../../activity-logger'
-import OutputViewContainer from './container'
-import { Entry } from './Entry'
-import { Record } from '../../activity-logger'
+import * as AnsiToHtml from "ansi-to-html";
+import { CommandEvent, CompositeDisposable } from "atom";
+import cx from "classnames";
+import * as linkify from "linkify-urls";
+import * as React from "react";
+import ActivityLogger from "../../activity-logger";
+import { Record } from "../../activity-logger";
+import { withConfigs } from "../withConfigs";
+import OutputViewContainer from "./container";
+import { Entry } from "./Entry";
 
 function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {
-  const result: any[] = []
+  const result: any[] = [];
   for (let i = array.length - 1; i > -1; i--) {
-    result.push(fn(array[i], i))
+    result.push(fn(array[i], i));
   }
-  return result
+  return result;
 }
 
 interface Props {
-  container: OutputViewContainer
+  container: OutputViewContainer;
 }
 interface State {
-  records: Record[]
-  latestId: string | null
+  records: Record[];
+  latestId: string | null;
 }
 
-export default class Root extends React.Component<Props, State> {
+export class Root extends React.Component<Props, State> {
   state = {
     latestId: null,
     records: []
-  }
-  subscriptions = new CompositeDisposable()
-  $root = React.createRef<HTMLDivElement>()
-  ansiConverter: { toHtml: (stuff: string) => string } = new AnsiToHtml()
+  };
+  subscriptions = new CompositeDisposable();
+  $root = React.createRef<HTMLDivElement>();
+  ansiConverter: { toHtml(stuff: string): string } = new AnsiToHtml();
 
   componentDidMount() {
     this.subscriptions.add(
       ActivityLogger.onDidRecordActivity(record => {
-        this.setState(state => ({ latestId: record.id, records: [...state.records, record] }))
+        this.setState(state => ({ latestId: record.id, records: [...state.records, record] }));
       }),
-      atom.commands.add('atom-workspace', 'git-plus:copy', {
+      atom.commands.add("atom-workspace", "git-plus:copy", {
         hiddenInCommandPalette: true,
         didDispatch: (event: CommandEvent) => {
           if (
             event.currentTarget &&
             (event.currentTarget as HTMLElement).contains(
-              document.querySelector('.git-plus.output')
+              document.querySelector(".git-plus.output")
             )
-          )
-            atom.clipboard.write(window.getSelection().toString())
-          else event.abortKeyBinding()
+          ) {
+            atom.clipboard.write(window.getSelection().toString());
+          } else event.abortKeyBinding();
         }
       })
-    )
-    atom.keymaps.add('git-plus', {
-      '.platform-darwin atom-workspace': {
-        'cmd-c': 'git-plus:copy'
+    );
+    atom.keymaps.add("git-plus", {
+      ".platform-darwin atom-workspace": {
+        "cmd-c": "git-plus:copy"
       },
-      '.platform-win32 atom-workspace, .platform-linux atom-workspace': {
-        'ctrl-c': 'git-plus:copy'
+      ".platform-win32 atom-workspace, .platform-linux atom-workspace": {
+        "ctrl-c": "git-plus:copy"
       }
-    })
+    });
   }
 
   componentDidUpdate(previousProps: Props, previousState: State) {
     if (previousState.records.length < this.state.records.length) {
-      if (atom.config.get('git-plus.general.alwaysOpenDockWithResult')) this.props.container.show()
-      if (this.$root.current) this.$root.current.scrollTop = 0
+      if (atom.config.get("git-plus.general.alwaysOpenDockWithResult")) this.props.container.show();
+      if (this.$root.current) this.$root.current.scrollTop = 0;
     }
   }
 
   componentWillUnmount() {
-    this.subscriptions.dispose()
-    atom.keymaps['removeBindingsFromSource']('git-plus')
+    this.subscriptions.dispose();
+    atom.keymaps["removeBindingsFromSource"]("git-plus");
   }
 
   render() {
@@ -86,6 +87,6 @@ export default class Root extends React.Component<Props, State> {
           />
         ))}
       </div>
-    )
+    );
   }
 }
