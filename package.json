@@ -16,8 +16,7 @@
   },
   "scripts": {
     "test": "eslint --fix \"lib/**/*.js\" \"spec/**/*.js\" && apm test",
-    "debug": "atom-transpiler-debug-tool",
-    "flow": "flow"
+    "debug": "atom-transpiler-debug-tool"
   },
   "deserializers": {
     "git-plus/output-view": "deserializeOutputView"
@@ -50,7 +49,6 @@
         "babel": {
           "presets": [
             "env",
-            "flow",
             "react"
           ],
           "plugins": [
@@ -89,7 +87,6 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "classnames": "^2.2.6",
     "fs-plus": "^2.2.0",
@@ -104,9 +101,7 @@
     "atom-transpiler-debug-tool": "^1.0.5",
     "babel-eslint": "^8.2.5",
     "eslint": "^5.0.1",
-    "eslint-plugin-flowtype": "^2.50.0",
     "eslint-plugin-react": "^7.10.0",
-    "flow-bin": "^0.75.0",
     "lint": "^1.1.2",
     "prettier": "^1.13.6",
     "quibble": "^0.3.0",

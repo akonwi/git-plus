@@ -8,7 +8,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     "noImplicitAny": false,
     "noUnusedLocals": false,
     "outDir": "dist",
