@@ -51,6 +51,12 @@ module.exports = ->
       ],
       { type: 'separator'}
     ],
+    '.tree-view .multi-select': [
+      'label': 'Git',
+      'submenu': [
+        {label: 'Git push', 'command': 'git-plus-context:push'}
+      ]
+    ]
     'atom-text-editor:not(.mini)': [
       {
         'label': 'Git add file'
