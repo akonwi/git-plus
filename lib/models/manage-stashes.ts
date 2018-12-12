@@ -29,7 +29,7 @@ class StashListView {
         this.destroy();
       }
     });
-    this.disposables.add(new Disposable(this.listView.destroy));
+    this.disposables.add(new Disposable(() => this.listView.destroy()));
     this.attach();
   }
 
@@ -48,7 +48,7 @@ class StashListView {
 
   destroy = () => {
     this.disposables.dispose();
-  }
+  };
 }
 
 type StashOptionItem = StashCommand & {
@@ -83,7 +83,7 @@ class StashOptionsView {
         this.destroy();
       }
     });
-    this.disposables.add(new Disposable(this.listView.destroy));
+    this.disposables.add(new Disposable(() => this.listView.destroy()));
     this.attach();
   }
 
@@ -106,7 +106,7 @@ class StashOptionsView {
 
   destroy = () => {
     this.disposables.dispose();
-  }
+  };
 }
 
 export default async () => {

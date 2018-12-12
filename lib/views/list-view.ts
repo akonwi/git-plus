@@ -40,7 +40,7 @@ export default class ListView {
       },
       ...options
     });
-    this.disposables.add(new Disposable(this.listView.destroy));
+    this.disposables.add(new Disposable(() => this.listView.destroy()));
     this.result = new Promise((resolve, reject) => {
       this.emitter.once("did-cancel", reject);
       this.emitter.once("did-confirm", resolve);
@@ -63,5 +63,5 @@ export default class ListView {
 
   destroy = () => {
     this.disposables.dispose();
-  }
+  };
 }
