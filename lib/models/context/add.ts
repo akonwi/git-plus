@@ -1,7 +1,7 @@
 import ActivityLogger from "../../activity-logger";
 import Repository from "../../repository";
 
-export const addFromContext = (treeView: { selectedPaths(): string[] }) => {
+export const gitAddFromContext = (treeView: Services.TreeView) => {
   const paths = treeView.selectedPaths();
 
   paths.forEach(async path => {

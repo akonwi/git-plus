@@ -161,4 +161,11 @@ export default class Repository {
     this.refresh();
     return result;
   }
+
+  async isPathStaged(path: string): Promise<boolean> {
+    const result = await git(["diff", "--cached", "--name-only", path], {
+      cwd: this.repo.getWorkingDirectory()
+    });
+    return result.output.includes(this.relativize(path)!);
+  }
 }
