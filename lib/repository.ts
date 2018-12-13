@@ -168,4 +168,8 @@ export default class Repository {
     });
     return result.output.includes(this.relativize(path)!);
   }
+
+  isPathModified(path: string): boolean {
+    return this.repo.isPathModified(path);
+  }
 }
