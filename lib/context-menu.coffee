@@ -25,7 +25,7 @@ module.exports = ->
           'command': 'git-plus-context:diff-branches'
         },
         {
-          label: 'Git diff branche files',
+          label: 'Git diff against branch',
           'command': 'git-plus-context:diff-branch-files'
         },
         {
