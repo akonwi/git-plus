@@ -58,6 +58,10 @@ export default class Repository {
     this.repo = repo;
   }
 
+  getWorkingDirectory() {
+    return this.repo.getWorkingDirectory();
+  }
+
   add(path: string, options: AddOptions = { update: false }): Promise<GitCliResponse> {
     const args = ["add"];
     if (options.update) args.push("--update");
