@@ -176,4 +176,12 @@ export default class Repository {
   isPathModified(path: string): boolean {
     return this.repo.isPathModified(path);
   }
+
+  async getUpstreamBranchFor(branch: string): Promise<[string, string] | null> {
+    const result = await git(["rev-parse", "--abbrev-ref", `${branch}@{upstream}`], {
+      cwd: this.repo.getWorkingDirectory()
+    });
+    if (result.failed && result.output.includes("fatal: no upstream configured")) return null;
+    else return result.output.split("/") as [string, string];
+  }
 }
