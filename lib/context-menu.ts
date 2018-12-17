@@ -1,26 +1,14 @@
 const fileSelector = ".tree-view > .full-menu .file";
-const directorySelector = ".tree-view > .full-menu .directory";
-const projectRootSelector = ".tree-view .header.list-item.project-root-header"; // unfortunately, there's no indicator on the .list-item of whether it's a git repo
-const modifiedFile = ".entry.file.status-modified";
-const modifiedDirectory = ".entry.directory.status-modified > .list-item";
+const notMultiSelectedSelector = ".tree-view-root:not(.multi-select)";
+const multiSelectedSelector = ".tree-view-root.multi-select";
+const projectRootSelector = ".header.list-item.project-root-header"; // unfortunately, there's no indicator on the .list-item of whether it's a git repo
+const modifiedFileSelector = ".entry.file.status-modified";
+const modifiedDirectorySelector = ".entry.directory.status-modified > .list-item";
 
-//     '.tree-view .multi-select': [
-//       'label': 'Git',
-//       'submenu': [
-//         {label: 'Git push', 'command': 'git-plus-context:push'}
-//       ]
-//     ]
-//     'atom-text-editor:not(.mini)': [
-//       {
-//         'label': 'Git add file'
-//         'command': 'git-plus:add'
-//       }
-//     ]
-//   }
 export function initializeContextMenu() {
   atom.contextMenu.add({
     // modified files and directories
-    [`${modifiedFile}, ${modifiedDirectory}`]: [
+    [`${notMultiSelectedSelector} ${modifiedFileSelector}, ${notMultiSelectedSelector} ${modifiedDirectorySelector}`]: [
       { type: "separator" },
       {
         label: "Git",
@@ -28,6 +16,7 @@ export function initializeContextMenu() {
           { label: "Add", command: "git-plus-context:add" },
           { label: "Add + Commit", command: "git-plus-context:add-and-commit" },
           { label: "Checkout", command: "git-plus-context:checkout-file" },
+          { label: "Difftool", command: "git-plus-context:difftool" },
           {
             label: "Unstage",
             command: "git-plus-context:unstage-file"
@@ -37,7 +26,7 @@ export function initializeContextMenu() {
       { type: "separator" }
     ],
     // modified files
-    [modifiedFile]: [
+    [`${notMultiSelectedSelector} ${modifiedFileSelector}`]: [
       { type: "separator" },
       {
         label: "Git",
@@ -46,7 +35,7 @@ export function initializeContextMenu() {
       { type: "separator" }
     ],
     // all files
-    [fileSelector]: [
+    [`${notMultiSelectedSelector} ${fileSelector}`]: [
       { type: "separator" },
       {
         label: "Git",
@@ -54,17 +43,23 @@ export function initializeContextMenu() {
       },
       { type: "separator" }
     ],
-    // all files and directories
-    [`${fileSelector},${directorySelector}`]: [
+    [`${multiSelectedSelector} ${modifiedFileSelector}`]: [
       { type: "separator" },
       {
         label: "Git",
-        submenu: [{ label: "Difftool", command: "git-plus-context:difftool" }]
+        submenu: [
+          { label: "Add", command: "git-plus-context:add" },
+          {
+            label: "Unstage",
+            command: "git-plus-context:unstage-file"
+          }
+        ]
       },
       { type: "separator" }
     ],
+    // all files and directories
     // root directory
-    [projectRootSelector]: [
+    [`${notMultiSelectedSelector} ${projectRootSelector}`]: [
       { type: "separator" },
       {
         label: "Git",
@@ -73,7 +68,17 @@ export function initializeContextMenu() {
           {
             label: "Diff Branches",
             command: "git-plus-context:diff-branches"
-          },
+          }
+        ]
+      },
+      { type: "separator" }
+    ],
+    [`${multiSelectedSelector} ${projectRootSelector}, ${notMultiSelectedSelector} ${projectRootSelector}`]: [
+      { type: "separator" },
+      {
+        label: "Git",
+        submenu: [
+          { label: "Add", command: "git-plus-context:add" },
           { label: "Pull", command: "git-plus-context:pull" },
           { label: "Push", command: "git-plus-context:push" }
         ]
