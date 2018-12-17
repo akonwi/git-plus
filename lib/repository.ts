@@ -186,6 +186,10 @@ export default class Repository {
     if (result.failed && result.output.includes("fatal: no upstream configured")) return null;
     else return result.output.split("/") as [string, string];
   }
+
+  async unstage(path: string): Promise<GitCliResponse> {
+    return await git(["reset", path], { cwd: this.repo.getWorkingDirectory() });
+  }
 }
 
 export { Repository };

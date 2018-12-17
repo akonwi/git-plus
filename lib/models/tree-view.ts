@@ -3,6 +3,7 @@ import Repository from "../repository";
 import GitCheckoutFile = require("./git-checkout-file");
 import GitCommit = require("./git-commit");
 import GitDiff = require("./git-diff");
+import GitDiffAll = require("./git-diff-all");
 import GitDiffBranchFiles = require("./git-diff-branch-files");
 import GitDiffBranches = require("./git-diff-branches");
 import GitDiffTool = require("./git-difftool");
@@ -89,16 +90,16 @@ export async function diffTool(treeView: Services.TreeView) {
   GitDiffTool(repo.repo, { file: repo.relativize(path) });
 }
 
-export async function diff(treeView: Services.TreeView) {
+export async function diff(treeView: Services.TreeView, all = false) {
   const [path] = treeView.selectedPaths();
   const repo = await Repository.getForPath(path);
 
   if (!repo) return atom.notifications.addWarning(`No repository found for \`${path}\``);
-  if (!repo.isPathModified(path)) {
+  if (!all && !repo.isPathModified(path)) {
     return atom.notifications.addInfo(`\`${repo.relativize(path)}\` has no changes to diff`);
   }
 
-  GitDiff(repo.repo, { file: repo.relativize(path) });
+  all ? GitDiffAll(repo.repo) : GitDiff(repo.repo, { file: repo.relativize(path) });
 }
 
 export async function pull(treeView: Services.TreeView) {
@@ -170,16 +171,16 @@ export function unstage(treeView: Services.TreeView) {
     if (!repo) return atom.notifications.addWarning(`No repository found for ${path}`);
 
     const pathIsStaged = await repo.isPathStaged(path);
-    if (!pathIsStaged) {
+    if (repo.getWorkingDirectory() !== path && !pathIsStaged) {
       return atom.notifications.addInfo(`\`${repo.relativize(path)}\` can't be unstaged.`, {
         detail: "This file has no staged changes"
       });
     }
 
-    const result = await repo.resetChanges(path);
+    const result = await repo.unstage(path);
     ActivityLogger.record({
       repoName: repo.getName(),
-      message: `reset changes in ${path}`,
+      message: `Unstage ${path}`,
       ...result
     });
   });
