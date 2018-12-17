@@ -1,0 +1,3 @@
+exports = {
+  items: ["Git-Plus"]
+};

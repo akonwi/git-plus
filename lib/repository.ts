@@ -62,6 +62,7 @@ export default class Repository {
     return this.repo.getWorkingDirectory();
   }
 
+  // TODO: rename to `stage`
   add(path: string, options: AddOptions = { update: false }): Promise<GitCliResponse> {
     const args = ["add"];
     if (options.update) args.push("--update");
@@ -153,6 +154,7 @@ export default class Repository {
   }
 
   relativize(path: string): string | undefined {
+    if (path === this.getWorkingDirectory()) return this.getName();
     return (this.repo as any).relativize(path);
   }
 
