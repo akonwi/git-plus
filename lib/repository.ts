@@ -187,3 +187,5 @@ export default class Repository {
     else return result.output.split("/") as [string, string];
   }
 }
+
+export { Repository };
