@@ -5,11 +5,11 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
-  plugins: ['flowtype'],
-  parser: 'babel-eslint',
+  extends: ["eslint:recommended", "plugin:react/recommended"],
+  plugins: [],
+  parser: "babel-eslint",
   parserOptions: {
-    sourceType: 'module',
+    sourceType: "module",
     ecmaFeatures: {}
   },
   globals: {
@@ -21,12 +21,11 @@ module.exports = {
     }
   },
   rules: {
-    indent: ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    'no-console': 'off',
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    'flowtype/define-flow-type': 'warn'
+    indent: ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "no-console": "off",
+    "no-unused-vars": ["error", { argsIgnorePattern: "^_" }]
     // quotes: ['error', 'single'],
     // semi: ['error', 'never']
   }
-}
+};
