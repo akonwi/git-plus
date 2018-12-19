@@ -43,12 +43,14 @@ export async function checkoutFile(treeView: Services.TreeView) {
   treeView.selectedPaths().forEach(async path => {
     const repo = await Repository.getForPath(path);
     if (!repo) return atom.notifications.addWarning(`No repository found for \`${path}\``);
-    if (!repo.isPathModified(path)) {
+
+    const entry = treeView.entryForPath(path);
+    if (entry.classList.contains("file") && !repo.isPathModified(path)) {
       return atom.notifications.addInfo(`\`${repo.relativize(path)}\` has no changes to reset.`);
     }
     if (await repo.isPathStaged(path)) {
       return atom.notifications.addWarning(`\`${repo.relativize(path)}\` can't be reset.`, {
-        detail: "This file has staged changes"
+        detail: "It has staged changes, which must be unstaged first"
       });
     }
     atom.confirm({

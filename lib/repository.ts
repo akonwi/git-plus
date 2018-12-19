@@ -172,6 +172,7 @@ export default class Repository {
     const result = await git(["diff", "--cached", "--name-only", path], {
       cwd: this.repo.getWorkingDirectory()
     });
+    if (path === this.getWorkingDirectory() && result.output !== "") return true;
     return result.output.includes(this.relativize(path)!);
   }
 
