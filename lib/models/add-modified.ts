@@ -7,7 +7,7 @@ export default async () => {
     return atom.notifications.addInfo("No repository found");
   }
 
-  const result = await repo.add(".", { update: true });
+  const result = await repo.add(["."], { update: true });
   ActivityLogger.record({
     repoName: repo.getName(),
     message: `add modified files`,
