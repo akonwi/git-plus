@@ -1,3 +1,4 @@
+import { GitRepository } from "atom";
 import ActivityLogger from "../activity-logger";
 import Repository from "../repository";
 import GitCheckoutFile = require("./git-checkout-file");
@@ -12,9 +13,13 @@ import GitPush = require("./git-push");
 
 const logNoRepoFound = () => atom.notifications.addInfo("No repository found");
 
-export function add(treeView: Services.TreeView) {
-  return Promise.all(
-    treeView.selectedPaths().map(async path => {
+export async function add(treeView: Services.TreeView) {
+  const filesPerRepo = new Map<GitRepository, string[]>();
+
+  const paths = treeView.selectedPaths();
+
+  await Promise.all(
+    paths.map(async path => {
       const repo = await Repository.getForPath(path);
 
       if (!repo) {
@@ -23,14 +28,26 @@ export function add(treeView: Services.TreeView) {
         );
       }
 
-      const result = await repo.add(path);
-      ActivityLogger.record({
-        repoName: repo.getName(),
-        message: `add ${repo.getWorkingDirectory() === path ? "all" : repo.relativize(path)}`,
-        ...result
-      });
+      const files = filesPerRepo.get(repo.repo) || [];
+      files.push(path);
+      filesPerRepo.set(repo.repo, files);
     })
   );
+
+  for (const [gitRepo, files] of filesPerRepo.entries()) {
+    const repo = await new Repository(gitRepo);
+    const result = await repo.add(files);
+
+    let localizedPaths;
+    if (files.length === 1 && files[0] === repo.getWorkingDirectory()) {
+      localizedPaths = "all changes";
+    } else localizedPaths = files.map(file => repo.relativize(file)).join(", ");
+    ActivityLogger.record({
+      repoName: repo.getName(),
+      message: `add ${localizedPaths}`,
+      ...result
+    });
+  }
 }
 
 export async function addAndCommit(treeView: Services.TreeView) {
