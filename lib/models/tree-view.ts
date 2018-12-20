@@ -17,7 +17,11 @@ export function add(treeView: Services.TreeView) {
     treeView.selectedPaths().map(async path => {
       const repo = await Repository.getForPath(path);
 
-      if (!repo) return logNoRepoFound();
+      if (!repo) {
+        return atom.notifications.addInfo(
+          `No repository found for ${atom.project.relativizePath(path)[1]}`
+        );
+      }
 
       const result = await repo.add(path);
       ActivityLogger.record({
