@@ -63,11 +63,12 @@ export default class Repository {
   }
 
   // TODO: rename to `stage`
-  add(path: string, options: AddOptions = { update: false }): Promise<GitCliResponse> {
+  add(path: string | string[], options: AddOptions = { update: false }): Promise<GitCliResponse> {
     const args = ["add"];
     if (options.update) args.push("--update");
     else args.push("--all");
-    args.push(path);
+    debugger;
+    args.push(...path);
 
     return git(args, { cwd: this.repo.getWorkingDirectory() });
   }
