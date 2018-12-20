@@ -14,7 +14,7 @@ export default async (stageEverything: boolean = false) => {
   if (!repo) return atom.notifications.addInfo("No repository found");
 
   const path = stageEverything ? "." : getCurrentFileInRepo(repo) || ".";
-  const result = await repo.add([path]);
+  const result = await repo.stage([path]);
   ActivityLogger.record({
     repoName: repo.getName(),
     message: `add ${path}`,

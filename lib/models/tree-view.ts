@@ -36,7 +36,7 @@ export async function add(treeView: Services.TreeView) {
 
   for (const [gitRepo, files] of filesPerRepo.entries()) {
     const repo = await new Repository(gitRepo);
-    const result = await repo.add(files);
+    const result = await repo.stage(files);
 
     let localizedPaths;
     if (files.length === 1 && files[0] === repo.getWorkingDirectory()) {
