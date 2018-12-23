@@ -49,6 +49,13 @@ module.exports =
         type: "boolean"
         default: false
         description: "Always display bottom dock with output after command is complete (regardless of dock visibility)"
+      newBranchKey:
+        order: 7
+        title: "Status-bar New Branch modifier key"
+        type: "string"
+        default: "alt"
+        description: "Holding this modifier key while clicking on the branch name in the status bar will trigger creatinga a new branch. Note that _[`meta`](#{meta.define})_ is <kbd>#{meta.key}</kbd>"
+        enum: ["alt", "shift", "meta", "ctrl"]
   commits:
     order: 2
     type: "object"
