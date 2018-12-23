@@ -1,5 +1,10 @@
 ## Changelog
 
+### 8.3.0
+
+- Fix [#774](https://github.com/akonwi/git-plus/issues/774). Brings back clicking on the branch name in status bar to activate the Checkout branch command.
+- The tree view context menu has been improved to only show commands that are applicable to the selected items. Unfortunately, the current api has no way of knowing if the directory root is a git repository, so there will be git options for non git directories.
+
 ### 8.2.1
 
 - Fix issue with git plus hijacking copy/paste commands
