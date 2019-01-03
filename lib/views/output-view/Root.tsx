@@ -6,7 +6,7 @@ import * as React from "react";
 import ActivityLogger from "../../activity-logger";
 import { Record } from "../../activity-logger";
 import { withConfigs } from "../withConfigs";
-import OutputViewContainer from "./container";
+import { OutputViewContainer } from "./container";
 import { Entry } from "./Entry";
 
 function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {

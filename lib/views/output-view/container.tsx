@@ -1,58 +1,76 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import { Root } from './Root'
+import { Dock, WorkspaceCenter } from "atom";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Root } from "./Root";
 
-export default class OutputViewContainer {
-  static URI = 'git-plus://output-view'
+function isDock(container: Dock | WorkspaceCenter): container is Dock {
+  return (container as any).getLocation() !== "center";
+}
 
-  isDestroyed = false
-  element: HTMLElement
+export class OutputViewContainer {
+  static URI = "git-plus://output-view";
+
+  isDestroyed = false;
+  element: HTMLElement;
 
   constructor() {
-    this.element = document.createElement('div')
-    this.element.classList.add('git-plus', 'output')
-    this.render()
+    this.element = document.createElement("div");
+    this.element.classList.add("git-plus", "output");
+    this.render();
   }
 
   getURI() {
-    return OutputViewContainer.URI
+    return OutputViewContainer.URI;
   }
 
   getTitle() {
-    return 'Git+'
+    return "Git+";
   }
 
   getDefaultLocation() {
-    return 'bottom'
+    return "bottom";
   }
 
   serialize() {
     return {
-      deserializer: 'git-plus/output-view'
-    }
+      deserializer: "git-plus/output-view"
+    };
   }
 
   async show() {
-    const focusedPane = atom.workspace.getActivePane()
-    await atom.workspace.open(this, { activatePane: true })
-    if (focusedPane && !focusedPane.isDestroyed()) focusedPane.activate()
+    const focusedPane = atom.workspace.getActivePane();
+    await atom.workspace.open(this, { activatePane: true });
+    if (focusedPane && !focusedPane.isDestroyed()) focusedPane.activate();
   }
 
   hide() {
-    atom.workspace.hide(this)
+    atom.workspace.hide(this);
   }
 
   render() {
-    ReactDOM.render(<Root container={this} />, this.element)
+    ReactDOM.render(<Root container={this} />, this.element);
   }
 
   toggle() {
-    atom.workspace.toggle(this)
+    atom.workspace.toggle(this);
   }
 
   destroy() {
-    ReactDOM.unmountComponentAtNode(this.element)
-    this.element.remove()
-    this.isDestroyed = true
+    ReactDOM.unmountComponentAtNode(this.element);
+    this.element.remove();
+    this.isDestroyed = true;
+  }
+
+  static isVisible() {
+    const container = atom.workspace.paneContainerForURI(OutputViewContainer.URI);
+    if (container) {
+      const activeItem = container.getActivePaneItem();
+      const viewIsActive = activeItem instanceof OutputViewContainer;
+      if (isDock(container)) {
+        return container.isVisible() && viewIsActive;
+      }
+      return viewIsActive;
+    }
+    return false;
   }
 }
