@@ -28,7 +28,7 @@ interface State {
 export class Root extends React.Component<Props, State> {
   state = {
     latestId: null,
-    records: []
+    records: [...ActivityLogger.records]
   };
   subscriptions = new CompositeDisposable();
   $root = React.createRef<HTMLDivElement>();

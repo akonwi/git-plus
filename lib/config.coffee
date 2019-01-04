@@ -48,7 +48,7 @@ module.exports =
         title: "Always show result output"
         type: "boolean"
         default: false
-        description: "Always display bottom dock with output after command is complete (regardless of dock visibility)"
+        description: "Always display the output view after a command completes (regardless of dock visibility). If the view has been destroyed, it will need to be manually toggled."
       newBranchKey:
         order: 7
         title: "Status-bar New Branch modifier key"

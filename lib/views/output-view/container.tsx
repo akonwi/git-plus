@@ -10,13 +10,14 @@ function isDock(container: Dock | WorkspaceCenter): container is Dock {
 export class OutputViewContainer {
   static URI = "git-plus://output-view";
 
-  isDestroyed = false;
+  private _isDestroyed = false;
   element: HTMLElement;
 
   constructor() {
     this.element = document.createElement("div");
     this.element.classList.add("git-plus", "output");
     this.render();
+    atom.workspace.open(this, { activatePane: false });
   }
 
   getURI() {
@@ -58,7 +59,11 @@ export class OutputViewContainer {
   destroy() {
     ReactDOM.unmountComponentAtNode(this.element);
     this.element.remove();
-    this.isDestroyed = true;
+    this._isDestroyed = true;
+  }
+
+  get isDestroyed() {
+    return this._isDestroyed;
   }
 
   static isVisible() {

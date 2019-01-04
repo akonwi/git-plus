@@ -19,8 +19,15 @@ export interface Record extends RecordAttributes {
 
 class ActivityLogger {
   listeners: Set<Function> = new Set();
+  private _records: Record[] = [];
 
-  record(record: RecordAttributes) {
+  get records() {
+    return this._records;
+  }
+
+  record(attributes: RecordAttributes) {
+    const record = { ...attributes, id: makeId() };
+
     if (
       record.failed &&
       !atom.config.get("git-plus.general.alwaysOpenDockWithResult") &&
@@ -41,9 +48,9 @@ class ActivityLogger {
         ]
       });
     }
-    window.requestIdleCallback(() =>
-      this.listeners.forEach(listener => listener({ ...record, id: makeId() }))
-    );
+
+    this._records.push(record);
+    window.requestIdleCallback(() => this.listeners.forEach(listener => listener(record)));
   }
 
   onDidRecordActivity(callback: (record: Record) => any): Disposable {
