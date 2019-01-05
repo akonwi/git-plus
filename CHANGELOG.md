@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.4.1
+
+- Fix [#776](https://github.com/akonwi/git-plus/issues/776)
+
 ### 8.4.0
 
 - Show notifications for command errors if 'Always show result output' is disabled.
