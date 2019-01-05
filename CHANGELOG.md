@@ -1,5 +1,11 @@
 ## Changelog
 
+### 8.4.0
+
+- Show notifications for command errors if 'Always show result output' is disabled.
+- If the output view is destroyed, it can be recreated via the toggle with restored state.
+- Fixes some deserialization bugs with the output view.
+
 ### 8.3.0
 
 - Fix [#774](https://github.com/akonwi/git-plus/issues/774). Brings back clicking on the branch name in status bar to activate the Checkout branch command.
