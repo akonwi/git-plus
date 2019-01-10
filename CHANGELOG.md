@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.4.2
+
+- Fix for a window creating 2 output views at startup
+
 ### 8.4.1
 
 - Fix [#776](https://github.com/akonwi/git-plus/issues/776)
