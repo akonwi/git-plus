@@ -1,10 +1,11 @@
-import { CompositeDisposable, GitRepository } from "atom";
+import { CompositeDisposable, Disposable, GitRepository } from "atom";
 import { getRepoForPath } from "../git-es";
 
 export class TreeViewBranchManager {
   private treeView: Services.TreeView;
   private renderedBranches = new Map<string, HTMLElement>();
   private subscriptions = new CompositeDisposable();
+  private repoSubscriptions = new Map<String, Disposable>();
 
   constructor(treeView: Services.TreeView) {
     this.treeView = treeView;
@@ -13,7 +14,10 @@ export class TreeViewBranchManager {
       atom.project.onDidChangePaths(async paths => {
         await Promise.all(paths.map(this.renderBranch));
         for (const path of this.renderedBranches.keys()) {
-          if (!paths.includes(path)) this.renderedBranches.delete(path);
+          if (!paths.includes(path)) {
+            this.renderedBranches.delete(path);
+            this.repoSubscriptions.delete(path);
+          }
         }
       })
     );
@@ -37,6 +41,18 @@ export class TreeViewBranchManager {
     div.innerText = branchName;
     entry.querySelector(".project-root-header").appendChild(div);
     this.renderedBranches.set(repo.getWorkingDirectory(), div);
+    this.updateRepoSubscription(
+      repo.getWorkingDirectory(),
+      repo.onDidChangeStatuses(() => {
+        this.renderBranch(repo.getWorkingDirectory());
+      })
+    );
+  }
+
+  updateRepoSubscription(path: string, disposable: Disposable) {
+    const subscription = this.repoSubscriptions.get(path);
+    if (subscription) subscription.dispose();
+    this.repoSubscriptions.set(path, disposable);
   }
 
   destroy() {
