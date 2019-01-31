@@ -1,6 +1,7 @@
 Path = require 'path'
 {CompositeDisposable} = require 'atom'
 fs = require 'fs-plus'
+emoji = require 'node-emoji'
 git = require '../git'
 notifier = require('../notifier')
 ActivityLogger = require('../activity-logger').default
@@ -72,7 +73,7 @@ commit = (repo, filePath) ->
   repoName = new Repository(repo).getName()
   git.cmd(['commit', "--cleanup=whitespace", "--file=#{filePath}"], cwd: repo.getWorkingDirectory())
   .then (data) ->
-    ActivityLogger.record({ repoName, message: 'commit', output: data})
+    ActivityLogger.record({ repoName, message: 'commit', output: emoji.emojify(data)})
     destroyCommitEditor(filePath)
     git.refresh()
   .catch (data) ->

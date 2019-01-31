@@ -2,6 +2,7 @@
 {BufferedProcess} = require 'atom'
 {$, $$$, View} = require 'atom-space-pen-views'
 _ = require 'underscore-plus'
+emoji = require 'node-emoji'
 git = require '../git'
 GitShow = require '../models/git-show'
 
@@ -89,7 +90,7 @@ class LogListView extends View
     commitRow = $$$ ->
       @tr class: 'commit-row', hash: "#{commit.hash}", =>
         @td class: 'date', "#{commit.date} by #{commit.author}"
-        @td class: 'message', "#{commit.message}"
+        @td class: 'message', "#{emoji.emojify commit.message}"
         @td class: 'hashShort', "#{commit.hashShort}"
 
     @commitsListView.append(commitRow)
