@@ -56,6 +56,12 @@ module.exports =
         default: "alt"
         description: "Holding this modifier key while clicking on the branch name in the status bar will trigger creatinga a new branch. Note that _[`meta`](#{meta.define})_ is <kbd>#{meta.key}</kbd>"
         enum: ["alt", "shift", "meta", "ctrl"]
+      showBranchInTreeView:
+        order: 8
+        title: "Show current branch name in tree view."
+        type: "boolean"
+        default: true
+        description: "The branch name will be displayed next to repo root in the tree view as `[branch-name]`."
   commits:
     order: 2
     type: "object"

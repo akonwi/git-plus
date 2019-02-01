@@ -6,9 +6,23 @@ export class TreeViewBranchManager {
   private renderedBranches = new Map<string, HTMLElement>();
   private subscriptions = new CompositeDisposable();
   private repoSubscriptions = new Map<String, Disposable>();
+  private isEnabled = false;
 
   constructor(treeView: Services.TreeView) {
     this.treeView = treeView;
+
+    atom.config.observe("git-plus.general.showBranchInTreeView", (isEnabled: boolean) => {
+      this.isEnabled = isEnabled;
+      if (isEnabled) {
+        this.initialize();
+      } else {
+        this.destroy();
+        this.subscriptions = new CompositeDisposable();
+      }
+    });
+  }
+
+  initialize() {
     atom.project.getPaths().forEach(this.renderBranch);
     this.subscriptions.add(
       atom.project.onDidChangePaths(async paths => {
@@ -24,6 +38,7 @@ export class TreeViewBranchManager {
   }
 
   renderBranch = async (path: string) => {
+    if (!this.isEnabled) return;
     const repo = (await getRepoForPath(path)) as GitRepository;
     const branchName = `[${repo!.getShortHead()}]`;
     const entry = this.treeView.entryForPath(repo.getWorkingDirectory());
