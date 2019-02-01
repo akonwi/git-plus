@@ -168,9 +168,3 @@ module.exports =
         type: "boolean"
         default: false
         description: "Show notifications while running `fetch --all`?"
-      betaOutputView:
-        order: 5
-        title: 'Improved output view'
-        type: "boolean"
-        default: true
-        description: "The new pane will show all executed git commands and their results"
