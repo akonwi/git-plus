@@ -1,5 +1,11 @@
 ## Changelog
 
+### 8.6.0
+
+- Show current branch next to the repo root in the tree view.
+  - This can be disabled in the general settings of the plugin.
+  - ![screenshot](https://dl.dropboxusercontent.com/s/bt3lbsd9oxqhhbh//tree-view-branch.png.png)
+
 ### 8.5.0
 
 - Render emojis in commit messages. [#780](https://github.com/akonwi/git-plus/issues/780)
