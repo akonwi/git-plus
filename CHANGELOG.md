@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.5.0
+
+- Render emojis in commit messages. [#780](https://github.com/akonwi/git-plus/issues/780)
+
 ### 8.4.2
 
 - Fix for a window creating 2 output views at startup
