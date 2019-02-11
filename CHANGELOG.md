@@ -1,5 +1,9 @@
 ## Changelog
 
+### 8.6.1
+
+- Fix [#781](https://github.com/akonwi/git-plus/issues/781)
+
 ### 8.6.0
 
 - Show current branch next to the repo root in the tree view.
