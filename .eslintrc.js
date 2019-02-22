@@ -15,11 +15,6 @@ module.exports = {
   globals: {
     atom: false
   },
-  settings: {
-    flowType: {
-      onlyFilesWithFlowAnnotation: true
-    }
-  },
   rules: {
     indent: ["error", 2],
     "linebreak-style": ["error", "unix"],
