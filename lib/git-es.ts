@@ -18,7 +18,12 @@ const getCachedRepo = (path: string): GitRepository | undefined => {
   let entry = iterator.next();
   while (!entry.done) {
     const [directory, repo] = entry.value;
-    if (directory.contains(path)) return repo;
+    if (directory.contains(path)) {
+      if (repo.isDestroyed()) {
+        reposByDirectory.delete(directory);
+        return undefined;
+      } else return repo;
+    }
 
     entry = iterator.next();
   }
