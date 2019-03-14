@@ -1,4 +1,5 @@
-const fileSelector = ".tree-view > .full-menu .file";
+// const fileSelector = ".tree-view > .full-menu .file";
+const notMultiSelectedFileSelector = ".tree-view > .full-menu:not(.multi-select) .file";
 const notMultiSelectedSelector = ".tree-view-root:not(.multi-select)";
 const multiSelectedSelector = ".tree-view-root.multi-select";
 const projectRootSelector = ".header.list-item.project-root-header"; // unfortunately, there's no indicator on the .list-item of whether it's a git repo
@@ -35,7 +36,7 @@ export function initializeContextMenu() {
       { type: "separator" }
     ],
     // all files
-    [`${notMultiSelectedSelector} ${fileSelector}`]: [
+    [notMultiSelectedFileSelector]: [
       { type: "separator" },
       {
         label: "Git",
