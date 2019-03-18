@@ -1,7 +1,7 @@
 {
   "name": "git-plus",
   "main": "./lib/git-plus",
-  "version": "8.6.1",
+  "version": "8.6.2",
   "description": "Do git things without the terminal",
   "keywords": [
     "git"
