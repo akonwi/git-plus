@@ -1,6 +1,6 @@
 {
   "name": "git-plus",
-  "main": "./lib/git-plus",
+  "main": "./lib/git-plus-v2",
   "version": "8.6.2",
   "description": "Do git things without the terminal",
   "keywords": [
@@ -94,6 +94,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "classnames": "^2.2.6",
+    "etch": "^0.14.0",
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
     "linkify-urls": "^2.0.0",

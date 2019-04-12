@@ -1,11 +1,13 @@
+import { Editor, RepositoryCommand } from "../models/common";
 import Repository from "../repository";
-import { Editor, RepositoryCommand } from "./common";
 
-interface Params {
+interface AddParams {
   stageEverything?: boolean;
 }
 
-class Add extends RepositoryCommand<Params | void> {
+class Add extends RepositoryCommand<AddParams | void> {
+  readonly id = "git-plus:add";
+
   async execute(repo: Repository, params = { stageEverything: false }) {
     const path = params.stageEverything ? "." : Editor.getCurrentFileInRepo(repo) || ".";
     const result = await repo.stage([path]);
@@ -18,6 +20,8 @@ class Add extends RepositoryCommand<Params | void> {
 }
 
 class AddModified extends RepositoryCommand<void> {
+  readonly id = "git-plus:add-modified";
+
   async execute(repo: Repository) {
     const result = await repo.stage(["."], { update: true });
 

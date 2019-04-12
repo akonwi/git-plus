@@ -1,9 +1,8 @@
 git = require './git'
 
 getCommands = ->
-  gitAdd                = require('./models/add').default
-  gitAddModified        = require('./models/add-modified').default
-  GitCheckoutNewBranch   = require './models/git-checkout-new-branch'
+  {gitAdd, gitAddModified}                = require('./models/add')
+  {gitChangeToNewBranch}   = require './models/git-checkout-new-branch'
   GitCheckoutBranch      = require './models/git-checkout-branch'
   GitDeleteBranch        = require './models/git-delete-branch'
   gitCheckoutFile        = require('./models/checkout-file').default
@@ -18,11 +17,11 @@ getCommands = ->
   gitFetch               = require('./models/fetch').default
   gitFetchInAllRepos            = require('./models/fetch-in-all-repos').default
   GitInit                = require './models/git-init'
-  GitLog                 = require './models/git-log'
+  {showLog}                 = require './models/git-log'
   gitPull                = require('./models/pull').default
   gitPush                = require('./models/push').default
   gitReset                = require('./models/reset').default
-  GitRemove              = require './models/git-remove'
+  {gitRemove}              = require './models/git-remove'
   GitShow                = require './models/git-show'
   GitStageFiles          = require './models/git-stage-files'
   GitStageHunk           = require './models/git-stage-hunk'
@@ -47,12 +46,12 @@ getCommands = ->
       git.refresh repo
       if atom.config.get('git-plus.experimental.customCommands')
         commands = commands.concat(require('./service').getCustomCommands())
-      commands.push ['git-plus:add', 'Add', gitAdd]
-      commands.push ['git-plus:add-modified', 'Add Modified', gitAddModified]
-      commands.push ['git-plus:add-all', 'Add All', -> gitAdd(true)]
-      commands.push ['git-plus:log', 'Log', -> GitLog(repo)]
-      commands.push ['git-plus:log-current-file', 'Log Current File', -> GitLog(repo, onlyCurrentFile: true)]
-      commands.push ['git-plus:remove-current-file', 'Remove Current File', -> GitRemove(repo)]
+      commands.push ['git-plus:add', 'Add', -> gitAdd.invoke({}, repo)]
+      commands.push ['git-plus:add-modified', 'Add Modified', -> gitAddModified.invoke(undefined, repo)]
+      commands.push ['git-plus:add-all', 'Add All', -> gitAdd.invoke({stageEverything: true}, repo)]
+      commands.push ['git-plus:log', 'Log', -> showLog.invoke({}, repo)]
+      commands.push ['git-plus:log-current-file', 'Log Current File', -> showLog.invoke({onlyCurrentFile: true}, repo)]
+      commands.push ['git-plus:remove-current-file', 'Remove Current File', -> gitRemove.invoke(repo)]
       commands.push ['git-plus:checkout-all-files', 'Checkout All Files', -> gitCheckoutFile(true)]
       commands.push ['git-plus:checkout-current-file', 'Checkout Current File', -> gitCheckoutFile()]
       commands.push ['git-plus:commit', 'Commit', -> GitCommit(repo)]
@@ -65,7 +64,7 @@ getCommands = ->
       commands.push ['git-plus:commit-all-and-push', 'Commit All And Push', -> GitCommit(repo, stageChanges: true, andPush: true)]
       commands.push ['git-plus:checkout', 'Checkout', -> GitCheckoutBranch(repo)]
       commands.push ['git-plus:checkout-remote', 'Checkout Remote', -> GitCheckoutBranch(repo, {remote: true})]
-      commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitCheckoutNewBranch(repo)]
+      commands.push ['git-plus:new-branch', 'Checkout New Branch', -> gitChangeToNewBranch.invoke(undefined, repo)]
       commands.push ['git-plus:delete-local-branch', 'Delete Local Branch', -> GitDeleteBranch(repo)]
       commands.push ['git-plus:delete-remote-branch', 'Delete Remote Branch', -> GitDeleteBranch(repo, {remote: true})]
       commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick(repo)]
@@ -81,7 +80,7 @@ getCommands = ->
       commands.push ['git-plus:pull', 'Pull', gitPull]
       commands.push ['git-plus:push', 'Push', gitPush]
       commands.push ['git-plus:push-set-upstream', 'Push -u', -> gitPush(true)]
-      commands.push ['git-plus:remove', 'Remove', -> GitRemove(repo, showSelector: true)]
+      commands.push ['git-plus:remove', 'Remove', -> gitRemove.invoke({showSelector: true}, repo)]
       commands.push ['git-plus:reset', 'Reset HEAD', gitReset]
       commands.push ['git-plus:show', 'Show', -> GitShow(repo)]
       commands.push ['git-plus:stage-files', 'Stage Files', -> GitStageFiles(repo)]

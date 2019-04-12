@@ -1,4 +1,4 @@
-import { Dock, WorkspaceCenter } from "atom";
+import { Dock, Emitter, WorkspaceCenter } from "atom";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Root } from "./Root";
@@ -7,10 +7,12 @@ function isDock(container: Dock | WorkspaceCenter): container is Dock {
   return (container as any).getLocation() !== "center";
 }
 
+const DID_DESTROY = "did-destroy";
+
 export class OutputViewContainer {
   static URI = "git-plus://output-view";
 
-  private _isDestroyed = false;
+  private emitter = new Emitter();
   element: HTMLElement;
 
   constructor() {
@@ -59,11 +61,12 @@ export class OutputViewContainer {
   destroy() {
     ReactDOM.unmountComponentAtNode(this.element);
     this.element.remove();
-    this._isDestroyed = true;
+    this.emitter.emit(DID_DESTROY);
+    this.emitter.dispose();
   }
 
-  get isDestroyed() {
-    return this._isDestroyed;
+  onDidDestroy(cb: () => void) {
+    return this.emitter.on(DID_DESTROY, cb);
   }
 
   static isVisible() {

@@ -7,7 +7,7 @@ const makeId: (...args: any[]) => string = a =>
     ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
     : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, makeId);
 
-interface RecordAttributes {
+export interface RecordAttributes {
   message: string;
   output: string;
   repoName: string;
@@ -59,7 +59,7 @@ class ActivityLogger {
   }
 }
 
-const logger: ActivityLogger = new ActivityLogger();
+export const logger: ActivityLogger = new ActivityLogger();
 
 export default logger;
 

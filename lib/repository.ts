@@ -62,6 +62,10 @@ export default class Repository {
     return this.repo.getWorkingDirectory();
   }
 
+  getConfig(setting: string) {
+    return this.repo.getConfigValue(setting, this.getWorkingDirectory()) as string | null;
+  }
+
   stage(paths: string[], options: AddOptions = { update: false }): Promise<GitCliResponse> {
     const args = ["add"];
     if (options.update) args.push("--update");
@@ -71,8 +75,35 @@ export default class Repository {
     return git(args, { cwd: this.repo.getWorkingDirectory() });
   }
 
+  async getStagedFiles() {
+    const args = ["diff-index", "--cached", "HEAD", "--name-status", "-z"];
+    const response = await git(args, { cwd: this.repo.getWorkingDirectory() });
+    if (response.failed) {
+      atom.notifications.addWarning("Git-Plus was unable to determine staged files", {
+        detail: response.output,
+        dismissable: true
+      });
+      return [];
+    }
+    return this.prettifyDiffFiles(response.output, true);
+  }
+
+  private prettifyDiffFiles(text: string, staged = false) {
+    if (text === "") return [];
+    const data = text.split(/\0/).slice(0, -1);
+    const files: { mode: string; staged: boolean; path: string }[] = [];
+    for (let i = 0; i < data.length; i += 2) {
+      files.push({ mode: data[i], staged, path: data[i + 1] });
+    }
+    return files;
+  }
+
   getName() {
     return path.basename(this.repo.getWorkingDirectory());
+  }
+
+  async createBranch(name: string) {
+    return git(["checkout", "-b", name], { cwd: this.repo.getWorkingDirectory() });
   }
 
   async getBranchesForRemote(remote: string): Promise<string[]> {
