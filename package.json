@@ -83,6 +83,7 @@
     "@babel/polyfill": "^7.0.0-beta.51",
     "@types/atom": "^1.31.0",
     "@types/react": "^16.7.13",
+    "@types/react-dom": "^16.8.4",
     "ansi-to-html": "^0.4.1",
     "atom-babel6-transpiler": "^1.2.0",
     "atom-notify": "^1.1.0",
