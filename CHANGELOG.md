@@ -1,6 +1,6 @@
 ## Changelog
 
-### 8.6.2
+### 8.6.3
 
 - Fix [#783](https://github.com/akonwi/git-plus/issues/783)
 
