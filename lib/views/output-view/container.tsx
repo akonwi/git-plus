@@ -1,17 +1,13 @@
-import { Dock, WorkspaceCenter } from "atom";
+import { Emitter } from "atom";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Root } from "./Root";
 
-function isDock(container: Dock | WorkspaceCenter): container is Dock {
-  return (container as any).getLocation() !== "center";
-}
-
 export class OutputViewContainer {
   static URI = "git-plus://output-view";
 
-  private _isDestroyed = false;
   element: HTMLElement;
+  private emitter = new Emitter();
 
   constructor() {
     this.element = document.createElement("div");
@@ -49,7 +45,7 @@ export class OutputViewContainer {
   }
 
   render() {
-    ReactDOM.render(<Root container={this} />, this.element);
+    ReactDOM.render(<Root />, this.element);
   }
 
   toggle() {
@@ -59,23 +55,10 @@ export class OutputViewContainer {
   destroy() {
     ReactDOM.unmountComponentAtNode(this.element);
     this.element.remove();
-    this._isDestroyed = true;
+    this.emitter.emit("did-destroy");
   }
 
-  get isDestroyed() {
-    return this._isDestroyed;
-  }
-
-  static isVisible() {
-    const container = atom.workspace.paneContainerForURI(OutputViewContainer.URI);
-    if (container) {
-      const activeItem = container.getActivePaneItem();
-      const viewIsActive = activeItem instanceof OutputViewContainer;
-      if (isDock(container)) {
-        return container.isVisible() && viewIsActive;
-      }
-      return viewIsActive;
-    }
-    return false;
+  onDidDestroy(cb: () => void) {
+    return this.emitter.on("did-destroy", cb);
   }
 }

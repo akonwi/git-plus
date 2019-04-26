@@ -1,4 +1,5 @@
 import { Disposable } from "atom";
+import { viewController } from "./views/controller";
 import { OutputViewContainer } from "./views/output-view/container";
 
 // taken from: https://gist.github.com/jed/982883
@@ -31,7 +32,7 @@ class ActivityLogger {
     if (
       record.failed &&
       !atom.config.get("git-plus.general.alwaysOpenDockWithResult") &&
-      !OutputViewContainer.isVisible()
+      !viewController.isVisible(OutputViewContainer.URI)
     ) {
       atom.notifications.addError(`Unable to complete command: ${record.message}`, {
         detail: record.output,
@@ -50,7 +51,12 @@ class ActivityLogger {
     }
 
     this._records.push(record);
-    window.requestIdleCallback(() => this.listeners.forEach(listener => listener(record)));
+    window.requestIdleCallback(() => {
+      this.listeners.forEach(listener => listener(record));
+      if (atom.config.get("git-plus.general.alwaysOpenDockWithResult")) {
+        viewController.getOutputView().show();
+      }
+    });
   }
 
   onDidRecordActivity(callback: (record: Record) => any): Disposable {

@@ -5,8 +5,6 @@ import * as linkify from "linkify-urls";
 import * as React from "react";
 import ActivityLogger from "../../activity-logger";
 import { Record } from "../../activity-logger";
-import { withConfigs } from "../withConfigs";
-import { OutputViewContainer } from "./container";
 import { Entry } from "./Entry";
 
 function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {
@@ -17,9 +15,7 @@ function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {
   return result;
 }
 
-interface Props {
-  container: OutputViewContainer;
-}
+interface Props {}
 interface State {
   records: Record[];
   latestId: string | null;
@@ -63,7 +59,6 @@ export class Root extends React.Component<Props, State> {
 
   componentDidUpdate(previousProps: Props, previousState: State) {
     if (previousState.records.length < this.state.records.length) {
-      if (atom.config.get("git-plus.general.alwaysOpenDockWithResult")) this.props.container.show();
       if (this.$root.current) this.$root.current.scrollTop = 0;
     }
   }
