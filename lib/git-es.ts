@@ -29,6 +29,10 @@ const getCachedRepo = (path: string): GitRepository | undefined => {
   }
 };
 
+export function getWorkspaceRepos() {
+  return atom.project.getRepositories().filter(Boolean);
+}
+
 export async function getRepo(): Promise<GitRepository | undefined> {
   const activeEditor = atom.workspace.getCenter().getActiveTextEditor();
   if (activeEditor) {
