@@ -1,14 +1,15 @@
 import { Dock, WorkspaceCenter } from "atom";
+import { GitPlusPackage } from "../package";
 import { OutputViewContainer } from "./output-view/container";
 
 function isDock(container: Dock | WorkspaceCenter): container is Dock {
   return (container as any).getLocation() !== "center";
 }
 
-class ViewController {
+export class ViewController {
   private outputView?: OutputViewContainer;
 
-  constructor() {
+  constructor(private pkg: GitPlusPackage) {
     atom.workspace.addOpener(uri => {
       if (uri === OutputViewContainer.URI) {
         return this.getOutputView();
@@ -18,7 +19,7 @@ class ViewController {
 
   getOutputView() {
     if (!this.outputView) {
-      this.outputView = new OutputViewContainer();
+      this.outputView = new OutputViewContainer(this.pkg.logger);
       this.outputView.onDidDestroy(() => {
         this.outputView = undefined;
       });
@@ -40,5 +41,3 @@ class ViewController {
     return false;
   }
 }
-
-export const viewController = new ViewController();

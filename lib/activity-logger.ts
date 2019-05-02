@@ -1,14 +1,9 @@
 import { Disposable } from "atom";
+import nanoid = require("nanoid");
 import { viewController } from "./views/controller";
 import { OutputViewContainer } from "./views/output-view/container";
 
-// taken from: https://gist.github.com/jed/982883
-const makeId: (...args: any[]) => string = a =>
-  a
-    ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
-    : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, makeId);
-
-interface RecordAttributes {
+export interface RecordAttributes {
   message: string;
   output: string;
   repoName: string;
@@ -18,7 +13,7 @@ export interface Record extends RecordAttributes {
   id: string;
 }
 
-class ActivityLogger {
+export class ActivityLogger {
   listeners: Set<Function> = new Set();
   private _records: Record[] = [];
 
@@ -27,7 +22,7 @@ class ActivityLogger {
   }
 
   record(attributes: RecordAttributes) {
-    const record = { ...attributes, id: makeId() };
+    const record = { ...attributes, id: nanoid() };
 
     if (
       record.failed &&
@@ -64,10 +59,6 @@ class ActivityLogger {
     return new Disposable(() => this.listeners.delete(callback));
   }
 }
-
-const logger: ActivityLogger = new ActivityLogger();
-
-export default logger;
 
 type RequestIdleCallbackHandle = any;
 interface RequestIdleCallbackOptions {

@@ -1,10 +1,7 @@
 import * as AnsiToHtml from "ansi-to-html";
 import { CommandEvent, CompositeDisposable } from "atom";
-import cx from "classnames";
-import * as linkify from "linkify-urls";
 import * as React from "react";
-import ActivityLogger from "../../activity-logger";
-import { Record } from "../../activity-logger";
+import { ActivityLogger, Record } from "../../activity-logger";
 import { Entry } from "./Entry";
 
 function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {
@@ -15,7 +12,9 @@ function reverseMap<T>(array: T[], fn: (item: T, index: number) => any): any[] {
   return result;
 }
 
-interface Props {}
+interface Props {
+  logger: ActivityLogger;
+}
 interface State {
   records: Record[];
   latestId: string | null;
@@ -24,7 +23,7 @@ interface State {
 export class Root extends React.Component<Props, State> {
   state = {
     latestId: null,
-    records: [...ActivityLogger.records]
+    records: [...this.props.logger.records]
   };
   subscriptions = new CompositeDisposable();
   $root = React.createRef<HTMLDivElement>();
@@ -32,7 +31,7 @@ export class Root extends React.Component<Props, State> {
 
   componentDidMount() {
     this.subscriptions.add(
-      ActivityLogger.onDidRecordActivity(record => {
+      this.props.logger.onDidRecordActivity(record => {
         this.setState(state => ({ latestId: record.id, records: [...state.records, record] }));
       }),
       atom.commands.add("atom-workspace", "git-plus:copy", {

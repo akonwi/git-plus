@@ -1,6 +1,7 @@
 import { Emitter } from "atom";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { ActivityLogger } from "../../activity-logger";
 import { Root } from "./Root";
 
 export class OutputViewContainer {
@@ -8,8 +9,10 @@ export class OutputViewContainer {
 
   element: HTMLElement;
   private emitter = new Emitter();
+  private logger: ActivityLogger;
 
-  constructor() {
+  constructor(logger: ActivityLogger) {
+    this.logger = logger;
     this.element = document.createElement("div");
     this.element.classList.add("git-plus", "output");
     this.render();
@@ -45,7 +48,7 @@ export class OutputViewContainer {
   }
 
   render() {
-    ReactDOM.render(<Root />, this.element);
+    ReactDOM.render(<Root logger={this.logger} />, this.element);
   }
 
   toggle() {

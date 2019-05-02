@@ -1,29 +1,35 @@
 import { CompositeDisposable } from "atom";
-import { configs } from "./config";
+import { ActivityLogger } from "./activity-logger";
+import { init } from "./commands/init";
 import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
 import service = require("./service");
-import { viewController } from "./views/controller";
+import { ViewController } from "./views/controller";
 
-class GitPlusPackage {
+export class GitPlusPackage {
   configs: any;
-  commandResources: CompositeDisposable;
+  private commandResources: CompositeDisposable;
+  readonly logger: ActivityLogger;
+  readonly viewController: ViewController;
 
   constructor(configs: any) {
     this.configs = configs;
     this.commandResources = new CompositeDisposable();
+    this.logger = new ActivityLogger();
+    this.viewController = new ViewController(this);
     this.setDiffGrammar();
     this.registerCommands();
   }
 
-  registerCommands() {
+  private registerCommands() {
     const repos = getWorkspaceRepos();
     if (repos.length === 0 && atom.project.getDirectories().length > 0) {
       this.commandResources.add(
-        atom.commands.add("atom-workspace", "git-plus:init", () => {
-          // GitInit().then(() => {
-          //   this.resetCommands();
-          // });
+        atom.commands.add("atom-workspace", `git-plus:${init.id}`, async () => {
+          const result = await init.run(undefined);
+          if (result) this.logger.record(result);
+
+          this.resetCommands();
         })
       );
     } else {
@@ -35,7 +41,7 @@ class GitPlusPackage {
     }
   }
 
-  resetCommands() {
+  private resetCommands() {
     this.commandResources.dispose();
     this.commandResources = new CompositeDisposable();
     this.registerCommands();
@@ -46,7 +52,7 @@ class GitPlusPackage {
   }
 
   deserializeOutputView() {
-    return viewController.getOutputView();
+    return this.viewController.getOutputView();
   }
 
   deactivate() {
@@ -72,23 +78,3 @@ class GitPlusPackage {
     }
   }
 }
-let gitPlus;
-const packageWrapper = {
-  initialize(_state) {
-    gitPlus = new GitPlusPackage(configs);
-  }
-};
-
-export = new Proxy(packageWrapper, {
-  get(target, name) {
-    if (gitPlus && Reflect.has(gitPlus, name)) {
-      let property = gitPlus[name];
-      if (typeof property === "function") {
-        property = property.bind(gitPlus);
-      }
-      return property;
-    } else {
-      return target[name];
-    }
-  }
-});

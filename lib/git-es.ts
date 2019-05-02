@@ -77,6 +77,8 @@ export interface GitCliResponse {
   failed: boolean;
 }
 
+export { cmd as gitDo };
+
 export default async function cmd(
   args: string[],
   options: GitCliOptions = defaultCmdOptions

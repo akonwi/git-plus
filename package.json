@@ -1,6 +1,6 @@
 {
   "name": "git-plus",
-  "main": "./lib/git-plus",
+  "main": "./lib/main",
   "version": "8.6.3",
   "description": "Do git things without the terminal",
   "keywords": [
@@ -97,6 +97,7 @@
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
     "linkify-urls": "^2.0.0",
+    "nanoid": "^2.0.1",
     "node-emoji": "^1.8.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
@@ -104,6 +105,7 @@
     "underscore-plus": "^1.6.6"
   },
   "devDependencies": {
+    "@types/nanoid": "^1.2.1",
     "atom-transpiler-debug-tool": "^1.0.5",
     "babel-eslint": "^8.2.5",
     "eslint": "^5.0.1",
