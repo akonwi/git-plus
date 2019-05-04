@@ -1,5 +1,5 @@
-import { GitRepository, TextEditor } from "atom";
-import { logger, RecordAttributes } from "../activity-logger";
+import { TextEditor } from "atom";
+import { RecordAttributes } from "../activity-logger";
 import { Repository } from "../repository";
 
 // export abstract class RepositoryCommand<P> {
@@ -23,7 +23,7 @@ import { Repository } from "../repository";
 
 export interface GitPlusCommand {
   id: string;
-  label?: string;
+  displayName?: string;
 }
 
 export interface RepositoryCommand<P> extends GitPlusCommand {

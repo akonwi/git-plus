@@ -1,9 +1,16 @@
 _ = require 'underscore-plus'
 {$, $$, SelectListView} = require 'atom-space-pen-views'
-GitPlusCommands = require '../git-plus-commands'
-GitInit = require '../models/git-init'
+{getRepoCommands} = require '../commands'
 fuzzyFilter = require('fuzzaldrin').filter
 CommandsKeystrokeHumanizer = require('../command-keystroke-humanizer')()
+memoizeOne = require('memoize-one');
+
+getCommandsWithDisplayNames = memoizeOne(
+  (commands) ->
+    commands.map ({id, displayName, run}) ->
+      { id, run, displayName: displayName || _.humanizeEventName(id) } 
+)
+
 module.exports =
 class GitPaletteView extends SelectListView
 
@@ -13,7 +20,7 @@ class GitPaletteView extends SelectListView
     @toggle()
 
   getFilterKey: ->
-    'description'
+    'displayName'
 
   cancelled: -> @hide()
 
@@ -34,19 +41,11 @@ class GitPaletteView extends SelectListView
       @commandElement = atom.views.getView(atom.workspace)
     @keyBindings = atom.keymaps.findKeyBindings(target: @commandElement[0])
 
-    GitPlusCommands()
-      .then (commands) =>
-        keystrokes = CommandsKeystrokeHumanizer.get(commands)
-        commands = commands.map (c) -> { name: c[0], description: c[1], func: c[2], keystroke: keystrokes[c[0]] }
-        commands = _.sortBy(commands, 'description')
-        @setItems(commands)
-        @panel.show()
-        @focusFilterEditor()
-      .catch (err) =>
-        (commands = []).push { name: 'git-plus:init', description: 'Init', func: -> GitInit() }
-        @setItems(commands)
-        @panel.show()
-        @focusFilterEditor()
+    commands = _.sortBy getCommandsWithDisplayNames(getRepoCommands()), 'displayName'
+    @keystrokes = CommandsKeystrokeHumanizer.get(commands)
+    @setItems(commands)
+    @panel.show()
+    @focusFilterEditor()
 
   populateList: ->
     return unless @items?
@@ -75,12 +74,13 @@ class GitPaletteView extends SelectListView
   hide: ->
     @panel?.destroy()
 
-  viewForItem: ({name, description, keystroke}, matchedStr) ->
+  viewForItem: ({id, displayName}, matchedStr) ->
+    keystroke = @keystrokes["git-plus:#{id}"]
     $$ ->
-      @li class: 'command', 'data-command-name': name, =>
+      @li class: 'command', 'data-command-name': id, =>
         if matchedStr? then @raw(matchedStr)
         else
-          @span description
+          @span displayName
           if keystroke?
             @div class: 'pull-right', =>
               @kbd class: 'key-binding', keystroke

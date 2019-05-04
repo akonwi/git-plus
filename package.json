@@ -6,6 +6,9 @@
   "keywords": [
     "git"
   ],
+  "activationHooks": [
+    "core:loaded-shell-environment"
+  ],
   "providedServices": {
     "git-plus": {
       "description": "Execute git commands",
@@ -97,6 +100,7 @@
     "fs-plus": "^2.2.0",
     "fuzzaldrin": "^1.2.0",
     "linkify-urls": "^2.0.0",
+    "memoize-one": "^5.0.4",
     "nanoid": "^2.0.1",
     "node-emoji": "^1.8.1",
     "react": "^16.6.3",

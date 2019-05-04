@@ -1,10 +1,13 @@
 import { CompositeDisposable } from "atom";
 import { ActivityLogger } from "./activity-logger";
+import { getRepoCommands } from "./commands";
 import { init } from "./commands/init";
 import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
+import { Repository } from "./repository";
 import service = require("./service");
 import { ViewController } from "./views/controller";
+import GitPaletteView = require("./views/git-palette-view");
 
 export class GitPlusPackage {
   configs: any;
@@ -33,11 +36,22 @@ export class GitPlusPackage {
         })
       );
     } else {
-      // this.commandResources.add(
-      //   ...getRepoCommands().map(command => {
-      //     return atom.commands.add("atom-workspace", command.id, () => command.invoke());
-      //   })
-      // );
+      const commandDescriptors = {
+        "git-plus:menu": () => new GitPaletteView()
+      };
+      getRepoCommands().forEach(command => {
+        commandDescriptors[`git-plus:${command.id}`] = {
+          displayName: command.displayName,
+          didDispatch: async () => {
+            const repo = await Repository.getCurrent();
+            if (repo === undefined) return atom.notifications.addInfo("No repository found");
+            const result = await command.run(repo!, undefined);
+            if (result) this.logger.record(result);
+          }
+        };
+      });
+
+      this.commandResources.add(atom.commands.add("atom-workspace", commandDescriptors));
     }
   }
 
