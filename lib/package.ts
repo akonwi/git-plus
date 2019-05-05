@@ -22,6 +22,10 @@ export class GitPlusPackage {
     this.viewController = new ViewController(this);
     this.setDiffGrammar();
     this.registerCommands();
+
+    atom.project.onDidChangePaths(_paths => {
+      this.resetCommands();
+    });
   }
 
   private registerCommands() {
@@ -104,4 +108,20 @@ export class GitPlusPackage {
     // if (getWorkspaceRepos().length > 0) this.setupBranchesMenuToggle();
     return disposable;
   }
+
+  // TODO: make this a replacement of the github package's branch name in case that package is disabled
+  // private setupBranchesMenuToggle() {
+  //   const branchDiv = document.querySelector(".github-StatusBarTileController .github-branch");
+  //   if (branchDiv) {
+  //     branchDiv.addEventListener("click", event => {
+  //       const { newBranchKey } = atom.config.get("git-plus.general");
+  //       const wasPressed = key => event[`${key}Key`];
+  //       const workspaceNode = atom.views.getView(atom.workspace);
+  //       debugger;
+  //       if (wasPressed(newBranchKey)) {
+  //         atom.commands.dispatch(workspaceNode, "git-plus:new-branch");
+  //       } else atom.commands.dispatch(workspaceNode, "git-plus:checkout");
+  //     });
+  //   }
+  // }
 }
