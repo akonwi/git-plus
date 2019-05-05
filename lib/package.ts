@@ -2,12 +2,12 @@ import { CompositeDisposable } from "atom";
 import { ActivityLogger } from "./activity-logger";
 import { getRepoCommands } from "./commands";
 import { init } from "./commands/init";
+import { showCommandPalette } from "./commands/show-command-palette";
 import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
 import { Repository } from "./repository";
 import service = require("./service");
 import { ViewController } from "./views/controller";
-import GitPaletteView = require("./views/git-palette-view");
 
 export class GitPlusPackage {
   configs: any;
@@ -37,7 +37,7 @@ export class GitPlusPackage {
       );
     } else {
       const commandDescriptors = {
-        "git-plus:menu": () => new GitPaletteView()
+        "git-plus:menu": showCommandPalette
       };
       getRepoCommands().forEach(command => {
         commandDescriptors[`git-plus:${command.id}`] = {

@@ -109,6 +109,7 @@
     "underscore-plus": "^1.6.6"
   },
   "devDependencies": {
+    "@types/memoize-one": "^4.1.1",
     "@types/nanoid": "^1.2.1",
     "atom-transpiler-debug-tool": "^1.0.5",
     "babel-eslint": "^8.2.5",
