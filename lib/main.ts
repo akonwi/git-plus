@@ -3,8 +3,9 @@ import { GitPlusPackage } from "./package";
 
 let gitPlus;
 const packageWrapper = {
+  config: configs,
   initialize(_state) {
-    gitPlus = new GitPlusPackage(configs);
+    gitPlus = new GitPlusPackage();
   }
 };
 

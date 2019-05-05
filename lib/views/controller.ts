@@ -40,4 +40,8 @@ export class ViewController {
     }
     return false;
   }
+
+  dispose() {
+    this.outputView && this.outputView.destroy();
+  }
 }

@@ -1,4 +1,4 @@
-import { CompositeDisposable } from "atom";
+import { CompositeDisposable, Disposable } from "atom";
 import { ActivityLogger } from "./activity-logger";
 import { getRepoCommands } from "./commands";
 import { init } from "./commands/init";
@@ -7,16 +7,16 @@ import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
 import { Repository } from "./repository";
 import service = require("./service");
+import { StatusBar } from "./types/status-bar";
 import { ViewController } from "./views/controller";
+import { StatusBarTileView } from "./views/status-bar-tile";
 
 export class GitPlusPackage {
-  configs: any;
   private commandResources: CompositeDisposable;
   readonly logger: ActivityLogger;
   readonly viewController: ViewController;
 
-  constructor(configs: any) {
-    this.configs = configs;
+  constructor() {
     this.commandResources = new CompositeDisposable();
     this.logger = new ActivityLogger();
     this.viewController = new ViewController(this);
@@ -70,11 +70,11 @@ export class GitPlusPackage {
   }
 
   deactivate() {
-    // this.viewController.dispose();
+    this.viewController.dispose();
     this.commandResources.dispose();
   }
 
-  setDiffGrammar() {
+  private setDiffGrammar() {
     const enableSyntaxHighlighting = atom.config.get("git-plus.diffs.syntaxHighlighting");
     const wordDiff = atom.config.get("git-plus.diffs.wordDiff");
     let diffGrammar: any = null;
@@ -90,5 +90,18 @@ export class GitPlusPackage {
       }
       atom.grammars.addGrammar(diffGrammar);
     }
+  }
+
+  consumeStatusBar(statusBar: StatusBar) {
+    const disposable = new CompositeDisposable();
+    if (atom.config.get("git-plus.general.enableStatusBarIcon")) {
+      const statusBarTile = statusBar.addRightTile({
+        item: new StatusBarTileView({ viewController: this.viewController }),
+        priority: 0
+      });
+      disposable.add(new Disposable(() => statusBarTile.destroy()));
+    }
+    // if (getWorkspaceRepos().length > 0) this.setupBranchesMenuToggle();
+    return disposable;
   }
 }
