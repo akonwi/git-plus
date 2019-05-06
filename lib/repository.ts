@@ -44,6 +44,10 @@ export interface PushOptions {
 export default class Repository {
   repo: GitRepository;
 
+  get workingDirectory() {
+    return this.repo.getWorkingDirectory();
+  }
+
   static async getCurrent(): Promise<Repository | undefined> {
     const repo = await getRepo();
     return repo ? new Repository(repo) : undefined;
@@ -60,6 +64,13 @@ export default class Repository {
 
   getWorkingDirectory() {
     return this.repo.getWorkingDirectory();
+  }
+
+  getConfig(config: string) {
+    return this.repo.getConfigValue(config, this.getWorkingDirectory()) as
+      | string
+      | undefined
+      | null;
   }
 
   stage(paths: string[], options: AddOptions = { update: false }): Promise<GitCliResponse> {
@@ -165,6 +176,31 @@ export default class Repository {
     const result = await git(["checkout", "--", path], { cwd: this.repo.getWorkingDirectory() });
     this.refresh();
     return result;
+  }
+
+  async getStagedFiles() {
+    const args = ["diff-index", "--cached", "HEAD", "--name-status", "-z"];
+    const result = await git(args, { cwd: this.getWorkingDirectory() });
+    if (result.failed) {
+      if (result.output.includes("ambiguous argument 'HEAD'")) {
+        // TODO: maybe find a better way to still return a non-empty array on initial commit
+        return [{}];
+      }
+      atom.notifications.addWarning("Unable to get staged files", { detail: result.output });
+      return [];
+    }
+
+    if (result.output === "") return [];
+
+    const data = result.output.split(/\0/).slice(0, -1);
+    const files: { mode: string; path: string }[] = [];
+
+    for (let i = 0; i < data.length; i += 2) {
+      const mode = data[i];
+      files.push({ mode, path: data[i + 1] });
+    }
+
+    return files;
   }
 
   async isPathStaged(path: string): Promise<boolean> {

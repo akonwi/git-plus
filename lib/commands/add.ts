@@ -10,14 +10,16 @@ const getCurrentFileInRepo = (repo: Repository) => {
 
 interface AddParams {
   stageEverything?: boolean;
+  stageModified?: boolean;
 }
 
 export const add: RepositoryCommand<void | AddParams> = {
   id: "add",
 
-  async run(repo: Repository, params: AddParams = { stageEverything: false }) {
-    const path = params.stageEverything ? "." : getCurrentFileInRepo(repo) || ".";
-    const result = await repo.stage([path]);
+  async run(repo: Repository, params: AddParams = {}) {
+    const path =
+      params.stageEverything || params.stageModified ? "." : getCurrentFileInRepo(repo) || ".";
+    const result = await repo.stage([path], { update: params.stageModified });
     return {
       ...result,
       repoName: repo.getName(),
