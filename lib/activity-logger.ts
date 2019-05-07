@@ -1,6 +1,7 @@
 import { Disposable } from "atom";
 import nanoid = require("nanoid");
-import { viewController } from "./views/controller";
+import { Container } from "./container";
+import { GitPlusPackage } from "./package";
 import { OutputViewContainer } from "./views/output-view/container";
 
 export interface RecordAttributes {
@@ -14,7 +15,7 @@ export interface Record extends RecordAttributes {
 }
 
 export class ActivityLogger {
-  listeners: Set<Function> = new Set();
+  private listeners: Set<Function> = new Set();
   private _records: Record[] = [];
 
   get records() {
@@ -27,7 +28,7 @@ export class ActivityLogger {
     if (
       record.failed &&
       !atom.config.get("git-plus.general.alwaysOpenDockWithResult") &&
-      !viewController.isVisible(OutputViewContainer.URI)
+      !Container.viewController.isVisible(OutputViewContainer.URI)
     ) {
       atom.notifications.addError(`Unable to complete command: ${record.message}`, {
         detail: record.output,
@@ -49,7 +50,7 @@ export class ActivityLogger {
     window.requestIdleCallback(() => {
       this.listeners.forEach(listener => listener(record));
       if (atom.config.get("git-plus.general.alwaysOpenDockWithResult")) {
-        viewController.getOutputView().show();
+        Container.viewController.getOutputView().show();
       }
     });
   }
@@ -57,6 +58,11 @@ export class ActivityLogger {
   onDidRecordActivity(callback: (record: Record) => any): Disposable {
     this.listeners.add(callback);
     return new Disposable(() => this.listeners.delete(callback));
+  }
+
+  dispose() {
+    this.listeners.clear();
+    this._records = [];
   }
 }
 

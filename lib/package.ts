@@ -1,25 +1,19 @@
 import { CompositeDisposable, Disposable } from "atom";
-import { ActivityLogger } from "./activity-logger";
-import { getRepoCommands } from "./commands";
+import { getRepoCommands, run } from "./commands";
 import { init } from "./commands/init";
 import { showCommandPalette } from "./commands/show-command-palette";
+import { Container } from "./container";
 import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
-import { Repository } from "./repository";
 import service = require("./service");
 import { StatusBar } from "./types/status-bar";
-import { ViewController } from "./views/controller";
 import { StatusBarTileView } from "./views/status-bar-tile";
 
 export class GitPlusPackage {
   private commandResources: CompositeDisposable;
-  readonly logger: ActivityLogger;
-  readonly viewController: ViewController;
 
   constructor() {
     this.commandResources = new CompositeDisposable();
-    this.logger = new ActivityLogger();
-    this.viewController = new ViewController(this);
     this.setDiffGrammar();
     this.registerCommands();
 
@@ -34,7 +28,7 @@ export class GitPlusPackage {
       this.commandResources.add(
         atom.commands.add("atom-workspace", `git-plus:${init.id}`, async () => {
           const result = await init.run(undefined);
-          if (result) this.logger.record(result);
+          if (result) Container.logger.record(result);
 
           this.resetCommands();
         })
@@ -46,12 +40,7 @@ export class GitPlusPackage {
       getRepoCommands().forEach(command => {
         commandDescriptors[`git-plus:${command.id}`] = {
           displayName: command.displayName,
-          didDispatch: async () => {
-            const repo = await Repository.getCurrent();
-            if (repo === undefined) return atom.notifications.addInfo("No repository found");
-            const result = await command.run(repo!, undefined);
-            if (result) this.logger.record(result);
-          }
+          didDispatch: () => run(command)
         };
       });
 
@@ -70,12 +59,13 @@ export class GitPlusPackage {
   }
 
   deserializeOutputView() {
-    return this.viewController.getOutputView();
+    return Container.viewController.getOutputView();
   }
 
   deactivate() {
-    this.viewController.dispose();
+    Container.viewController.dispose();
     this.commandResources.dispose();
+    Container.logger.dispose();
   }
 
   private setDiffGrammar() {
@@ -100,7 +90,7 @@ export class GitPlusPackage {
     const disposable = new CompositeDisposable();
     if (atom.config.get("git-plus.general.enableStatusBarIcon")) {
       const statusBarTile = statusBar.addRightTile({
-        item: new StatusBarTileView({ viewController: this.viewController }),
+        item: new StatusBarTileView({ viewController: Container.viewController }),
         priority: 0
       });
       disposable.add(new Disposable(() => statusBarTile.destroy()));

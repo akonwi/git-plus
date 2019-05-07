@@ -30,7 +30,5 @@ export const add: RepositoryCommand<void | AddParams> = {
 
 export const addAll: RepositoryCommand<void> = {
   id: "add-all",
-  run(repo) {
-    add.run(repo, { stageEverything: true });
-  }
+  run: repo => add.run(repo, { stageEverything: true })
 };
