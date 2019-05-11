@@ -14,14 +14,9 @@ const verboseCommitsEnabled = () => atom.config.get("git-plus.commits.verboseCom
 const scissorsLine = "------------------------ >8 ------------------------";
 
 const getStatus = async (repo: Repository) => {
-  const files = await repo.getStagedFiles();
-  if (files.length >= 1) {
-    return gitDo(["-c", "color.ui=false", "status"], {
-      cwd: repo.workingDirectory
-    });
-  } else {
-    return undefined;
-  }
+  return gitDo(["-c", "color.ui=false", "status"], {
+    cwd: repo.workingDirectory
+  });
 };
 
 const getTemplate = function(filePath?: string) {
@@ -142,12 +137,13 @@ export const commit: RepositoryCommand<CommitParams | void> = {
       const init = async () => {
         let status: string;
         try {
-          const statusResult = await getStatus(repo);
-          if (!statusResult) {
+          const files = await repo.getStagedFiles();
+          if (files.length === 0) {
             atom.notifications.addInfo("Nothing to commit");
             resolve();
             throw new Error();
           }
+          const statusResult = await getStatus(repo);
           if (statusResult.failed) {
             return resolve({
               ...statusResult,
@@ -235,6 +231,97 @@ export const commit: RepositoryCommand<CommitParams | void> = {
   }
 };
 
+function parsePreviousCommit(prevCommit: string) {
+  let message = "";
+  const messageResult = /\n{2,}/.exec(prevCommit);
+  if (messageResult) {
+    message = prevCommit.substring(0, messageResult.index);
+    prevCommit = prevCommit.substring(messageResult.index).trim();
+  }
+
+  const fileStatusRegex = /[ MADRCU?!]\s+/;
+  const changedFiles = prevCommit
+    .split("\n")
+    .map(line => {
+      const fileStatusResult = fileStatusRegex.exec(line);
+      if (fileStatusResult) {
+        const [mode, path] = line.substring(fileStatusResult.index).split(/\s+/);
+        return {
+          mode,
+          path
+        };
+      }
+    })
+    .filter(Boolean);
+
+  return { message, changedFiles };
+}
+
+function uniqueOfBothSets(previousFiles, currentFiles) {
+  const currentPaths = currentFiles.map(({ path }) => path);
+  return previousFiles.filter(p => Array.from(currentPaths).includes(p.path) === false);
+}
+
+function prettifyFileStatuses(files: { mode: string; path: string }[]) {
+  return files.map(function({ mode, path }) {
+    switch (mode) {
+      case "M":
+        return `modified:   ${path}`;
+      case "A":
+        return `new file:   ${path}`;
+      case "D":
+        return `deleted:   ${path}`;
+      case "R":
+        return `renamed:   ${path}`;
+    }
+  }) as string[];
+}
+
+const cleanupUnstagedText = function(status) {
+  const unstagedFiles = status.indexOf("Changes not staged for commit:");
+  if (unstagedFiles >= 0) {
+    const text = status.substring(unstagedFiles);
+    return (status = `${status.substring(0, unstagedFiles - 1)}\n${text.replace(
+      /\s*\(.*\)\n/g,
+      ""
+    )}`);
+  } else {
+    return status;
+  }
+};
+
+function prepAmendFile(
+  status: string,
+  filePath: string,
+  commentChar: string,
+  message: string,
+  prevChangedFiles: string[]
+) {
+  status = cleanupUnstagedText(status);
+  status = status.replace(/\s*\(.*\)\n/g, "\n").replace(/\n/g, `\n${commentChar} `);
+  if (prevChangedFiles.length > 0) {
+    const nothingToCommit = "nothing to commit, working directory clean";
+    const currentChanges = `committed:\n${commentChar}`;
+    let textToReplace;
+    if (status.indexOf(nothingToCommit) > -1) {
+      textToReplace = nothingToCommit;
+    } else if (status.indexOf(currentChanges) > -1) {
+      textToReplace = currentChanges;
+    }
+    const replacementText = `committed:
+${prevChangedFiles.map(f => `${commentChar}   ${f}`).join("\n")}`;
+    status = status.replace(textToReplace, replacementText);
+  }
+  return fs.writeFileSync(
+    filePath,
+    `${message}
+${commentChar} Please enter the commit message for your changes. Lines starting
+${commentChar} with '${commentChar}' will be ignored, and an empty message aborts the commit.
+${commentChar}
+${commentChar} ${status}`
+  );
+}
+
 export const commitAll: RepositoryCommand = {
   id: "commit-all",
 
@@ -243,5 +330,79 @@ export const commitAll: RepositoryCommand = {
     if (staged) {
       return commit.run(repo);
     }
+  }
+};
+
+export const commitAmend: RepositoryCommand = {
+  id: "commit-amend",
+
+  async run(repo: Repository) {
+    const filePath = Path.join(repo.repo.getPath(), "COMMIT_EDITMSG");
+    const currentPane = atom.workspace.getActivePane();
+    const commentChar = repo.getConfig("core.commentchar") || "#";
+
+    const logResult = await gitDo(["whatchanged", "-1", "--format=%B"], {
+      cwd: repo.workingDirectory
+    });
+
+    if (logResult.failed) {
+      atom.notifications.addError("Unable to get log for previous commit");
+      return;
+    }
+
+    const { message, changedFiles } = parsePreviousCommit(logResult.output);
+
+    if (message === "") {
+      atom.notifications.addError("Unable to determine previous commit message");
+      return;
+    }
+
+    const stagedFiles = await repo.getStagedFiles();
+    const stagedFilesForCommit = prettifyFileStatuses(uniqueOfBothSets(changedFiles, stagedFiles));
+
+    const statusResult = await getStatus(repo);
+    if (statusResult.failed) {
+      return {
+        ...statusResult,
+        message: "Failed to get repository status for commit",
+        repoName: repo.getName()
+      };
+    }
+
+    prepAmendFile(statusResult.output, filePath, commentChar, message, stagedFilesForCommit);
+
+    const disposables = new CompositeDisposable();
+
+    const editor = await showFile(filePath);
+
+    let resolved = false;
+    return new Promise<RecordAttributes | void>(resolve => {
+      disposables.add(
+        editor.onDidSave(async () => {
+          const args = ["commit", "--amend", "--cleanup=strip", `--file=${filePath}`];
+          const result = await gitDo(args, { cwd: repo.workingDirectory });
+
+          if (!result.failed) {
+            repo.refresh();
+          }
+          resolved = true;
+          destroyCommitEditor(filePath);
+          resolve({
+            ...result,
+            output: emoji.emojify(result.output),
+            message: "commit",
+            repoName: repo.getName()
+          });
+        }),
+
+        editor.onDidDestroy(() => {
+          if (!resolved) resolve();
+          if (!currentPane.isDestroyed()) {
+            currentPane.activate();
+          }
+          disposables.dispose();
+        })
+      );
+    });
   }
 };

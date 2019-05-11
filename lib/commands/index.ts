@@ -1,10 +1,10 @@
 import { Container } from "../container";
 import { Repository } from "../repository";
 import { add, addAll, addModified } from "./add";
-import { commit, commitAll } from "./commit";
+import { commit, commitAll, commitAmend } from "./commit";
 import { RepositoryCommand } from "./common";
 
-const commands = [add, addAll, addModified, commit, commitAll];
+const commands = [add, addAll, addModified, commit, commitAll, commitAmend];
 
 export function getRepoCommands(): RepositoryCommand<any>[] {
   return commands;
