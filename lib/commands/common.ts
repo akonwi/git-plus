@@ -26,7 +26,7 @@ export interface GitPlusCommand {
   displayName?: string;
 }
 
-export interface RepositoryCommand<P> extends GitPlusCommand {
+export interface RepositoryCommand<P = void> extends GitPlusCommand {
   run(repo: Repository, args: P): Promise<RecordAttributes | void> | void;
 }
 

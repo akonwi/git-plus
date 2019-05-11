@@ -5,7 +5,8 @@ import Path = require("path");
 import { RecordAttributes } from "../activity-logger";
 import { gitDo } from "../git-es";
 import { Repository } from "../repository";
-import { add } from "./add";
+import { run } from "./";
+import { addModified } from "./add";
 import { guard, RepositoryCommand } from "./common";
 
 let disposables = new CompositeDisposable();
@@ -138,7 +139,6 @@ const showFile = function(filePath) {
 };
 
 interface CommitParams {
-  stageChanges?: boolean;
   andPush?: boolean;
 }
 
@@ -146,8 +146,8 @@ export const commit: RepositoryCommand<CommitParams | void> = {
   id: "commit",
 
   async run(repo: Repository, params: CommitParams = {}) {
-    new Promise<RecordAttributes>(async resolve => {
-      const { stageChanges, andPush } = params;
+    return new Promise<RecordAttributes>(async resolve => {
+      const { andPush } = params;
       const filePath = Path.join(repo.repo.getPath(), "COMMIT_EDITMSG");
       const currentPane = atom.workspace.getActivePane();
       const commentChar = repo.getConfig("core.commentchar") || "#";
@@ -232,9 +232,6 @@ export const commit: RepositoryCommand<CommitParams | void> = {
           })
           .catch(atom.notifications.addError);
 
-      if (stageChanges) {
-        await add.run(repo, { stageModified: true });
-      }
       try {
         await init();
         startCommit();
@@ -251,5 +248,16 @@ export const commit: RepositoryCommand<CommitParams | void> = {
         }
       }
     });
+  }
+};
+
+export const commitAll: RepositoryCommand = {
+  id: "commit-all",
+
+  async run(repo: Repository) {
+    const staged = await run(addModified, repo);
+    if (staged) {
+      return commit.run(repo);
+    }
   }
 };

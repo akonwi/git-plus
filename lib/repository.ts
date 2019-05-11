@@ -67,10 +67,7 @@ export default class Repository {
   }
 
   getConfig(config: string) {
-    return this.repo.getConfigValue(config, this.getWorkingDirectory()) as
-      | string
-      | undefined
-      | null;
+    return this.repo.getConfigValue(config, this.getWorkingDirectory()) as string | undefined;
   }
 
   stage(paths: string[], options: AddOptions = { update: false }): Promise<GitCliResponse> {
