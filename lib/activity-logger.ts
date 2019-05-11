@@ -1,7 +1,6 @@
 import { Disposable } from "atom";
 import nanoid = require("nanoid");
 import { Container } from "./container";
-import { GitPlusPackage } from "./package";
 import { OutputViewContainer } from "./views/output-view/container";
 
 export interface RecordAttributes {

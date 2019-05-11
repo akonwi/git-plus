@@ -1,4 +1,5 @@
 import { CompositeDisposable, Disposable } from "atom";
+import { RecordAttributes } from "./activity-logger";
 import { getRepoCommands, run } from "./commands";
 import { init } from "./commands/init";
 import { showCommandPalette } from "./commands/show-command-palette";
@@ -28,7 +29,7 @@ export class GitPlusPackage {
       this.commandResources.add(
         atom.commands.add("atom-workspace", `git-plus:${init.id}`, async () => {
           const result = await init.run(undefined);
-          if (result) Container.logger.record(result);
+          if (result) Container.logger.record(result as RecordAttributes);
 
           this.resetCommands();
         })

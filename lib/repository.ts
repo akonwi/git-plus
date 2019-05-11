@@ -48,6 +48,10 @@ export default class Repository {
     return this.repo.getWorkingDirectory();
   }
 
+  get name() {
+    return path.basename(this.repo.getWorkingDirectory());
+  }
+
   static async getCurrent(): Promise<Repository | undefined> {
     const repo = await getRepo();
     return repo ? new Repository(repo) : undefined;
@@ -77,10 +81,6 @@ export default class Repository {
     args.push(...paths);
 
     return git(args, { cwd: this.repo.getWorkingDirectory() });
-  }
-
-  getName() {
-    return path.basename(this.repo.getWorkingDirectory());
   }
 
   async getBranchesForRemote(remote: string): Promise<string[]> {
@@ -161,7 +161,7 @@ export default class Repository {
   }
 
   relativize(path: string): string | undefined {
-    if (path === this.getWorkingDirectory()) return this.getName();
+    if (path === this.getWorkingDirectory()) return this.name;
     return (this.repo as any).relativize(path);
   }
 

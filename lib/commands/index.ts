@@ -15,7 +15,7 @@ export async function run(command: RepositoryCommand<any>, repo?: Repository) {
   if (repo === undefined) return atom.notifications.addInfo("No repository found");
   const result = await command.run(repo, undefined);
   if (result) {
-    Container.logger.record(result);
+    Container.logger.record({ ...result, repoName: repo.name });
     return result.failed === false;
   }
   return true;

@@ -1,5 +1,5 @@
 import { TextEditor } from "atom";
-import { RecordAttributes } from "../activity-logger";
+import { GitCliResponse } from "../git-es";
 import { Repository } from "../repository";
 
 // export abstract class RepositoryCommand<P> {
@@ -26,12 +26,16 @@ export interface GitPlusCommand {
   displayName?: string;
 }
 
-export interface RepositoryCommand<P = void> extends GitPlusCommand {
-  run(repo: Repository, args: P): Promise<RecordAttributes | void> | void;
+export interface CommandResult extends GitCliResponse {
+  message: string;
 }
 
-export interface NonRepositoryCommand<P> extends GitPlusCommand {
-  run(args: P): Promise<RecordAttributes | void> | void;
+export interface RepositoryCommand<P = void> extends GitPlusCommand {
+  run(repo: Repository, args: P): Promise<CommandResult | void> | void;
+}
+
+export interface NonRepositoryCommand<P = void> extends GitPlusCommand {
+  run(args: P): Promise<CommandResult | void> | void;
 }
 
 export namespace Editor {

@@ -7,7 +7,7 @@ import { gitDo } from "../git-es";
 import { Repository } from "../repository";
 import { run } from "./";
 import { addModified } from "./add";
-import { guard, RepositoryCommand } from "./common";
+import { CommandResult, guard, RepositoryCommand } from "./common";
 
 const verboseCommitsEnabled = () => atom.config.get("git-plus.commits.verboseCommits") === true;
 
@@ -116,7 +116,7 @@ export const commit: RepositoryCommand<CommitParams | void> = {
   id: "commit",
 
   async run(repo: Repository, params: CommitParams = {}) {
-    return new Promise<RecordAttributes>(async resolve => {
+    return new Promise<CommandResult>(async resolve => {
       const { andPush } = params;
       const filePath = Path.join(repo.repo.getPath(), "COMMIT_EDITMSG");
       const currentPane = atom.workspace.getActivePane();
@@ -128,7 +128,6 @@ export const commit: RepositoryCommand<CommitParams | void> = {
         atom.notifications.addError(e.message);
         return resolve({
           message: e.message,
-          repoName: repo.getName(),
           failed: true,
           output: ""
         });
@@ -147,8 +146,7 @@ export const commit: RepositoryCommand<CommitParams | void> = {
           if (statusResult.failed) {
             return resolve({
               ...statusResult,
-              message: "Failed to get repository status for commit",
-              repoName: repo.getName()
+              message: "Failed to get repository status for commit"
             });
           }
           status = statusResult.output;
@@ -192,8 +190,7 @@ export const commit: RepositoryCommand<CommitParams | void> = {
                 resolve({
                   ...result,
                   output: emoji.emojify(result.output),
-                  message: "commit",
-                  repoName: repo.getName()
+                  message: "commit"
                 });
                 // if (andPush) {
                 //   return GitPush(repo);
@@ -222,8 +219,7 @@ export const commit: RepositoryCommand<CommitParams | void> = {
           resolve({
             failed: true,
             message: "Error during commit command",
-            output: message.toString(),
-            repoName: repo.getName()
+            output: message.toString()
           });
         }
       }
@@ -364,8 +360,7 @@ export const commitAmend: RepositoryCommand = {
     if (statusResult.failed) {
       return {
         ...statusResult,
-        message: "Failed to get repository status for commit",
-        repoName: repo.getName()
+        message: "Failed to get repository status for commit"
       };
     }
 
@@ -376,7 +371,7 @@ export const commitAmend: RepositoryCommand = {
     const editor = await showFile(filePath);
 
     let resolved = false;
-    return new Promise<RecordAttributes | void>(resolve => {
+    return new Promise<CommandResult | void>(resolve => {
       disposables.add(
         editor.onDidSave(async () => {
           const args = ["commit", "--amend", "--cleanup=strip", `--file=${filePath}`];
@@ -390,8 +385,7 @@ export const commitAmend: RepositoryCommand = {
           resolve({
             ...result,
             output: emoji.emojify(result.output),
-            message: "commit",
-            repoName: repo.getName()
+            message: "commit"
           });
         }),
 

@@ -4,9 +4,9 @@ import { Repository } from "../repository";
 import ProjectsListView = require("../views/projects-list-view");
 import { guard, NonRepositoryCommand } from "./common";
 
-export const init: NonRepositoryCommand<void> = {
+export const init: NonRepositoryCommand = {
   id: "init",
-  async run(_) {
+  async run() {
     const workspacePaths = atom.project.getPaths();
     const currentFile = guard(atom.workspace.getActiveTextEditor(), e => e.getPath());
 
@@ -22,6 +22,6 @@ export const init: NonRepositoryCommand<void> = {
     const result = await gitDo(["init"], { cwd: folderPath });
     const repo = await Repository.getForPath(folderPath);
     atom.project.setPaths(atom.project.getPaths());
-    return { ...result, message: "init", repoName: repo!.getName() };
+    return { ...result, message: "init", repoName: repo!.name };
   }
 };

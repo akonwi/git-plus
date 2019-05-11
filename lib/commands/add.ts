@@ -34,7 +34,6 @@ export const add: RepositoryCommand<void | AddParams> = {
     const result = await repo.stage([path], { update: params.stageModified });
     return {
       ...result,
-      repoName: repo.getName(),
       message: `add ${messagePath}`
     };
   }
