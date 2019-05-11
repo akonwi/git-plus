@@ -9,8 +9,6 @@ import { run } from "./";
 import { addModified } from "./add";
 import { guard, RepositoryCommand } from "./common";
 
-let disposables = new CompositeDisposable();
-
 const verboseCommitsEnabled = () => atom.config.get("git-plus.commits.verboseCommits") === true;
 
 const scissorsLine = "------------------------ >8 ------------------------";
@@ -88,36 +86,13 @@ const destroyCommitEditor = (filePath: string) => {
 const trimFile = function(filePath: string, commentChar: string) {
   const findScissorsLine = (line: string) => line.includes(`${commentChar} ${scissorsLine}`);
 
-  const cwd = Path.dirname(filePath);
   let content = fs.readFileSync(fs.absolute(filePath)).toString();
   const startOfComments = content.indexOf(content.split("\n").find(findScissorsLine));
   content = startOfComments > 0 ? content.substring(0, startOfComments) : content;
   return fs.writeFileSync(filePath, content);
 };
 
-const doCommit = async function(repo: Repository, filePath: string) {
-  const result = await gitDo(["commit", "--cleanup=whitespace", `--file=${filePath}`], {
-    cwd: repo.getWorkingDirectory()
-  });
-  // .then(function(data) {
-  //   ActivityLogger.record({ repoName, message: "commit", output: emoji.emojify(data) });
-  //   destroyCommitEditor(filePath);
-  //   return git.refresh();
-  // })
-  // .catch(function(data) {
-  //   ActivityLogger.record({ repoName, message: "commit", output: data, failed: true });
-  //   return destroyCommitEditor(filePath);
-  // });
-};
-
-const cleanup = function(currentPane) {
-  if (currentPane.isAlive()) {
-    currentPane.activate();
-  }
-  return disposables.dispose();
-};
-
-const showFile = function(filePath) {
+const showFile = function(filePath: string) {
   const commitEditor = guard(atom.workspace.paneForURI(filePath), x => x.itemForURI(filePath));
   if (!commitEditor) {
     if (atom.config.get("git-plus.general.openInPane")) {
@@ -127,14 +102,14 @@ const showFile = function(filePath) {
         .getActivePane()
         [`split${splitDirection}`]();
     }
-    return atom.workspace.open(filePath);
+    return atom.workspace.open(filePath) as Promise<TextEditor>;
   } else {
     if (atom.config.get("git-plus.general.openInPane")) {
       atom.workspace.paneForURI(filePath)!.activate();
     } else {
       atom.workspace.paneForURI(filePath)!.activateItemForURI(filePath);
     }
-    return Promise.resolve(commitEditor);
+    return Promise.resolve(commitEditor) as Promise<TextEditor>;
   }
 };
 
@@ -170,7 +145,8 @@ export const commit: RepositoryCommand<CommitParams | void> = {
           const statusResult = await getStatus(repo);
           if (!statusResult) {
             atom.notifications.addInfo("Nothing to commit");
-            return resolve();
+            resolve();
+            throw new Error();
           }
           if (statusResult.failed) {
             return resolve({
@@ -199,11 +175,11 @@ export const commit: RepositoryCommand<CommitParams | void> = {
         return prepFile(status, filePath, commentChar, template, diff);
       };
 
-      const startCommit = () =>
-        showFile(filePath)
+      const disposables = new CompositeDisposable();
+
+      const startCommit = () => {
+        return showFile(filePath)
           .then(function(textEditor) {
-            disposables.dispose();
-            disposables = new CompositeDisposable();
             disposables.add(
               textEditor.onDidSave(async () => {
                 trimFile(filePath, commentChar);
@@ -228,9 +204,17 @@ export const commit: RepositoryCommand<CommitParams | void> = {
                 // }
               })
             );
-            return disposables.add(textEditor.onDidDestroy(() => cleanup(currentPane)));
+            return disposables.add(
+              textEditor.onDidDestroy(() => {
+                if (!currentPane.isDestroyed()) {
+                  currentPane.activate();
+                }
+                return disposables.dispose();
+              })
+            );
           })
           .catch(atom.notifications.addError);
+      };
 
       try {
         await init();
