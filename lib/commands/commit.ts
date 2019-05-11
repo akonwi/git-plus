@@ -296,17 +296,10 @@ function prepAmendFile(
   status = cleanupUnstagedText(status);
   status = status.replace(/\s*\(.*\)\n/g, "\n").replace(/\n/g, `\n${commentChar} `);
   if (prevChangedFiles.length > 0) {
-    const nothingToCommit = "nothing to commit, working directory clean";
-    const currentChanges = `committed:\n${commentChar}`;
-    let textToReplace;
-    if (status.indexOf(nothingToCommit) > -1) {
-      textToReplace = nothingToCommit;
-    } else if (status.indexOf(currentChanges) > -1) {
-      textToReplace = currentChanges;
-    }
-    const replacementText = `committed:
-${prevChangedFiles.map(f => `${commentChar}   ${f}`).join("\n")}`;
-    status = status.replace(textToReplace, replacementText);
+    status = `Changes to be committed:
+${prevChangedFiles.map(f => `${commentChar}   ${f}`).join("\n")}
+${commentChar}
+${commentChar} ${status}`;
   }
   return fs.writeFileSync(
     filePath,
