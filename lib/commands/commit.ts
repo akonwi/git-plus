@@ -2,7 +2,6 @@ import { CompositeDisposable, TextEditor } from "atom";
 import fs = require("fs-plus");
 import emoji = require("node-emoji");
 import Path = require("path");
-import { RecordAttributes } from "../activity-logger";
 import { gitDo } from "../git-es";
 import { Repository } from "../repository";
 import { run } from "./";
@@ -161,7 +160,7 @@ export const commit: RepositoryCommand<CommitParams | void> = {
           if (atom.config.get("git-plus.diffs.wordDiff")) {
             args.push("--word-diff");
           }
-          const result = await gitDo(args, { cwd: repo.getWorkingDirectory() }); // .then(diff =>
+          const result = await gitDo(args, { cwd: repo.workingDirectory });
           if (result.failed) {
             atom.notifications.addWarning("Unable to get diff for verbose commit");
           } else diff = result.output;
@@ -180,7 +179,7 @@ export const commit: RepositoryCommand<CommitParams | void> = {
                 const result = await gitDo(
                   ["commit", "--cleanup=whitespace", `--file=${filePath}`],
                   {
-                    cwd: repo.getWorkingDirectory()
+                    cwd: repo.workingDirectory
                   }
                 );
                 if (!result.failed) {

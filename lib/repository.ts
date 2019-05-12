@@ -49,7 +49,7 @@ export default class Repository {
   }
 
   get name() {
-    return path.basename(this.repo.getWorkingDirectory());
+    return path.basename(this.workingDirectory);
   }
 
   static async getCurrent(): Promise<Repository | undefined> {
@@ -66,12 +66,8 @@ export default class Repository {
     this.repo = repo;
   }
 
-  getWorkingDirectory() {
-    return this.repo.getWorkingDirectory();
-  }
-
   getConfig(config: string) {
-    return this.repo.getConfigValue(config, this.getWorkingDirectory()) as string | undefined;
+    return this.repo.getConfigValue(config, this.workingDirectory) as string | undefined;
   }
 
   stage(paths: string[], options: AddOptions = { update: false }): Promise<GitCliResponse> {
@@ -161,7 +157,7 @@ export default class Repository {
   }
 
   relativize(path: string): string | undefined {
-    if (path === this.getWorkingDirectory()) return this.name;
+    if (path === this.workingDirectory) return this.name;
     return (this.repo as any).relativize(path);
   }
 
@@ -177,7 +173,7 @@ export default class Repository {
 
   async getStagedFiles() {
     const args = ["diff-index", "--cached", "HEAD", "--name-status", "-z"];
-    const result = await git(args, { cwd: this.getWorkingDirectory() });
+    const result = await git(args, { cwd: this.workingDirectory });
     if (result.failed) {
       if (result.output.includes("ambiguous argument 'HEAD'")) {
         // TODO: maybe find a better way to still return a non-empty array on initial commit
@@ -202,9 +198,9 @@ export default class Repository {
 
   async isPathStaged(path: string): Promise<boolean> {
     const result = await git(["diff", "--cached", "--name-only", path], {
-      cwd: this.repo.getWorkingDirectory()
+      cwd: this.workingDirectory
     });
-    if (path === this.getWorkingDirectory() && result.output !== "") return true;
+    if (path === this.workingDirectory && result.output !== "") return true;
     return result.output.includes(this.relativize(path)!);
   }
 
@@ -214,14 +210,14 @@ export default class Repository {
 
   async getUpstreamBranchFor(branch: string): Promise<[string, string] | null> {
     const result = await git(["rev-parse", "--abbrev-ref", `${branch}@{upstream}`], {
-      cwd: this.repo.getWorkingDirectory()
+      cwd: this.workingDirectory
     });
     if (result.failed && result.output.includes("fatal: no upstream configured")) return null;
     else return result.output.split("/") as [string, string];
   }
 
   async unstage(path: string): Promise<GitCliResponse> {
-    return await git(["reset", path], { cwd: this.repo.getWorkingDirectory() });
+    return await git(["reset", path], { cwd: this.workingDirectory });
   }
 }
 
