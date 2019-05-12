@@ -8,7 +8,9 @@ import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
 import service = require("./service");
 import { StatusBar } from "./types/status-bar";
+import { TreeView } from "./types/tree-view";
 import { StatusBarTileView } from "./views/status-bar-tile";
+import { TreeViewBranchManager } from "./views/tree-view-branches";
 
 export class GitPlusPackage {
   private commandResources: CompositeDisposable;
@@ -98,6 +100,14 @@ export class GitPlusPackage {
     }
     // if (getWorkspaceRepos().length > 0) this.setupBranchesMenuToggle();
     return disposable;
+  }
+
+  consumeTreeView(treeView: TreeView) {
+    const treeViewBranchManager = new TreeViewBranchManager(treeView);
+
+    return new Disposable(() => {
+      treeViewBranchManager.destroy();
+    });
   }
 
   // TODO: make this a replacement of the github package's branch name in case that package is disabled

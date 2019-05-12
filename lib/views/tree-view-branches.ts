@@ -1,14 +1,15 @@
 import { CompositeDisposable, Disposable, GitRepository } from "atom";
 import { getRepoForPath } from "../git-es";
+import { TreeView } from "../types/tree-view";
 
 export class TreeViewBranchManager {
-  private treeView: Services.TreeView;
+  private treeView: TreeView;
   private renderedBranches = new Map<string, HTMLElement>();
   private subscriptions = new CompositeDisposable();
   private repoSubscriptions = new Map<String, Disposable>();
   private isEnabled = false;
 
-  constructor(treeView: Services.TreeView) {
+  constructor(treeView: TreeView) {
     this.treeView = treeView;
 
     atom.config.observe("git-plus.general.showBranchInTreeView", (isEnabled: boolean) => {
