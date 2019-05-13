@@ -3,8 +3,9 @@ import { Repository } from "../repository";
 import { add, addAll, addModified } from "./add";
 import { commit, commitAll, commitAmend } from "./commit";
 import { RepositoryCommand } from "./common";
+import { pull } from "./pull";
 
-const commands = [add, addAll, addModified, commit, commitAll, commitAmend];
+const commands = [add, addAll, addModified, commit, commitAll, commitAmend, pull];
 
 export function getRepoCommands(): RepositoryCommand<any>[] {
   return commands;
