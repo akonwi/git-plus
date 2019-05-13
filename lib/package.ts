@@ -7,6 +7,7 @@ import { Container } from "./container";
 import { getWorkspaceRepos } from "./git-es";
 import diffGrammars = require("./grammars/diff.js");
 import service = require("./service");
+import { AutoSave } from "./types/auto-save";
 import { StatusBar } from "./types/status-bar";
 import { TreeView } from "./types/tree-view";
 import { StatusBarTileView } from "./views/status-bar-tile";
@@ -87,6 +88,10 @@ export class GitPlusPackage {
       }
       atom.grammars.addGrammar(diffGrammar);
     }
+  }
+
+  consumeAutosave({ dontSaveIf }: AutoSave) {
+    dontSaveIf(paneItem => paneItem.getPath().includes("COMMIT_EDITMSG"));
   }
 
   consumeStatusBar(statusBar: StatusBar) {
