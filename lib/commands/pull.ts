@@ -3,42 +3,48 @@ import SelectList = require("atom-select-list");
 import { PullOptions, Repository } from "../repository";
 import { RepositoryCommand } from "./common";
 
-export const pull: RepositoryCommand = {
+export const pull: RepositoryCommand<PullOptions | void> = {
   id: "pull",
 
-  async run(repo: Repository) {
+  async run(repo: Repository, options?: PullOptions) {
     const remotes = await repo.getRemoteNames();
     if (remotes.length === 0) {
       atom.notifications.addInfo("There is no remote repository to pull from.");
       return;
     }
 
-    const shouldRebase = atom.config.get("git-plus.remoteInteractions.pullRebase") === true;
-    const shouldAutostash = atom.config.get("git-plus.remoteInteractions.pullAutostash") === true;
-    const pullOptions: PullOptions = { rebase: shouldRebase, autostash: shouldAutostash };
+    let pullOptions: PullOptions;
 
-    if (atom.config.get("git-plus.remoteInteractions.promptForBranch") === true) {
-      let chosenRemote: string;
-      if (remotes.length === 1) chosenRemote = remotes[0];
-      else {
-        const chosen = await getChosenItem(remotes);
-        if (chosen === undefined) return;
-        chosenRemote = chosen;
+    if (options) {
+      pullOptions = options;
+    } else {
+      const shouldRebase = atom.config.get("git-plus.remoteInteractions.pullRebase") === true;
+      const shouldAutostash = atom.config.get("git-plus.remoteInteractions.pullAutostash") === true;
+      pullOptions = { rebase: shouldRebase, autostash: shouldAutostash };
+
+      if (atom.config.get("git-plus.remoteInteractions.promptForBranch") === true) {
+        let chosenRemote: string;
+        if (remotes.length === 1) chosenRemote = remotes[0];
+        else {
+          const chosen = await getChosenItem(remotes);
+          if (chosen === undefined) return;
+          chosenRemote = chosen;
+        }
+
+        let chosenBranch: string;
+        const branches = await repo.getBranchesForRemote(chosenRemote);
+        if (branches.length === 1) chosenBranch = branches[0];
+        else {
+          const chosen = await getChosenItem(branches, {
+            infoMessage: `Select branch on ${chosenRemote}`
+          });
+          if (chosen === undefined) return;
+          chosenBranch = chosen;
+        }
+
+        pullOptions.remote = chosenRemote;
+        pullOptions.branch = chosenBranch;
       }
-
-      let chosenBranch: string;
-      const branches = await repo.getBranchesForRemote(chosenRemote);
-      if (branches.length === 1) chosenBranch = branches[0];
-      else {
-        const chosen = await getChosenItem(branches, {
-          infoMessage: `Select branch on ${chosenRemote}`
-        });
-        if (chosen === undefined) return;
-        chosenBranch = chosen;
-      }
-
-      pullOptions.remote = chosenRemote;
-      pullOptions.branch = chosenBranch;
     }
 
     const notification = atom.notifications.addInfo("Pulling...", {
@@ -58,7 +64,7 @@ export const pull: RepositoryCommand = {
   }
 };
 
-async function getChosenItem(items: string[], options = {}) {
+export async function getChosenItem(items: string[], options = {}) {
   const previouslyFocusedElement = document.activeElement as HTMLElement | null;
   let panel: Panel;
 
@@ -88,5 +94,6 @@ async function getChosenItem(items: string[], options = {}) {
     panel.onDidDestroy(() => {
       listView.destroy();
     });
+    listView.focus();
   });
 }
