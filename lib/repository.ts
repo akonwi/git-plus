@@ -79,6 +79,23 @@ export default class Repository {
     return git(args, { cwd: this.repo.getWorkingDirectory() });
   }
 
+  async getBranches(remote = false) {
+    const args = ["branch", "--no-color"];
+    if (remote) {
+      args.push("--remote");
+    }
+    const { failed, output } = await git(args, {
+      cwd: this.workingDirectory
+    });
+
+    if (failed) {
+      atom.notifications.addWarning("Unable to get branches for repository", { detail: output });
+      return [];
+    }
+
+    return output.split(/\n/).map(s => s.trim());
+  }
+
   async getBranchesForRemote(remote: string): Promise<string[]> {
     const { failed, output } = await git(["branch", "-r", "--no-color"], {
       cwd: this.repo.getWorkingDirectory()
