@@ -68,6 +68,7 @@ getCommands = ->
       commands.push ['git-plus:new-branch', 'Checkout New Branch', -> GitCheckoutNewBranch(repo)]
       commands.push ['git-plus:delete-local-branch', 'Delete Local Branch', -> GitDeleteBranch(repo)]
       commands.push ['git-plus:delete-remote-branch', 'Delete Remote Branch', -> GitDeleteBranch(repo, {remote: true})]
+      commands.push ['git-plus:delete-branch-local-and-remote', 'Delete Branch (Local and Remote)', -> GitDeleteBranch(repo).then -> GitDeleteBranch(repo, {remote: true})]
       commands.push ['git-plus:cherry-pick', 'Cherry-Pick', -> GitCherryPick(repo)]
       commands.push ['git-plus:diff', 'Diff', -> GitDiff(repo, file: currentFile)]
       if atom.config.get('git-plus.experimental.diffBranches')
