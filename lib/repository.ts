@@ -79,6 +79,35 @@ export default class Repository {
     return git(args, { cwd: this.repo.getWorkingDirectory() });
   }
 
+  async getCurrentBranch(): Promise<{ name: string; upstream?: string }> {
+    const { output, failed } = await git(["status", "--porcelain", "--branch"], {
+      cwd: this.workingDirectory
+    });
+
+    if (failed && output.includes("not a git repository")) {
+      throw new Error(
+        `Repository instance is invalid: ${this.workingDirectory} is not a repository`
+      );
+    }
+
+    if (output.includes("No commits yet on")) {
+      const split = output.split(/\s/);
+      return { name: split[split.length - 1] };
+    }
+
+    if (output !== "") {
+      const [branch, tracking] = output
+        .substring(2)
+        .trim()
+        .split(/\s/)[0]
+        .split("...");
+
+      return { name: branch, upstream: tracking };
+    }
+
+    throw new Error("current branch couldn't be determined");
+  }
+
   async getBranches(remote = false) {
     const args = ["branch", "--no-color"];
     if (remote) {

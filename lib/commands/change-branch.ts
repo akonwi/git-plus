@@ -11,30 +11,31 @@ export const changeBranch: RepositoryCommand<ChangeBranchOptions | void> = {
   id: "change-branch",
 
   async run(repo: Repository, options: ChangeBranchOptions = { remote: false }) {
-    const branches = await repo.getBranches(options.remote);
+    const branches = (await repo.getBranches(options.remote)).filter(
+      branch => !branch.startsWith("*")
+    );
 
     if (branches.length === 0) {
-      return;
-    } else if (branches.length === 1) {
-      atom.notifications.addWarning("There are no other branches");
+      atom.notifications.addInfo("There are no other branches");
       return;
     }
 
-    const chosen = await getChosenItem(branches, {
-      elementForItem: branch => {
-        const [current, name] = branch.startsWith("*")
-          ? [true, branch.substring(1)]
-          : [false, branch];
-        const li = document.createElement("li");
-        const div = document.createElement("div");
-        div.classList.add("pull-right");
-        if (current) {
-          const span = document.createElement("span");
-          span.innerText = "HEAD";
-          div.appendChild(span);
+    const infoMessage = async () => {
+      const currentBranch = await repo.getCurrentBranch();
+      if (options.remote) {
+        if (currentBranch.upstream) {
+          return `Current branch ${currentBranch.name} is tracking ${currentBranch.upstream}`;
         }
-        li.textContent = name;
-        li.appendChild(div);
+        return `Current branch is ${currentBranch.name}`;
+      }
+      return `Current branch is ${currentBranch.name}`;
+    };
+
+    const chosen = await getChosenItem(branches, {
+      infoMessage: await infoMessage(),
+      elementForItem: (branch: string) => {
+        const li = document.createElement("li");
+        li.textContent = branch;
         return li;
       }
     });
