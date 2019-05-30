@@ -4,6 +4,7 @@ import { add, addAll, addModified } from "./add";
 import { changeBranch, changeBranchRemote } from "./change-branch";
 import { commit, commitAll, commitAmend } from "./commit";
 import { CommandResult, RepositoryCommand } from "./common";
+import { createBranch } from "./create-branch";
 import { pull } from "./pull";
 import { push } from "./push";
 
@@ -17,7 +18,8 @@ const commands = [
   pull,
   push,
   changeBranch,
-  changeBranchRemote
+  changeBranchRemote,
+  createBranch
 ];
 
 export function getRepoCommands(): RepositoryCommand<any>[] {

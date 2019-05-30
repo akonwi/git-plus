@@ -1,3 +1,4 @@
+import * as etch from "etch";
 import { configs } from "./config";
 import { GitPlusPackage } from "./package";
 
@@ -5,6 +6,7 @@ let gitPlus;
 const packageWrapper = {
   config: configs,
   initialize(_state) {
+    etch.setScheduler(atom.views);
     gitPlus = new GitPlusPackage();
   }
 };
