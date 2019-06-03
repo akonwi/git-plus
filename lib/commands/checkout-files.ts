@@ -1,4 +1,3 @@
-import { gitDo } from "../git-es";
 import { Repository } from "../repository";
 import { CommandResult, getCurrentFileInRepo, RepositoryCommand } from "./common";
 

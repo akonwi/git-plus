@@ -41,7 +41,7 @@ export interface PushOptions {
   setUpstream?: boolean;
 }
 
-export default class Repository {
+export class Repository {
   repo: GitRepository;
 
   get workingDirectory() {
@@ -270,5 +270,3 @@ export default class Repository {
     return git(args, { cwd: this.workingDirectory });
   }
 }
-
-export { Repository };
