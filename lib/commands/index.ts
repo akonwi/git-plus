@@ -2,7 +2,7 @@ import { Container } from "../container";
 import { Repository } from "../repository";
 import { add, addAll, addModified } from "./add";
 import { changeBranch, changeBranchRemote } from "./change-branch";
-import { resetFiles } from "./checkout-files";
+import { checkoutAllFiles, checkoutFile } from "./checkout-files";
 import { commit, commitAll, commitAmend } from "./commit";
 import { CommandResult, RepositoryCommand } from "./common";
 import { createBranch } from "./create-branch";
@@ -21,7 +21,8 @@ const commands = [
   changeBranch,
   changeBranchRemote,
   createBranch,
-  resetFiles
+  checkoutFile,
+  checkoutAllFiles
 ];
 
 export function getRepoCommands(): RepositoryCommand<any>[] {
