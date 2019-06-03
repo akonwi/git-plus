@@ -265,6 +265,10 @@ export default class Repository {
   async unstage(path: string): Promise<GitCliResponse> {
     return await git(["reset", path], { cwd: this.workingDirectory });
   }
+
+  do(args: string[]) {
+    return git(args, { cwd: this.workingDirectory });
+  }
 }
 
 export { Repository };

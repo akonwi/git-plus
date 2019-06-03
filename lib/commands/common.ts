@@ -39,17 +39,17 @@ export interface NonRepositoryCommand<P = void> extends GitPlusCommand {
 }
 
 export namespace Editor {
-  export function getCurrentFileInRepo(repo: Repository): string | undefined {
-    const activeEditor = atom.workspace.getActiveTextEditor();
-    const path = activeEditor && activeEditor.getPath();
-    if (!path) return undefined;
-    return repo.relativize(path);
-  }
-
   export function getEditor(filePath: string) {
     const commitPane = atom.workspace.paneForURI(filePath);
     return commitPane && (commitPane.itemForURI(filePath) as TextEditor | undefined);
   }
+}
+
+export function getCurrentFileInRepo(repo: Repository): string | undefined {
+  const activeEditor = atom.workspace.getActiveTextEditor();
+  const path = activeEditor && activeEditor.getPath();
+  if (!path) return undefined;
+  return repo.relativize(path);
 }
 
 export function guard<T, R>(
