@@ -1,20 +1,20 @@
 import { CompositeDisposable } from "atom";
 import * as etch from "etch";
 
-const $ = etch.dom;
+export const $ = etch.dom;
 
-class Etch<Props = void> {
+export class Etch<Props = void, Children = void> {
   props: Props;
-  children: any;
+  children: Children;
   readonly refs: any;
 
-  constructor(props: Props, children?: any) {
+  constructor(props: Props, children: Children) {
     this.props = props;
     this.children = children;
     etch.initialize(this);
   }
 
-  update(props: Props, children) {
+  update(props?: Props, children?: any) {
     if (props == null) return etch.update(this);
     this.props = props;
     this.children = children;

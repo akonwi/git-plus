@@ -85,7 +85,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0-beta.51",
     "@types/atom": "^1.31.0",
-    "@types/react": "^16.7.13",
     "ansi-to-html": "^0.4.1",
     "atom-babel6-transpiler": "^1.2.0",
     "atom-notify": "^1.1.0",
@@ -103,14 +102,15 @@
     "memoize-one": "^5.0.4",
     "nanoid": "^2.0.1",
     "node-emoji": "^1.8.1",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "typescript": "^3.5.1",
     "underscore-plus": "^1.6.6"
   },
   "devDependencies": {
     "@types/memoize-one": "^4.1.1",
     "@types/nanoid": "^1.2.1",
+    "@types/react": "^16.8.19",
     "atom-transpiler-debug-tool": "^1.0.5",
     "babel-eslint": "^8.2.5",
     "eslint": "^5.0.1",
