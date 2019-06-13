@@ -54,7 +54,7 @@ module.exports =
         title: "Status-bar New Branch modifier key"
         type: "string"
         default: "alt"
-        description: "Holding this modifier key while clicking on the branch name in the status bar will trigger creatinga a new branch. Note that _[`meta`](#{meta.define})_ is <kbd>#{meta.key}</kbd>"
+        description: "Holding this modifier key while clicking on the branch name in the status bar will trigger creating a new branch. Note that _[`meta`](#{meta.define})_ is <kbd>#{meta.key}</kbd>"
         enum: ["alt", "shift", "meta", "ctrl"]
       showBranchInTreeView:
         order: 8
