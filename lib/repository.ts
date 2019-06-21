@@ -1,6 +1,7 @@
 import { GitRepository } from "atom";
 import * as path from "path";
 import git, { getRepo, getRepoForPath, GitCliResponse } from "./git-es";
+import { parseDiff } from "./utils/repository-utils";
 
 export interface Stash {
   index: string;
@@ -240,6 +241,15 @@ export class Repository {
     }
 
     return files;
+  }
+
+  async getIndexDiffs() {
+    const result = await this.do(["diff", "--color=never", "--staged"]);
+    if (result.failed) {
+      // TODO
+    }
+
+    return parseDiff(result.output);
   }
 
   async isPathStaged(path: string): Promise<boolean> {

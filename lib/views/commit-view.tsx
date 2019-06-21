@@ -1,9 +1,9 @@
-import { CompositeDisposable, TextEditor } from "atom";
+import { CompositeDisposable, TextBuffer, TextEditor } from "atom";
 import * as fs from "fs-plus";
-import { useEffect, useRef } from "react";
 import React = require("react");
 import * as ReactDOM from "react-dom";
 import { Repository } from "../repository";
+import { Hunk } from "../utils/repository-utils";
 
 const statusText = {
   M: "modified",
@@ -39,10 +39,12 @@ export class CommitView {
 
   private subscriptions = new CompositeDisposable();
   readonly element: HTMLDivElement;
+  private repo: Repository;
   private editor: TextEditor;
   private stagedFiles: any[];
 
   constructor(props: Props) {
+    this.repo = props.repo;
     this.editor = atom.workspace.buildTextEditor({});
     this.stagedFiles = props.stagedFiles;
     this.element = document.createElement("div");
@@ -85,7 +87,7 @@ export class CommitView {
 
   render() {
     ReactDOM.render(
-      <CommitViewContent editor={this.editor} stagedFiles={this.stagedFiles} />,
+      <CommitViewContent repo={this.repo} editor={this.editor} stagedFiles={this.stagedFiles} />,
       this.element
     );
   }
@@ -104,15 +106,24 @@ export class CommitView {
 }
 
 function CommitViewContent(props: {
+  repo: Repository;
   editor: TextEditor;
   stagedFiles: { mode: string; path: string }[];
 }) {
-  const editorRootRef = useRef<HTMLDivElement | null>(null);
+  const editorRootRef = React.useRef<HTMLDivElement | null>(null);
+  const [diffs, setDiffs] = React.useState<Hunk[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const editorElement = (props.editor as any).getElement();
     editorRootRef.current!.appendChild(editorElement);
     editorElement.focus();
+  }, []);
+
+  React.useEffect(() => {
+    (async () => {
+      const patches = await props.repo.getIndexDiffs();
+      setDiffs(patches);
+    })();
   }, []);
 
   return (
@@ -131,17 +142,64 @@ function CommitViewContent(props: {
             ))}
           </ul>
         </div>
+        <div>
+          {diffs.map(diff => {
+            return (
+              <AtomTextEditor
+                text={diff.text}
+                readOnly
+                showLineNumbers={false}
+                keyboardInputEnabled={false}
+              />
+            );
+            // return (
+            //   <div>
+            //     <div>{diff.newFile}</div>
+            //     {diff.lines.map(line => {
+            //       let type = "";
+            //       if (line.startsWith("+")) {
+            //         type = "added";
+            //       } else if (line.startsWith("-")) {
+            //         type = "removed";
+            //       }
+            //       return (
+            //         <div className={`line-diff ${type !== "" ? `status-${type}` : ""}`}>{line}</div>
+            //       );
+            //     })}
+            //   </div>
+            // );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
-// const defaultParams = {};
-// function useTextEditor(target: HTMLElement, params: { buffer?: TextBuffer } = defaultParams) {
-//   useEffect(() => {
-//     const editor = atom.workspace.buildTextEditor(params);
-//     return () => {
-//       editor.destroy();
-//     };
-//   }, []);
-// }
+interface AtomTextEditorProps {
+  text?: string;
+  readOnly?: boolean;
+  showLineNumbers?: boolean;
+  keyboardInputEnabled?: boolean;
+}
+
+function AtomTextEditor(props: AtomTextEditorProps) {
+  const rootRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const buffer = new TextBuffer({ text: props.text });
+    const editor = atom.workspace.buildTextEditor({
+      buffer: buffer,
+      readOnly: props.readOnly,
+      showLineNumbers: props.showLineNumbers,
+      keyboardInputEnabled: props.keyboardInputEnabled
+    });
+
+    editor.addGutter({ name: "hunk-line-number", type: "line-number", labelFn: any => "1" });
+
+    if (rootRef.current) {
+      rootRef.current.appendChild(editor.getElement());
+    }
+  }, []);
+
+  return <div ref={rootRef} />;
+}
