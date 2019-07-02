@@ -44,6 +44,8 @@ export class TreeViewBranchManager {
     const branchName = `[${repo!.getShortHead()}]`;
     const entry = this.treeView.entryForPath(repo.getWorkingDirectory());
 
+    if (entry == null) return;
+
     let div = this.renderedBranches.get(path);
     if (div) {
       div.innerText = branchName;
